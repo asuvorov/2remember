@@ -147,8 +147,8 @@ class ForgotPasswordNotifyViewSet(APIView):
         try:
             user = get_object_or_None(
                 User,
-                email=email,
-                )
+                email=email)
+
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 

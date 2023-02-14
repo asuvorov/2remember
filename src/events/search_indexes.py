@@ -27,16 +27,13 @@ class EventIndex(indexes.SearchIndex, indexes.Indexable):
         indexed=False)
 
     # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author")
-    name = indexes.CharField(
-        model_attr="name")
+    author = indexes.CharField(model_attr="author")
+    name = indexes.CharField(model_attr="name")
     description = indexes.CharField(
         model_attr="description",
         default="")
 
-    created = indexes.DateTimeField(
-        model_attr="created")
+    created = indexes.DateTimeField(model_attr="created")
 
     def get_model(self):
         """Docstring."""

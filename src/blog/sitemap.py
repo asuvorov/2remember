@@ -15,8 +15,7 @@ class BlogPostSitemap(Sitemap):
 
     def items(self):
         """Docstring."""
-        return Post.objects.filter(
-            status=PostStatus.VISIBLE)
+        return Post.objects.filter(status=PostStatus.VISIBLE)
 
     def lastmod(self, obj):
         """Docstring."""

@@ -120,8 +120,7 @@ class UserForm(forms.ModelForm):
         """Docstring."""
         user = get_object_or_None(
             User,
-            email=self.cleaned_data.get("email", "")
-            )
+            email=self.cleaned_data.get("email", ""))
 
         if user:
             raise forms.ValidationError(

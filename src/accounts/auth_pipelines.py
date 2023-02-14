@@ -12,8 +12,8 @@ from .models import (
 
 
 def save_profile(
-        strategy, backend, uid, response, details, user, social, request,
-        is_new=False, *args, **kwargs):
+        strategy, backend, uid, response, details, user, social, request, is_new=False,
+        *args, **kwargs):
     """Docstring."""
     avatar_url = ""
 

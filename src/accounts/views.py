@@ -176,9 +176,7 @@ def account_near_you_list(request):
         members_logins.values_list(
             "user__id", flat=True
         ).distinct()))
-    members_near = accounts.filter(
-        id__in=members_user_ids,
-    )
+    members_near = accounts.filter(id__in=members_user_ids)
 
     # -------------------------------------------------------------------------
     # --- Paginate QuerySet.
@@ -857,8 +855,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     account = get_object_or_404(
         User,
-        pk=user_id,
-    )
+        pk=user_id)
 
     if account == request.user:
         return HttpResponseRedirect(
@@ -994,8 +991,7 @@ def profile_participations(request, user_id):
     # -------------------------------------------------------------------------
     account = get_object_or_404(
         User,
-        pk=user_id,
-    )
+        pk=user_id)
 
     if account == request.user:
         return HttpResponseRedirect(

@@ -13,7 +13,7 @@ PostStatus = enum(
     VISIBLE="1",
     CLOSED="2")
 post_status_choices = [
-    (PostStatus.DRAFT,     _("Draft")),
-    (PostStatus.VISIBLE,   _("Visible")),
-    (PostStatus.CLOSED,    _("Closed")),
+    (PostStatus.DRAFT,      _("Draft")),
+    (PostStatus.VISIBLE,    _("Visible")),
+    (PostStatus.CLOSED,     _("Closed")),
 ]

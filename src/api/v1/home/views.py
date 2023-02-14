@@ -74,8 +74,7 @@ class FAQDetailsViewSet(APIView):
         # ---------------------------------------------------------------------
         faq = get_object_or_None(
             FAQ,
-            pk=faq_id,
-        )
+            pk=faq_id)
 
         if not faq:
             return Response({
@@ -154,8 +153,7 @@ class ContactUsViewSet(APIView):
             from_name = "{name} (registered as {account_name} <{account_email}>".format(
                 name=name,
                 account_name=request.user.get_full_name(),
-                account_email=request.user.email,
-                )
+                account_email=request.user.email)
         else:
             from_name = name
 

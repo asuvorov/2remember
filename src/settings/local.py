@@ -2,12 +2,14 @@
 from decouple import config
 
 # pylint: disable=wildcard-import
+# pylint: disable=unused-wildcard-import
 from .base import *
 
 
 # -----------------------------------------------------------------------------
-# --- Override Settings here
-DEBUG = config("DEBUG", default=False, cast=bool)
+# --- Override Settings here.
+# -----------------------------------------------------------------------------
+DEBUG = True
 
 DATABASES = {
     "default": {

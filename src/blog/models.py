@@ -62,8 +62,7 @@ class Post(CommentMixin, RatingMixin, ViewMixin, TimeStampedModel):
         related_name="posted_posts",
         verbose_name=_("Post Author"),
         help_text=_("Post Author"))
-    avatar = models.ImageField(
-        upload_to=blog_directory_path)
+    avatar = models.ImageField(upload_to=blog_directory_path)
 
     title = models.CharField(
         db_index=True,

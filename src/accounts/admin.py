@@ -243,8 +243,7 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
             current_order_count = Team.objects.count()
             db_field.default = current_order_count
 
-        return super().formfield_for_dbfield(
-            db_field, **kwargs)
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
 admin.site.register(Team, TeamAdmin)
 
@@ -293,7 +292,6 @@ class TeamMemberAdmin(admin.ModelAdmin):
             current_order_count = TeamMember.objects.count()
             db_field.default = current_order_count
 
-        return super().formfield_for_dbfield(
-            db_field, **kwargs)
+        return super().formfield_for_dbfield(db_field, **kwargs)
 
 admin.site.register(TeamMember, TeamMemberAdmin)

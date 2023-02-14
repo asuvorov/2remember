@@ -76,8 +76,7 @@ class BlogArchiveViewSet(APIView):
         posts = Post.objects.filter(
             status=PostStatus.VISIBLE,
             created__year=year,
-            created__month=month,
-        )
+            created__month=month)
 
         for post in posts:
             data.append({
@@ -136,8 +135,7 @@ class PostPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         post = get_object_or_None(
             Post,
-            id=post_id,
-        )
+            id=post_id)
 
         if not post:
             return Response({
@@ -202,8 +200,7 @@ class PostCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         post = get_object_or_None(
             Post,
-            id=post_id,
-        )
+            id=post_id)
 
         if not post:
             return Response({

@@ -17,8 +17,7 @@ from ddcore.Utilities import (
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @exception
 def insert_seo_model_instance_metadata(
-        path, title, description, keywords, heading,
-        object_id, content_type_id):
+        path, title, description, keywords, heading, object_id, content_type_id):
     """Insert SEO Model Instance Metadata."""
     with connection.cursor() as cursor:
         query = """
@@ -68,8 +67,7 @@ def insert_seo_model_instance_metadata(
 
 @exception
 def update_seo_model_instance_metadata(
-        path, title, description, keywords, heading,
-        object_id, content_type_id):
+        path, title, description, keywords, heading, object_id, content_type_id):
     """Update SEO Model Instance Metadata."""
     with connection.cursor() as cursor:
         query = """

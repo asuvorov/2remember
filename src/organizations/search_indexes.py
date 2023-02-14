@@ -22,10 +22,8 @@ class OrganizationIndex(indexes.SearchIndex, indexes.Indexable):
         indexed=False)
 
     # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author")
-    name = indexes.CharField(
-        model_attr="name")
+    author = indexes.CharField(model_attr="author")
+    name = indexes.CharField(model_attr="name")
     description = indexes.CharField(
         model_attr="description",
         default="")
@@ -40,17 +38,15 @@ class OrganizationIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr="email",
         default="")
 
-    created = indexes.DateTimeField(
-        model_attr="created")
+    created = indexes.DateTimeField(model_attr="created")
 
     def get_model(self):
         """Docstring."""
         return Organization
 
     def index_queryset(self, using=None):
-        """Used when the entire Index for Model is updated."""
+        """Used, when the entire Index for Model is updated."""
         return self.get_model().objects.filter(
             is_deleted=False,
             is_hidden=False,
-            created__lte=datetime.date.today(),
-            )
+            created__lte=datetime.date.today())

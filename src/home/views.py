@@ -173,16 +173,15 @@ def faq_edit(request, faq_id):
     # -------------------------------------------------------------------------
     faq = get_object_or_404(
         FAQ,
-        id=faq_id,
-    )
+        id=faq_id)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
         request.POST or None, request.FILES or None,
-        user=request.user, instance=faq,
-        )
+        user=request.user,
+        instance=faq)
 
     if request.method == "POST":
         if form.is_valid():
