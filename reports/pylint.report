@@ -253,7 +253,7 @@ setup.py:27:9: C0103: Variable name "p" doesn't conform to snake_case naming sty
 setup.py:27:12: W0612: Unused variable 'directories' (unused-variable)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.settings.base:[209:252]
-==src.settings.local:[86:129]
+==src.settings.local:[87:130]
 LOGGING = {
     "version":                      1,
     "disable_existing_loggers":     False,
@@ -323,25 +323,24 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[22:41]
 ==src.events.decorators:[115:133]
-        Event,
-        Q(organization=None) |
-        Q(organization__is_hidden=False) |
-        Q(
-            Q(organization__pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True
-                )) |
-            Q(organization__pk__in=request.user
-                .organization_group_members.all().values_list(
-                    "organization_id", flat=True
-                )),
-            organization__is_hidden=True,
-        ),
-        id=event_id,
-        )
- (duplicate-code)
+                    Event,
+                    Q(organization=None) |
+                    Q(organization__is_hidden=False) |
+                    Q(
+                        Q(organization__pk__in=OrganizationStaff
+                            .objects.filter(
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True
+                            )) |
+                        Q(organization__pk__in=request.user
+                            .organization_group_members.all().values_list(
+                                "organization_id", flat=True
+                            )),
+                        organization__is_hidden=True,
+                    ),
+                    id=event_id,
+                    ) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.views:[1133:1151]
 ==src.events.helpers:[23:41]
@@ -390,7 +389,9 @@ setup.py:1:0: R0801: Similar lines in 2 files
                     [_("This Field is required.")])
 
                 del self.cleaned_data["alt_person_phone"]
- (duplicate-code)
+
+        # ---------------------------------------------------------------------
+        # --- Validate `recurrence` Field (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[87:103]
 ==src.events.helpers:[23:39]
@@ -470,18 +471,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
         #
-        #            MEDIA_ROOT/challenges/<id>/avatars/<filename>
+        #            MEDIA_ROOT/organizations/<id>/avatars/<filename>
         #
         # --- As long as the uploading Path is being generated before
-        #     the Challenge Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Challenge looks like:
+        #     the Organization Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Organization looks like:
         #
-        #            MEDIA_ROOT/challenges/None/avatars/<filename>
+        #            MEDIA_ROOT/organizations/None/avatars/<filename>
         #
         # --- To fix this:
         #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Challenge Avatar Object;
-        #     3. Save the Challenge Instance. Now the Avatar Image in the
+        #     2. Assign the Avatar File Content to the Organization Avatar Object;
+        #     3. Save the Organization Instance. Now the Avatar Image in the
         #        correct Path;
         #     4. Delete previous Avatar File;
         #
@@ -513,21 +514,21 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[21:36]
 ==src.organizations.views:[78:93]
-        Q(is_hidden=False) |
-        Q(
-            Q(pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True
-                )) |
-            Q(pk__in=request.user
-                .organization_group_members
-                .all().values_list(
-                    "organization_id", flat=True
-                )),
-            is_hidden=True,
-        ), (duplicate-code)
+            Q(is_hidden=False) |
+            Q(
+                Q(pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(pk__in=request.user
+                    .organization_group_members
+                    .all().values_list(
+                        "organization_id", flat=True
+                    )),
+                is_hidden=True,
+            ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.invites.views:[117:130]
 ==src.events.decorators:[27:40]
@@ -645,31 +646,31 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[112:123]
 ==src.organizations.views:[80:91]
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )), (duplicate-code)
+            Q(pk__in=OrganizationStaff
+                .objects.filter(
+                    member=request.user,
+                ).values_list(
+                    "organization_id", flat=True
+                )) |
+            Q(pk__in=request.user
+                .organization_group_members
+                .all().values_list(
+                    "organization_id", flat=True
+                )), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.organizations.decorators:[74:85]
 ==src.organizations.views:[82:93]
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ), (duplicate-code)
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True
+                            )) |
+                        Q(pk__in=request.user
+                            .organization_group_members
+                            .all().values_list(
+                                "organization_id", flat=True
+                            )),
+                        is_hidden=True,
+                    ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.forms:[172:183]
 ==src.organizations.forms:[104:115]
@@ -687,16 +688,16 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[116:126]
 ==src.events.helpers:[23:33]
-            Q(organization=None) |
-            Q(organization__is_hidden=False) |
-            Q(
-                Q(organization__pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(organization__pk__in=request.user (duplicate-code)
+                    Q(organization=None) |
+                    Q(organization__is_hidden=False) |
+                    Q(
+                        Q(organization__pk__in=OrganizationStaff
+                            .objects.filter(
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True
+                            )) |
+                        Q(organization__pk__in=request.user (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[56:74]
 ==src.api.v1.invites.views:[116:134]
@@ -812,19 +813,19 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[57:70]
 ==src.events.decorators:[27:40]
-        Event,
-        Q(
-            Q(organization=None) &
-            Q(author=request.user),
-        ) |
-        Q(
-            Q(organization__pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True
-                )),
-        ), (duplicate-code)
+                Event,
+                Q(
+                    Q(organization=None) &
+                    Q(author=request.user),
+                ) |
+                Q(
+                    Q(organization__pk__in=OrganizationStaff
+                        .objects.filter(
+                            member=request.user,
+                        ).values_list(
+                            "organization_id", flat=True
+                        )),
+                ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.models:[197:227]
 ==src.events.models:[870:900]
@@ -837,18 +838,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
         #
-        #            MEDIA_ROOT/challenges/<id>/avatars/<filename>
+        #            MEDIA_ROOT/blog/<id>/avatars/<filename>
         #
         # --- As long as the uploading Path is being generated before
-        #     the Challenge Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Challenge looks like:
+        #     the Blog Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Blog looks like:
         #
-        #            MEDIA_ROOT/challenges/None/avatars/<filename>
+        #            MEDIA_ROOT/blog/None/avatars/<filename>
         #
         # --- To fix this:
         #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Challenge Avatar Object;
-        #     3. Save the Challenge Instance. Now the Avatar Image in the
+        #     2. Assign the Avatar File Content to the Blog Avatar Object;
+        #     3. Save the Blog Instance. Now the Avatar Image in the
         #        correct Path;
         #     4. Delete previous Avatar File;
         #
@@ -882,15 +883,16 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[58:68]
 ==src.organizations.decorators:[37:46]
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )),
-                id=organization_id,
-                is_deleted=False,
-                ) (duplicate-code)
+        Q(pk__in=OrganizationStaff
+            .objects.filter(
+                member=request.user,
+            ).values_list(
+                "organization_id", flat=True
+            )),
+        id=organization_id,
+        is_deleted=False,
+        )
+ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[114:123]
 ==src.organizations.decorators:[74:83]
@@ -920,7 +922,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.models:[901:926]
 ==src.organizations.models:[370:405]
-                storage.delete(avatar.file.name)
+            storage.delete(avatar.file.name)
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -932,7 +934,6 @@ setup.py:1:0: R0801: Similar lines in 2 files
             related_invites = Invite.objects.filter(
                 content_type=content_type,
                 object_id=self.id)
-
             related_invites.delete()
 
         except Exception as exc:
@@ -943,7 +944,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
 
 # -----------------------------------------------------------------------------
-# --- Event Model Mixin.
+# --- Organization Model Mixin.
+# -----------------------------------------------------------------------------
+
+
+# =============================================================================
+# ===
+# === ORGANIZATION STAFF
+# ===
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Organization Staff Manager.
 # ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.models:[87:99]
@@ -959,7 +971,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
         help_text=_("Hashtag"))
 
     # -------------------------------------------------------------------------
-    # --- Address & Phone Number (duplicate-code)
+    # --- Flags (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.search_indexes:[17:27]
 ==src.events.search_indexes:[21:31]
@@ -1011,9 +1023,11 @@ setup.py:1:0: R0801: Similar lines in 2 files
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- USER PRIVACY MEMBERS FORM
-# ----------------------------------------------------------------------------- (duplicate-code)
+# =============================================================================
+# ===
+# === NEWSLETTER CREATE FORM
+# ===
+# ============================================================================= (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.forms:[198:220]
 ==src.app.forms:[94:118]
@@ -1036,11 +1050,9 @@ setup.py:1:0: R0801: Similar lines in 2 files
         return instance
 
 
-# =============================================================================
-# ===
-# === PHONE FORM
-# ===
-# ============================================================================= (duplicate-code)
+# -----------------------------------------------------------------------------
+# --- USER PROFILE EDIT FORM
+# ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.app.forms:[209:233]
 ==src.home.forms:[88:105]
@@ -1116,13 +1128,13 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.views:[1079:1086]
 ==src.events.models:[1719:1726]
-        event__status__in=[
-            EventStatus.UPCOMING,
-            EventStatus.COMPLETE,
-        ],
-        status__in=[
-            ParticipationStatus.CONFIRMATION_DENIED,
-            ParticipationStatus.CANCELLED_BY_ADMIN, (duplicate-code)
+            event__status__in=[
+                EventStatus.UPCOMING,
+                EventStatus.COMPLETE,
+            ],
+            status__in=[
+                ParticipationStatus.CONFIRMATION_DENIED,
+                ParticipationStatus.CANCELLED_BY_ADMIN, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.views:[1175:1185]
 ==src.events.models:[1688:1696]
@@ -1232,11 +1244,10 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
     def save(self, commit=True):
         """Docstring."""
-        instance = super().save(commit=False)
- (duplicate-code)
+        instance = super().save(commit=False) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.settings.base:[262:269]
-==src.settings.local:[158:165]
+==src.settings.local:[159:166]
             ],
             "level":                "ERROR",
             "propagate":            False,
@@ -1296,22 +1307,22 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[32:38]
 ==src.events.helpers:[25:31]
-                Q(
-                    Q(organization__pk__in=OrganizationStaff
-                        .objects.filter(
-                            member=request.user,
-                        ).values_list(
-                            "organization_id", flat=True (duplicate-code)
+            Q(
+                Q(organization__pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.views:[174:182]
 ==src.api.v1.invites.views:[130:138]
-            id=event_id,
-        )
+                id=event_id,
+                )
 
-        if not event:
-            return Response({
-                "message":      _("Event not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
+            if not event:
+                return Response({
+                    "message":      _("Event not found."),
+                }, status=status.HTTP_404_NOT_FOUND)
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[25:31]
@@ -1424,39 +1435,16 @@ setup.py:1:0: R0801: Similar lines in 2 files
     image_tag.short_description = "Avatar"
     image_tag.allow_tags = True
 
-    def event_url(self):
+    # -------------------------------------------------------------------------
+    # --- Signals
+    def pre_save(self, **kwargs):
         """Docstring."""
+
+    def post_save(self, created, **kwargs):
+        """Docstring."""
+        # ---------------------------------------------------------------------
+        # --- Ping Google
         try: (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.settings.base:[139:146]
-==src.settings.local:[59:86]
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-)
-
-
-###############################################################################
-### DJANGO CACHING                                                          ###
-###############################################################################
-# CACHES = {
-#     "default": {
-#         "BACKEND":  config("CACHE_BACKEND", default=""),
-#         "LOCATION": config("CACHE_LOCATION", default=""),
-#         "TIMEOUT":  config("CACHE_TIMEOUT", default=""),
-#     }
-# }
-
-# CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="")
-# CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default="")
-# CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="")
-
-
-###############################################################################
-### DJANGO LOGGING                                                          ###
-############################################################################### (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[58:81]
 ==src.organizations.decorators:[45:65]
@@ -1471,17 +1459,14 @@ setup.py:1:0: R0801: Similar lines in 2 files
     return _check
 
 
-def event_access_check_required(func):
-    """Restrict Access to the Event Details."""
+def organization_access_check_required(func):
+    """Restrict Access to the Organization Details.
+
+    Only for the Organization Staff and Group Members.
+    """
     def _check(request, *args, **kwargs):
         # ---------------------------------------------------------------------
-        # --- Retrieve the Event with the Organization Privacy Settings:
-        #     1. Organization is not set;
-        #     2. Organization is set to Public;
-        #     3. Organization is set to Private, and:
-        #        a) User is the Organization Staff Member (and/or Author);
-        #        b) User is the Organization Group Member.
-        # ---------------------------------------------------------------------
+        # --- Retrieve the Organization.
         slug = kwargs.get("slug", "") (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[58:64]
@@ -1505,21 +1490,21 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.organizations.decorators:[99:114]
 ==src.organizations.views:[78:93]
-                    Q(is_hidden=False) |
-                    Q(
-                        Q(pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(pk__in=request.user
-                            .organization_group_members
-                            .all().values_list(
-                                "organization_id", flat=True
-                            )),
-                        is_hidden=True,
-                    ), (duplicate-code)
+            Q(is_hidden=False) |
+            Q(
+                Q(pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(pk__in=request.user
+                    .organization_group_members
+                    .all().values_list(
+                        "organization_id", flat=True
+                    )),
+                is_hidden=True,
+            ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.invites.admin:[70:76]
 ==src.organizations.admin:[184:190]
@@ -1573,7 +1558,10 @@ setup.py:1:0: R0801: Similar lines in 2 files
             self.fields["contact"].initial = "he"
 
         # ---------------------------------------------------------------------
-        # --- Modify Fields (duplicate-code)
+        # --- Recurrence.
+
+        # ---------------------------------------------------------------------
+        # --- Date/Time. (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.search_indexes:[16:24]
 ==src.organizations.search_indexes:[16:24]
@@ -1635,11 +1623,11 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.views:[1054:1059]
 ==src.events.models:[1688:1693]
-            event__status=EventStatus.COMPLETE,
-            status__in=[
-                ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                ParticipationStatus.ACKNOWLEDGED, (duplicate-code)
+        event__status=EventStatus.COMPLETE,
+        status__in=[
+            ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
+            ParticipationStatus.ACKNOWLEDGED, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.views:[916:921]
 ==src.api.v1.invites.views:[152:157]
@@ -1659,7 +1647,12 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
         return instance
 
- (duplicate-code)
+
+# =============================================================================
+# ===
+# === SOCIAL LINK FORM & FORMSET
+# ===
+# ============================================================================= (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.forms:[303:318]
 ==src.app.forms:[283:295]
@@ -1674,7 +1667,10 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
         return instance
 
- (duplicate-code)
+
+# -----------------------------------------------------------------------------
+# --- RESET PASSWORD FORM
+# ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.forms:[19:27]
 ==src.home.forms:[64:72]
@@ -1767,21 +1763,15 @@ setup.py:1:0: R0801: Similar lines in 2 files
     image_tag.short_description = "Avatar"
     image_tag.allow_tags = True
 
-    def email_notify_admin_org_created(self, request=None):
-        """Send Notification to the Organization Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content
-
-        # ---------------------------------------------------------------------
-        # --- Send Email
-
-    def email_notify_alt_person_org_created(self, request=None):
-        """Send Notification to the Organization alternative Contact Person.""" (duplicate-code)
+    # -------------------------------------------------------------------------
+    # --- Signals
+    def pre_save(self, **kwargs):
+        """Docstring.""" (duplicate-code)
 
 
 Report
 ======
-5057 statements analysed.
+5068 statements analysed.
 
 Statistics by type
 ------------------
@@ -1789,18 +1779,18 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |170    |170        |=          |100.00      |0.00     |
+|module   |171    |171        |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |222    |222        |=          |81.98       |0.00     |
+|class    |224    |224        |=          |82.14       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |400    |400        |=          |100.00      |0.00     |
+|method   |402    |402        |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 |function |151    |151        |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 
 
 
-20400 lines have been analyzed
+20434 lines have been analyzed
 
 Raw metrics
 -----------
@@ -1808,13 +1798,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |10041  |49.22 |10043    |-2.00      |
+|code      |10052  |49.19 |10052    |=          |
 +----------+-------+------+---------+-----------+
-|docstring |3577   |17.53 |3563     |+14.00     |
+|docstring |3578   |17.51 |3579     |-1.00      |
 +----------+-------+------+---------+-----------+
-|comment   |3433   |16.83 |3429     |+4.00      |
+|comment   |3442   |16.84 |3442     |=          |
 +----------+-------+------+---------+-----------+
-|empty     |3349   |16.42 |3349     |=          |
+|empty     |3362   |16.45 |3358     |+4.00      |
 +----------+-------+------+---------+-----------+
 
 
@@ -1838,13 +1828,13 @@ Messages by category
 +-----------+-------+---------+-----------+
 |type       |number |previous |difference |
 +===========+=======+=========+===========+
-|convention |67     |67       |67         |
+|convention |67     |70       |70         |
 +-----------+-------+---------+-----------+
-|refactor   |144    |144      |144        |
+|refactor   |143    |143      |143        |
 +-----------+-------+---------+-----------+
 |warning    |65     |65       |65         |
 +-----------+-------+---------+-----------+
-|error      |33     |35       |35         |
+|error      |33     |33       |33         |
 +-----------+-------+---------+-----------+
 
 
@@ -1855,7 +1845,7 @@ Messages
 +-------------------------------------+------------+
 |message id                           |occurrences |
 +=====================================+============+
-|duplicate-code                       |95          |
+|duplicate-code                       |94          |
 +-------------------------------------+------------+
 |unused-variable                      |30          |
 +-------------------------------------+------------+
@@ -1948,5 +1938,5 @@ Messages
 
 
 ------------------------------------------------------------------
-Your code has been rated at 9.13/10 (previous run: 9.11/10, +0.02)
+Your code has been rated at 9.13/10 (previous run: 9.13/10, +0.01)
 
