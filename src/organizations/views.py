@@ -233,6 +233,7 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
+
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -244,8 +245,7 @@ def organization_create(request):
             staff_member = OrganizationStaff(
                 author=organization.author,
                 organization=organization,
-                member=organization.author,
-                )
+                member=organization.author)
             staff_member.save()
 
             # -----------------------------------------------------------------
@@ -293,8 +293,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     organization = get_object_or_404(
         Organization,
-        slug=slug,
-        )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -307,12 +306,10 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     upcoming_events = Event.objects.filter(
         organization=organization,
-        status=EventStatus.UPCOMING,
-    )
+        status=EventStatus.UPCOMING)
     completed_events = Event.objects.filter(
         organization=organization,
-        status=EventStatus.COMPLETE,
-    )
+        status=EventStatus.COMPLETE)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization Social Links.
@@ -321,8 +318,7 @@ def organization_details(request, slug=None):
 
     social_links = SocialLink.objects.filter(
         content_type=ContentType.objects.get_for_model(organization),
-        object_id=organization.id
-    )
+        object_id=organization.id)
 
     for social_link in social_links:
         if social_link.social_app == SocialApp.TWITTER:
@@ -337,15 +333,12 @@ def organization_details(request, slug=None):
     if request.user.is_authenticated():
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
-        is_complained = organization.is_complained_by_user(
-            request.user)
+        is_complained = organization.is_complained_by_user(request.user)
 
         if not is_complained:
             # -----------------------------------------------------------------
             # --- Retrieve User's Participations to the Organization's Events.
-            event_ids = completed_events.values_list(
-                "pk", flat=True
-            )
+            event_ids = completed_events.values_list("pk", flat=True)
 
             try:
                 participation = Participation.objects.filter(
@@ -422,8 +415,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     organization = get_object_or_404(
         Organization,
-        slug=slug,
-        )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -452,8 +444,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     organization = get_object_or_404(
         Organization,
-        slug=slug,
-        )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -481,8 +472,7 @@ def organization_edit(request, slug=None):
     """Edit Organization."""
     organization = get_object_or_404(
         Organization,
-        slug=slug,
-        )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -502,8 +492,7 @@ def organization_edit(request, slug=None):
         request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
-            object_id=organization.id
-            ))
+            object_id=organization.id))
 
     if request.method == "POST":
         if (
@@ -524,6 +513,7 @@ def organization_edit(request, slug=None):
             #     ).delete()
 
             social_links = formset_social.save(commit=True)
+
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -539,15 +529,13 @@ def organization_edit(request, slug=None):
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id,
-                        )
+                        object_id=organization.id)
                 elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id,
-                        )
+                        object_id=organization.id)
 
                 tmp_file.delete()
 
@@ -560,15 +548,13 @@ def organization_edit(request, slug=None):
                     AttachedVideoUrl.objects.create(
                         url=link,
                         content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id,
-                        )
+                        object_id=organization.id)
                 elif url:
                     AttachedUrl.objects.create(
                         url=url,
                         title=get_website_title(url) or "",
                         content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id,
-                        )
+                        object_id=organization.id)
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications.
@@ -605,8 +591,7 @@ def organization_populate_newsletter(request, slug=None):
     """Organization, populate Newsletter."""
     organization = get_object_or_404(
         Organization,
-        slug=slug,
-        )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -659,12 +644,11 @@ def organization_iframe_upcoming(request, organization_id):
     """Organization iFrame for upcoming Events."""
     organization = get_object_or_404(
         Organization,
-        pk=organization_id,
-        )
+        pk=organization_id)
     events_upcoming = Event.objects.filter(
         status=EventStatus.UPCOMING,
         organization=organization,
-        ).order_by("created")
+    ).order_by("created")
 
     return render(
         request, "organizations/fragments/organization-iframe-upcoming.html", {
@@ -678,12 +662,11 @@ def organization_iframe_complete(request, organization_id):
     """Organization iFrame for completed Events."""
     organization = get_object_or_404(
         Organization,
-        pk=organization_id,
-        )
+        pk=organization_id)
     events_completed = Event.objects.filter(
         status=EventStatus.COMPLETE,
         organization=organization,
-        ).order_by("created")
+    ).order_by("created")
 
     return render(
         request, "organizations/fragments/organization-iframe-complete.html", {

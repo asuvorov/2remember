@@ -102,8 +102,7 @@ class InviteListViewSet(APIView):
         # ---------------------------------------------------------------------
         invitee = get_object_or_None(
             User,
-            id=invitee_id,
-        )
+            id=invitee_id)
 
         if not invitee:
             return Response({
@@ -129,7 +128,7 @@ class InviteListViewSet(APIView):
                         )),
                 ),
                 id=event_id,
-                )
+            )
 
             if not event:
                 return Response({
@@ -158,7 +157,7 @@ class InviteListViewSet(APIView):
                     )),
                 id=organization_id,
                 is_deleted=False,
-                )
+            )
 
             if not organization:
                 return Response({
@@ -175,8 +174,7 @@ class InviteListViewSet(APIView):
             org_group = get_object_or_None(
                 OrganizationGroup,
                 id=org_group_id,
-                organization=organization,
-            )
+                organization=organization)
 
             if not org_group:
                 return Response({
@@ -193,8 +191,7 @@ class InviteListViewSet(APIView):
             inviter=request.user,
             invitee=invitee,
             content_type=content_type,
-            object_id=object_id
-        )
+            object_id=object_id)
         invite.status = InviteStatus.NEW
         invite.invitation_text = invitation_text
         invite.save()
@@ -279,8 +276,7 @@ class InviteArchiveViewSet(APIView):
                 status=InviteStatus.NEW,
             )
 
-            invites.update(
-                is_archived_for_inviter=True)
+            invites.update(is_archived_for_inviter=True)
 
         return Response({
             "message":      _("Successfully archived the Invitations."),
@@ -333,8 +329,7 @@ class InviteAcceptViewSet(APIView):
         invite = get_object_or_None(
             Invite,
             id=invite_id,
-            invitee=request.user,
-        )
+            invitee=request.user)
 
         if not invite:
             return Response({
@@ -357,8 +352,7 @@ class InviteAcceptViewSet(APIView):
             # --- Create a Participation.
             participation, created = Participation.objects.get_or_create(
                 user=invite.invitee,
-                event=invite.content_object,
-            )
+                event=invite.content_object)
             participation.application_text =\
                 "Joined by Invitation from " + invite.inviter.get_full_name()
             participation.date_created = datetime.datetime.now()
@@ -373,8 +367,7 @@ class InviteAcceptViewSet(APIView):
                 OrganizationStaff.objects.get_or_create(
                     author=invite.inviter,
                     organization=invite.content_object,
-                    member=invite.invitee,
-                    )
+                    member=invite.invitee)
 
             invite.content_object.subscribers.add(invite.invitee)
             invite.content_object.save()
@@ -454,8 +447,7 @@ class InviteRejectViewSet(APIView):
         invite = get_object_or_None(
             Invite,
             id=invite_id,
-            invitee=request.user,
-        )
+            invitee=request.user)
 
         if not invite:
             return Response({
@@ -536,8 +528,7 @@ class InviteRevokeViewSet(APIView):
         invite = get_object_or_None(
             Invite,
             id=invite_id,
-            inviter=request.user,
-        )
+            inviter=request.user)
 
         if not invite:
             return Response({

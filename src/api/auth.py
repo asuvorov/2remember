@@ -1,4 +1,5 @@
 """Define Authorization."""
+
 from rest_framework.authentication import SessionAuthentication
 
 
@@ -13,5 +14,5 @@ class CsrfExemptSessionAuthentication(SessionAuthentication):
     """Docstring."""
 
     def enforce_csrf(self, request):
-        """Don't perform the CSRF check previously happening."""
+        """Don't perform the CSRF Check previously happening."""
         return

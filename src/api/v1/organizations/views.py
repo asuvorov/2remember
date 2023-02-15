@@ -189,8 +189,7 @@ class OrganizationStaffMemberEditViewSet(APIView):
         organization_staff_member = get_object_or_None(
             OrganizationStaff,
             pk=member_id,
-            organization_id=organization_id,
-        )
+            organization_id=organization_id)
 
         if not organization_staff_member:
             return Response({
@@ -270,8 +269,7 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
         organization_staff_member = get_object_or_None(
             OrganizationStaff,
             pk=member_id,
-            organization_id=organization_id,
-        )
+            organization_id=organization_id)
 
         if not organization_staff_member:
             return Response({
@@ -342,9 +340,7 @@ class OrganizationGroupListViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Organization Group List.
         # ---------------------------------------------------------------------
-        queryset = self.get_queryset().filter(
-            organization_id=organization_id,
-        )
+        queryset = self.get_queryset().filter(organization_id=organization_id)
 
         data = self.serializer_class(
             queryset,
@@ -411,8 +407,7 @@ class OrganizationGroupListViewSet(APIView):
         # ---------------------------------------------------------------------
         organization = get_object_or_None(
             Organization,
-            id=organization_id,
-        )
+            id=organization_id)
 
         if not organization:
             return Response({
@@ -426,8 +421,7 @@ class OrganizationGroupListViewSet(APIView):
             author=request.user,
             name=group_name,
             description=group_description,
-            organization=organization,
-        )
+            organization=organization)
 
         template = loader.get_template(
             "organizations/fragments/organization-groups-adm.html")
@@ -508,8 +502,7 @@ class OrganizationGroupRemoveViewSet(APIView):
         organization_group = get_object_or_None(
             OrganizationGroup,
             pk=group_id,
-            organization_id=organization_id,
-        )
+            organization_id=organization_id)
 
         if not organization_group:
             return Response({
@@ -598,8 +591,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
         organization_group = get_object_or_None(
             OrganizationGroup,
             pk=group_id,
-            organization_id=organization_id,
-        )
+            organization_id=organization_id)
 
         if not organization_group:
             return Response({
@@ -609,8 +601,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
         # ---------------------------------------------------------------------
         organization_group_member = get_object_or_None(
             User,
-            pk=member_id,
-        )
+            pk=member_id)
 
         if not organization_group_member:
             return Response({
@@ -677,8 +668,7 @@ class OrganizationSubscribeViewSet(APIView):
         # ---------------------------------------------------------------------
         organization = get_object_or_None(
             Organization,
-            id=organization_id,
-        )
+            id=organization_id)
 
         if not organization:
             return Response({

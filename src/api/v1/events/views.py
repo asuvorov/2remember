@@ -95,8 +95,7 @@ class EventUpcomingViewSet(APIView):
             status=EventStatus.UPCOMING,
             start_date__gte=datetime.date.today(),
             start_date__year=year,
-            start_date__month=month,
-        )
+            start_date__month=month)
 
         for event in events:
             data.append({
@@ -172,8 +171,7 @@ class EventCreateViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -258,8 +256,7 @@ class EventCompleteViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -348,8 +345,7 @@ class EventCloneViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -477,8 +473,7 @@ class EventCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -571,8 +566,7 @@ class ParticipationPostViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -587,16 +581,14 @@ class ParticipationPostViewSet(APIView):
         if role_id:
             role = get_object_or_None(
                 Role,
-                id=role_id,
-            )
+                id=role_id)
 
         # ---------------------------------------------------------------------
         # --- Create/Retrieve the Participation
         # ---------------------------------------------------------------------
         participation, created = Participation.objects.get_or_create(
             user=request.user,
-            event=event,
-        )
+            event=event)
         participation.application_text = application_text
         participation.date_created = datetime.datetime.now()
 
@@ -700,8 +692,7 @@ class ParticipationWithdrawViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -714,8 +705,7 @@ class ParticipationWithdrawViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             user=request.user,
-            event=event,
-            )
+            event=event)
 
         if not participation:
             return Response({
@@ -809,8 +799,7 @@ class ParticipationRemoveViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -823,8 +812,7 @@ class ParticipationRemoveViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             id=participation_id,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -911,8 +899,7 @@ class ParticipationAcceptApplicationViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -925,8 +912,7 @@ class ParticipationAcceptApplicationViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             id=participation_id,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -1033,8 +1019,7 @@ class ParticipationRejectApplicationViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -1047,8 +1032,7 @@ class ParticipationRejectApplicationViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             id=participation_id,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -1141,8 +1125,7 @@ class SelfreflectionSubmitViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -1155,8 +1138,7 @@ class SelfreflectionSubmitViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             user=request.user,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -1270,8 +1252,7 @@ class SelfreflectionAcceptViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -1284,8 +1265,7 @@ class SelfreflectionAcceptViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             id=participation_id,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -1301,15 +1281,13 @@ class SelfreflectionAcceptViewSet(APIView):
         # --- Rate the Participant
         # ---------------------------------------------------------------------
         if participant_rating:
-            content_type = ContentType.objects.get_for_model(
-                participation.user.profile)
+            content_type = ContentType.objects.get_for_model(participation.user.profile)
             object_id = participation.user.profile.id
 
             rating, created = Rating.objects.get_or_create(
                 author=request.user,
                 content_type=content_type,
-                object_id=object_id,
-            )
+                object_id=object_id)
             rating.rating = int(participant_rating)
             rating.review_text = acknowledgement_text
             rating.save()
@@ -1396,8 +1374,7 @@ class SelfreflectionRejectViewSet(APIView):
         # ---------------------------------------------------------------------
         event = get_object_or_None(
             Event,
-            id=event_id,
-        )
+            id=event_id)
 
         if not event:
             return Response({
@@ -1410,8 +1387,7 @@ class SelfreflectionRejectViewSet(APIView):
         participation = get_object_or_None(
             Participation,
             id=participation_id,
-            event=event,
-        )
+            event=event)
 
         if not participation:
             return Response({
@@ -1419,8 +1395,7 @@ class SelfreflectionRejectViewSet(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
         participation.status = ParticipationStatus.WAITING_FOR_SELFREFLECTION
-        participation.selfreflection_rejection_text =\
-            selfreflection_rejection_text
+        participation.selfreflection_rejection_text = selfreflection_rejection_text
         participation.date_selfreflection_rejection = datetime.datetime.now()
         participation.save()
 

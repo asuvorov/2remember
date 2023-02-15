@@ -100,7 +100,7 @@ def tmp_upload(request):
             "files":    [result]
         }),
         content_type="application/json"
-        )
+    )
 
 
 @login_required
@@ -140,7 +140,7 @@ def remove_upload(request):
             "deleted":  found,
         }),
         content_type="application/json"
-        )
+    )
 
 
 @login_required
@@ -171,4 +171,4 @@ def remove_link(request):
             "deleted":  found,
         }),
         content_type="application/json"
-        )
+    )

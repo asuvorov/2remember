@@ -1,19 +1,18 @@
 """Define URL Paths."""
+
 from django.urls import (
     include,
     re_path)
 
-from .views import (
-    api_status,
-    api_version)
+from . import views
 
 
 urlpatterns = [
     re_path(r"^status/",
-        api_status,
+        views.api_status,
         name="api-status"),
     re_path(r"^version/",
-        api_version,
+        views.api_version,
         name="api-version"),
 
     re_path(r"^v1/", include("api.v1.urls")),

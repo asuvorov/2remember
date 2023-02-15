@@ -1,4 +1,5 @@
 """Define Models."""
+
 from django.utils.translation import gettext_lazy as _
 
 from ddcore import enum
@@ -192,19 +193,19 @@ Month = enum(
     NOVEMBER="11",
     DECEMBER="12")
 month_choices = [
-    (Month.NONE,            _("----------")),
-    (Month.JANUARY,         _("January")),
-    (Month.FEBRUARY,        _("February")),
-    (Month.MARCH,           _("March")),
-    (Month.APRIL,           _("April")),
-    (Month.MAY,             _("May")),
-    (Month.JUNE,            _("June")),
-    (Month.JULY,            _("July")),
-    (Month.AUGUST,          _("August")),
-    (Month.SEPTEMBER,       _("September")),
-    (Month.OCTOBER,         _("October")),
-    (Month.NOVEMBER,        _("November")),
-    (Month.DECEMBER,        _("December")),
+    (Month.NONE,        _("----------")),
+    (Month.JANUARY,     _("January")),
+    (Month.FEBRUARY,    _("February")),
+    (Month.MARCH,       _("March")),
+    (Month.APRIL,       _("April")),
+    (Month.MAY,         _("May")),
+    (Month.JUNE,        _("June")),
+    (Month.JULY,        _("July")),
+    (Month.AUGUST,      _("August")),
+    (Month.SEPTEMBER,   _("September")),
+    (Month.OCTOBER,     _("October")),
+    (Month.NOVEMBER,    _("November")),
+    (Month.DECEMBER,    _("December")),
 ]
 
 DayOfWeek = enum(
@@ -217,14 +218,14 @@ DayOfWeek = enum(
     FRIDAY="5",
     SATURDAY="6")
 day_of_week_choices = [
-    (DayOfWeek.NONE,          _("----------")),
-    (DayOfWeek.SUNDAY,        _("Sunday")),
-    (DayOfWeek.MONDAY,        _("Monday")),
-    (DayOfWeek.TUESDAY,       _("Tuesday")),
-    (DayOfWeek.WEDNESDAY,     _("Wednesday")),
-    (DayOfWeek.THURSDAY,      _("Thursday")),
-    (DayOfWeek.FRIDAY,        _("Friday")),
-    (DayOfWeek.SATURDAY,      _("Saturday")),
+    (DayOfWeek.NONE,        _("----------")),
+    (DayOfWeek.SUNDAY,      _("Sunday")),
+    (DayOfWeek.MONDAY,      _("Monday")),
+    (DayOfWeek.TUESDAY,     _("Tuesday")),
+    (DayOfWeek.WEDNESDAY,   _("Wednesday")),
+    (DayOfWeek.THURSDAY,    _("Thursday")),
+    (DayOfWeek.FRIDAY,      _("Friday")),
+    (DayOfWeek.SATURDAY,    _("Saturday")),
 ]
 
 day_of_month_choices = [(str(day), str(day)) for day in range(0, 32)]

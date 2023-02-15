@@ -1,6 +1,10 @@
+"""Clear Cache."""
+
 from django.conf import settings
 from django.core.cache import cache
-from django.core.management.base import BaseCommand, CommandError
+from django.core.management.base import (
+    BaseCommand,
+    CommandError)
 
 
 class Command(BaseCommand):

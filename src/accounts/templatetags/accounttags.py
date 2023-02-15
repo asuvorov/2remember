@@ -65,12 +65,12 @@ def check_privacy(request, account, flag_members, flag_admins):
             request.user.is_authenticated()):
         # --- Participants of the Events, the User participate in as well.
         event_ids = account.user_participations.confirmed().values_list(
-            "event_id", flat=True)
+            "event_id",
+            flat=True)
 
         participations = Participation.objects.filter(
             user=request.user,
-            event__pk__in=event_ids,
-        )
+            event__pk__in=event_ids)
 
         if participations.exists():
             # --- Return True.
@@ -153,11 +153,11 @@ def check_privacy(request, account, flag_members, flag_admins):
             request.user.is_authenticated()):
         # --- Admins of the Events, I participate(-d) in.
         event_ids = account.user_participations.confirmed().values_list(
-            "event_id", flat=True)
+            "event_id",
+            flat=True)
         events = Event.objects.filter(
             pk__in=event_ids,
-            author=request.user,
-            )
+            author=request.user)
 
         if events.exists():
             # --- Return True.
@@ -170,8 +170,7 @@ def check_privacy(request, account, flag_members, flag_admins):
         # --- Admins of the upcoming Events on the Platform.
         events = Event.objects.filter(
             author=request.user,
-            status=EventStatus.UPCOMING,
-            )
+            status=EventStatus.UPCOMING)
 
         if events.exists():
             # --- Return True.

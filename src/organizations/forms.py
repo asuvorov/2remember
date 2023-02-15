@@ -42,14 +42,12 @@ class CreateEditOrganizationForm(forms.ModelForm):
             "Members, invited by you, will be able to see the Organization's Activity and sign up "
             "for its Events.")
 
-    contact = forms.ChoiceField(
-        widget=forms.RadioSelect())
+    contact = forms.ChoiceField(widget=forms.RadioSelect())
 
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
         queryset=TemporaryFile.objects.all(),
-        required=False,
-    )
+        required=False)
     tmp_links = forms.CharField(
         label="Related Links",
         widget=forms.TextInput(

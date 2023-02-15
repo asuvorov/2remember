@@ -14,8 +14,7 @@ class OrganizationSitemap(Sitemap):
 
     def items(self):
         """Docstring."""
-        return Organization.objects.filter(
-            is_hidden=False)
+        return Organization.objects.filter(is_hidden=False)
 
     def lastmod(self, obj):
         """Docstring."""

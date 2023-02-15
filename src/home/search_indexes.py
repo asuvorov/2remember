@@ -20,16 +20,13 @@ class FAQIndex(indexes.SearchIndex, indexes.Indexable):
         indexed=False)
 
     # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author")
-    question = indexes.CharField(
-        model_attr="question")
+    author = indexes.CharField(model_attr="author")
+    question = indexes.CharField(model_attr="question")
     answer = indexes.CharField(
         model_attr="answer",
         default="")
 
-    created = indexes.DateTimeField(
-        model_attr="created")
+    created = indexes.DateTimeField(model_attr="created")
 
     def get_model(self):
         """Docstring."""

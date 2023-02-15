@@ -1,4 +1,5 @@
 """Define Serializers."""
+
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext as _
 
@@ -12,7 +13,7 @@ from accounts.models import UserProfile
 
 
 # -----------------------------------------------------------------------------
-# --- Authorization
+# --- Authorization.
 # -----------------------------------------------------------------------------
 class AuthTokenSerializer(serializers.Serializer):
     """Auth Token Serializer."""
@@ -32,27 +33,19 @@ class AuthTokenSerializer(serializers.Serializer):
 
             if user:
                 if not user.is_active:
-                    raise serializers.ValidationError(
-                        _("User Account is disabled."))
+                    raise serializers.ValidationError(_("User Account is disabled."))
 
                 attrs["user"] = user
 
                 return attrs
 
-            raise serializers.ValidationError(
-                _("Unable to login with provided Credentials."))
+            raise serializers.ValidationError(_("Unable to login with provided Credentials."))
 
-        raise serializers.ValidationError(
-            _("Must include \"username\" and \"password\""))
+        raise serializers.ValidationError(_("Must include \"username\" and \"password\""))
 
 
 # -----------------------------------------------------------------------------
-# --- Version
-# -----------------------------------------------------------------------------
-
-
-# -----------------------------------------------------------------------------
-# --- Autocomplete
+# --- Autocomplete.
 # -----------------------------------------------------------------------------
 class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
     """Autocomplete Member Serializer."""

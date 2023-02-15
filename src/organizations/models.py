@@ -80,8 +80,7 @@ class Organization(
         related_name="created_organizations",
         verbose_name=_("Author"),
         help_text=_("Organization Author"))
-    avatar = models.ImageField(
-        upload_to=organization_directory_path)
+    avatar = models.ImageField(upload_to=organization_directory_path)
 
     # -------------------------------------------------------------------------
     # --- Tags
@@ -150,8 +149,7 @@ class Organization(
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
-    is_alt_person = models.BooleanField(
-        default=False)
+    is_alt_person = models.BooleanField(default=False)
     alt_person_fullname = models.CharField(
         max_length=80, null=True, blank=True,
         verbose_name=_("Full Name"),
@@ -167,12 +165,9 @@ class Organization(
 
     # -------------------------------------------------------------------------
     # --- Flags
-    is_newly_created = models.BooleanField(
-        default=True)
-    is_hidden = models.BooleanField(
-        default=False)
-    is_deleted = models.BooleanField(
-        default=False)
+    is_newly_created = models.BooleanField(default=True)
+    is_hidden = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     objects = OrganizationManager()
 
@@ -225,7 +220,7 @@ class Organization(
         hours_worked = Event.objects.filter(
             status=EventStatus.COMPLETE,
             organization=self,
-            ).aggregate(Sum("duration"))
+        ).aggregate(Sum("duration"))
 
         return hours_worked["duration__sum"]
 
@@ -451,8 +446,7 @@ class OrganizationStaff(AttachmentMixin, CommentMixin, RatingMixin, ViewMixin, T
         verbose_name=_("Bio"),
         help_text=_("Short Bio"))
 
-    order = models.PositiveIntegerField(
-        default=0)
+    order = models.PositiveIntegerField(default=0)
 
     # -------------------------------------------------------------------------
     # --- Social Links

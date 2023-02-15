@@ -145,8 +145,7 @@ def post_details(request, slug):
     # -------------------------------------------------------------------------
     post = get_object_or_404(
         Post,
-        slug=slug,
-    )
+        slug=slug)
 
     if post.is_closed:
         raise Http404
@@ -170,15 +169,15 @@ def post_edit(request, slug):
     # -------------------------------------------------------------------------
     post = get_object_or_404(
         Post,
-        slug=slug,
-    )
+        slug=slug)
 
     if post.is_closed:
         raise Http404
 
     form = CreateEditPostForm(
         request.POST or None, request.FILES or None,
-        user=request.user, instance=post)
+        user=request.user,
+        instance=post)
 
     if request.method == "POST":
         if form.is_valid():
