@@ -23,16 +23,13 @@ class PostIndex(indexes.SearchIndex, indexes.Indexable):
         indexed=False)
 
     # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author")
-    title = indexes.CharField(
-        model_attr="title")
+    author = indexes.CharField(model_attr="author")
+    title = indexes.CharField(model_attr="title")
     content = indexes.CharField(
         model_attr="content",
         default="")
 
-    created = indexes.DateTimeField(
-        model_attr="created")
+    created = indexes.DateTimeField(model_attr="created")
 
     def get_model(self):
         """Docstring."""

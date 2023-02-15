@@ -30,8 +30,7 @@ class UserProfileIndex(indexes.SearchIndex, indexes.Indexable):
         model_attr="bio",
         default="")
 
-    created = indexes.DateTimeField(
-        model_attr="created")
+    created = indexes.DateTimeField(model_attr="created")
 
     def get_model(self):
         """Docstring."""

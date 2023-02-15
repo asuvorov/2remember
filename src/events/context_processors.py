@@ -18,15 +18,15 @@ from .choices import (
 def pb_event_choices(request):
     """Docstring."""
     return {
-        "EventStatus":             EventStatus,
-        "EventMode":               EventMode,
-        "EventCategory":           EventCategory,
+        "EventStatus":              EventStatus,
+        "EventMode":                EventMode,
+        "EventCategory":            EventCategory,
         "event_category_choices":   event_category_choices,
-        "EventColors":             EventColors,
+        "EventColors":              EventColors,
         "event_category_colors":    event_category_colors,
-        "EventIcons":              EventIcons,
+        "EventIcons":               EventIcons,
         "event_category_icons":     event_category_icons,
-        "EventImages":             EventImages,
+        "EventImages":              EventImages,
         "event_category_images":    event_category_images,
     }
 
@@ -34,8 +34,8 @@ def pb_event_choices(request):
 def pb_participation_choices(request):
     """Docstring."""
     return {
-        "ParticipationStatus":         ParticipationStatus,
-        "ParticipationRemoveMode":    ParticipationRemoveMode,
+        "ParticipationStatus":          ParticipationStatus,
+        "ParticipationRemoveMode":      ParticipationRemoveMode,
         "participation_status_choices": participation_status_choices,
     }
 
@@ -43,11 +43,11 @@ def pb_participation_choices(request):
 def pb_recurrence_choices(request):
     """Docstring."""
     return {
-        "Recurrence":                   Recurrence,
-        "recurrence_choices":           recurrence_choices,
-        "Month":                        Month,
-        "month_choices":                month_choices,
-        "DayOfWeek":                  DayOfWeek,
-        "day_of_week_choices":          day_of_week_choices,
-        "day_of_month_choices":         day_of_month_choices,
+        "Recurrence":           Recurrence,
+        "recurrence_choices":   recurrence_choices,
+        "Month":                Month,
+        "month_choices":        month_choices,
+        "DayOfWeek":            DayOfWeek,
+        "day_of_week_choices":  day_of_week_choices,
+        "day_of_month_choices": day_of_month_choices,
     }

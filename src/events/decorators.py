@@ -56,7 +56,7 @@ def event_org_staff_member_required(func):
                         )),
                 ),
                 id=event_id,
-                )
+            )
         else:
             raise Http404
 
@@ -102,14 +102,14 @@ def event_access_check_required(func):
                         organization__is_hidden=True,
                     ),
                     slug=slug,
-                    )
+                )
             else:
                 event = get_object_or_404(
                     Event,
                     Q(organization=None) |
                     Q(organization__is_hidden=False),
                     slug=slug,
-                    )
+                )
         elif event_id:
             if request.user.is_authenticated():
                 event = get_object_or_404(
@@ -130,14 +130,14 @@ def event_access_check_required(func):
                         organization__is_hidden=True,
                     ),
                     id=event_id,
-                    )
+                )
             else:
                 event = get_object_or_404(
                     Event,
                     Q(organization=None) |
                     Q(organization__is_hidden=False),
                     id=event_id,
-                    )
+                )
         else:
             raise Http404
 

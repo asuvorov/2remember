@@ -1,5 +1,6 @@
-"""Views."""
-# from django.conf import settings
+"""Define Views."""
+
+from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import status
@@ -7,8 +8,6 @@ from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-# from ddutils.version import get_version
 
 
 # =============================================================================
@@ -21,11 +20,14 @@ from rest_framework.views import APIView
 class APIStatusViewSet(APIView):
     """API Status View Set.
 
-    Returns the Platform Status.
+    Returns the Service Status.
+
+    Attributes
+    ----------
 
     Methods
     -------
-    get()
+    get()                               Returns the Service Status.
 
     """
 
@@ -40,7 +42,14 @@ class APIStatusViewSet(APIView):
 
         Parameters
         ----------
-        request : obj
+        request         : obj           Request Object.
+
+        Returns
+        -------
+        Response        : obj           Service Status.
+
+        Raises
+        ------
 
         """
 
@@ -80,11 +89,14 @@ api_status = APIStatusViewSet.as_view()
 class APIVersionViewSet(APIView):
     """API Version View Set.
 
-    Returns the Platform Version.
+    Returns the Service Version.
+
+    Attributes
+    ----------
 
     Methods
     -------
-    get()
+    get()                               Returns the Service Version.
 
     """
 
@@ -99,7 +111,14 @@ class APIVersionViewSet(APIView):
 
         Parameters
         ----------
-        request : obj
+        request         : obj           Request Object.
+
+        Returns
+        -------
+        Response        : obj           Service Version.
+
+        Raises
+        ------
 
         """
 
@@ -119,10 +138,12 @@ class APIVersionViewSet(APIView):
         # --- Send the Response.
         # ---------------------------------------------------------------------
         return Response({
-            "code":         "",
-            "message":      "",
+            "code":         2000,
+            "message":      "SUCCESS",
             "response":     {
-                "status":   "0.0.0",  # get_version(settings.PROJECT_PATH, "__init__.py"),
+                "version":      "0.0.0",  # get_version(settings.PROJECT_PATH, "__init__.py"),
+                "version_num":  settings.PRODUCT_VERSION_NUM,
+                "version_full": settings.PRODUCT_VERSION_FULL,
             }
         }, status=status.HTTP_200_OK)
 

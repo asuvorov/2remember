@@ -1,40 +1,35 @@
-************* Module src.wsgi
-src/wsgi.py:11:0: W0611: Unused import sys (unused-import)
 ************* Module src.organizations.models
 src/organizations/models.py:50:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 src/organizations/models.py:69:0: R0901: Too many ancestors (11/7) (too-many-ancestors)
-src/organizations/models.py:252:32: E1101: Instance of 'File' has no 'url' member (no-member)
-src/organizations/models.py:406:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-src/organizations/models.py:534:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-src/organizations/models.py:545:0: R0901: Too many ancestors (9/7) (too-many-ancestors)
+src/organizations/models.py:247:32: E1101: Instance of 'File' has no 'url' member (no-member)
+src/organizations/models.py:401:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+src/organizations/models.py:528:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+src/organizations/models.py:539:0: R0901: Too many ancestors (9/7) (too-many-ancestors)
 ************* Module src.organizations.views
-src/organizations/views.py:303:0: C0301: Line too long (131/100) (line-too-long)
-src/organizations/views.py:330:0: C0301: Line too long (130/100) (line-too-long)
-src/organizations/views.py:432:0: C0301: Line too long (131/100) (line-too-long)
-src/organizations/views.py:462:0: C0301: Line too long (131/100) (line-too-long)
+src/organizations/views.py:302:0: C0301: Line too long (131/100) (line-too-long)
+src/organizations/views.py:326:0: C0301: Line too long (130/100) (line-too-long)
+src/organizations/views.py:424:0: C0301: Line too long (131/100) (line-too-long)
+src/organizations/views.py:453:0: C0301: Line too long (131/100) (line-too-long)
 src/organizations/views.py:213:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
 src/organizations/views.py:281:0: R0914: Too many local variables (16/15) (too-many-locals)
-src/organizations/views.py:495:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
+src/organizations/views.py:485:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
 ************* Module src.organizations.decorators
 src/organizations/decorators.py:24:12: W0612: Unused variable 'organization' (unused-variable)
 src/organizations/decorators.py:70:16: W0612: Unused variable 'organization' (unused-variable)
-************* Module src.settings.local
-src/settings/local.py:5:0: W0614: Unused import(s) DEBUG, DATABASES, SECURE_SSL_REDIRECT, AWS_QUERYSTRING_AUTH, MEDIA_URL, LOGGING, os, DEBUG_TOOLBAR, PROJECT_PATH, ENVIRONMENT, DJANGO_SETTINGS_MODULE, ADMINS, MANAGERS, DOMAIN_NAME, ALLOWED_HOSTS, APPEND_SLASH, TIME_ZONE, LANGUAGE_CODE, LANGUAGES, LOCALE_PATHS, SITE_ID, USE_I18N, USE_L10N, USE_TZ, ADMIN_MEDIA_PREFIX, MEDIA_ROOT, STATIC_URL, STATIC_ROOT, STATICFILES_DIRS, STATICFILES_FINDERS, SECRET_KEY, TEMPLATES, DEFAULT_AUTO_FIELD, MIDDLEWARE, ROOT_URLCONF, WSGI_APPLICATION, INSTALLED_APPS, SESSION_SERIALIZER, CACHES, AUTHENTICATION_BACKENDS, SELFREFLECTION_SUBMIT_DURATION_PERIOD, PROFILE_COMPLETENESS_GRACE_PERIOD, EVENT_NAME_RESERVED_WORDS, ORGANIZATION_NAME_RESERVED_WORDS, BOWER_COMPONENTS_ROOT, BOWER_PATH, BOWER_INSTALLED_APPS, CKEDITOR_BROWSE_SHOW_DIRS, CKEDITOR_IMAGE_BACKEND, CKEDITOR_RESTRICT_BY_DATE, CKEDITOR_RESTRICT_BY_USER, CKEDITOR_UPLOAD_PATH, CKEDITOR_UPLOAD_SLUGIFY_FILENAME, CKEDITOR_CONFIGS, IMAGE_QUALITY, THUMBNAIL_SIZE, X_FRAME_OPTIONS, COMPRESS_PRECOMPILERS, COMPRESS_CSS_FILTERS, COMPRESS_JS_FILTERS, COMPRESS_ENABLED, GEOIP_DATABASE, GEOIPV6_DATABASE, GEOIP_PATH, GRAPPELLI_ADMIN_TITLE, GRAPPELLI_AUTOCOMPLETE_LIMIT, GRAPPELLI_SWITCH_USER, HAYSTACK_CONNECTIONS, HAYSTACK_DEFAULT_OPERATOR, HAYSTACK_SEARCH_RESULTS_PER_PAGE, IMAGEKIT_CACHEFILE_DIR, IMAGEKIT_DEFAULT_CACHEFILE_BACKEND, IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY, IMAGEKIT_CACHEFILE_NAMER, IMAGEKIT_SPEC_CACHEFILE_NAMER, MPTT_ADMIN_LEVEL_INDENT, MAX_MEMBERS_PER_PAGE, MAX_MEMBERS_PER_QUERY, MAX_POSTS_PER_PAGE, MAX_POSTS_PER_QUERY, MAX_EVENTS_PER_PAGE, MAX_EVENTS_PER_QUERY, MAX_ORGANIZATIONS_PER_PAGE, MAX_ORGANIZATIONS_PER_QUERY, PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, PASSWORD_DICTIONARY, PASSWORD_MATCH_THRESHOLD, PASSWORD_COMMON_SEQUENCES, PASSWORD_COMPLEXITY, PHONENUMBER_DB_FORMAT, REST_FRAMEWORK, SWAGGER_SETTINGS, ROSETTA_MESSAGES_PER_PAGE, ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS, YANDEX_TRANSLATE_KEY, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE, ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME, ROSETTA_WSGI_AUTO_RELOAD, ROSETTA_UWSGI_AUTO_RELOAD, ROSETTA_EXCLUDED_APPLICATIONS, ROSETTA_EXCLUDED_PATHS, ROSETTA_REQUIRES_AUTH, ROSETTA_POFILE_WRAP_WIDTH, ROSETTA_POFILENAMES, ROSETTA_STORAGE_CLASS, ROSETTA_ACCESS_CONTROL_FUNCTION, ROSETTA_LANGUAGE_GROUPS, ROSETTA_AUTO_COMPILE, CAPTCHA_FONT_SIZE, CAPTCHA_BACKGROUND_COLOR, CAPTCHA_FOREGROUND_COLOR, CAPTCHA_PUNCTUATION, CAPTCHA_TIMEOUT, CAPTCHA_LENGTH, CAPTCHA_IMAGE_BEFORE_FIELD, CAPTCHA_DICTIONARY_MIN_LENGTH, CAPTCHA_DICTIONARY_MAX_LENGTH, CAPTCHA_TEST_MODE, SESSION_COOKIE_AGE, LOGIN_URL, LOGIN_REDIRECT_URL, SOCIAL_AUTH_UUID_LENGTH, SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL, SOCIAL_AUTH_SLUGIFY_USERNAMES, SOCIAL_AUTH_CLEAN_USERNAMES, SOCIAL_AUTH_COMPLETE_URL_NAME, SOCIAL_AUTH_ASSOCIATE_URL_NAME, SOCIAL_AUTH_DEFAULT_USERNAME, SOCIAL_AUTH_CREATE_USERS, SOCIAL_AUTH_PIPELINE, SOCIAL_AUTH_FACEBOOK_KEY, SOCIAL_AUTH_FACEBOOK_SECRET, SOCIAL_AUTH_FACEBOOK_SCOPE, SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS, TWITTER_OAUTH_TOKEN, TWITTER_OAUTH_SECRET, TWITTER_CONSUMER_KEY, TWITTER_CONSUMER_SECRET, SOCIAL_AUTH_TWITTER_KEY, SOCIAL_AUTH_TWITTER_SECRET, LINKEDIN_OAUTH_TOKEN, LINKEDIN_OAUTH_SECRET, LINKEDIN_CONSUMER_KEY, LINKEDIN_CONSUMER_SECRET, LINKEDIN_SCOPE, LINKEDIN_EXTRA_FIELD_SELECTORS, SOCIAL_AUTH_LINKEDIN_KEY, SOCIAL_AUTH_LINKEDIN_SECRET, SOCIAL_AUTH_LINKEDIN_SCOPE, SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS, SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY, SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET, SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE, SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS, TAGGIT_CASE_INSENSITIVE, TAGGIT_TAGCLOUD_MIN, TAGGIT_TAGCLOUD_MAX, TAGGIT_LIMIT, TAGGIT_TAG_LIST_ORDER_BY, TAGGIT_TAG_CLOUD_ORDER_BY, WHITENOISE_MAX_AGE, EMAIL_SENDER, EMAIL_SUPPORT, EMAIL_BACKEND, SENDGRID_API_KEY, PB_SOCIAL_LINKS and UPLOADER_SETTINGS from wildcard import of base (unused-wildcard-import)
-************* Module src.settings
-src/settings/__init__.py:57:4: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
-src/settings/__init__.py:68:4: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
 ************* Module src.settings.base
-src/settings/base.py:397:0: C0301: Line too long (123/100) (line-too-long)
-src/settings/base.py:427:0: C0301: Line too long (112/100) (line-too-long)
-src/settings/base.py:657:0: C0301: Line too long (105/100) (line-too-long)
-src/settings/base.py:658:0: C0301: Line too long (104/100) (line-too-long)
-src/settings/base.py:659:0: C0301: Line too long (103/100) (line-too-long)
-src/settings/base.py:665:0: C0301: Line too long (116/100) (line-too-long)
-src/settings/base.py:736:0: C0301: Line too long (313/100) (line-too-long)
-src/settings/base.py:757:0: C0301: Line too long (109/100) (line-too-long)
-src/settings/base.py:1:0: C0302: Too many lines in module (1072/1000) (too-many-lines)
-src/settings/base.py:856:31: C3001: Lambda expression assigned to a variable. Define a function using the "def" keyword instead. (unnecessary-lambda-assignment)
-src/settings/base.py:856:39: E0602: Undefined variable 'random' (undefined-variable)
+src/settings/base.py:462:0: C0301: Line too long (123/100) (line-too-long)
+src/settings/base.py:492:0: C0301: Line too long (112/100) (line-too-long)
+src/settings/base.py:722:0: C0301: Line too long (105/100) (line-too-long)
+src/settings/base.py:723:0: C0301: Line too long (104/100) (line-too-long)
+src/settings/base.py:724:0: C0301: Line too long (103/100) (line-too-long)
+src/settings/base.py:730:0: C0301: Line too long (116/100) (line-too-long)
+src/settings/base.py:801:0: C0301: Line too long (313/100) (line-too-long)
+src/settings/base.py:822:0: C0301: Line too long (109/100) (line-too-long)
+src/settings/base.py:1:0: C0302: Too many lines in module (1137/1000) (too-many-lines)
+src/settings/base.py:55:4: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
+src/settings/base.py:66:4: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
+src/settings/base.py:921:31: C3001: Lambda expression assigned to a variable. Define a function using the "def" keyword instead. (unnecessary-lambda-assignment)
+src/settings/base.py:921:39: E0602: Undefined variable 'random' (undefined-variable)
 ************* Module src.home.models
 src/home/models.py:25:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 src/home/models.py:126:0: R0903: Too few public methods (1/2) (too-few-public-methods)
@@ -49,13 +44,13 @@ src/home/views.py:174:4: W0621: Redefining name 'faq' from outer scope (line 129
 ************* Module src.app.apps
 src/app/apps.py:8:0: E0102: class already defined line 5 (function-redefined)
 ************* Module src.app.admin
-src/app/admin.py:259:22: W0613: Unused argument 'modeladmin' (unused-argument)
-src/app/admin.py:266:20: W0613: Unused argument 'modeladmin' (unused-argument)
+src/app/admin.py:258:22: W0613: Unused argument 'modeladmin' (unused-argument)
+src/app/admin.py:265:20: W0613: Unused argument 'modeladmin' (unused-argument)
 ************* Module src.app.utils
 src/app/utils.py:19:0: R0913: Too many arguments (7/5) (too-many-arguments)
-src/app/utils.py:24:16: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
-src/app/utils.py:70:0: R0913: Too many arguments (7/5) (too-many-arguments)
-src/app/utils.py:75:16: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
+src/app/utils.py:23:16: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
+src/app/utils.py:69:0: R0913: Too many arguments (7/5) (too-many-arguments)
+src/app/utils.py:73:16: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
 ************* Module src.app.views
 src/app/views.py:31:37: W0613: Unused argument 'resource' (unused-argument)
 src/app/views.py:98:11: R5101: Instead of HttpResponse(json.dumps(data)) use JsonResponse(data) (http-response-with-json-dumps)
@@ -88,9 +83,11 @@ src/app/templatetags/common_tags.py:286:8: C0103: Variable name "x" doesn't conf
 src/app/templatetags/common_tags.py:297:13: C0103: Argument name "l" doesn't conform to snake_case naming style (invalid-name)
 src/app/templatetags/common_tags.py:303:8: C0103: Variable name "x" doesn't conform to snake_case naming style (invalid-name)
 src/app/templatetags/common_tags.py:353:8: W0613: Unused argument 'parser' (unused-argument)
+************* Module src.app.management.commands.clear_cache
+src/app/management/commands/clear_cache.py:24:12: W0707: Consider explicitly re-raising using 'except AttributeError as exc' and 'raise CommandError('## You have no Cache configured!\n') from exc' (raise-missing-from)
 ************* Module src.blog.models
 src/blog/models.py:44:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-src/blog/models.py:172:32: E1101: Instance of 'File' has no 'url' member (no-member)
+src/blog/models.py:171:32: E1101: Instance of 'File' has no 'url' member (no-member)
 ************* Module src.accounts.auth_pipelines
 src/accounts/auth_pipelines.py:14:0: R0913: Too many arguments (9/5) (too-many-arguments)
 src/accounts/auth_pipelines.py:14:0: W1113: Keyword argument before variable positional arguments list in the definition of save_profile function (keyword-arg-before-vararg)
@@ -117,82 +114,82 @@ src/accounts/models.py:940:32: E1101: Instance of 'User' has no 'profile' member
 src/accounts/context_processors.py:8:4: W0621: Redefining name 'signin_form' from outer scope (line 6) (redefined-outer-name)
 ************* Module src.accounts.admin
 src/accounts/admin.py:240:4: W0221: Number of parameters was 4 in 'BaseModelAdmin.formfield_for_dbfield' and is now 3 in overridden 'TeamAdmin.formfield_for_dbfield' method (arguments-differ)
-src/accounts/admin.py:290:4: W0221: Number of parameters was 4 in 'BaseModelAdmin.formfield_for_dbfield' and is now 3 in overridden 'TeamMemberAdmin.formfield_for_dbfield' method (arguments-differ)
+src/accounts/admin.py:289:4: W0221: Number of parameters was 4 in 'BaseModelAdmin.formfield_for_dbfield' and is now 3 in overridden 'TeamMemberAdmin.formfield_for_dbfield' method (arguments-differ)
 ************* Module src.accounts.utils
 src/accounts/utils.py:12:1: W0511: TODO: Expand django.contrib.auth.models.User and move methods there (fixme)
 ************* Module src.accounts.urls
-src/accounts/urls.py:57:0: C0301: Line too long (110/100) (line-too-long)
+src/accounts/urls.py:35:0: C0301: Line too long (110/100) (line-too-long)
 ************* Module src.accounts.views
-src/accounts/views.py:1:0: C0302: Too many lines in module (1253/1000) (too-many-lines)
+src/accounts/views.py:1:0: C0302: Too many lines in module (1249/1000) (too-many-lines)
 src/accounts/views.py:148:4: W0612: Unused variable 'country' (unused-variable)
-src/accounts/views.py:363:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
-src/accounts/views.py:365:19: E0602: Undefined variable 'geo' (undefined-variable)
-src/accounts/views.py:363:4: W0612: Unused variable 'g' (unused-variable)
-src/accounts/views.py:365:4: W0612: Unused variable 'country_code' (unused-variable)
-src/accounts/views.py:488:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
-src/accounts/views.py:488:4: W0612: Unused variable 'g' (unused-variable)
-src/accounts/views.py:489:4: W0612: Unused variable 'ip_addr' (unused-variable)
-src/accounts/views.py:553:4: E1111: Assigning result of a function call, where the function has no return (assignment-from-no-return)
-src/accounts/views.py:553:15: E1123: Unexpected keyword argument 'next_page' in function call (unexpected-keyword-arg)
-src/accounts/views.py:580:8: W0612: Unused variable 'privacy_general' (unused-variable)
-src/accounts/views.py:580:25: W0612: Unused variable 'created' (unused-variable)
-src/accounts/views.py:581:8: W0612: Unused variable 'privacy_members' (unused-variable)
-src/accounts/views.py:582:8: W0612: Unused variable 'privacy_admins' (unused-variable)
-src/accounts/views.py:790:25: W0612: Unused variable 'created' (unused-variable)
-src/accounts/views.py:1015:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
-src/accounts/views.py:1134:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
-src/accounts/views.py:1191:11: E0602: Undefined variable 'render_to_pdf' (undefined-variable)
+src/accounts/views.py:361:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+src/accounts/views.py:363:19: E0602: Undefined variable 'geo' (undefined-variable)
+src/accounts/views.py:361:4: W0612: Unused variable 'g' (unused-variable)
+src/accounts/views.py:363:4: W0612: Unused variable 'country_code' (unused-variable)
+src/accounts/views.py:486:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+src/accounts/views.py:486:4: W0612: Unused variable 'g' (unused-variable)
+src/accounts/views.py:487:4: W0612: Unused variable 'ip_addr' (unused-variable)
+src/accounts/views.py:551:4: E1111: Assigning result of a function call, where the function has no return (assignment-from-no-return)
+src/accounts/views.py:551:15: E1123: Unexpected keyword argument 'next_page' in function call (unexpected-keyword-arg)
+src/accounts/views.py:578:8: W0612: Unused variable 'privacy_general' (unused-variable)
+src/accounts/views.py:578:25: W0612: Unused variable 'created' (unused-variable)
+src/accounts/views.py:579:8: W0612: Unused variable 'privacy_members' (unused-variable)
+src/accounts/views.py:580:8: W0612: Unused variable 'privacy_admins' (unused-variable)
+src/accounts/views.py:788:25: W0612: Unused variable 'created' (unused-variable)
+src/accounts/views.py:1011:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+src/accounts/views.py:1130:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+src/accounts/views.py:1187:11: E0602: Undefined variable 'render_to_pdf' (undefined-variable)
 ************* Module src.accounts.templatetags.accounttags
 src/accounts/templatetags/accounttags.py:90:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
 src/accounts/templatetags/accounttags.py:112:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
 src/accounts/templatetags/accounttags.py:32:0: R0911: Too many return statements (8/6) (too-many-return-statements)
 src/accounts/templatetags/accounttags.py:32:0: R0912: Too many branches (13/12) (too-many-branches)
 ************* Module src.api.v1.serializers
-src/api/v1/serializers.py:17:0: W0223: Method 'create' is abstract in class 'BaseSerializer' but is not overridden (abstract-method)
-src/api/v1/serializers.py:17:0: W0223: Method 'update' is abstract in class 'BaseSerializer' but is not overridden (abstract-method)
-src/api/v1/serializers.py:87:4: W0237: Parameter 'dictionary' has been renamed to 'obj' in overridden 'AutocompleteMemberSerializer.get_value' method (arguments-renamed)
+src/api/v1/serializers.py:18:0: W0223: Method 'create' is abstract in class 'BaseSerializer' but is not overridden (abstract-method)
+src/api/v1/serializers.py:18:0: W0223: Method 'update' is abstract in class 'BaseSerializer' but is not overridden (abstract-method)
+src/api/v1/serializers.py:80:4: W0237: Parameter 'dictionary' has been renamed to 'obj' in overridden 'AutocompleteMemberSerializer.get_value' method (arguments-renamed)
 ************* Module src.api.v1.views
 src/api/v1/views.py:49:19: W0612: Unused variable 'created' (unused-variable)
-src/api/v1/views.py:99:0: R0901: Too many ancestors (11/7) (too-many-ancestors)
-src/api/v1/views.py:105:25: W0613: Unused argument 'queryset' (unused-argument)
-src/api/v1/views.py:122:8: C0103: Variable name "q" doesn't conform to snake_case naming style (invalid-name)
-src/api/v1/views.py:125:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
-src/api/v1/views.py:144:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
-src/api/v1/views.py:148:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
-src/api/v1/views.py:152:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
-src/api/v1/views.py:156:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
-src/api/v1/views.py:160:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
-src/api/v1/views.py:164:8: W0107: Unnecessary pass statement (unnecessary-pass)
-src/api/v1/views.py:168:8: W0107: Unnecessary pass statement (unnecessary-pass)
+src/api/v1/views.py:66:0: R0901: Too many ancestors (11/7) (too-many-ancestors)
+src/api/v1/views.py:72:25: W0613: Unused argument 'queryset' (unused-argument)
+src/api/v1/views.py:89:8: C0103: Variable name "q" doesn't conform to snake_case naming style (invalid-name)
+src/api/v1/views.py:92:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
+src/api/v1/views.py:111:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
+src/api/v1/views.py:115:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
+src/api/v1/views.py:119:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
+src/api/v1/views.py:123:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
+src/api/v1/views.py:127:15: E1120: No value for argument 'request' in method call (no-value-for-parameter)
+src/api/v1/views.py:131:8: W0107: Unnecessary pass statement (unnecessary-pass)
+src/api/v1/views.py:3:0: W0611: Unused settings imported from django.conf (unused-import)
 ************* Module src.api.v1.organizations.serializers
 src/api/v1/organizations/serializers.py:5:0: E0401: Unable to import 'organizations.models' (import-error)
 ************* Module src.api.v1.organizations.views
-src/api/v1/organizations/views.py:695:0: C0301: Line too long (119/100) (line-too-long)
+src/api/v1/organizations/views.py:685:0: C0301: Line too long (119/100) (line-too-long)
 src/api/v1/organizations/views.py:74:8: W0621: Redefining name 'staff_member_order' from outer scope (line 124) (redefined-outer-name)
 src/api/v1/organizations/views.py:95:36: E0602: Undefined variable 'e' (undefined-variable)
-src/api/v1/organizations/views.py:425:8: W0612: Unused variable 'group' (unused-variable)
+src/api/v1/organizations/views.py:420:8: W0612: Unused variable 'group' (unused-variable)
 ************* Module src.api.v1.home.views
-src/api/v1/home/views.py:154:24: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
+src/api/v1/home/views.py:153:24: C0209: Formatting a regular string which could be a f-string (consider-using-f-string)
 src/api/v1/home/views.py:4:0: W0611: Unused User imported from django.contrib.auth.models (unused-import)
 ************* Module src.api.v1.events.utils
 src/api/v1/events/utils.py:24:8: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
 ************* Module src.api.v1.events.views
-src/api/v1/events/views.py:1:0: C0302: Too many lines in module (1441/1000) (too-many-lines)
-src/api/v1/events/views.py:596:23: W0612: Unused variable 'created' (unused-variable)
-src/api/v1/events/views.py:755:4: R0911: Too many return statements (7/6) (too-many-return-statements)
-src/api/v1/events/views.py:979:4: R0911: Too many return statements (7/6) (too-many-return-statements)
-src/api/v1/events/views.py:1213:4: R0911: Too many return statements (7/6) (too-many-return-statements)
-src/api/v1/events/views.py:1308:20: W0612: Unused variable 'created' (unused-variable)
-src/api/v1/events/views.py:1342:4: R0911: Too many return statements (7/6) (too-many-return-statements)
+src/api/v1/events/views.py:1:0: C0302: Too many lines in module (1416/1000) (too-many-lines)
+src/api/v1/events/views.py:589:23: W0612: Unused variable 'created' (unused-variable)
+src/api/v1/events/views.py:745:4: R0911: Too many return statements (7/6) (too-many-return-statements)
+src/api/v1/events/views.py:965:4: R0911: Too many return statements (7/6) (too-many-return-statements)
+src/api/v1/events/views.py:1195:4: R0911: Too many return statements (7/6) (too-many-return-statements)
+src/api/v1/events/views.py:1287:20: W0612: Unused variable 'created' (unused-variable)
+src/api/v1/events/views.py:1320:4: R0911: Too many return statements (7/6) (too-many-return-statements)
 ************* Module src.api.v1.invites.views
 src/api/v1/invites/views.py:51:0: C0301: Line too long (106/100) (line-too-long)
 src/api/v1/invites/views.py:92:0: C0301: Line too long (106/100) (line-too-long)
 src/api/v1/invites/views.py:48:4: R0914: Too many local variables (16/15) (too-many-locals)
 src/api/v1/invites/views.py:48:4: R0911: Too many return statements (8/6) (too-many-return-statements)
-src/api/v1/invites/views.py:146:12: W0612: Unused variable 'vals' (unused-variable)
-src/api/v1/invites/views.py:192:16: W0612: Unused variable 'created' (unused-variable)
-src/api/v1/invites/views.py:358:27: W0612: Unused variable 'created' (unused-variable)
-src/api/v1/invites/views.py:372:12: W0612: Unused variable 'org_staff_member' (unused-variable)
+src/api/v1/invites/views.py:145:12: W0612: Unused variable 'vals' (unused-variable)
+src/api/v1/invites/views.py:190:16: W0612: Unused variable 'created' (unused-variable)
+src/api/v1/invites/views.py:353:27: W0612: Unused variable 'created' (unused-variable)
+src/api/v1/invites/views.py:366:12: W0612: Unused variable 'org_staff_member' (unused-variable)
 ************* Module src.api.v2.urls
 src/api/v2/urls.py:2:0: W0611: Unused include imported from django.urls (unused-import)
 src/api/v2/urls.py:2:0: W0611: Unused re_path imported from django.urls (unused-import)
@@ -201,46 +198,46 @@ src/api/v2/urls.py:6:0: W0611: Unused import views (unused-import)
 src/events/tasks.py:55:0: C0301: Line too long (162/100) (line-too-long)
 src/events/tasks.py:122:0: C0301: Line too long (157/100) (line-too-long)
 ************* Module src.events.models
-src/events/models.py:442:0: C0301: Line too long (109/100) (line-too-long)
-src/events/models.py:485:0: C0301: Line too long (102/100) (line-too-long)
-src/events/models.py:531:0: C0301: Line too long (148/100) (line-too-long)
-src/events/models.py:580:0: C0301: Line too long (163/100) (line-too-long)
-src/events/models.py:581:0: C0301: Line too long (148/100) (line-too-long)
-src/events/models.py:675:0: C0301: Line too long (128/100) (line-too-long)
-src/events/models.py:720:0: C0301: Line too long (102/100) (line-too-long)
-src/events/models.py:1236:0: C0301: Line too long (103/100) (line-too-long)
-src/events/models.py:1:0: C0302: Too many lines in module (1730/1000) (too-many-lines)
+src/events/models.py:439:0: C0301: Line too long (109/100) (line-too-long)
+src/events/models.py:482:0: C0301: Line too long (102/100) (line-too-long)
+src/events/models.py:528:0: C0301: Line too long (148/100) (line-too-long)
+src/events/models.py:577:0: C0301: Line too long (163/100) (line-too-long)
+src/events/models.py:578:0: C0301: Line too long (148/100) (line-too-long)
+src/events/models.py:672:0: C0301: Line too long (128/100) (line-too-long)
+src/events/models.py:717:0: C0301: Line too long (102/100) (line-too-long)
+src/events/models.py:1232:0: C0301: Line too long (103/100) (line-too-long)
+src/events/models.py:1:0: C0302: Too many lines in module (1725/1000) (too-many-lines)
 src/events/models.py:63:0: R0903: Too few public methods (1/2) (too-few-public-methods)
 src/events/models.py:183:0: R0901: Too many ancestors (11/7) (too-many-ancestors)
-src/events/models.py:414:32: E1101: Instance of 'File' has no 'url' member (no-member)
-src/events/models.py:425:8: W0702: No exception type(s) specified (bare-except)
-src/events/models.py:851:38: E1101: Instance of 'TimeZoneField' has no 'localize' member (no-member)
-src/events/models.py:1004:0: R0903: Too few public methods (1/2) (too-few-public-methods)
-src/events/models.py:1058:58: E1101: Instance of 'Role' has no 'title' member (no-member)
-src/events/models.py:1062:15: E1101: Instance of 'Role' has no 'title' member (no-member)
-src/events/models.py:1335:12: W0612: Unused variable 'participation' (unused-variable)
-src/events/models.py:1382:12: W0612: Unused variable 'participation' (unused-variable)
-src/events/models.py:1404:12: W0612: Unused variable 'participation' (unused-variable)
-src/events/models.py:1474:12: W0612: Unused variable 'participation' (unused-variable)
-src/events/models.py:1510:11: E1101: Instance of 'User' has no 'profile' member (no-member)
-src/events/models.py:1511:32: E1101: Instance of 'User' has no 'profile' member (no-member)
-src/events/models.py:1130:0: R0904: Too many public methods (39/20) (too-many-public-methods)
+src/events/models.py:411:32: E1101: Instance of 'File' has no 'url' member (no-member)
+src/events/models.py:422:8: W0702: No exception type(s) specified (bare-except)
+src/events/models.py:848:38: E1101: Instance of 'TimeZoneField' has no 'localize' member (no-member)
+src/events/models.py:1000:0: R0903: Too few public methods (1/2) (too-few-public-methods)
+src/events/models.py:1054:58: E1101: Instance of 'Role' has no 'title' member (no-member)
+src/events/models.py:1058:15: E1101: Instance of 'Role' has no 'title' member (no-member)
+src/events/models.py:1331:12: W0612: Unused variable 'participation' (unused-variable)
+src/events/models.py:1378:12: W0612: Unused variable 'participation' (unused-variable)
+src/events/models.py:1400:12: W0612: Unused variable 'participation' (unused-variable)
+src/events/models.py:1470:12: W0612: Unused variable 'participation' (unused-variable)
+src/events/models.py:1505:11: E1101: Instance of 'User' has no 'profile' member (no-member)
+src/events/models.py:1506:32: E1101: Instance of 'User' has no 'profile' member (no-member)
+src/events/models.py:1126:0: R0904: Too many public methods (39/20) (too-many-public-methods)
 ************* Module src.events.helpers
 src/events/helpers.py:24:12: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
 ************* Module src.events.views
-src/events/views.py:1:0: C0302: Too many lines in module (1129/1000) (too-many-lines)
-src/events/views.py:169:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
-src/events/views.py:170:4: C0103: Variable name "ip" doesn't conform to snake_case naming style (invalid-name)
-src/events/views.py:172:4: W0612: Unused variable 'country' (unused-variable)
-src/events/views.py:506:0: R0914: Too many local variables (17/15) (too-many-locals)
-src/events/views.py:522:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
-src/events/views.py:523:4: C0103: Variable name "ip" doesn't conform to snake_case naming style (invalid-name)
-src/events/views.py:536:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
-src/events/views.py:614:0: R0914: Too many local variables (17/15) (too-many-locals)
-src/events/views.py:614:0: R0912: Too many branches (15/12) (too-many-branches)
-src/events/views.py:899:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
-src/events/views.py:1010:20: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
-src/events/views.py:875:0: R0912: Too many branches (14/12) (too-many-branches)
+src/events/views.py:1:0: C0302: Too many lines in module (1106/1000) (too-many-lines)
+src/events/views.py:166:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+src/events/views.py:167:4: C0103: Variable name "ip" doesn't conform to snake_case naming style (invalid-name)
+src/events/views.py:169:4: W0612: Unused variable 'country' (unused-variable)
+src/events/views.py:496:0: R0914: Too many local variables (17/15) (too-many-locals)
+src/events/views.py:512:4: C0103: Variable name "g" doesn't conform to snake_case naming style (invalid-name)
+src/events/views.py:513:4: C0103: Variable name "ip" doesn't conform to snake_case naming style (invalid-name)
+src/events/views.py:528:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
+src/events/views.py:608:0: R0914: Too many local variables (17/15) (too-many-locals)
+src/events/views.py:608:0: R0912: Too many branches (15/12) (too-many-branches)
+src/events/views.py:886:17: R1719: The if expression can be replaced with 'not test' (simplifiable-if-expression)
+src/events/views.py:992:20: R0916: Too many boolean expressions in if statement (6/5) (too-many-boolean-expressions)
+src/events/views.py:862:0: R0912: Too many branches (14/12) (too-many-branches)
 ************* Module src.events.decorators
 src/events/decorators.py:27:12: W0612: Unused variable 'event' (unused-variable)
 src/events/decorators.py:88:20: E1131: unsupported operand type(s) for | (unsupported-binary-operation)
@@ -252,8 +249,8 @@ setup.py:18:4: W0105: String statement has no effect (pointless-string-statement
 setup.py:27:9: C0103: Variable name "p" doesn't conform to snake_case naming style (invalid-name)
 setup.py:27:12: W0612: Unused variable 'directories' (unused-variable)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.settings.base:[209:252]
-==src.settings.local:[86:129]
+==src.settings.base:[274:317]
+==src.settings.local:[89:132]
 LOGGING = {
     "version":                      1,
     "disable_existing_loggers":     False,
@@ -299,51 +296,49 @@ LOGGING = {
         }, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[20:40]
-==src.organizations.decorators:[98:117]
-        Organization,
-        Q(is_hidden=False) |
-        Q(
-            Q(pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True
-                )) |
-            Q(pk__in=request.user
-                .organization_group_members
-                .all().values_list(
-                    "organization_id", flat=True
-                )),
-            is_hidden=True,
-        ),
-        id=organization_id,
-        is_deleted=False,
-        )
- (duplicate-code)
+==src.organizations.decorators:[97:116]
+                    Organization,
+                    Q(is_hidden=False) |
+                    Q(
+                        Q(pk__in=OrganizationStaff
+                            .objects.filter(
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True
+                            )) |
+                        Q(pk__in=request.user
+                            .organization_group_members
+                            .all().values_list(
+                                "organization_id", flat=True
+                            )),
+                        is_hidden=True,
+                    ),
+                    id=organization_id,
+                    is_deleted=False,
+                ) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[22:41]
 ==src.events.decorators:[115:133]
-        Event,
-        Q(organization=None) |
-        Q(organization__is_hidden=False) |
-        Q(
-            Q(organization__pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True
-                )) |
-            Q(organization__pk__in=request.user
-                .organization_group_members.all().values_list(
-                    "organization_id", flat=True
-                )),
-            organization__is_hidden=True,
-        ),
-        id=event_id,
-        )
- (duplicate-code)
+                    Event,
+                    Q(organization=None) |
+                    Q(organization__is_hidden=False) |
+                    Q(
+                        Q(organization__pk__in=OrganizationStaff
+                            .objects.filter(
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True
+                            )) |
+                        Q(organization__pk__in=request.user
+                            .organization_group_members.all().values_list(
+                                "organization_id", flat=True
+                            )),
+                        organization__is_hidden=True,
+                    ),
+                    id=event_id,
+                ) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1133:1151]
+==src.accounts.views:[1129:1147]
 ==src.events.helpers:[23:41]
             Q(organization=None) |
             Q(organization__is_hidden=False) |
@@ -364,8 +359,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
         )
     else: (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[227:254]
-==src.organizations.forms:[134:159]
+==src.events.forms:[223:250]
+==src.organizations.forms:[132:157]
         if self.cleaned_data["contact"] == "me":
             self.cleaned_data["is_alt_person"] = False
         else:
@@ -394,24 +389,24 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[87:103]
 ==src.events.helpers:[23:39]
-                    Q(organization=None) |
-                    Q(organization__is_hidden=False) |
-                    Q(
-                        Q(organization__pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(organization__pk__in=request.user
-                            .organization_group_members
-                            .all().values_list(
-                                "organization_id", flat=True
-                            )),
-                        organization__is_hidden=True,
-                    ), (duplicate-code)
+            Q(organization=None) |
+            Q(organization__is_hidden=False) |
+            Q(
+                Q(organization__pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(organization__pk__in=request.user
+                    .organization_group_members
+                    .all().values_list(
+                        "organization_id", flat=True
+                    )),
+                organization__is_hidden=True,
+            ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[936:952]
+==src.accounts.views:[933:949]
 ==src.organizations.views:[160:176]
             Q(is_hidden=False) |
             Q(
@@ -430,7 +425,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
             ),
             is_deleted=False, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[914:930]
+==src.accounts.views:[911:927]
 ==src.organizations.views:[78:94]
             Q(is_hidden=False) |
             Q(
@@ -449,8 +444,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
             ),
             is_deleted=False, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.models:[860:900]
-==src.organizations.models:[330:370]
+==src.events.models:[856:896]
+==src.organizations.models:[325:365]
         try:
             ping_google()
         except Exception as exc:
@@ -470,18 +465,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
         #
-        #            MEDIA_ROOT/challenges/<id>/avatars/<filename>
+        #            MEDIA_ROOT/organizations/<id>/avatars/<filename>
         #
         # --- As long as the uploading Path is being generated before
-        #     the Challenge Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Challenge looks like:
+        #     the Organization Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Organization looks like:
         #
-        #            MEDIA_ROOT/challenges/None/avatars/<filename>
+        #            MEDIA_ROOT/organizations/None/avatars/<filename>
         #
         # --- To fix this:
         #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Challenge Avatar Object;
-        #     3. Save the Challenge Instance. Now the Avatar Image in the
+        #     2. Assign the Avatar File Content to the Organization Avatar Object;
+        #     3. Save the Organization Instance. Now the Avatar Image in the
         #        correct Path;
         #     4. Delete previous Avatar File;
         #
@@ -492,7 +487,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
             self.save()
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.invites.views:[117:133]
+==src.api.v1.invites.views:[116:132]
 ==src.events.decorators:[44:59]
                 Event,
                 Q(
@@ -508,8 +503,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
                         )),
                 ),
                 id=event_id,
-                )
- (duplicate-code)
+            ) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[21:36]
 ==src.organizations.views:[78:93]
@@ -529,7 +523,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
             is_hidden=True,
         ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.invites.views:[117:130]
+==src.api.v1.invites.views:[116:129]
 ==src.events.decorators:[27:40]
                 Event,
                 Q(
@@ -553,7 +547,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
     # model = Post
 
     def get(self, request):
-        """GET: Events upcoming.
+        """GET: Blog Archive.
 
             Receive:
 
@@ -610,52 +604,33 @@ setup.py:1:0: R0801: Similar lines in 2 files
     }
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.search_indexes:[21:37]
-==src.organizations.search_indexes:[16:32]
-    text = indexes.CharField(
-        document=True,
-        use_template=True)
-    rendered = indexes.CharField(
-        use_template=True,
-        indexed=False)
-
-    # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author")
-    name = indexes.CharField(
-        model_attr="name")
-    description = indexes.CharField(
-        model_attr="description",
-        default="")
- (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[22:33]
 ==src.events.decorators:[86:97]
-                    Event,
-                    Q(organization=None) |
-                    Q(organization__is_hidden=False) |
-                    Q(
-                        Q(organization__pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(organization__pk__in=request.user (duplicate-code)
+        Event,
+        Q(organization=None) |
+        Q(organization__is_hidden=False) |
+        Q(
+            Q(organization__pk__in=OrganizationStaff
+                .objects.filter(
+                    member=request.user,
+                ).values_list(
+                    "organization_id", flat=True
+                )) |
+            Q(organization__pk__in=request.user (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[112:123]
 ==src.organizations.views:[80:91]
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )), (duplicate-code)
+            Q(pk__in=OrganizationStaff
+                .objects.filter(
+                    member=request.user,
+                ).values_list(
+                    "organization_id", flat=True
+                )) |
+            Q(pk__in=request.user
+                .organization_group_members
+                .all().values_list(
+                    "organization_id", flat=True
+                )), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.organizations.decorators:[74:85]
 ==src.organizations.views:[82:93]
@@ -671,8 +646,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 is_hidden=True,
             ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[172:183]
-==src.organizations.forms:[104:115]
+==src.events.forms:[169:180]
+==src.organizations.forms:[102:113]
                 }),
             "alt_person_fullname": forms.TextInput(
                 attrs={
@@ -684,6 +659,23 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Email"), (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.events.search_indexes:[21:35]
+==src.organizations.search_indexes:[16:30]
+    text = indexes.CharField(
+        document=True,
+        use_template=True)
+    rendered = indexes.CharField(
+        use_template=True,
+        indexed=False)
+
+    # -------------------------------------------------------------------------
+    author = indexes.CharField(model_attr="author")
+    name = indexes.CharField(model_attr="name")
+    description = indexes.CharField(
+        model_attr="description",
+        default="")
+ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[116:126]
 ==src.events.helpers:[23:33]
@@ -699,38 +691,38 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 Q(organization__pk__in=request.user (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[56:74]
-==src.api.v1.invites.views:[116:134]
-            event = get_object_or_None(
-                Event,
-                Q(
-                    Q(organization=None) &
-                    Q(author=request.user),
-                ) |
-                Q(
-                    Q(organization__pk__in=OrganizationStaff
-                        .objects.filter(
-                            member=request.user,
-                        ).values_list(
-                            "organization_id", flat=True
-                        )),
-                ),
-                id=event_id,
-                )
-
-            if not event: (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1133:1143]
-==src.api.v1.events.utils:[23:33]
-        Q(organization=None) |
-        Q(organization__is_hidden=False) |
+==src.api.v1.invites.views:[115:133]
+    event = get_object_or_None(
+        Event,
+        Q(
+            Q(organization=None) &
+            Q(author=request.user),
+        ) |
         Q(
             Q(organization__pk__in=OrganizationStaff
                 .objects.filter(
                     member=request.user,
                 ).values_list(
                     "organization_id", flat=True
-                )) |
-            Q(organization__pk__in=request.user (duplicate-code)
+                )),
+        ),
+        id=event_id,
+    )
+
+    if not event: (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.accounts.views:[1129:1139]
+==src.api.v1.events.utils:[23:33]
+            Q(organization=None) |
+            Q(organization__is_hidden=False) |
+            Q(
+                Q(organization__pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(organization__pk__in=request.user (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.admin:[25:35]
 ==src.events.admin:[172:182]
@@ -746,7 +738,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
         }), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.admin:[59:69]
-==src.app.admin:[239:249]
+==src.app.admin:[238:248]
         "created", "modified",
     ]
     list_display_links = [
@@ -758,8 +750,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
     ]
     search_fields = [ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[197:228]
-==src.organizations.models:[340:376]
+==src.blog.models:[196:227]
+==src.organizations.models:[335:371]
             keywords=", ".join(self.tags.names()),
             heading=self.title,
             path=self.get_absolute_url(),
@@ -794,24 +786,6 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[57:73]
 ==src.events.decorators:[44:59]
-                Event,
-                Q(
-                    Q(organization=None) &
-                    Q(author=request.user),
-                ) |
-                Q(
-                    Q(organization__pk__in=OrganizationStaff
-                        .objects.filter(
-                            member=request.user,
-                        ).values_list(
-                            "organization_id", flat=True
-                        )),
-                ),
-                id=event_id,
-                ) (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.events.utils:[57:70]
-==src.events.decorators:[27:40]
         Event,
         Q(
             Q(organization=None) &
@@ -824,10 +798,29 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 ).values_list(
                     "organization_id", flat=True
                 )),
-        ), (duplicate-code)
+        ),
+        id=event_id,
+    )
+ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[197:227]
-==src.events.models:[870:900]
+==src.api.v1.events.utils:[57:70]
+==src.events.decorators:[27:40]
+                Event,
+                Q(
+                    Q(organization=None) &
+                    Q(author=request.user),
+                ) |
+                Q(
+                    Q(organization__pk__in=OrganizationStaff
+                        .objects.filter(
+                            member=request.user,
+                        ).values_list(
+                            "organization_id", flat=True
+                        )),
+                ), (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.blog.models:[196:226]
+==src.events.models:[866:896]
             keywords=", ".join(self.tags.names()),
             heading=self.title,
             path=self.get_absolute_url(),
@@ -837,18 +830,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
         #
-        #            MEDIA_ROOT/challenges/<id>/avatars/<filename>
+        #            MEDIA_ROOT/blog/<id>/avatars/<filename>
         #
         # --- As long as the uploading Path is being generated before
-        #     the Challenge Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Challenge looks like:
+        #     the Blog Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Blog looks like:
         #
-        #            MEDIA_ROOT/challenges/None/avatars/<filename>
+        #            MEDIA_ROOT/blog/None/avatars/<filename>
         #
         # --- To fix this:
         #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Challenge Avatar Object;
-        #     3. Save the Challenge Instance. Now the Avatar Image in the
+        #     2. Assign the Avatar File Content to the Blog Avatar Object;
+        #     3. Save the Blog Instance. Now the Avatar Image in the
         #        correct Path;
         #     4. Delete previous Avatar File;
         #
@@ -857,6 +850,28 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
             self.avatar = avatar
             self.save()
+ (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.app.management.commands.rebuild_index:[16:26]
+==src.app.tasks:[45:64]
+        rebuild_index.Command().handle(
+            age=4,
+            batchsize=1000,
+            workers=0,
+            max_retries=5,
+            interactive=False,
+            remove=True,
+            verbosity=2,
+            using=["default", ])
+        # update_index.Command().handle(
+        #     age=4,
+        #     interactive=False,
+        #     remove=True,
+        #     verbosity=2,
+        #     using=["default", ])
+
+        # ---------------------------------------------------------------------
+        # --- Save the Log
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.forms:[46:64]
@@ -890,19 +905,19 @@ setup.py:1:0: R0801: Similar lines in 2 files
                     )),
                 id=organization_id,
                 is_deleted=False,
-                ) (duplicate-code)
+            ) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[114:123]
 ==src.organizations.decorators:[74:83]
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(pk__in=request.user
-                            .organization_group_members
-                            .all().values_list(
-                                "organization_id", flat=True
-                            )), (duplicate-code)
+                    member=request.user,
+                ).values_list(
+                    "organization_id", flat=True
+                )) |
+            Q(pk__in=request.user
+                .organization_group_members
+                .all().values_list(
+                    "organization_id", flat=True
+                )), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.invites.admin:[67:78]
 ==src.organizations.admin:[263:274]
@@ -918,8 +933,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
     }
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.models:[901:926]
-==src.organizations.models:[370:405]
+==src.events.models:[897:922]
+==src.organizations.models:[365:400]
                 storage.delete(avatar.file.name)
 
     def pre_delete(self, **kwargs):
@@ -946,8 +961,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
 # --- Event Model Mixin.
 # ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[87:99]
-==src.organizations.models:[87:99]
+==src.blog.models:[86:98]
+==src.organizations.models:[86:98]
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
@@ -959,23 +974,10 @@ setup.py:1:0: R0801: Similar lines in 2 files
         help_text=_("Hashtag"))
 
     # -------------------------------------------------------------------------
-    # --- Address & Phone Number (duplicate-code)
+    # --- Flags (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.search_indexes:[17:27]
-==src.events.search_indexes:[21:31]
-    text = indexes.CharField(
-        document=True,
-        use_template=True)
-    rendered = indexes.CharField(
-        use_template=True,
-        indexed=False)
-
-    # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author") (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.app.forms:[238:251]
-==src.events.forms:[349:362]
+==src.app.forms:[239:252]
+==src.events.forms:[340:353]
         self.user = kwargs.pop("user", None)
 
         super().__init__(*args, **kwargs)
@@ -985,12 +987,12 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
     class Media:
         js = formset_media_js + (
-            # Other form media here
+            # Other Form Media here.
         )
 
     class Meta: (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.forms:[377:399]
+==src.accounts.forms:[376:398]
 ==src.app.forms:[160:184]
                 }),
             }
@@ -1015,7 +1017,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
 # --- USER PRIVACY MEMBERS FORM
 # ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.forms:[198:220]
+==src.accounts.forms:[197:219]
 ==src.app.forms:[94:118]
                 }),
             }
@@ -1036,13 +1038,11 @@ setup.py:1:0: R0801: Similar lines in 2 files
         return instance
 
 
-# =============================================================================
-# ===
-# === PHONE FORM
-# ===
-# ============================================================================= (duplicate-code)
+# -----------------------------------------------------------------------------
+# --- USER PROFILE EDIT FORM
+# ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.app.forms:[209:233]
+==src.app.forms:[210:234]
 ==src.home.forms:[88:105]
             }
 
@@ -1073,8 +1073,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 "title",
                 "description", (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[157:165]
-==src.organizations.forms:[81:89]
+==src.events.forms:[154:162]
+==src.organizations.forms:[79:87]
                 }),
             "tags": TagWidget(),
             "hashtag": forms.TextInput(
@@ -1084,38 +1084,25 @@ setup.py:1:0: R0801: Similar lines in 2 files
                     "maxlength":    80,
                 }), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.home.search_indexes:[14:24]
-==src.organizations.search_indexes:[16:26]
-    text = indexes.CharField(
-        document=True,
-        use_template=True)
-    rendered = indexes.CharField(
-        use_template=True,
-        indexed=False)
-
-    # -------------------------------------------------------------------------
-    author = indexes.CharField(
-        model_attr="author") (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.invites.views:[149:163]
+==src.api.v1.invites.views:[148:162]
 ==src.api.v1.organizations.utils:[55:69]
-    organization = get_object_or_None(
-        Organization,
-        Q(author=request.user) |
-        Q(pk__in=OrganizationStaff
-            .objects.filter(
-                member=request.user,
-            ).values_list(
-                "organization_id", flat=True
-            )),
-        id=organization_id,
-        is_deleted=False,
-        )
+            organization = get_object_or_None(
+                Organization,
+                Q(author=request.user) |
+                Q(pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )),
+                id=organization_id,
+                is_deleted=False,
+            )
 
-    if not organization: (duplicate-code)
+            if not organization: (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1079:1086]
-==src.events.models:[1719:1726]
+==src.accounts.views:[1075:1082]
+==src.events.models:[1714:1721]
         event__status__in=[
             EventStatus.UPCOMING,
             EventStatus.COMPLETE,
@@ -1124,73 +1111,57 @@ setup.py:1:0: R0801: Similar lines in 2 files
             ParticipationStatus.CONFIRMATION_DENIED,
             ParticipationStatus.CANCELLED_BY_ADMIN, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1175:1185]
-==src.events.models:[1688:1696]
-            event__status=EventStatus.COMPLETE,
-            status__in=[
-                ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                ParticipationStatus.ACKNOWLEDGED,
-            ]
-        )
- (duplicate-code)
+==src.accounts.views:[1171:1181]
+==src.events.models:[1683:1691]
+        event__status=EventStatus.COMPLETE,
+        status__in=[
+            ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
+            ParticipationStatus.ACKNOWLEDGED,
+        ]
+    )
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Data. (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.blog.search_indexes:[17:26]
+==src.events.search_indexes:[21:30]
+    text = indexes.CharField(
+        document=True,
+        use_template=True)
+    rendered = indexes.CharField(
+        use_template=True,
+        indexed=False)
+
+    # -------------------------------------------------------------------------
+    author = indexes.CharField(model_attr="author") (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.models:[347:398]
-==src.blog.models:[173:194]
+==src.blog.models:[172:193]
         return "(Sin Imagen)"
 
     image_tag.short_description = "Avatar"
     image_tag.allow_tags = True
 
     # -------------------------------------------------------------------------
-    # --- Signals.
+    # --- Signals
     def pre_save(self, **kwargs):
         """Docstring."""
 
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google.
+        # --- Ping Google
         try:
             ping_google()
         except Exception as exc:
-            # -----------------------------------------------------------------
-            # --- Logging.
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Update/insert SEO Model Instance Metadata.
-        # update_seo_model_instance_metadata(
-        #     title=self.user.get_full_name(),
-        #     description=self.bio,
-        #     keywords=self.nickname,
-        #     heading=self.user.get_full_name(),
-        #     path=self.get_absolute_url(),
-        #     object_id=self.id,
-        #     content_type_id=ContentType.objects.get_for_model(self).id,
-        # )
-
-        # ---------------------------------------------------------------------
-        # --- The Path for uploading Avatar Images is:
-        #
-        #            MEDIA_ROOT/accounts/<id>/avatars/<filename>
-        #
-        # --- As long as the uploading Path is being generated before
-        #     the Profile Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Profile looks like:
-        #
-        #            MEDIA_ROOT/accounts/None/avatars/<filename>
-        #
-        # --- To fix this:
-        #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Profile Avatar Object;
-        #     3. Save the Profile Instance. Now the Avatar Image in the
-        #        correct Path;
-        #     4. Delete previous Avatar File;
-        # (duplicate-code)
+        # --- Update/insert SEO Model Instance Metadata (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.app.forms:[280:295]
-==src.events.forms:[399:414]
+==src.app.forms:[281:296]
+==src.events.forms:[388:403]
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
@@ -1207,7 +1178,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.app.admin:[339:346]
+==src.app.admin:[338:345]
 ==src.home.admin:[90:97]
     ]
     list_filter = [
@@ -1217,7 +1188,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
     ]
     search_fields = [ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.forms:[443:458]
+==src.accounts.forms:[442:457]
 ==src.home.forms:[85:99]
                 attrs={
                     "class":        "form-control selectpicker",
@@ -1232,11 +1203,10 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
     def save(self, commit=True):
         """Docstring."""
-        instance = super().save(commit=False)
- (duplicate-code)
+        instance = super().save(commit=False) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.settings.base:[262:269]
-==src.settings.local:[158:165]
+==src.settings.base:[327:334]
+==src.settings.local:[161:168]
             ],
             "level":                "ERROR",
             "propagate":            False,
@@ -1245,27 +1215,12 @@ setup.py:1:0: R0801: Similar lines in 2 files
             "handlers": [
                 "console", (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.views:[960:972]
-==src.organizations.views:[549:561]
-                        )
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link, (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.views:[940:951]
-==src.organizations.views:[529:540]
+==src.events.views:[926:937]
+==src.organizations.views:[519:530]
                 social_link.save()
 
             # -----------------------------------------------------------------
-            # --- Move temporary Files to real Organization Images/Documents.
+            # --- Move temporary Files to real Event Images/Documents.
             for tmp_file in form.cleaned_data["tmp_files"]:
                 mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
 
@@ -1285,7 +1240,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
     exclude = [ (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.blog.forms:[40:47]
-==src.organizations.forms:[82:89]
+==src.organizations.forms:[80:87]
             "tags": TagWidget(),
             "hashtag": forms.TextInput(
                 attrs={
@@ -1293,6 +1248,18 @@ setup.py:1:0: R0801: Similar lines in 2 files
                     "placeholder":  _("Hashtag"),
                     "maxlength":    80,
                 }), (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.home.search_indexes:[14:23]
+==src.organizations.search_indexes:[16:25]
+    text = indexes.CharField(
+        document=True,
+        use_template=True)
+    rendered = indexes.CharField(
+        use_template=True,
+        indexed=False)
+
+    # -------------------------------------------------------------------------
+    author = indexes.CharField(model_attr="author") (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[32:38]
 ==src.events.helpers:[25:31]
@@ -1303,19 +1270,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
                         ).values_list(
                             "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.events.views:[174:182]
-==src.api.v1.invites.views:[130:138]
-            id=event_id,
-        )
-
-        if not event:
-            return Response({
-                "message":      _("Event not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
- (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.events.utils:[25:31]
-==src.api.v1.invites.views:[122:128]
+==src.api.v1.invites.views:[121:127]
         Q(
             Q(organization__pk__in=OrganizationStaff
                 .objects.filter(
@@ -1323,8 +1279,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 ).values_list(
                     "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.api.v1.organizations.views:[349:356]
-==src.api.v1.views:[130:137]
+==src.api.v1.organizations.views:[345:352]
+==src.api.v1.views:[97:104]
             queryset,
             many=True,
             context={
@@ -1334,70 +1290,70 @@ setup.py:1:0: R0801: Similar lines in 2 files
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[111:117]
-==src.api.v1.invites.views:[151:157]
-            Q(author=request.user) |
-            Q(pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1133:1143]
-==src.events.decorators:[116:126]
-                    Q(organization=None) |
-                    Q(organization__is_hidden=False) |
-                    Q(
-                        Q(organization__pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(organization__pk__in=request.user (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1133:1149]
-==src.events.decorators:[87:103]
-                    Q(organization=None) |
-                    Q(organization__is_hidden=False) |
-                    Q(
-                        Q(organization__pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(organization__pk__in=request.user
-                            .organization_group_members
-                            .all().values_list(
-                                "organization_id", flat=True
-                            )),
-                        organization__is_hidden=True,
-                    ), (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1066:1072]
-==src.events.models:[1703:1709]
-        event__status__in=[
-            EventStatus.UPCOMING,
-            EventStatus.COMPLETE,
-        ],
-        status__in=[
-            ParticipationStatus.CANCELLED_BY_USER, (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1135:1141]
-==src.api.v1.events.utils:[62:68]
-            Q(
-                Q(organization__pk__in=OrganizationStaff
+==src.api.v1.invites.views:[150:156]
+                Q(author=request.user) |
+                Q(pk__in=OrganizationStaff
                     .objects.filter(
                         member=request.user,
                     ).values_list(
                         "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.forms:[299:318]
-==src.events.forms:[325:344]
-            }
+==src.accounts.views:[1129:1139]
+==src.events.decorators:[116:126]
+            Q(organization=None) |
+            Q(organization__is_hidden=False) |
+            Q(
+                Q(organization__pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(organization__pk__in=request.user (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.accounts.views:[1129:1145]
+==src.events.decorators:[87:103]
+            Q(organization=None) |
+            Q(organization__is_hidden=False) |
+            Q(
+                Q(organization__pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(organization__pk__in=request.user
+                    .organization_group_members
+                    .all().values_list(
+                        "organization_id", flat=True
+                    )),
+                organization__is_hidden=True,
+            ), (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.accounts.views:[1062:1068]
+==src.events.models:[1698:1704]
+            event__status__in=[
+                EventStatus.UPCOMING,
+                EventStatus.COMPLETE,
+            ],
+            status__in=[
+                ParticipationStatus.CANCELLED_BY_USER, (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.accounts.views:[1131:1137]
+==src.api.v1.events.utils:[62:68]
+        Q(
+            Q(organization__pk__in=OrganizationStaff
+                .objects.filter(
+                    member=request.user,
+                ).values_list(
+                    "organization_id", flat=True (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.accounts.forms:[298:317]
+==src.events.forms:[316:335]
+        }
 
     def clean(self):
-        """Docstring."""
+        """Clean."""
         return self.cleaned_data
 
     def save(self, commit=True):
@@ -1411,11 +1367,11 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
 
 # -----------------------------------------------------------------------------
-# --- RESET PASSWORD FORM
+# --- ROLE FORM & FORMSET
 # ----------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[170:188]
-==src.events.models:[412:423]
+==src.blog.models:[169:187]
+==src.events.models:[409:420]
         if self.avatar:
             return f"<img src='{self.avatar.url}' width='100' height='60' />"
 
@@ -1428,39 +1384,9 @@ setup.py:1:0: R0801: Similar lines in 2 files
         """Docstring."""
         try: (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.settings.base:[139:146]
-==src.settings.local:[59:86]
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-)
-
-
-###############################################################################
-### DJANGO CACHING                                                          ###
-###############################################################################
-# CACHES = {
-#     "default": {
-#         "BACKEND":  config("CACHE_BACKEND", default=""),
-#         "LOCATION": config("CACHE_LOCATION", default=""),
-#         "TIMEOUT":  config("CACHE_TIMEOUT", default=""),
-#     }
-# }
-
-# CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="")
-# CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default="")
-# CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="")
-
-
-###############################################################################
-### DJANGO LOGGING                                                          ###
-############################################################################### (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
 ==src.events.decorators:[58:81]
 ==src.organizations.decorators:[45:65]
-                )
+            )
         else:
             raise Http404
 
@@ -1493,8 +1419,21 @@ setup.py:1:0: R0801: Similar lines in 2 files
                         "organization_id", flat=True
                     )), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.views:[1069:1076]
-==src.organizations.views:[533:540]
+==src.events.views:[946:956]
+==src.organizations.views:[539:549]
+                tmp_file.delete()
+
+            # -----------------------------------------------------------------
+            # --- Save URLs and Video URLs and pull their Titles.
+            for link in request.POST["tmp_links"].split():
+                url = validate_url(link)
+
+                if get_youtube_video_id(link):
+                    AttachedVideoUrl.objects.create(
+                        url=link, (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
+==src.events.views:[1050:1057]
+==src.organizations.views:[523:530]
             for tmp_file in form.cleaned_data["tmp_files"]:
                 mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
 
@@ -1503,23 +1442,23 @@ setup.py:1:0: R0801: Similar lines in 2 files
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.organizations.decorators:[99:114]
+==src.organizations.decorators:[98:113]
 ==src.organizations.views:[78:93]
-                    Q(is_hidden=False) |
-                    Q(
-                        Q(pk__in=OrganizationStaff
-                            .objects.filter(
-                                member=request.user,
-                            ).values_list(
-                                "organization_id", flat=True
-                            )) |
-                        Q(pk__in=request.user
-                            .organization_group_members
-                            .all().values_list(
-                                "organization_id", flat=True
-                            )),
-                        is_hidden=True,
-                    ), (duplicate-code)
+            Q(is_hidden=False) |
+            Q(
+                Q(pk__in=OrganizationStaff
+                    .objects.filter(
+                        member=request.user,
+                    ).values_list(
+                        "organization_id", flat=True
+                    )) |
+                Q(pk__in=request.user
+                    .organization_group_members
+                    .all().values_list(
+                        "organization_id", flat=True
+                    )),
+                is_hidden=True,
+            ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.invites.admin:[70:76]
 ==src.organizations.admin:[184:190]
@@ -1539,8 +1478,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
             "invite-revoked",
         ), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[281:294]
-==src.organizations.forms:[159:170]
+==src.events.forms:[273:286]
+==src.organizations.forms:[157:168]
         return self.cleaned_data
 
     def save(self, commit=True):
@@ -1553,16 +1492,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
         return instance (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[116:122]
-==src.organizations.forms:[47:53]
-    tmp_files = forms.ModelMultipleChoiceField(
-        widget=forms.widgets.MultipleHiddenInput,
-        queryset=TemporaryFile.objects.all(),
-        required=False,
-    )
-    tmp_links = forms.CharField( (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.forms:[66:79]
+==src.events.forms:[65:78]
 ==src.organizations.forms:[29:39]
             ("he", _("Affiliate different Person")),
         ]
@@ -1586,8 +1516,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
     # ------------------------------------------------------------------------- (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.models:[119:125]
-==src.organizations.models:[111:117]
+==src.accounts.models:[120:126]
+==src.organizations.models:[110:116]
     phone_number = models.ForeignKey(
         Phone,
         db_index=True,
@@ -1595,8 +1525,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
         null=True, blank=True,
         verbose_name=_("Phone Numbers"), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.models:[112:118]
-==src.organizations.models:[103:109]
+==src.accounts.models:[113:119]
+==src.organizations.models:[102:108]
     address = models.ForeignKey(
         Address,
         db_index=True,
@@ -1604,8 +1534,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
         null=True, blank=True,
         verbose_name=_("Address"), (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[187:196]
-==src.organizations.models:[330:339]
+==src.blog.models:[186:195]
+==src.organizations.models:[325:334]
         try:
             ping_google()
         except Exception as exc:
@@ -1616,7 +1546,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
         update_seo_model_instance_metadata(
             title=self.title, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.models:[1200:1205]
+==src.events.models:[1196:1201]
 ==src.invites.models:[108:113]
     date_accepted = models.DateField(
         db_index=True,
@@ -1626,31 +1556,31 @@ setup.py:1:0: R0801: Similar lines in 2 files
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.templatetags.accounttags:[111:117]
 ==src.api.v1.organizations.utils:[57:63]
-            Q(author=request.user) |
-            Q(pk__in=OrganizationStaff
-                .objects.filter(
-                    member=request.user,
-                ).values_list(
-                    "organization_id", flat=True (duplicate-code)
+        Q(author=request.user) |
+        Q(pk__in=OrganizationStaff
+            .objects.filter(
+                member=request.user,
+            ).values_list(
+                "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[1054:1059]
-==src.events.models:[1688:1693]
-            event__status=EventStatus.COMPLETE,
-            status__in=[
-                ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                ParticipationStatus.ACKNOWLEDGED, (duplicate-code)
+==src.accounts.views:[1050:1055]
+==src.events.models:[1683:1688]
+        event__status=EventStatus.COMPLETE,
+        status__in=[
+            ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
+            ParticipationStatus.ACKNOWLEDGED, (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.views:[916:921]
-==src.api.v1.invites.views:[152:157]
+==src.accounts.views:[913:918]
+==src.api.v1.invites.views:[151:156]
                 Q(pk__in=OrganizationStaff
                     .objects.filter(
                         member=request.user,
                     ).values_list(
                         "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.app.forms:[219:233]
-==src.events.forms:[285:294]
+==src.app.forms:[220:234]
+==src.events.forms:[277:286]
         instance = super().save(commit=False)
         instance.author = self.user
 
@@ -1661,8 +1591,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
  (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.accounts.forms:[303:318]
-==src.app.forms:[283:295]
+==src.accounts.forms:[302:317]
+==src.app.forms:[284:296]
         return self.cleaned_data
 
     def save(self, commit=True):
@@ -1688,12 +1618,12 @@ setup.py:1:0: R0801: Similar lines in 2 files
     class Meta: (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.api.v1.organizations.utils:[58:63]
-==src.organizations.decorators:[101:106]
-        Q(pk__in=OrganizationStaff
-            .objects.filter(
-                member=request.user,
-            ).values_list(
-                "organization_id", flat=True (duplicate-code)
+==src.organizations.decorators:[100:105]
+                        Q(pk__in=OrganizationStaff
+                            .objects.filter(
+                                member=request.user,
+                            ).values_list(
+                                "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.organizations.decorators:[37:42]
 ==src.organizations.views:[162:167]
@@ -1711,8 +1641,16 @@ setup.py:1:0: R0801: Similar lines in 2 files
                     ).values_list(
                         "organization_id", flat=True (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
+==src.events.forms:[114:119]
+==src.organizations.forms:[46:51]
+    tmp_files = forms.ModelMultipleChoiceField(
+        widget=forms.widgets.MultipleHiddenInput,
+        queryset=TemporaryFile.objects.all(),
+        required=False)
+    tmp_links = forms.CharField( (duplicate-code)
+setup.py:1:0: R0801: Similar lines in 2 files
 ==src.home.forms:[98:105]
-==src.organizations.forms:[163:170]
+==src.organizations.forms:[161:168]
         instance = super().save(commit=False)
         instance.author = self.user
 
@@ -1721,16 +1659,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
         return instance (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.events.models:[308:313]
-==src.organizations.models:[152:157]
-    is_alt_person = models.BooleanField(
-        default=False)
-    alt_person_fullname = models.CharField(
-        max_length=80, null=True, blank=True,
-        verbose_name=_("Full Name"), (duplicate-code)
-setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.models:[399:406]
-==src.organizations.models:[364:376]
+==src.organizations.models:[359:371]
             if created:
                 avatar = File(storage.open(self.avatar.file.name, "rb"))
 
@@ -1740,7 +1670,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
                 storage.delete(avatar.file.name) (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.accounts.models:[166:172]
-==src.organizations.models:[601:607]
+==src.organizations.models:[595:601]
         if request:
             domain_name = request.get_host()
         else:
@@ -1748,8 +1678,8 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
         url = reverse( (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
-==src.blog.models:[127:133]
-==src.organizations.models:[195:201]
+==src.blog.models:[126:132]
+==src.organizations.models:[190:196]
         if request:
             domain_name = request.get_host()
         else:
@@ -1758,7 +1688,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
         url = reverse( (duplicate-code)
 setup.py:1:0: R0801: Similar lines in 2 files
 ==src.home.models:[89:101]
-==src.organizations.models:[250:268]
+==src.organizations.models:[245:263]
         if self.avatar:
             return f"<img src='{self.avatar.url}' width='100' height='60' />"
 
@@ -1781,7 +1711,7 @@ setup.py:1:0: R0801: Similar lines in 2 files
 
 Report
 ======
-5057 statements analysed.
+5065 statements analysed.
 
 Statistics by type
 ------------------
@@ -1789,18 +1719,18 @@ Statistics by type
 +---------+-------+-----------+-----------+------------+---------+
 |type     |number |old number |difference |%documented |%badname |
 +=========+=======+===========+===========+============+=========+
-|module   |170    |170        |=          |100.00      |0.00     |
+|module   |175    |174        |+1.00      |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|class    |222    |222        |=          |81.98       |0.00     |
+|class    |223    |223        |=          |82.06       |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
-|method   |400    |400        |=          |100.00      |0.00     |
+|method   |401    |401        |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 |function |151    |151        |=          |100.00      |0.00     |
 +---------+-------+-----------+-----------+------------+---------+
 
 
 
-20400 lines have been analyzed
+20237 lines have been analyzed
 
 Raw metrics
 -----------
@@ -1808,13 +1738,13 @@ Raw metrics
 +----------+-------+------+---------+-----------+
 |type      |number |%     |previous |difference |
 +==========+=======+======+=========+===========+
-|code      |10041  |49.22 |10043    |-2.00      |
+|code      |9847   |48.66 |9846     |+1.00      |
 +----------+-------+------+---------+-----------+
-|docstring |3577   |17.53 |3563     |+14.00     |
+|docstring |3586   |17.72 |3586     |=          |
 +----------+-------+------+---------+-----------+
-|comment   |3433   |16.83 |3429     |+4.00      |
+|comment   |3433   |16.96 |3433     |=          |
 +----------+-------+------+---------+-----------+
-|empty     |3349   |16.42 |3349     |=          |
+|empty     |3371   |16.66 |3370     |+1.00      |
 +----------+-------+------+---------+-----------+
 
 
@@ -1840,11 +1770,11 @@ Messages by category
 +===========+=======+=========+===========+
 |convention |67     |67       |67         |
 +-----------+-------+---------+-----------+
-|refactor   |144    |144      |144        |
+|refactor   |142    |142      |142        |
 +-----------+-------+---------+-----------+
-|warning    |65     |65       |65         |
+|warning    |64     |64       |64         |
 +-----------+-------+---------+-----------+
-|error      |33     |35       |35         |
+|error      |33     |33       |33         |
 +-----------+-------+---------+-----------+
 
 
@@ -1855,7 +1785,7 @@ Messages
 +-------------------------------------+------------+
 |message id                           |occurrences |
 +=====================================+============+
-|duplicate-code                       |95          |
+|duplicate-code                       |93          |
 +-------------------------------------+------------+
 |unused-variable                      |30          |
 +-------------------------------------+------------+
@@ -1901,17 +1831,15 @@ Messages
 +-------------------------------------+------------+
 |arguments-differ                     |3           |
 +-------------------------------------+------------+
-|unnecessary-pass                     |2           |
-+-------------------------------------+------------+
 |fixme                                |2           |
 +-------------------------------------+------------+
 |abstract-method                      |2           |
 +-------------------------------------+------------+
 |use-maxsplit-arg                     |1           |
 +-------------------------------------+------------+
-|unused-wildcard-import               |1           |
-+-------------------------------------+------------+
 |unspecified-encoding                 |1           |
++-------------------------------------+------------+
+|unnecessary-pass                     |1           |
 +-------------------------------------+------------+
 |unnecessary-lambda-assignment        |1           |
 +-------------------------------------+------------+
@@ -1922,6 +1850,8 @@ Messages
 |too-many-boolean-expressions         |1           |
 +-------------------------------------+------------+
 |redefined-builtin                    |1           |
++-------------------------------------+------------+
+|raise-missing-from                   |1           |
 +-------------------------------------+------------+
 |pointless-string-statement           |1           |
 +-------------------------------------+------------+
@@ -1948,5 +1878,5 @@ Messages
 
 
 ------------------------------------------------------------------
-Your code has been rated at 9.13/10 (previous run: 9.11/10, +0.02)
+Your code has been rated at 9.14/10 (previous run: 9.14/10, +0.00)
 

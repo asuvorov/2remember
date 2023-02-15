@@ -99,13 +99,10 @@ def event_list(request):
     if category_slug:
         category = get_object_or_None(
             Category,
-            slug=category_slug,
-            )
+            slug=category_slug)
 
         if category:
-            events = events.filter(
-                category=category.category,
-                )
+            events = events.filter(category=category.category)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -201,8 +198,7 @@ def event_near_you_list(request):
                 request.user.profile.address.city):
             events = events.filter(
                 address__country=request.user.profile.address.country,
-                address__city__icontains=request.user.profile.address.city,
-                )
+                address__city__icontains=request.user.profile.address.city)
         # ---------------------------------------------------------------------
         # --- Filter by Province and Zip Code
         elif (
@@ -210,22 +206,17 @@ def event_near_you_list(request):
                 request.user.profile.address.zip_code):
             events = events.filter(
                 address__province__icontains=request.user.profile.address.province,
-                address__zip_code=request.user.profile.address.zip_code,
-                )
+                address__zip_code=request.user.profile.address.zip_code)
         else:
             events = []
     elif city:
         # ---------------------------------------------------------------------
         # --- Filter by Country and City
         if city["country_code"]:
-            events = events.filter(
-                address__country=city["country_code"],
-            )
+            events = events.filter(address__country=city["country_code"])
 
         if city["city"]:
-            events = events.filter(
-                address__city__icontains=city["city"],
-            )
+            events = events.filter(address__city__icontains=city["city"])
     else:
         events = []
 
@@ -352,8 +343,7 @@ def event_dateless_list(request):
     """List of the dateless Events."""
     events = get_event_list(request).filter(
         status=EventStatus.UPCOMING,
-        recurrence=Recurrence.DATELESS,
-        )
+        recurrence=Recurrence.DATELESS)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -530,7 +520,9 @@ def event_create(request):
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
         request.POST or None, request.FILES or None,
-        user=request.user, organization_ids=organization_ids, tz_name=tz_name)
+        user=request.user,
+        organization_ids=organization_ids,
+        tz_name=tz_name)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
         required=False if request.POST.get("addressless", False) else True,
@@ -560,6 +552,7 @@ def event_create(request):
             # -----------------------------------------------------------------
             # --- Save Roles.
             roles = formset_roles.save(commit=True)
+
             for role in roles:
                 role.event = event
                 role.save()
@@ -567,6 +560,7 @@ def event_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
+
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(event)
                 social_link.object_id = event.id
@@ -632,16 +626,14 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     event = get_object_or_404(
         Event,
-        slug=slug,
-    )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
     # -------------------------------------------------------------------------
     social_links = SocialLink.objects.filter(
         content_type=ContentType.objects.get_for_model(event),
-        object_id=event.id
-    )
+        object_id=event.id)
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
@@ -658,21 +650,18 @@ def event_details(request, slug):
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Event.
-        is_rated = event.is_rated_by_user(
-            request.user)
+        is_rated = event.is_rated_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Event.
-        is_complained = event.is_complained_by_user(
-            request.user)
+        is_complained = event.is_complained_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
         participation = get_object_or_None(
             Participation,
             user=request.user,
-            event=event,
-        )
+            event=event)
 
         if participation:
             # -----------------------------------------------------------------
@@ -809,8 +798,7 @@ def event_confirm(request, slug):
     # -------------------------------------------------------------------------
     event = get_object_or_404(
         Event,
-        slug=slug,
-    )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
@@ -843,8 +831,7 @@ def event_acknowledge(request, slug):
     # -------------------------------------------------------------------------
     event = get_object_or_404(
         Event,
-        slug=slug,
-    )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
@@ -879,8 +866,7 @@ def event_edit(request, slug):
     # -------------------------------------------------------------------------
     event = get_object_or_404(
         Event,
-        slug=slug,
-    )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Completed or closed (deleted) Events cannot be modified.
@@ -893,7 +879,8 @@ def event_edit(request, slug):
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
         request.POST or None, request.FILES or None,
-        user=request.user, instance=event)
+        user=request.user,
+        instance=event)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
         required=False if request.POST.get("addressless", False) else True,
@@ -902,16 +889,13 @@ def event_edit(request, slug):
     formset_roles = RoleFormSet(
         request.POST or None, request.FILES or None,
         prefix="roles",
-        queryset=Role.objects.filter(
-            event=event,
-            ))
+        queryset=Role.objects.filter(event=event))
     formset_social = SocialLinkFormSet(
         request.POST or None, request.FILES or None,
         prefix="socials",
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(event),
-            object_id=event.id
-            ))
+            object_id=event.id))
 
     if request.method == "POST":
         if (
@@ -928,6 +912,7 @@ def event_edit(request, slug):
             # -----------------------------------------------------------------
             # --- Save Roles.
             roles = formset_roles.save(commit=True)
+
             for role in roles:
                 role.event = event
                 role.save()
@@ -935,6 +920,7 @@ def event_edit(request, slug):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
+
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(event)
                 social_link.object_id = event.id
@@ -950,15 +936,13 @@ def event_edit(request, slug):
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
                 elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
 
                 tmp_file.delete()
 
@@ -971,15 +955,13 @@ def event_edit(request, slug):
                     AttachedVideoUrl.objects.create(
                         url=link,
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
                 elif url:
                     AttachedUrl.objects.create(
                         url=url,
                         title=get_website_title(url) or "",
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).
@@ -1043,8 +1025,7 @@ def event_reporting_materials(request, slug):
     # -------------------------------------------------------------------------
     event = get_object_or_404(
         Event,
-        slug=slug,
-    )
+        slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Organizer can add reporting Materials only if Event is completed.
@@ -1075,15 +1056,13 @@ def event_reporting_materials(request, slug):
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
                 elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
 
                 tmp_file.delete()
 
@@ -1096,15 +1075,13 @@ def event_reporting_materials(request, slug):
                     AttachedVideoUrl.objects.create(
                         url=link,
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
                 elif url:
                     AttachedUrl.objects.create(
                         url=url,
                         title=get_website_title(url) or "",
                         content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id,
-                        )
+                        object_id=event.id)
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).

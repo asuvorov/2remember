@@ -46,7 +46,7 @@ def user_directory_path(instance, filename):
     """User Directory Path."""
     # --- File will be uploaded to
     #     MEDIA_ROOT/accounts/<id>/avatars/<filename>
-    fname=get_unique_filename(filename.split("/")[-1])
+    fname = get_unique_filename(filename.split("/")[-1])
 
     return f"accounts/{instance.user.id}/avatars/{fname}"
 
@@ -61,8 +61,8 @@ class UserProfileManager(models.Manager):
 
 @autoconnect
 class UserProfile(
-        CommentMixin, ComplaintMixin, EventMixin, ParticipationMixin,
-        OrganizationGroupMixin, OrganizationStaffMixin, RatingMixin, ViewMixin, TimeStampedModel):
+        CommentMixin, ComplaintMixin, EventMixin, ParticipationMixin, OrganizationGroupMixin,
+        OrganizationStaffMixin, RatingMixin, ViewMixin, TimeStampedModel):
     """User Profile Model."""
 
     # TODO: For each Model define the Attributes and Methods in this Order:
@@ -84,7 +84,8 @@ class UserProfile(
         verbose_name=_("User"),
         help_text=_("User"))
     avatar = models.ImageField(
-        upload_to=user_directory_path, blank=True)
+        upload_to=user_directory_path,
+        blank=True)
     nickname = models.CharField(
         db_index=True,
         max_length=32, null=True, blank=True,
@@ -132,8 +133,7 @@ class UserProfile(
         verbose_name=_("I would like to receive Email Updates"),
         help_text=_("I would like to receive Email Updates"))
 
-    is_newly_created = models.BooleanField(
-        default=True)
+    is_newly_created = models.BooleanField(default=True)
 
     # -------------------------------------------------------------------------
     # --- Different.

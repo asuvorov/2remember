@@ -36,7 +36,7 @@ def organization_access_check_required(request, organization_id):
         ),
         id=organization_id,
         is_deleted=False,
-        )
+    )
 
     if not organization:
         return False
@@ -64,7 +64,7 @@ def organization_staff_member_required(request, organization_id):
             )),
         id=organization_id,
         is_deleted=False,
-        )
+    )
 
     if not organization:
         return False

@@ -37,7 +37,7 @@ def event_access_check_required(request, event_id):
             organization__is_hidden=True,
         ),
         id=event_id,
-        )
+    )
 
     if not event:
         return False
@@ -69,7 +69,7 @@ def event_org_staff_member_required(request, event_id):
                 )),
         ),
         id=event_id,
-        )
+    )
 
     if not event:
         return False

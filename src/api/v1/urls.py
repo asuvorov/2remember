@@ -1,4 +1,5 @@
 """Define URL Paths."""
+
 from django.urls import (
     include,
     re_path)
@@ -15,15 +16,8 @@ urlpatterns = [
     # --- Authorization.
     # -------------------------------------------------------------------------
     re_path(r"^auth/get-token/$",
-        views.obtain_auth_token,
-        name="obtain-auth-token"),
-
-    # -------------------------------------------------------------------------
-    # --- Version.
-    # -------------------------------------------------------------------------
-    re_path(r"^app-version/$",
-        views.app_version,
-        name="app-version"),
+        views.get_auth_token,
+        name="get-auth-token"),
 
     # -------------------------------------------------------------------------
     # --- Autocomplete.
