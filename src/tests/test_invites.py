@@ -15,6 +15,6 @@ class InviteModelTests(TestCase):
         """
         time = timezone.now() + datetime.timedelta(days=30)
 
-        invite = Question(pub_date=time)
+        invite = Invite(pub_date=time)
 
         self.assertIs(invite.was_published_recently(), False)

@@ -104,6 +104,7 @@ setup(
         "django-twitter-tag==1.2.1",
         "django-url-tools-py3==0.2.1",
         "elasticsearch==8.6.1",
+        "fabric==3.0.0",
         "geoip2==4.6.0",
         "pendulum==2.1.2",
         "pep8==1.7.1",
