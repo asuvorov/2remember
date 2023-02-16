@@ -205,9 +205,10 @@ class CreateNewsletterForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Newsletter Title"),
                     "maxlength":    80,
-                }),
+                }
+            ),
             "content": CKEditorUploadingWidget(),
-            }
+        }
 
     def clean(self):
         """Docstring."""
@@ -263,8 +264,9 @@ class SocialLinkForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("URL"),
-                }),
-            }
+                }
+            ),
+        }
 
     def clean(self):
         """Docstring."""
@@ -273,8 +275,7 @@ class SocialLinkForm(forms.ModelForm):
                 # -----------------------------------------------------------------
                 # --- Validate `url` Field
                 if not self.cleaned_data["url"]:
-                    self._errors["url"] = self.error_class(
-                        [_("This Field is required.")])
+                    self._errors["url"] = self.error_class([_("This Field is required.")])
 
                     del self.cleaned_data["url"]
 
@@ -301,5 +302,9 @@ class SocialLinkModelFormSet(BaseModelFormSet):
         super().clean()
 
 SocialLinkFormSet = modelformset_factory(
-    SocialLink, form=SocialLinkForm, formset=SocialLinkModelFormSet,
-    max_num=10, extra=0, can_delete=True)
+    SocialLink,
+    form=SocialLinkForm,
+    formset=SocialLinkModelFormSet,
+    max_num=10,
+    extra=0,
+    can_delete=True)

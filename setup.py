@@ -111,6 +111,7 @@ setup(
         "pylint==2.15.10",
         "pylint-django==2.5.3",
         "python-decouple==3.7",
+        "sendgrid-django==4.2.0",
         "social-auth-app-django==5.0.0",
         "whitenoise==6.3.0",
     ],

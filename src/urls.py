@@ -51,6 +51,7 @@ urlpatterns = [
 
     re_path(r"^", include("home.urls")),
     re_path(r"^accounts/", include("accounts.urls")),
+    re_path(r"^api/", include("api.urls")),
     re_path(r"^api/v1/", include("api.v1.urls")),
     re_path(r"^api/v2/", include("api.v2.urls")),
     re_path(r"^blog/", include("blog.urls")),

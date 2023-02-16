@@ -20,7 +20,7 @@ def pretty_timestamp(timestamp):
     except ValueError:
         return None
 
-    # Specify Format here
+    # Specify Format here.
     # return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t_s))
     return local_tz.localize(datetime.datetime.fromtimestamp(t_s))
 

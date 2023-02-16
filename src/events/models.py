@@ -306,8 +306,7 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
     # -------------------------------------------------------------------------
-    is_alt_person = models.BooleanField(
-        default=False)
+    is_alt_person = models.BooleanField(default=False)
     alt_person_fullname = models.CharField(
         max_length=80, null=True, blank=True,
         verbose_name=_("Full Name"),
@@ -382,8 +381,6 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Methods.
     # -------------------------------------------------------------------------
-    # -------------------------------------------------------------------------
-    # --- Challenge direct URL
     def public_url(self, request=None):
         """Docstring."""
         if request:
@@ -708,7 +705,7 @@ class Event(
 
     def email_notify_admin_chl_completed(self, request=None):
         """Send Notification to the Challenge Admin."""
-        # -------------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
             "Dear, %(user)s.") % {
@@ -752,7 +749,7 @@ class Event(
 
     def email_notify_admin_chl_cloned(self, request=None):
         """Send Notification to the Challenge Admin."""
-        # -------------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
             "Dear, %(user)s.") % {
@@ -794,7 +791,7 @@ class Event(
 
     def email_notify_admin_chl_closed(self, request=None):
         """Send Notification to the Challenge Admin."""
-        # -------------------------------------------------------------------------
+        # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
             "Dear, %(user)s.") % {
@@ -851,8 +848,7 @@ class Event(
             self.start_date_time_tz = self.start_tz.localize(
                 datetime.datetime.combine(
                     self.start_date,
-                    self.start_time
-                    ))
+                    self.start_time))
 
     def post_save(self, created, **kwargs):
         """Docstring."""
@@ -1397,7 +1393,7 @@ class Participation(models.Model):
                 ParticipationStatus.CONFIRMED,
                 ParticipationStatus.WAITING_FOR_SELFREFLECTION,
                 ParticipationStatus.ACKNOWLEDGED,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
+                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
             ]
         )
 
@@ -1422,7 +1418,7 @@ class Participation(models.Model):
                 ParticipationStatus.CONFIRMED,
                 ParticipationStatus.WAITING_FOR_SELFREFLECTION,
                 ParticipationStatus.ACKNOWLEDGED,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
+                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
             ]
         )
 
@@ -1443,7 +1439,7 @@ class Participation(models.Model):
         participations = cls.objects.filter(
             event=event,
             status__in=[
-                ParticipationStatus.WAITING_FOR_CONFIRMATION
+                ParticipationStatus.WAITING_FOR_CONFIRMATION,
             ]
         )
 
@@ -1467,7 +1463,7 @@ class Participation(models.Model):
             event=event,
             status__in=[
                 ParticipationStatus.WAITING_FOR_CONFIRMATION,
-                ParticipationStatus.CONFIRMED
+                ParticipationStatus.CONFIRMED,
             ]
         )
 
@@ -1487,14 +1483,13 @@ class Participation(models.Model):
             event=event,
             status__in=[
                 ParticipationStatus.WAITING_FOR_CONFIRMATION,
-                ParticipationStatus.CONFIRMED
+                ParticipationStatus.CONFIRMED,
             ]
         )
 
         for participation in participations:
             participation.status = ParticipationStatus.CANCELLED_BY_ADMIN
-            participation.cancellation_text =\
-                "Event was canceled by Admin"
+            participation.cancellation_text = "Event was canceled by Admin"
             participation.save()
 
             # -----------------------------------------------------------------

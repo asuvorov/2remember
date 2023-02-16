@@ -52,8 +52,7 @@ class CreateEditEventForm(forms.ModelForm):
             if self.organization_ids:
                 try:
                     self.fields["organization"].initial = organizations.filter(
-                        id__in=self.organization_ids,
-                        )[0]
+                        id__in=self.organization_ids)[0]
                 except Exception as exc:
                     print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
         else:
@@ -89,8 +88,7 @@ class CreateEditEventForm(forms.ModelForm):
         else:
             self.fields["start_tz"].initial = settings.TIME_ZONE
 
-    contact = forms.ChoiceField(
-        widget=forms.RadioSelect())
+    contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
         input_formats=[
             "%Y-%m-%d",     # "2006-10-25"
@@ -117,8 +115,7 @@ class CreateEditEventForm(forms.ModelForm):
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
         queryset=TemporaryFile.objects.all(),
-        required=False,
-    )
+        required=False)
     tmp_links = forms.CharField(
         label=_("Related Links"),
         widget=forms.TextInput(
@@ -210,8 +207,7 @@ class CreateEditEventForm(forms.ModelForm):
         duration = self.cleaned_data["duration"]
 
         if duration <= 0:
-            raise forms.ValidationError(
-                _("Duration should be greater, than 0"))
+            raise forms.ValidationError(_("Duration should be greater, than 0"))
 
         return duration
 
@@ -256,15 +252,13 @@ class CreateEditEventForm(forms.ModelForm):
             pass
         elif self.cleaned_data["recurrence"] == Recurrence.ONCE:
             if not self.cleaned_data["start_date"]:
-                self._errors["start_date"] = self.error_class(
-                    [_("This Field is required.")])
+                self._errors["start_date"] = self.error_class([_("This Field is required.")])
 
                 del self.cleaned_data["start_date"]
 
             if self.cleaned_data["start_time"] is None:
                 # Refer to `https://bugs.python.org/issue13936`
-                self._errors["start_time"] = self.error_class(
-                    [_("This Field is required.")])
+                self._errors["start_time"] = self.error_class([_("This Field is required.")])
 
                 del self.cleaned_data["start_time"]
 
@@ -273,9 +267,7 @@ class CreateEditEventForm(forms.ModelForm):
         if (
                 self.cleaned_data["accept_automatically"] and
                 not self.cleaned_data["acceptance_text"]):
-
-            self._errors["acceptance_text"] = self.error_class(
-                [_("This Field is required.")])
+            self._errors["acceptance_text"] = self.error_class([_("This Field is required.")])
 
             del self.cleaned_data["acceptance_text"]
 
@@ -305,8 +297,7 @@ class AddEventMaterialsForm(forms.ModelForm):
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
         queryset=TemporaryFile.objects.all(),
-        required=False,
-    )
+        required=False)
     tmp_links = forms.CharField(
         label=_("Related Links"),
         widget=forms.TextInput(
@@ -356,7 +347,7 @@ class RoleForm(forms.ModelForm):
 
     class Media:
         js = formset_media_js + (
-            # Other form media here
+            # Other Form Media here.
         )
 
     class Meta:
@@ -384,16 +375,14 @@ class RoleForm(forms.ModelForm):
                 # -------------------------------------------------------------
                 # --- Validate `name` Field
                 if not self.cleaned_data["name"]:
-                    self._errors["name"] = self.error_class(
-                        [_("This Field is required.")])
+                    self._errors["name"] = self.error_class([_("This Field is required.")])
 
                     del self.cleaned_data["name"]
 
                 # -------------------------------------------------------------
                 # --- Validate `quantity` Field
                 if not self.cleaned_data["quantity"]:
-                    self._errors["quantity"] = self.error_class(
-                        [_("This Field is required.")])
+                    self._errors["quantity"] = self.error_class([_("This Field is required.")])
 
                     del self.cleaned_data["quantity"]
 
@@ -456,6 +445,7 @@ class FilterEventForm(forms.Form):
 
             self.fields["month"].choices = month_choices
             self.fields["day"].choices = day_of_month_choices[:-1]
+
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
@@ -478,7 +468,7 @@ class FilterEventForm(forms.Form):
                 "placeholder":  _("Year"),
             }),
         required=False,
-        )
+    )
     month = forms.ChoiceField(
         widget=forms.Select(
             attrs={
@@ -486,7 +476,7 @@ class FilterEventForm(forms.Form):
                 "placeholder":  _("Month"),
             }),
         required=False,
-        )
+    )
     day = forms.ChoiceField(
         widget=forms.Select(
             attrs={
@@ -494,4 +484,4 @@ class FilterEventForm(forms.Form):
                 "placeholder":  _("Day"),
             }),
         required=False,
-        )
+    )

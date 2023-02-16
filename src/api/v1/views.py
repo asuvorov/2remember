@@ -34,7 +34,7 @@ def api_root(request):
 # -----------------------------------------------------------------------------
 # --- Authorization
 # -----------------------------------------------------------------------------
-class ObtainAuthToken(APIView):
+class GetAuthTokenViewSet(APIView):
     """Get Auth Token."""
 
     permission_classes = (AllowAny,)
@@ -46,9 +46,8 @@ class ObtainAuthToken(APIView):
         serializer = self.serializer_class(data=request.DATA)
 
         if serializer.is_valid():
-            token, created = Token.objects.get_or_create(
-                user=serializer.validated_data["user"]
-            )
+            token, created = Token.objects.get_or_create(user=serializer.validated_data["user"])
+
             return Response({
                 "token":    token.key,
                 "user_id":  serializer.validated_data["user"].id
@@ -58,39 +57,7 @@ class ObtainAuthToken(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST)
 
-obtain_auth_token = ObtainAuthToken.as_view()
-
-
-# -----------------------------------------------------------------------------
-# --- Version
-# -----------------------------------------------------------------------------
-class ObtainProductVersion(APIView):
-    """Get App Version."""
-
-    permission_classes = (AllowAny,)
-
-    def get(self, request):
-        """GET."""
-        result = {
-            "PRODUCT_NAME":             settings.PRODUCT_NAME,
-            "VERSION_API":              settings.VERSION_API,
-            "VERSION_NAME":             settings.VERSION_NAME,
-            "VERSION_YEAR":             settings.VERSION_YEAR,
-            "VERSION_MAJOR":            settings.VERSION_MAJOR,
-            "VERSION_MINOR":            settings.VERSION_MINOR,
-            "VERSION_PATCH":            settings.VERSION_PATCH,
-            "VERSION_BUILD":            settings.VERSION_BUILD,
-            "VERSION_RELEASE":          settings.VERSION_RELEASE,
-            "VERSION_ATTEMPT":          settings.VERSION_ATTEMPT,
-            "PRODUCT_VERSION_FULL":     settings.PRODUCT_VERSION_FULL,
-            "PRODUCT_VERSION_NUM":      settings.PRODUCT_VERSION_NUM,
-        }
-
-        return Response(
-            result,
-            status=status.HTTP_200_OK)
-
-app_version = ObtainProductVersion.as_view()
+get_auth_token = GetAuthTokenViewSet.as_view()
 
 
 # -----------------------------------------------------------------------------
@@ -162,10 +129,8 @@ class AutocompleteMemberViewSet(viewsets.ModelViewSet):
     def pre_save(self, obj):
         """Docstring."""
         pass
-
     def post_save(self, obj):
         """Docstring."""
-        pass
 
 autocomplete_member_list = AutocompleteMemberViewSet.as_view({
     "get":      "list",

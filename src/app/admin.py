@@ -20,7 +20,6 @@ from ddcore.models.Rating import Rating
 from ddcore.models.SocialLink import SocialLink
 from ddcore.models.View import View
 
-
 # from .seo import Metadata
 
 
