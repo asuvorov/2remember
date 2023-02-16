@@ -5,6 +5,6 @@ lint:
 	@pylint src/ setup.py --reports=y > reports/pylint.report
 
 test:
-	@coverage run --source="." ./src/manage.py test tests --settings=settings.local
+	@coverage run --source="." ./src/manage.py test --settings=settings.testing
 	@coverage report
 	@coverage html

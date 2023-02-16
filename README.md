@@ -13,9 +13,21 @@ For more Information on how to work in the Project, check out some of the other 
 
 1. MacOS
 
+		brew install nodejs npm
+
 2. Ubuntu
 
+		apt-get install -y nodejs nodejs-legacy npm
+
+	```
+	npm cache clear
+	npm update npm -g
+	npm config set registry http://registry.npmjs.org/
+	```
+
 ## Install `bower`
+
+	npm install -g bower
 
 # Internationalization
 
