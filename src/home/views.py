@@ -3,9 +3,11 @@
 from itertools import chain
 from operator import attrgetter
 
+import geoip2
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.gis.geoip2 import GeoIP2 as GeoIP
+from django.contrib.gis.geoip2 import GeoIP2
 from django.http import HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
@@ -38,23 +40,27 @@ from .models import (
 @cache_page(60 * 60)
 def index(request):
     """Docstring."""
-    geo = GeoIP()
-    ip_addr = get_client_ip(request)
-    # ip = "108.162.209.69"
-    country = geo.country(ip_addr)
-    city = geo.city(ip_addr)
+    try:
+        geo = GeoIP2()
+        ip_addr = get_client_ip(request)
+        # ip_addr = "108.162.209.69"
+        country = geo.country(ip_addr)
+        city = geo.city(ip_addr)
+
+    except geoip2.errors.AddressNotFoundError:
+        pass
 
     timeline_qs = []
-    timeline_qs = sorted(
-        chain(
-            Post.objects.all(),
-            Event.objects.get_upcoming(),
-            Organization.objects.filter(
-                is_hidden=False,
-                is_deleted=False,
-            )
-        ),
-        key=attrgetter("created"))[:10]
+    # timeline_qs = sorted(
+    #     chain(
+    #         Post.objects.all(),
+    #         Event.objects.get_upcoming(),
+    #         Organization.objects.filter(
+    #             is_hidden=False,
+    #             is_deleted=False,
+    #         )
+    #     ),
+    #     key=attrgetter("created"))[:10]
 
     return render(
         request, "home/index.html", {
