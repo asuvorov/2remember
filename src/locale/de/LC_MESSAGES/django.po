@@ -1,0 +1,1699 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-15 13:53-0800\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: accounts/choices.py:16
+msgid "Female"
+msgstr ""
+
+#: accounts/choices.py:17
+msgid "Male"
+msgstr ""
+
+#: accounts/choices.py:18
+msgid "Other"
+msgstr ""
+
+#: accounts/choices.py:29
+msgid "Paranoid"
+msgstr ""
+
+#: accounts/choices.py:30
+msgid "Normal"
+msgstr ""
+
+#: accounts/choices.py:44 accounts/choices.py:57
+msgid "No-one"
+msgstr ""
+
+#: accounts/choices.py:45
+msgid "Registered Users"
+msgstr ""
+
+#: accounts/choices.py:46
+msgid "Participants of the Events, I participate in too"
+msgstr ""
+
+#: accounts/choices.py:48
+msgid "Staff/Group Members of the Organization(s), I affiliated with"
+msgstr ""
+
+#: accounts/choices.py:49
+msgid "Everyone"
+msgstr ""
+
+#: accounts/choices.py:58
+msgid "Admins of the Events, I participate(-d) in"
+msgstr ""
+
+#: accounts/choices.py:59
+msgid "Admins of the upcoming Events on the Platform"
+msgstr ""
+
+#: accounts/forms.py:27 accounts/forms.py:31 accounts/forms.py:115
+#: accounts/forms.py:259 events/forms.py:180 events/models.py:316
+#: home/forms.py:31 organizations/forms.py:113 organizations/models.py:134
+#: organizations/models.py:159
+msgid "Email"
+msgstr ""
+
+#: accounts/forms.py:35 accounts/forms.py:41 accounts/forms.py:74
+#: accounts/forms.py:80 accounts/forms.py:322 accounts/forms.py:328
+msgid "Password"
+msgstr ""
+
+#: accounts/forms.py:45
+msgid "Keep me logged-in on this Computer"
+msgstr ""
+
+#: accounts/forms.py:90 accounts/forms.py:337
+msgid "Retry"
+msgstr ""
+
+#: accounts/forms.py:103 accounts/forms.py:243
+msgid "First Name"
+msgstr ""
+
+#: accounts/forms.py:109 accounts/forms.py:251
+msgid "Last Name"
+msgstr ""
+
+#: accounts/forms.py:127
+msgid "User already exists."
+msgstr ""
+
+#: accounts/forms.py:135 accounts/forms.py:345
+msgid "Passwords don't match."
+msgstr ""
+
+#: accounts/forms.py:182 accounts/forms.py:281 accounts/models.py:93
+msgid "Nickname"
+msgstr ""
+
+#: accounts/forms.py:188 accounts/forms.py:287
+msgid "Tell us a bit about yourself."
+msgstr ""
+
+#: accounts/models.py:84 accounts/models.py:85 accounts/models.py:439
+#: accounts/models.py:440 accounts/models.py:508 accounts/models.py:509
+#: accounts/models.py:630 accounts/models.py:631 accounts/models.py:776
+#: accounts/models.py:777 events/models.py:1136
+msgid "User"
+msgstr ""
+
+#: accounts/models.py:94
+msgid "User Nickname"
+msgstr ""
+
+#: accounts/models.py:99
+msgid "User Bio"
+msgstr ""
+
+#: accounts/models.py:104
+msgid "Gender"
+msgstr ""
+
+#: accounts/models.py:105
+msgid "User Gender"
+msgstr ""
+
+#: accounts/models.py:109
+msgid "Birthday"
+msgstr ""
+
+#: accounts/models.py:110
+msgid "User Birthday"
+msgstr ""
+
+#: accounts/models.py:119 organizations/models.py:108
+msgid "Address"
+msgstr ""
+
+#: accounts/models.py:120
+msgid "User Address"
+msgstr ""
+
+#: accounts/models.py:126 organizations/models.py:116
+msgid "Phone Numbers"
+msgstr ""
+
+#: accounts/models.py:127
+msgid "User Phone Numbers"
+msgstr ""
+
+#: accounts/models.py:133 accounts/models.py:134
+msgid "I would like to receive Email Updates"
+msgstr ""
+
+#: accounts/models.py:148
+msgid "user profile"
+msgstr ""
+
+#: accounts/models.py:149
+msgid "user profiles"
+msgstr ""
+
+#: accounts/models.py:446 accounts/models.py:447
+msgid "Hide my Profile from the Search Results"
+msgstr ""
+
+#: accounts/models.py:450 accounts/models.py:451
+msgid "Hide my Profile from the Members' List"
+msgstr ""
+
+#: accounts/models.py:456 accounts/models.py:457
+msgid "user privacy (general)"
+msgstr ""
+
+#: accounts/models.py:518 accounts/models.py:520 accounts/models.py:640
+#: accounts/models.py:642
+msgid ""
+"Who can see my Profile Details (e.g. Avatar, Name, Bio, Gender, Birthday)"
+msgstr ""
+
+#: accounts/models.py:526 accounts/models.py:528 accounts/models.py:648
+#: accounts/models.py:650
+msgid "Who can see my Contact Details (e.g. Address, Phone #, Email)"
+msgstr ""
+
+#: accounts/models.py:535 accounts/models.py:537 accounts/models.py:657
+#: accounts/models.py:659
+msgid ""
+"Who can see the List of Events, I'm going to participate in (upcoming Events)"
+msgstr ""
+
+#: accounts/models.py:543 accounts/models.py:545 accounts/models.py:665
+#: accounts/models.py:667
+msgid "Who can see the List of Events, I participated in (completed Events)"
+msgstr ""
+
+#: accounts/models.py:552 accounts/models.py:554 accounts/models.py:674
+#: accounts/models.py:676
+msgid "Who can see the List of Events, I affiliated with "
+msgstr ""
+
+#: accounts/models.py:561 accounts/models.py:563 accounts/models.py:683
+#: accounts/models.py:685
+msgid ""
+"Who can see the List of Participations, canceled by me (withdrawn "
+"Participations)"
+msgstr ""
+
+#: accounts/models.py:569 accounts/models.py:572 accounts/models.py:691
+#: accounts/models.py:694
+msgid ""
+"Who can see the List of Participations, canceled by the Event Organizer/"
+"Admin (rejected Participations)"
+msgstr ""
+
+#: accounts/models.py:578 accounts/models.py:579
+msgid "user privacy (members)"
+msgstr ""
+
+#: accounts/models.py:700 accounts/models.py:701
+msgid "user privacy (admins)"
+msgstr ""
+
+#: accounts/models.py:781
+msgid "IP"
+msgstr ""
+
+#: accounts/models.py:782
+msgid "User IP Address"
+msgstr ""
+
+#: accounts/models.py:786
+msgid "Provider"
+msgstr ""
+
+#: accounts/models.py:787
+msgid "User Internet Provider"
+msgstr ""
+
+#: accounts/models.py:799
+msgid "user login"
+msgstr ""
+
+#: accounts/models.py:800
+msgid "user logins"
+msgstr ""
+
+#: accounts/models.py:846 accounts/models.py:910 accounts/models.py:911
+msgid "Team"
+msgstr ""
+
+#: accounts/models.py:847
+msgid "Team Name"
+msgstr ""
+
+#: accounts/models.py:853
+msgid "team"
+msgstr ""
+
+#: accounts/models.py:854
+msgid "teams"
+msgstr ""
+
+#: accounts/models.py:902 accounts/models.py:903
+msgid "Team Member"
+msgstr ""
+
+#: accounts/models.py:916 organizations/models.py:442
+#: organizations/models.py:443
+msgid "Position"
+msgstr ""
+
+#: accounts/models.py:917
+msgid "Team Member Position"
+msgstr ""
+
+#: accounts/models.py:923
+msgid "team member"
+msgstr ""
+
+#: accounts/models.py:924
+msgid "team members"
+msgstr ""
+
+#: accounts/views.py:136
+msgid "All Members"
+msgstr ""
+
+#: accounts/views.py:205
+msgid "Members near you"
+msgstr ""
+
+#: accounts/views.py:266
+msgid "Members you might know"
+msgstr ""
+
+#: accounts/views.py:308
+msgid "New Members"
+msgstr ""
+
+#: accounts/views.py:350
+msgid "Members online"
+msgstr ""
+
+#: accounts/views.py:535
+msgid "Sorry, you have entered wrong Email or Password"
+msgstr ""
+
+#: accounts/views.py:1214
+msgid "An Error has occurred."
+msgstr ""
+
+#: api/v1/accounts/views.py:63 api/v1/accounts/views.py:141
+msgid "No Email provided."
+msgstr ""
+
+#: api/v1/accounts/views.py:88
+msgid "Failed to update the Email."
+msgstr ""
+
+#: api/v1/accounts/views.py:92
+msgid "Successfully updated the Email."
+msgstr ""
+
+#: api/v1/accounts/views.py:156 api/v1/accounts/views.py:192
+msgid "Failed to send the Password Renewal Link."
+msgstr ""
+
+#: api/v1/accounts/views.py:161
+msgid "User not found."
+msgstr ""
+
+#: api/v1/accounts/views.py:196
+msgid "Successfully sent the Password Renewal Link."
+msgstr ""
+
+#: api/v1/blog/views.py:65 api/v1/events/views.py:83
+msgid "No Year provided."
+msgstr ""
+
+#: api/v1/blog/views.py:70 api/v1/events/views.py:88
+msgid "No Month provided."
+msgstr ""
+
+#: api/v1/blog/views.py:130 api/v1/blog/views.py:195
+msgid "Post ID is not provided."
+msgstr ""
+
+#: api/v1/blog/views.py:142 api/v1/blog/views.py:207
+msgid "Post not found."
+msgstr ""
+
+#: api/v1/blog/views.py:157
+msgid "Successfully published the Post."
+msgstr ""
+
+#: api/v1/blog/views.py:222
+msgid "Successfully closed the Post."
+msgstr ""
+
+#: api/v1/events/views.py:153 api/v1/events/views.py:238
+#: api/v1/events/views.py:327 api/v1/events/views.py:455
+#: api/v1/events/views.py:553
+msgid "Event ID is not provided."
+msgstr ""
+
+#: api/v1/events/views.py:158 api/v1/events/views.py:243
+#: api/v1/events/views.py:332 api/v1/events/views.py:460
+msgid "No Description Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:166 api/v1/events/views.py:251
+#: api/v1/events/views.py:340 api/v1/events/views.py:468
+#: api/v1/events/views.py:561 api/v1/events/views.py:794
+#: api/v1/events/views.py:894 api/v1/events/views.py:1014
+#: api/v1/events/views.py:1247 api/v1/events/views.py:1369
+#: api/v1/home/views.py:69 api/v1/organizations/views.py:103
+#: api/v1/organizations/views.py:183 api/v1/organizations/views.py:263
+#: api/v1/organizations/views.py:337 api/v1/organizations/views.py:402
+#: api/v1/organizations/views.py:496 api/v1/organizations/views.py:585
+#: api/v1/organizations/views.py:663
+msgid "You don't have Permissions to perform the Action."
+msgstr ""
+
+#: api/v1/events/views.py:178 api/v1/events/views.py:263
+#: api/v1/events/views.py:352 api/v1/events/views.py:480
+#: api/v1/events/views.py:573 api/v1/events/views.py:699
+#: api/v1/events/views.py:806 api/v1/events/views.py:906
+#: api/v1/events/views.py:1026 api/v1/events/views.py:1132
+#: api/v1/events/views.py:1259 api/v1/events/views.py:1381
+#: api/v1/invites/views.py:135
+msgid "Event not found."
+msgstr ""
+
+#: api/v1/events/views.py:196
+msgid "Successfully published the Event."
+msgstr ""
+
+#: api/v1/events/views.py:284
+msgid "Successfully completed the Event."
+msgstr ""
+
+#: api/v1/events/views.py:411
+msgid "Successfully cloned the Event."
+msgstr ""
+
+#: api/v1/events/views.py:501
+msgid "Successfully closed the Event."
+msgstr ""
+
+#: api/v1/events/views.py:640
+msgid "Successfully posted the Participation."
+msgstr ""
+
+#: api/v1/events/views.py:682 api/v1/events/views.py:776
+#: api/v1/events/views.py:881 api/v1/events/views.py:996
+#: api/v1/events/views.py:1110 api/v1/events/views.py:1229
+#: api/v1/events/views.py:1351
+msgid "No Event ID provided."
+msgstr ""
+
+#: api/v1/events/views.py:687 api/v1/events/views.py:786
+#: api/v1/events/views.py:1006
+msgid "No Cancellation Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:712 api/v1/events/views.py:819
+#: api/v1/events/views.py:919 api/v1/events/views.py:1039
+#: api/v1/events/views.py:1145 api/v1/events/views.py:1272
+#: api/v1/events/views.py:1394
+msgid "Participation not found."
+msgstr ""
+
+#: api/v1/events/views.py:731
+msgid "Successfully withdrew the Participation."
+msgstr ""
+
+#: api/v1/events/views.py:781 api/v1/events/views.py:886
+#: api/v1/events/views.py:1001 api/v1/events/views.py:1234
+#: api/v1/events/views.py:1356
+msgid "No Participation ID provided."
+msgstr ""
+
+#: api/v1/events/views.py:838
+msgid "Successfully removed the Participant."
+msgstr ""
+
+#: api/v1/events/views.py:950
+msgid "Successfully accepted the Participation Request."
+msgstr ""
+
+#: api/v1/events/views.py:1058
+msgid "Successfully rejected the Participation Request."
+msgstr ""
+
+#: api/v1/events/views.py:1115
+msgid "No Activity Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:1120
+msgid "No Learning Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:1181
+msgid "Successfully submitted the Experience Report."
+msgstr ""
+
+#: api/v1/events/views.py:1239
+msgid "No Acknowledgment Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:1306
+msgid "Successfully accepted the Experience Report."
+msgstr ""
+
+#: api/v1/events/views.py:1361 api/v1/invites/views.py:441
+msgid "No Rejection Text provided."
+msgstr ""
+
+#: api/v1/events/views.py:1413
+msgid "Successfully rejected the Experience Report."
+msgstr ""
+
+#: api/v1/home/views.py:64
+msgid "No FAQ ID provided."
+msgstr ""
+
+#: api/v1/home/views.py:81
+msgid "FAQ not found."
+msgstr ""
+
+#: api/v1/home/views.py:88
+msgid "Successfully removed the FAQ."
+msgstr ""
+
+#: api/v1/home/views.py:146
+msgid "No Name, Email, Subject or Message provided."
+msgstr ""
+
+#: api/v1/home/views.py:187
+msgid "Successfully sent the Message."
+msgstr ""
+
+#: api/v1/invites/views.py:87
+msgid "No Invitee ID provided."
+msgstr ""
+
+#: api/v1/invites/views.py:92
+msgid "Neither Event, nor Organization, nor Organization Group ID provided."
+msgstr ""
+
+#: api/v1/invites/views.py:97
+msgid "No Invitation Text provided."
+msgstr ""
+
+#: api/v1/invites/views.py:109
+msgid "Invitee not found."
+msgstr ""
+
+#: api/v1/invites/views.py:164 api/v1/organizations/views.py:414
+#: api/v1/organizations/views.py:675
+msgid "Organization not found."
+msgstr ""
+
+#: api/v1/invites/views.py:181 api/v1/organizations/views.py:509
+#: api/v1/organizations/views.py:598
+msgid "Organization Group not found."
+msgstr ""
+
+#: api/v1/invites/views.py:210
+msgid "Successfully sent the Invitation."
+msgstr ""
+
+#: api/v1/invites/views.py:254
+msgid "No Kind provided."
+msgstr ""
+
+#: api/v1/invites/views.py:282
+msgid "Successfully archived the Invitations."
+msgstr ""
+
+#: api/v1/invites/views.py:323 api/v1/invites/views.py:436
+#: api/v1/invites/views.py:522
+msgid "No Invite ID provided."
+msgstr ""
+
+#: api/v1/invites/views.py:336 api/v1/invites/views.py:454
+#: api/v1/invites/views.py:535
+msgid "Invite not found."
+msgstr ""
+
+#: api/v1/invites/views.py:341 api/v1/invites/views.py:459
+#: api/v1/invites/views.py:540
+msgid "Invite Status has been changed already."
+msgstr ""
+
+#: api/v1/invites/views.py:392
+msgid "Successfully accepted the Invitation."
+msgstr ""
+
+#: api/v1/invites/views.py:478
+msgid "Successfully rejected the Invitation."
+msgstr ""
+
+#: api/v1/invites/views.py:558
+msgid "Successfully revoked the Invitation."
+msgstr ""
+
+#: api/v1/organizations/views.py:81 api/v1/organizations/views.py:325
+#: api/v1/organizations/views.py:389 api/v1/organizations/views.py:655
+msgid "No Organization ID provided."
+msgstr ""
+
+#: api/v1/organizations/views.py:86 api/v1/organizations/views.py:175
+#: api/v1/organizations/views.py:255 api/v1/organizations/views.py:394
+#: api/v1/organizations/views.py:488 api/v1/organizations/views.py:577
+msgid "No Payload provided."
+msgstr ""
+
+#: api/v1/organizations/views.py:121
+msgid "Successfully changed the Staff Members Order."
+msgstr ""
+
+#: api/v1/organizations/views.py:170 api/v1/organizations/views.py:250
+msgid "No Organization/Member ID provided."
+msgstr ""
+
+#: api/v1/organizations/views.py:196 api/v1/organizations/views.py:276
+msgid "Organization Staff Member not found."
+msgstr ""
+
+#: api/v1/organizations/views.py:204
+msgid "Successfully updated the Staff Member Information."
+msgstr ""
+
+#: api/v1/organizations/views.py:282
+msgid "Successfully removed the Staff Member."
+msgstr ""
+
+#: api/v1/organizations/views.py:355
+msgid "Successfully pulled out the Groups."
+msgstr ""
+
+#: api/v1/organizations/views.py:436
+msgid "Successfully created the Group."
+msgstr ""
+
+#: api/v1/organizations/views.py:483
+msgid "No Organization/Group ID provided."
+msgstr ""
+
+#: api/v1/organizations/views.py:523
+msgid "Successfully removed the Group."
+msgstr ""
+
+#: api/v1/organizations/views.py:572
+msgid "No Organization/Group/Member ID provided."
+msgstr ""
+
+#: api/v1/organizations/views.py:608
+msgid "Organization Group Member not found."
+msgstr ""
+
+#: api/v1/organizations/views.py:616
+msgid "Successfully removed the Group Member."
+msgstr ""
+
+#: api/v1/organizations/views.py:685
+msgid ""
+"You have successfully subscribed to the Organization's Newsletters and "
+"Notifications."
+msgstr ""
+
+#: api/v1/serializers.py:36
+msgid "User Account is disabled."
+msgstr ""
+
+#: api/v1/serializers.py:42
+msgid "Unable to login with provided Credentials."
+msgstr ""
+
+#: api/v1/serializers.py:44
+msgid "Must include \"username\" and \"password\""
+msgstr ""
+
+#: api/views.py:75
+msgid "OK"
+msgstr ""
+
+#: app/forms.py:60
+msgid "Address Line #1"
+msgstr ""
+
+#: app/forms.py:66
+msgid "Address Line #2"
+msgstr ""
+
+#: app/forms.py:72
+msgid "City"
+msgstr ""
+
+#: app/forms.py:78
+msgid "Zip/Postal Code"
+msgstr ""
+
+#: app/forms.py:83
+msgid "State/Province"
+msgstr ""
+
+#: app/forms.py:94
+msgid "Enter your Notes here..."
+msgstr ""
+
+#: app/forms.py:143 events/forms.py:186 events/models.py:320
+#: organizations/forms.py:119 organizations/models.py:163
+msgid "Phone Number"
+msgstr ""
+
+#: app/forms.py:148 app/forms.py:159
+msgid "Ext."
+msgstr ""
+
+#: app/forms.py:154
+msgid "Mobile Phone Number"
+msgstr ""
+
+#: app/forms.py:206
+msgid "Newsletter Title"
+msgstr ""
+
+#: app/forms.py:266
+msgid "URL"
+msgstr ""
+
+#: app/forms.py:278 events/forms.py:231 events/forms.py:237 events/forms.py:245
+#: events/forms.py:255 events/forms.py:261 events/forms.py:270
+#: events/forms.py:378 events/forms.py:385 organizations/forms.py:140
+#: organizations/forms.py:146 organizations/forms.py:154
+msgid "This Field is required."
+msgstr ""
+
+#: app/views.py:85
+msgid "No Files attached."
+msgstr ""
+
+#: blog/choices.py:16 events/choices.py:111
+msgid "Draft"
+msgstr ""
+
+#: blog/choices.py:17
+msgid "Visible"
+msgstr ""
+
+#: blog/choices.py:18 events/choices.py:115
+msgid "Closed"
+msgstr ""
+
+#: blog/forms.py:36 blog/models.py:71
+msgid "Post Title"
+msgstr ""
+
+#: blog/forms.py:45 blog/models.py:94 blog/models.py:95 events/forms.py:160
+#: events/models.py:217 events/models.py:218 organizations/forms.py:85
+#: organizations/models.py:94 organizations/models.py:95
+msgid "Hashtag"
+msgstr ""
+
+#: blog/models.py:63 blog/models.py:64
+msgid "Post Author"
+msgstr ""
+
+#: blog/models.py:70 home/models.py:155
+msgid "Title"
+msgstr ""
+
+#: blog/models.py:75
+msgid "Short Description"
+msgstr ""
+
+#: blog/models.py:76
+msgid "Post short Description"
+msgstr ""
+
+#: blog/models.py:80
+msgid "Content"
+msgstr ""
+
+#: blog/models.py:81
+msgid "Post Content"
+msgstr ""
+
+#: blog/models.py:89 events/models.py:212 organizations/models.py:89
+msgid "Tags"
+msgstr ""
+
+#: blog/models.py:90 events/models.py:213 organizations/models.py:90
+msgid "A comma-separated List of Tags."
+msgstr ""
+
+#: blog/models.py:102 events/models.py:228 events/models.py:1160
+#: invites/models.py:82
+msgid "Status"
+msgstr ""
+
+#: blog/models.py:103
+msgid "Post Status"
+msgstr ""
+
+#: blog/models.py:108
+msgid "blog post"
+msgstr ""
+
+#: blog/models.py:109
+msgid "blog posts"
+msgstr ""
+
+#: events/choices.py:22
+msgid "Animals"
+msgstr ""
+
+#: events/choices.py:23
+msgid "Arts & Culture"
+msgstr ""
+
+#: events/choices.py:24
+msgid "Children & Youth"
+msgstr ""
+
+#: events/choices.py:25
+msgid "Community"
+msgstr ""
+
+#: events/choices.py:26
+msgid "Education & Literacy"
+msgstr ""
+
+#: events/choices.py:27
+msgid "Environment"
+msgstr ""
+
+#: events/choices.py:28
+msgid "Health & Wellness"
+msgstr ""
+
+#: events/choices.py:29
+msgid "Sports & Recreation"
+msgstr ""
+
+#: events/choices.py:30
+msgid "Veterans & Seniors"
+msgstr ""
+
+#: events/choices.py:112
+msgid "Upcoming"
+msgstr ""
+
+#: events/choices.py:113
+msgid "Complete"
+msgstr ""
+
+#: events/choices.py:114
+msgid "Expired"
+msgstr ""
+
+#: events/choices.py:122
+msgid "Anyone can participate."
+msgstr ""
+
+#: events/choices.py:123
+msgid "Participate only after a confirmed Application"
+msgstr ""
+
+#: events/choices.py:152
+msgid "Waiting for Confirmation"
+msgstr ""
+
+#: events/choices.py:154
+msgid "You were not accepted to this Event"
+msgstr ""
+
+#: events/choices.py:156
+msgid "Signed up"
+msgstr ""
+
+#: events/choices.py:158
+msgid "The Organizer removed you from this Event"
+msgstr ""
+
+#: events/choices.py:160
+msgid "You withdrew your Participation to this Event"
+msgstr ""
+
+#: events/choices.py:162
+msgid "Please, write your Experience Report"
+msgstr ""
+
+#: events/choices.py:164
+msgid "Waiting for Acknowledgment"
+msgstr ""
+
+#: events/choices.py:166
+msgid "Report acknowledged"
+msgstr ""
+
+#: events/choices.py:177
+msgid "Dateless"
+msgstr ""
+
+#: events/choices.py:178
+msgid "Once"
+msgstr ""
+
+#: events/choices.py:196 events/choices.py:221 events/choices.py:232
+msgid "----------"
+msgstr ""
+
+#: events/choices.py:197
+msgid "January"
+msgstr ""
+
+#: events/choices.py:198
+msgid "February"
+msgstr ""
+
+#: events/choices.py:199
+msgid "March"
+msgstr ""
+
+#: events/choices.py:200
+msgid "April"
+msgstr ""
+
+#: events/choices.py:201
+msgid "May"
+msgstr ""
+
+#: events/choices.py:202
+msgid "June"
+msgstr ""
+
+#: events/choices.py:203
+msgid "July"
+msgstr ""
+
+#: events/choices.py:204
+msgid "August"
+msgstr ""
+
+#: events/choices.py:205
+msgid "September"
+msgstr ""
+
+#: events/choices.py:206
+msgid "October"
+msgstr ""
+
+#: events/choices.py:207
+msgid "November"
+msgstr ""
+
+#: events/choices.py:208
+msgid "December"
+msgstr ""
+
+#: events/choices.py:222
+msgid "Sunday"
+msgstr ""
+
+#: events/choices.py:223
+msgid "Monday"
+msgstr ""
+
+#: events/choices.py:224
+msgid "Tuesday"
+msgstr ""
+
+#: events/choices.py:225
+msgid "Wednesday"
+msgstr ""
+
+#: events/choices.py:226
+msgid "Thursday"
+msgstr ""
+
+#: events/choices.py:227
+msgid "Friday"
+msgstr ""
+
+#: events/choices.py:228
+msgid "Saturday"
+msgstr ""
+
+#: events/choices.py:233
+msgid "Last Day of Month"
+msgstr ""
+
+#: events/forms.py:65 organizations/forms.py:29
+#, python-format
+msgid "Me (%s)"
+msgstr ""
+
+#: events/forms.py:66 organizations/forms.py:30
+msgid "Affiliate different Person"
+msgstr ""
+
+#: events/forms.py:120 events/forms.py:302
+msgid "Related Links"
+msgstr ""
+
+#: events/forms.py:123 events/forms.py:305 organizations/forms.py:55
+msgid "Separate your Links with a Space"
+msgstr ""
+
+#: events/forms.py:143 events/forms.py:460
+msgid "Event Name"
+msgstr ""
+
+#: events/forms.py:149
+msgid "Event Description"
+msgstr ""
+
+#: events/forms.py:174 events/models.py:312 organizations/forms.py:107
+#: organizations/models.py:155
+msgid "Full Name"
+msgstr ""
+
+#: events/forms.py:200
+msgid "Write the Feedback here..."
+msgstr ""
+
+#: events/forms.py:210
+msgid "Duration should be greater, than 0"
+msgstr ""
+
+#: events/forms.py:220
+msgid "Reserved Word cannot be used as a Event Name."
+msgstr ""
+
+#: events/forms.py:362 events/forms.py:457 events/models.py:1019
+#: home/forms.py:24 home/models.py:58 home/models.py:59
+#: organizations/models.py:555
+msgid "Name"
+msgstr ""
+
+#: events/forms.py:367
+msgid "Qty"
+msgstr ""
+
+#: events/forms.py:468
+msgid "Year"
+msgstr ""
+
+#: events/forms.py:476
+msgid "Month"
+msgstr ""
+
+#: events/forms.py:484
+msgid "Day"
+msgstr ""
+
+#: events/models.py:102 events/models.py:103 events/models.py:222
+msgid "Category"
+msgstr ""
+
+#: events/models.py:107
+msgid "Color"
+msgstr ""
+
+#: events/models.py:108
+msgid "Category Color"
+msgstr ""
+
+#: events/models.py:112
+msgid "Icon"
+msgstr ""
+
+#: events/models.py:113
+msgid "Category Icon"
+msgstr ""
+
+#: events/models.py:117
+msgid "Image"
+msgstr ""
+
+#: events/models.py:118
+msgid "Category Image"
+msgstr ""
+
+#: events/models.py:123
+msgid "category"
+msgstr ""
+
+#: events/models.py:124
+msgid "categories"
+msgstr ""
+
+#: events/models.py:191
+msgid "event"
+msgstr ""
+
+#: events/models.py:192
+msgid "events"
+msgstr ""
+
+#: events/models.py:203 home/models.py:149 organizations/models.py:81
+#: organizations/models.py:422 organizations/models.py:550
+msgid "Author"
+msgstr ""
+
+#: events/models.py:204
+msgid "Event Author"
+msgstr ""
+
+#: events/models.py:223
+msgid "Event Category"
+msgstr ""
+
+#: events/models.py:229
+msgid "Event Status"
+msgstr ""
+
+#: events/models.py:233
+msgid "Application"
+msgstr ""
+
+#: events/models.py:234
+msgid "Event Application"
+msgstr ""
+
+#: events/models.py:241 events/models.py:242 organizations/models.py:101
+#: organizations/models.py:102
+msgid "I will provide the Location later, if any."
+msgstr ""
+
+#: events/models.py:255
+msgid "Duration (hours)"
+msgstr ""
+
+#: events/models.py:256
+msgid "Event Duration"
+msgstr ""
+
+#: events/models.py:264
+msgid "Recurrence"
+msgstr ""
+
+#: events/models.py:265
+msgid "Challenge Recurrence"
+msgstr ""
+
+#: events/models.py:288
+msgid "Start Date"
+msgstr ""
+
+#: events/models.py:289
+msgid "Event Start Date"
+msgstr ""
+
+#: events/models.py:293
+msgid "Start Time"
+msgstr ""
+
+#: events/models.py:294
+msgid "Event Start Time"
+msgstr ""
+
+#: events/models.py:297
+msgid "Timezone"
+msgstr ""
+
+#: events/models.py:298
+msgid "Event Timezone"
+msgstr ""
+
+#: events/models.py:303
+msgid "Start Date/Time with TZ"
+msgstr ""
+
+#: events/models.py:304
+msgid "Event Start Date/Time with TZ"
+msgstr ""
+
+#: events/models.py:313
+msgid "Event Contact Person full Name"
+msgstr ""
+
+#: events/models.py:317
+msgid "Event Contact Person Email"
+msgstr ""
+
+#: events/models.py:321 organizations/models.py:164
+msgid "Please, use the International Format, e.g. +1-202-555-0114."
+msgstr ""
+
+#: events/models.py:331 organizations/models.py:429 organizations/models.py:430
+#: organizations/models.py:566 organizations/models.py:567
+msgid "Organization"
+msgstr ""
+
+#: events/models.py:332
+msgid "Event Organization"
+msgstr ""
+
+#: events/models.py:340 events/models.py:341
+msgid "Achievements"
+msgstr ""
+
+#: events/models.py:348 events/models.py:349
+msgid "Reason for closing"
+msgstr ""
+
+#: events/models.py:359 events/models.py:361
+msgid ""
+"Allow Members to apply again to the Event after withdrawing their "
+"Application."
+msgstr ""
+
+#: events/models.py:366 events/models.py:368
+msgid ""
+"Automatically accept Participants' Experience Reports after the Event "
+"completed."
+msgstr ""
+
+#: events/models.py:372
+msgid "Acceptance Text"
+msgstr ""
+
+#: events/models.py:374
+msgid ""
+"This Text will automatically appear as an Acknowledgment Text for each "
+"Participant after Event has been marked as completed."
+msgstr ""
+
+#: events/models.py:435 events/models.py:478 events/models.py:524
+#: events/models.py:622 events/models.py:668 events/models.py:711
+#: events/models.py:755 events/models.py:797 events/tasks.py:49
+#: events/tasks.py:118
+#, python-format
+msgid "Dear, %(user)s."
+msgstr ""
+
+#: events/models.py:439
+#, python-format
+msgid ""
+"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was "
+"successfully created.</p>"
+msgstr ""
+
+#: events/models.py:482
+#, python-format
+msgid ""
+"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
+"created.</p>"
+msgstr ""
+
+#: events/models.py:528
+#, python-format
+msgid ""
+"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
+"created, and you were added as a contact Person to it.</p>"
+msgstr ""
+
+#: events/models.py:571
+#, python-format
+msgid "The \"<a href=\"%(url)s\">%(name)s</a>\" recent Activity."
+msgstr ""
+
+#: events/models.py:576
+#, python-format
+msgid ""
+"<p>Dear, %(user)s,</p><p>The Organization \"<a "
+"href=\"%(org_url)s\">%(org_name)s</a>\" has just created new Challenge \"<a "
+"href=\"%(chl_url)s\">%(chl_name)s</a>\".</p><p>You have received this Email, "
+"because you're subscribed to the Organization's Newsletters and Activity "
+"Notifications.</p>"
+msgstr ""
+
+#: events/models.py:626
+#, python-format
+msgid ""
+"<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
+msgstr ""
+
+#: events/models.py:672
+#, python-format
+msgid ""
+"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a "
+"contact Person, was modified.</p>"
+msgstr ""
+
+#: events/models.py:715
+#, python-format
+msgid ""
+"<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</"
+"p><p>Experience Report Requests were sent to all signed up to the Challenge "
+"Members.</p><p>Please, don't forget to accept, or reject the Members' "
+"Experience Reports.</p>"
+msgstr ""
+
+#: events/models.py:759
+#, python-format
+msgid "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>"
+msgstr ""
+
+#: events/models.py:801
+#, python-format
+msgid "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>"
+msgstr ""
+
+#: events/models.py:1020
+msgid "Role Name"
+msgstr ""
+
+#: events/models.py:1022 events/models.py:1023
+msgid "Quantity"
+msgstr ""
+
+#: events/models.py:1033 events/models.py:1034 events/models.py:1143
+#: events/models.py:1144
+msgid "Event"
+msgstr ""
+
+#: events/models.py:1048
+msgid "role"
+msgstr ""
+
+#: events/models.py:1049
+msgid "roles"
+msgstr ""
+
+#: events/models.py:1137
+msgid "Participant"
+msgstr ""
+
+#: events/models.py:1151
+msgid "Role"
+msgstr ""
+
+#: events/models.py:1152
+msgid "Role, if applicable"
+msgstr ""
+
+#: events/models.py:1161
+msgid "Participation Status"
+msgstr ""
+
+#: events/models.py:1167 events/models.py:1168
+msgid "Application Text"
+msgstr ""
+
+#: events/models.py:1171 events/models.py:1172
+msgid "Cancellation Text"
+msgstr ""
+
+#: events/models.py:1175 events/models.py:1176
+msgid "Experience Report - Activity Text"
+msgstr ""
+
+#: events/models.py:1179 events/models.py:1180
+msgid "Experience Report - learning Text"
+msgstr ""
+
+#: events/models.py:1183 events/models.py:1184
+msgid "Experience Report - Rejection Text"
+msgstr ""
+
+#: events/models.py:1187 events/models.py:1188
+msgid "Acknowledgement Text"
+msgstr ""
+
+#: events/models.py:1195 events/models.py:1196
+msgid "Date created"
+msgstr ""
+
+#: events/models.py:1200 events/models.py:1201 invites/models.py:112
+#: invites/models.py:113
+msgid "Date accepted"
+msgstr ""
+
+#: events/models.py:1205 events/models.py:1206
+msgid "Date canceled"
+msgstr ""
+
+#: events/models.py:1210
+msgid "Date of the Experience Report"
+msgstr ""
+
+#: events/models.py:1211
+msgid "Date of receiving of the Experience Report"
+msgstr ""
+
+#: events/models.py:1215
+msgid "Date of the Experience Report Rejection"
+msgstr ""
+
+#: events/models.py:1216
+msgid "Date of Rejection of the Experience Report"
+msgstr ""
+
+#: events/models.py:1220
+msgid "Date acknowledged"
+msgstr ""
+
+#: events/models.py:1221
+msgid "Date of acknowledging of the Experience Report"
+msgstr ""
+
+#: events/models.py:1226
+msgid "participation"
+msgstr ""
+
+#: events/models.py:1227
+msgid "participations"
+msgstr ""
+
+#: events/tasks.py:53
+#, python-format
+msgid ""
+"<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" is overdue!</p><p>If this "
+"Event has taken place as planned, please, mark it as completed.</"
+"p><p>Remember to remove all Participants from the Event, who did not show up "
+"to help, so the Event will not appear on their Profiles.</p>"
+msgstr ""
+
+#: events/tasks.py:122
+#, python-format
+msgid ""
+"<p>Don't forget that you are signed up for the Event \"<a "
+"href=\"%(url)s\">%(name)s</a>\" on %(start_date)s at %(start_time)s.</"
+"p><p>Please, don't forget to show up!</p>"
+msgstr ""
+
+#: events/views.py:156
+msgid "All Events"
+msgstr ""
+
+#: events/views.py:263
+msgid "Events near you"
+msgstr ""
+
+#: events/views.py:334
+msgid "New Events"
+msgstr ""
+
+#: events/views.py:395
+msgid "Dateless Events"
+msgstr ""
+
+#: events/views.py:459
+msgid "Featured Events"
+msgstr ""
+
+#: home/forms.py:38
+msgid "Subject"
+msgstr ""
+
+#: home/forms.py:45
+msgid "Enter a Message here..."
+msgstr ""
+
+#: home/forms.py:81 home/models.py:236 home/models.py:237
+msgid "Question"
+msgstr ""
+
+#: home/models.py:66 home/models.py:67 organizations/forms.py:91
+#: organizations/models.py:124
+msgid "Website"
+msgstr ""
+
+#: home/models.py:72
+msgid "partner"
+msgstr ""
+
+#: home/models.py:73
+msgid "partners"
+msgstr ""
+
+#: home/models.py:150
+msgid "Section Author"
+msgstr ""
+
+#: home/models.py:156
+msgid "Section Title"
+msgstr ""
+
+#: home/models.py:159
+msgid "Order"
+msgstr ""
+
+#: home/models.py:160
+msgid "Section Order (auto-incremented)"
+msgstr ""
+
+#: home/models.py:165
+msgid "section"
+msgstr ""
+
+#: home/models.py:166
+msgid "sections"
+msgstr ""
+
+#: home/models.py:231
+msgid "Section"
+msgstr ""
+
+#: home/models.py:232
+msgid "FAQ Section"
+msgstr ""
+
+#: home/models.py:241 home/models.py:242
+msgid "Answer"
+msgstr ""
+
+#: home/models.py:250
+msgid "frequently asked question"
+msgstr ""
+
+#: home/models.py:251
+msgid "frequently asked questions"
+msgstr ""
+
+#: invites/choices.py:17
+msgid "New"
+msgstr ""
+
+#: invites/choices.py:18
+msgid "Accepted"
+msgstr ""
+
+#: invites/choices.py:19
+msgid "Rejected"
+msgstr ""
+
+#: invites/choices.py:20
+msgid "Revoked"
+msgstr ""
+
+#: invites/models.py:68 invites/models.py:69
+msgid "Inviter"
+msgstr ""
+
+#: invites/models.py:75 invites/models.py:76
+msgid "Invitee"
+msgstr ""
+
+#: invites/models.py:83
+msgid "Invite Status"
+msgstr ""
+
+#: invites/models.py:100 invites/models.py:101
+msgid "Invitation Text"
+msgstr ""
+
+#: invites/models.py:104
+msgid "Rejection Text"
+msgstr ""
+
+#: invites/models.py:105
+msgid "Rejection"
+msgstr ""
+
+#: invites/models.py:117 invites/models.py:118
+msgid "Date rejected"
+msgstr ""
+
+#: invites/models.py:122 invites/models.py:123
+msgid "Date revoked"
+msgstr ""
+
+#: invites/models.py:129 invites/models.py:130
+msgid "Archived for Inviter"
+msgstr ""
+
+#: invites/models.py:133 invites/models.py:134
+msgid "Archived for Invitee"
+msgstr ""
+
+#: invites/models.py:147
+msgid "invite"
+msgstr ""
+
+#: invites/models.py:148
+msgid "invites"
+msgstr ""
+
+#: organizations/forms.py:41
+msgid ""
+"You can make your Organization hidden from the Public, so only Subscribers "
+"and Members, invited by you, will be able to see the Organization's Activity "
+"and sign up for its Events."
+msgstr ""
+
+#: organizations/forms.py:72
+msgid "Organization Name"
+msgstr ""
+
+#: organizations/forms.py:78
+msgid "Organization Description"
+msgstr ""
+
+#: organizations/forms.py:96
+msgid "Embedded Video (Link)"
+msgstr ""
+
+#: organizations/forms.py:101 organizations/models.py:135
+msgid "Organization Email"
+msgstr ""
+
+#: organizations/forms.py:129
+msgid "Reserved Word cannot be used as an Organization Name."
+msgstr ""
+
+#: organizations/models.py:82
+msgid "Organization Author"
+msgstr ""
+
+#: organizations/models.py:109
+msgid "Organization Address"
+msgstr ""
+
+#: organizations/models.py:117
+msgid "Organization Phone Numbers"
+msgstr ""
+
+#: organizations/models.py:125
+msgid "Organization Website"
+msgstr ""
+
+#: organizations/models.py:129
+msgid "Video"
+msgstr ""
+
+#: organizations/models.py:130
+msgid "Organization Informational Video"
+msgstr ""
+
+#: organizations/models.py:147
+msgid "Subscribers"
+msgstr ""
+
+#: organizations/models.py:148
+msgid "Organization Subscribers"
+msgstr ""
+
+#: organizations/models.py:156
+msgid "Organization contact Person full Name"
+msgstr ""
+
+#: organizations/models.py:160
+msgid "Organization contact Person Email"
+msgstr ""
+
+#: organizations/models.py:175
+msgid "organization"
+msgstr ""
+
+#: organizations/models.py:176
+msgid "organizations"
+msgstr ""
+
+#: organizations/models.py:423
+msgid "Organization Staff Member Author"
+msgstr ""
+
+#: organizations/models.py:437
+msgid "Staff Member"
+msgstr ""
+
+#: organizations/models.py:438
+msgid "Organization Staff Member"
+msgstr ""
+
+#: organizations/models.py:446
+msgid "Bio"
+msgstr ""
+
+#: organizations/models.py:447
+msgid "Short Bio"
+msgstr ""
+
+#: organizations/models.py:457
+msgid "organization staff member"
+msgstr ""
+
+#: organizations/models.py:458
+msgid "organization staff members"
+msgstr ""
+
+#: organizations/models.py:551
+msgid "Organization Group Author"
+msgstr ""
+
+#: organizations/models.py:556
+msgid "Organiztion Group Name"
+msgstr ""
+
+#: organizations/models.py:559
+msgid "Description"
+msgstr ""
+
+#: organizations/models.py:560
+msgid "Organization Group Description"
+msgstr ""
+
+#: organizations/models.py:573
+msgid "Group Member"
+msgstr ""
+
+#: organizations/models.py:574
+msgid "Organization Group Member"
+msgstr ""
+
+#: organizations/models.py:582
+msgid "organization group"
+msgstr ""
+
+#: organizations/models.py:583
+msgid "organization groups"
+msgstr ""
+
+#: settings/base.py:114
+msgid "English"
+msgstr ""
+
+#: settings/base.py:115
+msgid "Deutsch"
+msgstr ""
+
+#: settings/base.py:116
+msgid "Spanish"
+msgstr ""
