@@ -6,7 +6,9 @@ from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import (
     include,
+    path,
     re_path)
+from django.views.generic.base import TemplateView
 
 from rest_framework_swagger.views import get_swagger_view
 
@@ -33,16 +35,15 @@ sitemaps = {
 
 
 urlpatterns = [
-    # re_path(r"", include("social_django.urls", namespace="social")),
-    # re_path(r"^", include("cyborg.urls")),
+    re_path(r"", include("social_django.urls", namespace="social")),
 
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
-    # re_path(r"^grappelli/", include("grappelli.urls")),
+    re_path(r"^grappelli/", include("grappelli.urls")),
     re_path(r"^admin/", admin.site.urls),
     re_path(r"^captcha/", include("captcha.urls")),
     re_path(r"^docs/", schema_view),
     re_path(r"^i18n/", include("django.conf.urls.i18n")),
-    # re_path(r"^rosetta/", include("rosetta.urls")),
+    re_path(r"^rosetta/", include("rosetta.urls")),
     re_path(r"^search/", include("haystack.urls")),
     re_path(r"^sitemap\.xml$", sitemap, {
             "sitemaps":     sitemaps,
@@ -59,6 +60,9 @@ urlpatterns = [
     re_path(r"^home/", include("home.urls")),
     re_path(r"^invites/", include("invites.urls")),
     re_path(r"^organizations/", include("organizations.urls")),
+
+    path("humans.txt",TemplateView.as_view(template_name="cyborg/humans.txt", content_type="text/plain")),
+    path("robots.txt",TemplateView.as_view(template_name="cyborg/robots.txt", content_type="text/plain")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # handler400 = "app.views.handler400"

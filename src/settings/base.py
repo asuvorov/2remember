@@ -609,14 +609,6 @@ COMPRESS_ENABLED = True
 
 
 ###############################################################################
-### DJANGO CYBORG                                                           ###
-###############################################################################
-INSTALLED_APPS += (
-    "cyborg",
-)
-
-
-###############################################################################
 ### DJANGO EASY TIMEZONES                                                   ###
 ###############################################################################
 # INSTALLED_APPS += (
@@ -625,8 +617,8 @@ INSTALLED_APPS += (
 # MIDDLEWARE += (
 #     "easy_timezones.middleware.EasyTimezoneMiddleware",
 # )
-GEOIP_DATABASE = os.path.join(PROJECT_PATH, "geoip/GeoLiteCity.dat")
-GEOIPV6_DATABASE = os.path.join(PROJECT_PATH, "geoip/GeoLiteCityv6.dat")
+# GEOIP_DATABASE = os.path.join(PROJECT_PATH, "geoip/GeoLiteCity.dat")
+# GEOIPV6_DATABASE = os.path.join(PROJECT_PATH, "geoip/GeoLiteCityv6.dat")
 
 
 ###############################################################################
