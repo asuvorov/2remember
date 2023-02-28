@@ -28,7 +28,6 @@
 #             "accounts",
 #             "blog",
 #             "events",
-#             "foro",
 #             "home",
 #             "organizations",
 #         ]
@@ -36,7 +35,6 @@
 #             "accounts",
 #             "blog",
 #             "events",
-#             "foro",
 #             "home",
 #             "organizations",
 #         ]

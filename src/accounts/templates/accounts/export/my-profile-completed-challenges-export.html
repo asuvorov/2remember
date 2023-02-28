@@ -14,17 +14,17 @@
 {% endblock %}
 
 {% block content %}
-    <div id="my-profile-challenge-list-export">
+    <div id="my-profile-event-list-export">
         <p>
         {% blocktrans with full_name=request.user.full_name %}
-            The List of the Challenges on SaneSide, {{ full_name }} participated in:
+            The List of the Events on SaneSide, {{ full_name }} participated in:
         {% endblocktrans %}
         </p>
 
         <table class="table table-condensed">
             <tr>
                 <th></th>
-                <th>{% trans "Challenge Name" %}</th>
+                <th>{% trans "Event Name" %}</th>
                 <th>{% trans "What I did" %}</th>
                 <th>{% trans "What I learned" %}</th>
                 <th>{% trans "Admin replied" %}</th>
@@ -33,11 +33,11 @@
         {% for participation in completed_participations %}
             <tr>
                 <td>
-                {% if participation.challenge.avatar %}
-                    {% generateimage "common:thumbnail" source=participation.challenge.avatar -- alt=participation.challenge.name %}
+                {% if participation.event.avatar %}
+                    {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.name %}
                 {% endif %}
                 </td>
-                <td>{{ participation.challenge.name }}</td>
+                <td>{{ participation.event.name }}</td>
                 <td>{{ participation.selfreflection_activity_text }}</td>
                 <td>{{ participation.selfreflection_learning_text }}</td>
                 <td>
@@ -61,7 +61,7 @@
             </tr>
         {% empty %}
             <p>
-                <span class="label label-info">{% trans "There are no completed Challenges at the moment." %}</span>
+                <span class="label label-info">{% trans "There are no completed Events at the moment." %}</span>
             </p>
         {% endfor %}
         </table>

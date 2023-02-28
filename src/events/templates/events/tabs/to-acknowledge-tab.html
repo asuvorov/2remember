@@ -1,17 +1,17 @@
 <!--
 TAB
-Challenge Details - to acknowledge
+Event Details - to acknowledge
 -->
 {% load i18n %}
 {% load imagekit %}
 {% load accounttags %}
 
-{% if challenge.challenge_participations.waiting_for_acknowledgement.count > 0 %}
+{% if event.event_participations.waiting_for_acknowledgement.count > 0 %}
     <!--
         Mobile View
     -->
     <div class="hidden-sm hidden-md hidden-lg">
-    {% for participation in challenge.challenge_participations.waiting_for_acknowledgement %}
+    {% for participation in event.event_participations.waiting_for_acknowledgement %}
         {% need_to_know_profile_details_tag request participation.user as need_to_know_profile_details %}
         {% need_to_know_contact_details_tag request participation.user as need_to_know_contact_details %}
 
@@ -65,8 +65,8 @@ Challenge Details - to acknowledge
                 <tr>
                     <td><strong>{% trans "Action" %}</strong></td>
                     <td>
-                        <a class="sr-accept txt-success" challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
-                        <a class="sr-reject txt-danger"  challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
+                        <a class="sr-accept txt-success" event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
+                        <a class="sr-reject txt-danger"  event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
                     </td>
                 </tr>
             </tbody>
@@ -91,7 +91,7 @@ Challenge Details - to acknowledge
         </thead>
 
         <tbody>
-        {% for participation in challenge.challenge_participations.waiting_for_acknowledgement %}
+        {% for participation in event.event_participations.waiting_for_acknowledgement %}
             {% need_to_know_profile_details_tag request participation.user as need_to_know_profile_details %}
             {% need_to_know_contact_details_tag request participation.user as need_to_know_contact_details %}
 
@@ -143,8 +143,8 @@ Challenge Details - to acknowledge
                     <span class="desc">{{ participation.selfreflection_learning_text }}</span>
                 </td>
                 <td>
-                    <a class="sr-accept txt-success" challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
-                    <a class="sr-reject txt-danger"  challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
+                    <a class="sr-accept txt-success" event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
+                    <a class="sr-reject txt-danger"  event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
                 </td>
             </tr>
             {% endwith %}
@@ -164,10 +164,10 @@ Challenge Details - to acknowledge
     /*** Show Notifications                                                ***/
     /*************************************************************************/
     $(document).ready(function () {
-        {% if challenge.challenge_participations.waiting_for_acknowledgement.count > 0 %}
+        {% if event.event_participations.waiting_for_acknowledgement.count > 0 %}
             new Noty({
                 type:   "warning",
-                text:   "You have {{ challenge.challenge_participations.waiting_for_acknowledgement.count }} Participant(s), waiting for Acknowledgment of their Experience Reports"
+                text:   "You have {{ event.event_participations.waiting_for_acknowledgement.count }} Participant(s), waiting for Acknowledgment of their Experience Reports"
             }).show();
         {% endif %}
     })
@@ -178,12 +178,12 @@ Challenge Details - to acknowledge
     $(".sr-accept").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-accept-selfreflection-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-accept-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationAcceptSelfreflectionPopupModal").modal("show");
+        $("#event-participation-accept-selfreflection-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-accept-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationAcceptSelfreflectionPopupModal").modal("show");
     })
 
     /*************************************************************************/
@@ -192,11 +192,11 @@ Challenge Details - to acknowledge
     $(".sr-reject").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationRejectSelfreflectionPopupModal").modal("show");
+        $("#event-participation-reject-selfreflection-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationRejectSelfreflectionPopupModal").modal("show");
     })
 </script>

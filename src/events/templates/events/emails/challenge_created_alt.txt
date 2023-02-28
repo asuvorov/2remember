@@ -4,10 +4,10 @@
 
 Dear, {{ user }}!
 
-The Challenge "{{ challenge.name }}", was successfully created, and you were added as contact Person to it.
+The Event "{{ event.name }}", was successfully created, and you were added as contact Person to it.
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
-Also, you can find Link to this Challenge on your Profile Page.
+Also, you can find Link to this Event on your Profile Page.
 
 Thank you, SaneSide Team.

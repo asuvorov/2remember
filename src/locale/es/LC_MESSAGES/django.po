@@ -1113,7 +1113,7 @@ msgid "Recurrence"
 msgstr ""
 
 #: events/models.py:265
-msgid "Challenge Recurrence"
+msgid "Event Recurrence"
 msgstr ""
 
 #: events/models.py:288
@@ -1210,21 +1210,21 @@ msgstr ""
 #: events/models.py:439
 #, python-format
 msgid ""
-"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was "
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was "
 "successfully created.</p>"
 msgstr ""
 
 #: events/models.py:482
 #, python-format
 msgid ""
-"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
 "created.</p>"
 msgstr ""
 
 #: events/models.py:528
 #, python-format
 msgid ""
-"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
 "created, and you were added as a contact Person to it.</p>"
 msgstr ""
 
@@ -1237,7 +1237,7 @@ msgstr ""
 #, python-format
 msgid ""
 "<p>Dear, %(user)s,</p><p>The Organization \"<a "
-"href=\"%(org_url)s\">%(org_name)s</a>\" has just created new Challenge \"<a "
+"href=\"%(org_url)s\">%(org_name)s</a>\" has just created new Event \"<a "
 "href=\"%(chl_url)s\">%(chl_name)s</a>\".</p><p>You have received this Email, "
 "because you're subscribed to the Organization's Newsletters and Activity "
 "Notifications.</p>"
@@ -1246,33 +1246,33 @@ msgstr ""
 #: events/models.py:626
 #, python-format
 msgid ""
-"<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
+"<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
 msgstr ""
 
 #: events/models.py:672
 #, python-format
 msgid ""
-"<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a "
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a "
 "contact Person, was modified.</p>"
 msgstr ""
 
 #: events/models.py:715
 #, python-format
 msgid ""
-"<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</"
-"p><p>Experience Report Requests were sent to all signed up to the Challenge "
+"<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</"
+"p><p>Experience Report Requests were sent to all signed up to the Event "
 "Members.</p><p>Please, don't forget to accept, or reject the Members' "
 "Experience Reports.</p>"
 msgstr ""
 
 #: events/models.py:759
 #, python-format
-msgid "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>"
+msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>"
 msgstr ""
 
 #: events/models.py:801
 #, python-format
-msgid "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>"
+msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>"
 msgstr ""
 
 #: events/models.py:1020

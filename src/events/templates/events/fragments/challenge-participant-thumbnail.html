@@ -5,7 +5,7 @@
 {% comment %}
     Input Parameters:
         :<account>
-        :[challenge]
+        :[event]
         :[participation]
         :[is_admin]
 {% endcomment %}
@@ -16,7 +16,7 @@
 {% sum_of_hours_spent_tag account as sum_of_hours_spent %}
 
 <div class="col-xs-8 col-sm-6 col-md-4" align="center">
-    <div class="challenge-participant-thumb">
+    <div class="event-participant-thumb">
         <div class="thumbnail">
         {% with account.profile as profile %}
             <a href="{% url 'profile-view' account.id %}">

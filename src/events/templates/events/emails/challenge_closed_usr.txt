@@ -4,7 +4,7 @@
 
 Dear, {{ user.first_name }}!
 
-The Challenge "{{ challenge.name }}", you signed up for, was closed for the following Reason:
+The Event "{{ event.name }}", you signed up for, was closed for the following Reason:
 
 {{ closed_reason }}
 

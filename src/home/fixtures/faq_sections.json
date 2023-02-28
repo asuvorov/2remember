@@ -15,7 +15,7 @@
         "pk":           2,
         "fields": {
             "author":       1,
-            "title":        "Challenges",
+            "title":        "Events",
             "order":        1,
             "created":      "2017-01-01",
             "modified":     "2017-01-01"

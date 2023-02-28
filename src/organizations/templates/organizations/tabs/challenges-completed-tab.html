@@ -1,22 +1,22 @@
 <!--
 TAB
-Organization Details - Past Challenges
+Organization Details - Past Events
 -->
 {% load i18n %}
 
 <div class="row">
     <div class="col-xs-24 col-sm-24 col-md-24">
-        <h4>{% trans "Organization's past Challenges" %}</h4>
+        <h4>{% trans "Organization's past Events" %}</h4>
 
         <div class="row">
-        {% for challenge in completed_challenges %}
+        {% for event in completed_events %}
             <div class="col-xs-24 col-sm-8 col-md-6 col-lg-6">
-                {% include "challenges/fragments/challenge-thumbnail-vert.html" with challenge=challenge show_org=False %}
+                {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=False %}
             </div>
         {% empty %}
             <div class="col-xs-24 col-sm-24 col-md-24">
                 <p>
-                    <span class="label label-info">{% trans "This Organization has no past Challenges at the moment." %}</span>
+                    <span class="label label-info">{% trans "This Organization has no past Events at the moment." %}</span>
                 </p>
             </div>
         {% endfor %}
