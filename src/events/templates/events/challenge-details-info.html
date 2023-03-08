@@ -1,15 +1,15 @@
-{% extends "challenges/challenge-details-base.html" %}
+{% extends "events/event-details-base.html" %}
 
 {% block extra_content %}
 <div class="container">
-    <div id="challenge-info">
+    <div id="event-info">
         <div id="info">
-            {% include "challenges/tabs/info-tab.html" %}
+            {% include "events/tabs/info-tab.html" %}
         </div>
 
-    {% if not challenge.is_draft %}
+    {% if not event.is_draft %}
         <div id="participants">
-            {% include "challenges/tabs/participants-tab.html" %}
+            {% include "events/tabs/participants-tab.html" %}
         </div>
     {% endif %}
     </div>
@@ -17,19 +17,19 @@
 
 <!-- Modals -->
 
-{% include "challenges/modals/challenge-view-on-map-modal.html" %}
+{% include "events/modals/event-view-on-map-modal.html" %}
 
 {% if request.user.is_authenticated %}
-    {% if challenge.author == request.user %}
-        {% include "challenges/modals/challenge-create-modal.html" %}
-        {% include "challenges/modals/challenge-complete-modal.html" %}
-        {% include "challenges/modals/challenge-participation-remove-modal.html" %}
+    {% if event.author == request.user %}
+        {% include "events/modals/event-create-modal.html" %}
+        {% include "events/modals/event-complete-modal.html" %}
+        {% include "events/modals/event-participation-remove-modal.html" %}
     {% else %}
-        {% include "challenges/modals/challenge-participation-post-modal.html" %}
-        {% include "challenges/modals/challenge-participation-withdraw-modal.html" %}
-        {% include "challenges/modals/challenge-selfreflection-submit-modal.html" %}
-        {% include "challenges/modals/challenge-not-participated-modal.html" %}
-        {% include "challenges/modals/challenge-rate-modal.html" %}
+        {% include "events/modals/event-participation-post-modal.html" %}
+        {% include "events/modals/event-participation-withdraw-modal.html" %}
+        {% include "events/modals/event-selfreflection-submit-modal.html" %}
+        {% include "events/modals/event-not-participated-modal.html" %}
+        {% include "events/modals/event-rate-modal.html" %}
     {% endif %}
 
     {% include "common/modals/comment-add-modal.html" %}

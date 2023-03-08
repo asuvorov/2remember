@@ -1,18 +1,18 @@
 {% load i18n %}
 
-<div class="modal fade" id="inviteToChallengePopupModal" tabindex="-1" role="dialog" aria-labelledby="inviteToChallengePopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="inviteToEventPopupModal" tabindex="-1" role="dialog" aria-labelledby="inviteToEventPopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="inviteToChallengePopupModalLabel">{% trans "Invite to Challenge" %}</h4>
+                <h4 class="modal-title" id="inviteToEventPopupModalLabel">{% trans "Invite to Event" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="invite-to-challenge-modal-form" action="" method="POST">
+                <form id="invite-to-event-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="invitee_id" value="">
 
                     <div class="form-group">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="invite_to_challenge();">{% trans "Invite" %}</button>
+                <button type="button" class="btn btn-primary" onclick="invite_to_event();">{% trans "Invite" %}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
             </div>
         </div>
@@ -32,23 +32,23 @@
 
 <script>
     /*************************************************************************/
-    /*** Invite to Challenge                                               ***/
+    /*** Invite to Event                                               ***/
     /*************************************************************************/
-    function invite_to_challenge() {
-        var challenge_id = $("#invite-to-challenge-modal-form").find("input[name='challenge_id']").val();
-        var invitee_id = $("#invite-to-challenge-modal-form").find("input[name='invitee_id']").val();
-        var invitation_text = $("#invite-to-challenge-modal-form").find("textarea[name='invitation_text']").val();
+    function invite_to_event() {
+        var event_id = $("#invite-to-event-modal-form").find("input[name='event_id']").val();
+        var invitee_id = $("#invite-to-event-modal-form").find("input[name='invitee_id']").val();
+        var invitation_text = $("#invite-to-event-modal-form").find("textarea[name='invitation_text']").val();
 
         $.post("{% url 'api-invite' %}", {
             "invitee_id":           invitee_id,
-            "challenge_id":         challenge_id,
+            "event_id":         event_id,
             "invitation_text":      invitation_text,
-            "csrfmiddlewaretoken":  $("#invite-to-challenge-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":  $("#invite-to-event-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#inviteToChallengePopupModal").modal("hide");
+            $("#inviteToEventPopupModal").modal("hide");
 
             new Noty({
                 type:   "info",

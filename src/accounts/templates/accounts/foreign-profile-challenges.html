@@ -4,11 +4,11 @@
 {% load accounttags %}
 
 {% block extra_content %}
-    {% need_to_know_affiliated_challenges_tag request account as need_to_know_affiliated_challenges %}
+    {% need_to_know_affiliated_events_tag request account as need_to_know_affiliated_events %}
 
 <div class="container">
-    <div id="foreign-profile-challenges">
-    {% if need_to_know_affiliated_challenges %}
+    <div id="foreign-profile-events">
+    {% if need_to_know_affiliated_events %}
         <div class="row">
             <div class="col-xs-24 col-sm-24 col-md-24">
                 <h4>
@@ -16,8 +16,8 @@
                     <span class="hidden-sm hidden-md hidden-lg">{% trans "Affiliated with" %}</span>
                 </h4>
 
-                <div id="challenges-action-required-section">
-                    {% include "accounts/tabs/foreign-profile/admin-challenges-tab.html" %}
+                <div id="events-action-required-section">
+                    {% include "accounts/tabs/foreign-profile/admin-events-tab.html" %}
                 </div>
             </div>
         </div>

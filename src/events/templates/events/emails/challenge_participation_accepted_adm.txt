@@ -2,11 +2,11 @@
     THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
 *******************************************************************************
 
-Dear, {{ challenge.author.first_name }}!
+Dear, {{ event.author.first_name }}!
 
-Member {{ participation.user.first_name }} was accepted to participate in your Challenge "{{ challenge.name }}"{% if participation.role %} for the Role of "{{ participation.role.name }}"{% endif %}!
+Member {{ participation.user.first_name }} was accepted to participate in your Event "{{ event.name }}"{% if participation.role %} for the Role of "{{ participation.role.name }}"{% endif %}!
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
 Link to the Member's Profile Page: {{ profile_link }}
 

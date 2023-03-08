@@ -8,4 +8,7 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
+    from djangobower.management.base import BaseBowerCommand
+    BaseBowerCommand.requires_system_checks = []
+
     execute_from_command_line(sys.argv)

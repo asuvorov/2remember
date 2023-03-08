@@ -4,10 +4,10 @@
 
 Dear, {{ user.first_name }}!
 
-Your Application to Challenge "{{ challenge.name }}" was removed due to the Reason:
+Your Application to Event "{{ event.name }}" was removed due to the Reason:
 
 {{ cancellation_text }}
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
 Thank you, SaneSide Team.

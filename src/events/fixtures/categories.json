@@ -1,6 +1,6 @@
 [
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       1,
         "fields": {
             "name":         "Animals",
@@ -15,7 +15,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       2,
         "fields": {
             "name":         "Arts & Culture",
@@ -30,7 +30,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       3,
         "fields": {
             "name":         "Children & Youth",
@@ -45,7 +45,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       4,
         "fields": {
             "name":         "Community",
@@ -60,7 +60,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       5,
         "fields": {
             "name":         "Education & Literacy",
@@ -75,7 +75,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       6,
         "fields": {
             "name":         "Environment",
@@ -90,7 +90,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       7,
         "fields": {
             "name":         "Health & Wellness",
@@ -105,7 +105,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       8,
         "fields": {
             "name":         "Sports & Recreation",
@@ -120,7 +120,7 @@
         }
     },
     {
-        "model":    "challenges.category",
+        "model":    "events.category",
         "pk":       9,
         "fields": {
             "name":         "Veterans & Seniors",

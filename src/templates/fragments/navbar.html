@@ -11,10 +11,7 @@
                     <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
 
                     <input type="hidden" name="models" value="blog.post" id="id_models_0">
-                    <input type="hidden" name="models" value="challenges.challenge" id="id_models_1">
-                    <input type="hidden" name="models" value="foro.post" id="id_models_2">
-                    <input type="hidden" name="models" value="foro.topic" id="id_models_3">
-                    <input type="hidden" name="models" value="foro.forum" id="id_models_4">
+                    <input type="hidden" name="models" value="events.event" id="id_models_1">
                     <input type="hidden" name="models" value="home.faq" id="id_models_5">
                     <input type="hidden" name="models" value="organizations.organization" id="id_models_6">
                     <input type="hidden" name="models" value="accounts.userprofile" id="id_models_7">
@@ -111,15 +108,15 @@
                     </ul>
                 </li>
 
-                <li class="dropdown {% if request.path|slice:'12' == '/challenges/' %} active {% endif %}">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Challenges" %}</a>
+                <li class="dropdown {% if request.path|slice:'12' == '/events/' %} active {% endif %}">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">{% trans "Events" %}</a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'challenge-near-you-list' %}">{% trans "Near you" %}</a></li>
-                        <li><a href="{% url 'challenge-new-list' %}">{% trans "New" %}</a></li>
-                        <li><a href="{% url 'challenge-dateless-list' %}">{% trans "Dateless" %}</a></li>
-                        <li><a href="{% url 'challenge-featured-list' %}">{% trans "Featured" %}</a></li>
+                        <li><a href="{% url 'event-near-you-list' %}">{% trans "Near you" %}</a></li>
+                        <li><a href="{% url 'event-new-list' %}">{% trans "New" %}</a></li>
+                        <li><a href="{% url 'event-dateless-list' %}">{% trans "Dateless" %}</a></li>
+                        <li><a href="{% url 'event-featured-list' %}">{% trans "Featured" %}</a></li>
                     {% if request.user.is_authenticated and request.user.profile.is_completed %}
-                        <li><a href="{% url 'challenge-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Create" %}</a></li>
+                        <li><a href="{% url 'event-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Create" %}</a></li>
                     {% endif %}
                     </ul>
                 </li>
@@ -190,7 +187,6 @@
             <ul class="link">
                 <li><a href="{% url 'about-us' %}">{% trans "About us" %}</a></li>
                 <li><a href="{% url 'contact-us' %}">{% trans "Contact us" %}</a></li>
-                <li><a href="{% url 'forum-list' %}">{% trans "Forum" %}</a></li>
             </ul>
         </div>
 

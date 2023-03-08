@@ -1,27 +1,27 @@
 {% load i18n %}
 
-<div class="modal fade" id="challengeDidNotParticipateSubmitPopupModal" tabindex="-1" role="dialog" aria-labelledby="challengeDidNotParticipateSubmitPopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventDidNotParticipateSubmitPopupModal" tabindex="-1" role="dialog" aria-labelledby="eventDidNotParticipateSubmitPopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="challengeDidNotParticipateSubmitPopupModalLabel">{% trans "Not participated" %}</h4>
+                <h4 class="modal-title" id="eventDidNotParticipateSubmitPopupModalLabel">{% trans "Not participated" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="challenge-not-participated-modal-form" action="" method="POST">
+                <form id="event-not-participated-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
 
                     <p class="note">
                         <span class="label label-warning">{% trans "Explain yourself" %}</span><br/>
-                        <strong>{% trans "Not participating in the Challenge could be very inconvenient for the Organizer. Please, write a Note, explaining why you couldn't make it this Time." %}</strong>
+                        <strong>{% trans "Not participating in the Event could be very inconvenient for the Organizer. Please, write a Note, explaining why you couldn't make it this Time." %}</strong>
                     </p>
 
                     <p class="note">
                         <span class="label label-warning">{% trans "Warning" %}</span><br/>
-                        {% trans "If you apply to the Challenge in the future, the Organizer will be able to see all Challenges you withdrew from, and the Reason you entered. Seeing fewer Withdrawals will make you look more trustworthy." %}
+                        {% trans "If you apply to the Event in the future, the Organizer will be able to see all Events you withdrew from, and the Reason you entered. Seeing fewer Withdrawals will make you look more trustworthy." %}
                     </p>
 
                     <div class="form-group">
@@ -44,17 +44,17 @@
     /*** Not participated after all                                        ***/
     /*************************************************************************/
     function participation_not_participated() {
-        var challenge_id = $("#challenge-not-participated-modal-form").find("input[name='challenge_id']").val();
-        var cancellation_text = $("#challenge-not-participated-modal-form").find("textarea[name='cancellation_text']").val();
+        var event_id = $("#event-not-participated-modal-form").find("input[name='event_id']").val();
+        var cancellation_text = $("#event-not-participated-modal-form").find("textarea[name='cancellation_text']").val();
 
-        $.post("{% url 'api-participation-withdraw' 0 %}".replace("0", challenge_id), {
+        $.post("{% url 'api-participation-withdraw' 0 %}".replace("0", event_id), {
             "cancellation_text":    cancellation_text,
-            "csrfmiddlewaretoken":  $("#challenge-not-participated-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":  $("#event-not-participated-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#challengeDidNotParticipateSubmitPopupModal").modal("hide");
+            $("#eventDidNotParticipateSubmitPopupModal").modal("hide");
 
             new Noty({
                 type:   "info",
@@ -62,16 +62,16 @@
             }).show();
 
             // ----------------------------------------------------------------
-            // --- Related to the `Accounts: My Profile Page: Completed Challenges Tab`
-            $(".action-" + challenge_id).find(".sr-submit").hide("slow");
-            $(".action-" + challenge_id).find(".not-participated").hide("slow");
-            $(".action-" + challenge_id).find(".add-rating").hide("slow");
-            $(".action-" + challenge_id).find(".add-complaint").hide("slow");
+            // --- Related to the `Accounts: My Profile Page: Completed Events Tab`
+            $(".action-" + event_id).find(".sr-submit").hide("slow");
+            $(".action-" + event_id).find(".not-participated").hide("slow");
+            $(".action-" + event_id).find(".add-rating").hide("slow");
+            $(".action-" + event_id).find(".add-complaint").hide("slow");
 
-            $(".status-" + challenge_id).html("<span class='label label-danger'>Not participated</span>");
+            $(".status-" + event_id).html("<span class='label label-danger'>Not participated</span>");
 
             // ----------------------------------------------------------------
-            // --- Related to the `Challenges: Details Page: Info Tab`
+            // --- Related to the `Events: Details Page: Info Tab`
             $(element).parent().parent().find("#div-sr-submit").hide("slow");
             $(element).parent().parent().find("#div-not-participated").hide("slow");
             $(element).parent().parent().find("#div-add-rating").hide("slow");

@@ -1,13 +1,13 @@
 <!--
 TAB
-My Profile - Upcoming Challenges
+My Profile - Upcoming Events.
 -->
 {% load i18n %}
 
 <div class="row">
 {% for participation in request.user.profile.get_upcoming_participations %}
     <div class="col-xs-24 col-sm-8 col-md-6 col-lg-6">
-        {% include "challenges/fragments/challenge-thumbnail-vert.html" with challenge=participation.challenge participation=participation show_org=True %}
+        {% include "events/fragments/event-thumbnail-vert.html" with event=participation.event participation=participation show_org=True %}
     </div>
 {% empty %}
     <div class="col-xs-24 col-sm-24 col-md-24">

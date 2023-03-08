@@ -4,7 +4,7 @@
 
     <!-- Underscore -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'underscore/underscore-min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'underscore/underscore-min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Animate CSS -->
@@ -18,9 +18,9 @@
 {% endcompress %}
 
     <!-- jQuery UI -->
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui/themes/base/all.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui/themes/base/all.css' %}"> -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap -->
@@ -110,11 +110,6 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
 
-    <!-- Font Awesome Animation -->
-{% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'font-awesome-animation/dist/font-awesome-animation.min.css' %}">
-{% endcompress %}
-
     <!-- Font Flat Icon -->
     <link rel="stylesheet" type="text/css" href="{% static 'fonts/flaticon/flaticon.css' %}">
 
@@ -125,14 +120,14 @@
 
     <!-- jQuery File Upload -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'blueimp-file-upload/css/jquery.fileupload.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-file-upload/css/jquery.fileupload.css' %}">
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'blueimp-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
-    <script type="text/javascript" charset="utf-8" src="{% static 'blueimp-file-upload/js/jquery.iframe-transport.js' %}"></script>
-    <script type="text/javascript" charset="utf-8" src="{% static 'blueimp-file-upload/js/jquery.fileupload.js' %}"></script>
-    <script type="text/javascript" charset="utf-8" src="{% static 'blueimp-file-upload/js/jquery.fileupload-process.js' %}"></script>
-    <script type="text/javascript" charset="utf-8" src="{% static 'blueimp-file-upload/js/jquery.fileupload-validate.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-file-upload/js/vendor/jquery.ui.widget.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-file-upload/js/jquery.iframe-transport.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-file-upload/js/jquery.fileupload.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-file-upload/js/jquery.fileupload-process.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-file-upload/js/jquery.fileupload-validate.js' %}"></script>
 {% endcompress %}
 
     <!-- jQuery ColorBox -->
@@ -163,12 +158,7 @@
 
     <!-- jQuery Input Mask -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'inputmask/dist/min/jquery.inputmask.bundle.min.js' %}"></script>
-{% endcompress %}
-
-    <!-- jQuery Pulsate -->
-{% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery.pulsate/jquery.pulsate.min.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'inputmask/dist/jquery.inputmask.min.js' %}"></script>
 {% endcompress %}
 
     <!-- jQuery pop-up Overlay -->
@@ -238,12 +228,7 @@
 
     <!-- jQuery isMobile -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'isMobile/isMobile.min.js' %}"></script>
-{% endcompress %}
-
-    <!-- jQuery Isotope -->
-{% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'isotope-layout/dist/isotope.pkgd.min.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'ismobilejs/src/isMobile.js' %}"></script>
 {% endcompress %}
 
     <!--[if lt IE 9]>

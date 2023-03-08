@@ -4,8 +4,8 @@
 
 Dear, {{ user.first_name }}!
 
-You have withdrawn your Participation in Challenge "{{ challenge.name }}"!
+You have withdrawn your Participation in Event "{{ event.name }}"!
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
 Thank you, SaneSide Team.

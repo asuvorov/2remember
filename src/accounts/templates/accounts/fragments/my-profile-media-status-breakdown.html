@@ -16,5 +16,5 @@
     </ul>
 </div>
 
-<a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'challenge-create' %}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Challenge" %}</a>
+<a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Event" %}</a>
 <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="fa fa-building-o fa-fw"></i> {% trans "Create Organization" %}</a>

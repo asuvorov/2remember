@@ -188,20 +188,20 @@ Foreign Profile - Info
     })
 
     /*************************************************************************/
-    /*** Invite to Challenge                                               ***/
+    /*** Invite to Event                                                   ***/
     /*************************************************************************/
     $(".invite-to-chl").click(function (event) {
         var event = window.event || event;
 
         event.preventDefault();
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var invitee_id = {{ account.profile.user_id }};
 
-        $("#invite-to-challenge-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#invite-to-challenge-modal-form").find("input[name='invitee_id']").val(invitee_id);
+        $("#invite-to-event-modal-form").find("input[name='event_id']").val(event_id);
+        $("#invite-to-event-modal-form").find("input[name='invitee_id']").val(invitee_id);
 
-        $("#inviteToChallengePopupModal").modal("show");
+        $("#inviteToEventPopupModal").modal("show");
     })
 
     /*************************************************************************/

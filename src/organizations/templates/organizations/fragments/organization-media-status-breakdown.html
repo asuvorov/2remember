@@ -8,7 +8,7 @@
 {% if organization.author == request.user %}
     <a class="btn btn-primary" href="{% url 'organization-edit' organization.slug %}"><i class="fa fa-edit fa-fw"></i> {% trans "Edit Organization" %}</a>
     <a class="btn btn-success" href="{% url 'organization-populate-newsletter' organization.slug %}"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Populate Newsletter" %}</a>
-    <a class="btn btn-primary" href="{% url 'challenge-create' %}?organization={{ organization.id }}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Challenge" %}</a>
+    <a class="btn btn-primary" href="{% url 'event-create' %}?organization={{ organization.id }}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Event" %}</a>
 {% elif request.user.is_authenticated %}
     {% if not is_subscribed %}
         <a class="btn btn-primary subscribe" href="#"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Subscribe" %}</a>
@@ -20,7 +20,7 @@
             <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
             <p>
             {% blocktrans %}
-                You see this Message, because in the you participated in the Challenge(s), organized by this Organization.<br/>
+                You see this Message, because in the you participated in the Event(s), organized by this Organization.<br/>
                 Let us know, if there's something to complain about it.
             {% endblocktrans %}
             </p>

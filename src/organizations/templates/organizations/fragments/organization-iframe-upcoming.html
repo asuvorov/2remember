@@ -6,7 +6,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>{% trans "Upcoming Challenges" %}</title>
+        <title>{% trans "Upcoming Events" %}</title>
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -38,30 +38,30 @@
             {% endif %}
             </a>
 
-            <p>{{ organization.name }} {% trans "Upcoming Challenges on SaneSide" %}:</p>
+            <p>{{ organization.name }} {% trans "Upcoming Events on SaneSide" %}:</p>
 
             <table class="table condensed-table">
-            {% for challenge in challenges_upcoming %}
+            {% for event in events_upcoming %}
                 <tr>
                     <td>
-                        <a class="" href="{% url 'challenge-details' challenge.slug %}">
-                        {% if challenge.avatar %}
-                            {% generateimage "iframe:thumbnail" source=challenge.avatar -- alt=challenge.name %}
+                        <a class="" href="{% url 'event-details' event.slug %}">
+                        {% if event.avatar %}
+                            {% generateimage "iframe:thumbnail" source=event.avatar -- alt=event.name %}
                         {% else %}
-                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ challenge.name }}. SaneSide Platform - Volunteering and Community Service made easy." />
+                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.name }}. SaneSide Platform - Volunteering and Community Service made easy." />
                         {% endif %}
                         </a>
                     </td>
                     <td>
-                        <a class="" href="{% url 'challenge-details' challenge.slug %}">{{ challenge.name }}</a>
+                        <a class="" href="{% url 'event-details' event.slug %}">{{ event.name }}</a>
                     </td>
-                    <td>{{ challenge.start_date }}</td>
-                    <td><span class="label label-info">{{ challenge.duration }}h</span></td>
-                    <td><span class="badge badge-success">{{ challenge.get_confirmed_count }}</span></td>
+                    <td>{{ event.start_date }}</td>
+                    <td><span class="label label-info">{{ event.duration }}h</span></td>
+                    <td><span class="badge badge-success">{{ event.get_confirmed_count }}</span></td>
                 </tr>
             {% empty %}
                 <tr>
-                    <span class="label label-info">{% trans "This Organization has no open Challenges at the moment" %}</span>
+                    <span class="label label-info">{% trans "This Organization has no open Events at the moment" %}</span>
                 </tr>
             {% endfor %}
             </table>

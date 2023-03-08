@@ -16,7 +16,7 @@ Foreign Profile - Canceled Participations
             <thead>
                 <tr class="active">
                     <th colspan="2">
-                        <a href="{% url 'challenge-details' participation.challenge.slug %}">{{ participation.challenge.name }}</a> canceled on {{ participation.date_cancelled }}
+                        <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a> canceled on {{ participation.date_cancelled }}
                     </th>
                 </tr>
             </thead>
@@ -40,7 +40,7 @@ Foreign Profile - Canceled Participations
         <thead>
             <tr>
                 <th></th>
-                <th>{% trans "Challenge Name" %}</th>
+                <th>{% trans "Event Name" %}</th>
                 <th>{% trans "Signed up" %}</th>
                 <th>{% trans "Canceled" %}</th>
                 <th>{% trans "Reason" %}</th>
@@ -51,13 +51,13 @@ Foreign Profile - Canceled Participations
         {% for participation in cancelled_participations %}
             <tr>
                 <td>
-                    <a href="{% url 'challenge-details' participation.challenge.slug %}">
-                    {% if participation.challenge.avatar %}
-                        {% generateimage "common:thumbnail" source=participation.challenge.avatar -- alt=participation.challenge.name %}
+                    <a href="{% url 'event-details' participation.event.slug %}">
+                    {% if participation.event.avatar %}
+                        {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.name %}
                     {% endif %}
                     </a>
                 </td>
-                <td><a href="{% url 'challenge-details' participation.challenge.slug %}">{{ participation.challenge.name }}</a></td>
+                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a></td>
                 <td>{{ participation.date_created }}</td>
                 <td>{{ participation.date_cancelled }}</td>
                 <td>

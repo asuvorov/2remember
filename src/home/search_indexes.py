@@ -9,7 +9,7 @@ from .models import FAQ
 # --- FAQ SEARCH INDEX
 # -----------------------------------------------------------------------------
 class FAQIndex(indexes.SearchIndex, indexes.Indexable):
-    """Forum Index."""
+    """FAQ Index."""
 
     # -------------------------------------------------------------------------
     text = indexes.CharField(

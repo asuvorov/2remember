@@ -4,9 +4,9 @@
 
 Dear, {{ user.first_name }}!
 
-The Organization "{{ organization.name }}" Newsletter has just created new Challenge "{{ challenge.name }}".
+The Organization "{{ organization.name }}" Newsletter has just created new Event "{{ event.name }}".
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
 Link to the Organization Details Page: {{ organization_link }}
 

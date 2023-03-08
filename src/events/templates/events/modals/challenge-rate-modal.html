@@ -1,27 +1,27 @@
 {% load i18n %}
 
-<div class="modal fade" id="challengeRatePopupModal" tabindex="-1" role="dialog" aria-labelledby="challengeRatePopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventRatePopupModal" tabindex="-1" role="dialog" aria-labelledby="eventRatePopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="challengeRatePopupModalLabel">{% trans "Rate the Challenge" %}</h4>
+                <h4 class="modal-title" id="eventRatePopupModalLabel">{% trans "Rate the Event" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="challenge-rate-modal-form" action="" method="POST">
+                <form id="event-rate-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
                     <input type="hidden" name="organizer_id" value="">
 
-                    <p><strong>{% trans "Thank you for participating! Please take a minute to rate the Challenge, Organization and Organizer." %}</strong></p>
+                    <p><strong>{% trans "Thank you for participating! Please take a minute to rate the Event, Organization and Organizer." %}</strong></p>
 
-                    <div id="challenge-form-group" class="form-group">
-                        <label for="id_challenge_review_text">{% trans "How would you rate the Challenge?" %}</label><br/>
-                        <input id="id_challenge_rating" name="challenge_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" />
-                        <textarea id="id_challenge_review_text" name="challenge_review_text" class="form-control" maxlength="1000" placeholder="Enter text here..."></textarea>
+                    <div id="event-form-group" class="form-group">
+                        <label for="id_event_review_text">{% trans "How would you rate the Event?" %}</label><br/>
+                        <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" />
+                        <textarea id="id_event_review_text" name="event_review_text" class="form-control" maxlength="1000" placeholder="Enter text here..."></textarea>
                     </div>
 
                     <div id="organization-form-group" class="form-group">
@@ -48,40 +48,40 @@
 
 <script>
     /*************************************************************************/
-    /*** Rate the Challenge, Organization and Organizer                    ***/
+    /*** Rate the Event, Organization and Organizer                    ***/
     /*************************************************************************/
     function participation_rate() {
-        var challenge_id = $("#challenge-rate-modal-form").find("input[name='challenge_id']").val();
-        var organization_id = $("#challenge-rate-modal-form").find("input[name='organization_id']").val();
-        var organizer_id = $("#challenge-rate-modal-form").find("input[name='organizer_id']").val();
+        var event_id = $("#event-rate-modal-form").find("input[name='event_id']").val();
+        var organization_id = $("#event-rate-modal-form").find("input[name='organization_id']").val();
+        var organizer_id = $("#event-rate-modal-form").find("input[name='organizer_id']").val();
 
-        var challenge_rating = $("input[name='challenge_rating']").rating("rate");
+        var event_rating = $("input[name='event_rating']").rating("rate");
         var organization_rating = $("input[name='organization_rating']").rating("rate");
         var organizer_rating = $("input[name='organizer_rating']").rating("rate");
 
-        var challenge_review_text = $("#challenge-rate-modal-form").find("textarea[name='challenge_review_text']").val();
-        var organization_review_text = $("#challenge-rate-modal-form").find("textarea[name='organization_review_text']").val();
-        var organizer_review_text = $("#challenge-rate-modal-form").find("textarea[name='organizer_review_text']").val();
+        var event_review_text = $("#event-rate-modal-form").find("textarea[name='event_review_text']").val();
+        var organization_review_text = $("#event-rate-modal-form").find("textarea[name='organization_review_text']").val();
+        var organizer_review_text = $("#event-rate-modal-form").find("textarea[name='organizer_review_text']").val();
 
         $.post("{% url 'api-rating-list' %}", {
-            "challenge_id":                 challenge_id,
+            "event_id":                 event_id,
             "organization_id":              organization_id,
             "organizer_id":                 organizer_id,
 
-            "challenge_rating":             challenge_rating,
+            "event_rating":             event_rating,
             "organization_rating":          organization_rating,
             "organizer_rating":             organizer_rating,
 
-            "challenge_review_text":        challenge_review_text,
+            "event_review_text":        event_review_text,
             "organization_review_text":     organization_review_text,
             "organizer_review_text":        organizer_review_text,
 
-            "csrfmiddlewaretoken":          $("#challenge-rate-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":          $("#event-rate-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#challengeRatePopupModal").modal("hide");
+            $("#eventRatePopupModal").modal("hide");
 
             new Noty({
                 type:   "info",
@@ -89,11 +89,11 @@
             }).show();
 
             // ----------------------------------------------------------------
-            // --- Related to the `Accounts: My Profile Page: Completed Challenges Tab`
-            $(".action-" + challenge_id).find(".add-rating").hide("slow");
+            // --- Related to the `Accounts: My Profile Page: Completed Events Tab`
+            $(".action-" + event_id).find(".add-rating").hide("slow");
 
             // ----------------------------------------------------------------
-            // --- Related to the `Challenges: Details Page: Info Tab`
+            // --- Related to the `Events: Details Page: Info Tab`
             $(element).parent().parent().find("#div-add-rating").hide("slow");
 
             // location.reload(true);
@@ -109,7 +109,7 @@
             } catch (err) {
                 new Noty({
                     type:   "error",
-                    text:   "Failed to rate the Challenge."
+                    text:   "Failed to rate the Event."
                 }).show();
             };
         });

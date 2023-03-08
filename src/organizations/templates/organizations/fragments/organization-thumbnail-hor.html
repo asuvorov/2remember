@@ -76,34 +76,34 @@
             <p>{{ organization.description|striptags|truncatechars:300 }}</p>
         </div>
 
-    {% with challenges=organization.get_upcoming_challenges %}
-        {% if organization.get_upcoming_challenges %}
+    {% with events=organization.get_upcoming_events %}
+        {% if organization.get_upcoming_events %}
             <hr>
 
             <div class="row">
                 <div class="col-xs-24 col-sm-24 col-md-24">
-                    <h5>{% trans "Current Challenges" %}</h5>
+                    <h5>{% trans "Current Events" %}</h5>
 
                     <ul class="event-list">
-                    {% for challenge in challenges|slice:":5"|dictsort:"start_date" %}
+                    {% for event in events|slice:":5"|dictsort:"start_date" %}
                         <li>
-                            <time style="background-color:{{ challenge.stat_category_color }};">
-                                <span class="day"  >{{ challenge.start_date|date:"j" }}</span>
-                                <span class="month">{{ challenge.start_date|date:"M" }}</span>
+                            <time style="background-color:{{ event.stat_category_color }};">
+                                <span class="day"  >{{ event.start_date|date:"j" }}</span>
+                                <span class="month">{{ event.start_date|date:"M" }}</span>
                             </time>
 
                             <div class="info">
-                                <a class="title" href="{% url 'challenge-details' slug=challenge.slug %}">
-                                    {{ challenge.name|truncatechars:30 }}
+                                <a class="title" href="{% url 'event-details' slug=event.slug %}">
+                                    {{ event.name|truncatechars:30 }}
                                 </a>
                                 <p class="desc">
-                                    <i class="fa fa-clock-o fa-fw"></i> {{ challenge.start_time|date:"G:i"|default:"0:00" }}
+                                    <i class="fa fa-clock-o fa-fw"></i> {{ event.start_time|date:"G:i"|default:"0:00" }}
                                 </p>
-                            {% if challenge.addressless %}
+                            {% if event.addressless %}
                                 <span class="label label-warning">{% trans "Location is not provided" %}</span>
                             {% else %}
                                 <p class="desc">
-                                    <i class="fa fa-map-marker fa-fw"></i> {{ challenge.address.short_address }}
+                                    <i class="fa fa-map-marker fa-fw"></i> {{ event.address.short_address }}
                                 </p>
                             {% endif %}
                             </div>

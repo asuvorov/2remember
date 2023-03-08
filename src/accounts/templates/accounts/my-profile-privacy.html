@@ -61,26 +61,26 @@
 
                             <hr>
 
-                            <div class="form-group {% if privacy_members_form.challenges_upcoming.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_members_form.challenges_upcoming.label }}{% if privacy_members_form.challenges_upcoming.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_members_form.challenges_upcoming }}
+                            <div class="form-group {% if privacy_members_form.events_upcoming.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_members_form.events_upcoming.label }}{% if privacy_members_form.events_upcoming.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_members_form.events_upcoming }}
 
-                                <span class="help-block">{% if privacy_members_form.challenges_upcoming.errors %}{% for error in privacy_members_form.challenges_upcoming.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_members_form.events_upcoming.errors %}{% for error in privacy_members_form.events_upcoming.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
-                            <div class="form-group {% if privacy_members_form.challenges_completed.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_members_form.challenges_completed.label }}{% if privacy_members_form.challenges_completed.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_members_form.challenges_completed }}
+                            <div class="form-group {% if privacy_members_form.events_completed.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_members_form.events_completed.label }}{% if privacy_members_form.events_completed.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_members_form.events_completed }}
 
-                                <span class="help-block">{% if privacy_members_form.challenges_completed.errors %}{% for error in privacy_members_form.challenges_completed.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_members_form.events_completed.errors %}{% for error in privacy_members_form.events_completed.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
                             <hr>
 
-                            <div class="form-group {% if privacy_members_form.challenges_affiliated.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_members_form.challenges_affiliated.label }}{% if privacy_members_form.challenges_affiliated.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_members_form.challenges_affiliated }}
+                            <div class="form-group {% if privacy_members_form.events_affiliated.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_members_form.events_affiliated.label }}{% if privacy_members_form.events_affiliated.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_members_form.events_affiliated }}
 
-                                <span class="help-block">{% if privacy_members_form.challenges_affiliated.errors %}{% for error in privacy_members_form.challenges_affiliated.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_members_form.events_affiliated.errors %}{% for error in privacy_members_form.events_affiliated.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
                             <hr>
@@ -117,26 +117,26 @@
 
                             <hr>
 
-                            <div class="form-group {% if privacy_admins_form.challenges_upcoming.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_admins_form.challenges_upcoming.label }}{% if privacy_admins_form.challenges_upcoming.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_admins_form.challenges_upcoming }}
+                            <div class="form-group {% if privacy_admins_form.events_upcoming.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_admins_form.events_upcoming.label }}{% if privacy_admins_form.events_upcoming.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_admins_form.events_upcoming }}
 
-                                <span class="help-block">{% if privacy_admins_form.challenges_upcoming.errors %}{% for error in privacy_admins_form.challenges_upcoming.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_admins_form.events_upcoming.errors %}{% for error in privacy_admins_form.events_upcoming.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
-                            <div class="form-group {% if privacy_admins_form.challenges_completed.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_admins_form.challenges_completed.label }}{% if privacy_admins_form.challenges_completed.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_admins_form.challenges_completed }}
+                            <div class="form-group {% if privacy_admins_form.events_completed.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_admins_form.events_completed.label }}{% if privacy_admins_form.events_completed.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_admins_form.events_completed }}
 
-                                <span class="help-block">{% if privacy_admins_form.challenges_completed.errors %}{% for error in privacy_admins_form.challenges_completed.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_admins_form.events_completed.errors %}{% for error in privacy_admins_form.events_completed.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
                             <hr>
 
-                            <div class="form-group {% if privacy_admins_form.challenges_affiliated.errors %}has-error{% endif %}">
-                                <label class="control-label">{{ privacy_admins_form.challenges_affiliated.label }}{% if privacy_admins_form.challenges_affiliated.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                {{ privacy_admins_form.challenges_affiliated }}
+                            <div class="form-group {% if privacy_admins_form.events_affiliated.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ privacy_admins_form.events_affiliated.label }}{% if privacy_admins_form.events_affiliated.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                {{ privacy_admins_form.events_affiliated }}
 
-                                <span class="help-block">{% if privacy_admins_form.challenges_affiliated.errors %}{% for error in privacy_admins_form.challenges_affiliated.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                <span class="help-block">{% if privacy_admins_form.events_affiliated.errors %}{% for error in privacy_admins_form.events_affiliated.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
                             <hr>
