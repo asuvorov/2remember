@@ -1,23 +1,23 @@
 {% load i18n %}
 
-<div class="modal fade" id="challengeSelfreflectionSubmitPopupModal" tabindex="-1" role="dialog" aria-labelledby="challengeSelfreflectionSubmitPopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventSelfreflectionSubmitPopupModal" tabindex="-1" role="dialog" aria-labelledby="eventSelfreflectionSubmitPopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="challengeSelfreflectionSubmitPopupModalLabel">{% trans "Submit Experience Report" %}</h4>
+                <h4 class="modal-title" id="eventSelfreflectionSubmitPopupModalLabel">{% trans "Submit Experience Report" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="challenge-selfreflection-submit-modal-form" action="" method="POST">
+                <form id="event-selfreflection-submit-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
 
                     <p><strong>{% trans "Thank you for participating! Please take a minute to write about your Experience." %}</strong></p>
 
                     <div class="form-group">
-                        <label for="id_selfreflection_activity_text">{% trans "What did you do during this Challenge?" %}</label>
+                        <label for="id_selfreflection_activity_text">{% trans "What did you do during this Event?" %}</label>
                         <textarea id="id_selfreflection_activity_text" class="form-control" name="selfreflection_activity_text" maxlength="1000" placeholder="Enter text here..."></textarea>
                     </div>
 
@@ -29,7 +29,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" onclick="challenge_selfreflection_submit();">{% trans "Submit" %}</button>
+                <button type="button" class="btn btn-success" onclick="event_selfreflection_submit();">{% trans "Submit" %}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
             </div>
         </div>
@@ -38,22 +38,22 @@
 
 <script>
     /*************************************************************************/
-    /*** Submit Challenge Experience Report                                ***/
+    /*** Submit Event Experience Report                                ***/
     /*************************************************************************/
-    function challenge_selfreflection_submit() {
-        var challenge_id = $("#challenge-selfreflection-submit-modal-form").find("input[name='challenge_id']").val();
-        var selfreflection_activity_text = $("#challenge-selfreflection-submit-modal-form").find("textarea[name='selfreflection_activity_text']").val();
-        var selfreflection_learning_text = $("#challenge-selfreflection-submit-modal-form").find("textarea[name='selfreflection_learning_text']").val();
+    function event_selfreflection_submit() {
+        var event_id = $("#event-selfreflection-submit-modal-form").find("input[name='event_id']").val();
+        var selfreflection_activity_text = $("#event-selfreflection-submit-modal-form").find("textarea[name='selfreflection_activity_text']").val();
+        var selfreflection_learning_text = $("#event-selfreflection-submit-modal-form").find("textarea[name='selfreflection_learning_text']").val();
 
-        $.post("{% url 'api-challenge-selfreflection-submit' 0 %}".replace("0", challenge_id), {
+        $.post("{% url 'api-event-selfreflection-submit' 0 %}".replace("0", event_id), {
             "selfreflection_activity_text": selfreflection_activity_text,
             "selfreflection_learning_text": selfreflection_learning_text,
-            "csrfmiddlewaretoken":          $("#challenge-selfreflection-submit-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":          $("#event-selfreflection-submit-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#challengeSelfreflectionSubmitPopupModal").modal("hide");
+            $("#eventSelfreflectionSubmitPopupModal").modal("hide");
 
             new Noty({
                 type:   "info",
@@ -61,14 +61,14 @@
             }).show();
 
             // ----------------------------------------------------------------
-            // --- Related to the `Accounts: My Profile Page: Completed Challenges Tab`
-            $(".action-" + challenge_id).find(".sr-submit").hide("slow");
-            $(".action-" + challenge_id).find(".not-participated").hide("slow");
+            // --- Related to the `Accounts: My Profile Page: Completed Events Tab`
+            $(".action-" + event_id).find(".sr-submit").hide("slow");
+            $(".action-" + event_id).find(".not-participated").hide("slow");
 
-            $(".status-" + challenge_id).html("<span class='label label-info'>Waiting for Acknowledgment</span>");
+            $(".status-" + event_id).html("<span class='label label-info'>Waiting for Acknowledgment</span>");
 
             // ----------------------------------------------------------------
-            // --- Related to the `Challenges: Details Page: Info Tab`
+            // --- Related to the `Events: Details Page: Info Tab`
             $(element).parent().parent().find("#div-sr-submit").hide("slow");
             $(element).parent().parent().find("#div-not-participated").hide("slow");
 

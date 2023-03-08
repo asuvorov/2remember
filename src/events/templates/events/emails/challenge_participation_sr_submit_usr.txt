@@ -4,10 +4,10 @@
 
 Dear, {{ user.first_name }}!
 
-Your Experience Report on the Challenge "{{ challenge.name }}" was submitted.
+Your Experience Report on the Event "{{ event.name }}" was submitted.
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
-Also, you can find Link to this Challenge on your Profile Page.
+Also, you can find Link to this Event on your Profile Page.
 
 Thank you, SaneSide Team.

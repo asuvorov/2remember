@@ -1,36 +1,36 @@
 <!--
 TAB
-My Profile - Admin Action required Challenges
+My Profile - Admin Action required Events
 -->
 {% load i18n %}
 {% load imagekit %}
 {% load accounttags %}
 
 <div class="row">
-{% for challenge in request.user.profile.get_admin_challenges_action_required %}
+{% for event in request.user.profile.get_admin_events_action_required %}
     <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24">
-        {% include "challenges/fragments/challenge-thumbnail-hor.html" with challenge=challenge show_org=True chl_admin=True %}
+        {% include "events/fragments/event-thumbnail-hor.html" with event=event show_org=True chl_admin=True %}
 
-    {% if challenge.challenge_participations.waiting_for_confirmation.count > 0 %}
-        <div id="challenge-confirm-section">
+    {% if event.event_participations.waiting_for_confirmation.count > 0 %}
+        <div id="event-confirm-section">
             <h4>{% trans "Waiting for Confirmation" %}</h4>
 
-            {% include "challenges/tabs/to-confirm-tab.html" with challenge=challenge %}
+            {% include "events/tabs/to-confirm-tab.html" with event=event %}
         </div>
     {% endif %}
 
-    {% if challenge.challenge_participations.waiting_for_acknowledgement.count > 0 %}
-        <div id="challenge-acknowledge-section">
+    {% if event.event_participations.waiting_for_acknowledgement.count > 0 %}
+        <div id="event-acknowledge-section">
             <h4>{% trans "Waiting for Acknowledgment" %}</h4>
 
-            {% include "challenges/tabs/to-acknowledge-tab.html" with challenge=challenge %}
+            {% include "events/tabs/to-acknowledge-tab.html" with event=event %}
         </div>
     {% endif %}
     </div>
 {% empty %}
     <div class="col-xs-24 col-sm-24 col-md-24">
         <p>
-            <span class="label label-info">{% trans "There are no Challenges required Action at the moment." %}</span>
+            <span class="label label-info">{% trans "There are no Events required Action at the Moment." %}</span>
         </p>
     </div>
 {% endfor %}
@@ -45,10 +45,10 @@ My Profile - Admin Action required Challenges
     $(".accept-app").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $.post("{% url 'api-participation-accept-application' 0 %}".replace("0", challenge_id), {
+        $.post("{% url 'api-participation-accept-application' 0 %}".replace("0", event_id), {
             "participation_id": participation_id
         }).done(function (data) {
             console.log("Success");
@@ -80,12 +80,12 @@ My Profile - Admin Action required Challenges
     $(".reject-app").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-reject-application-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-reject-application-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationRejectApplicationPopupModal").modal("show");
+        $("#event-participation-reject-application-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-reject-application-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationRejectApplicationPopupModal").modal("show");
     })
 
     /*************************************************************************/
@@ -94,12 +94,12 @@ My Profile - Admin Action required Challenges
     $(".accept-sr").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-accept-selfreflection-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-accept-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationAcceptSelfreflectionPopupModal").modal("show");
+        $("#event-participation-accept-selfreflection-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-accept-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationAcceptSelfreflectionPopupModal").modal("show");
     })
 
     /*************************************************************************/
@@ -108,11 +108,11 @@ My Profile - Admin Action required Challenges
     $(".reject-sr").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationRejectSelfreflectionPopupModal").modal("show");
+        $("#event-participation-reject-selfreflection-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationRejectSelfreflectionPopupModal").modal("show");
     })
 </script>

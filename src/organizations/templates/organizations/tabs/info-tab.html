@@ -291,12 +291,12 @@ Organization Details - Info
         <h4>{% trans "Widgets" %}</h4>
 
         <div class="organization-widget">
-            <p>{% trans "Copy and paste this Block of Code to your Website to show a List of all upcoming Challenges of your Organization." %}</p>
+            <p>{% trans "Copy and paste this Block of Code to your Website to show a List of all upcoming Events of your Organization." %}</p>
             <pre class="prettyprint">&lt;iframe src="http://{{ request.get_host }}{% url 'organization-iframe-upcoming' organization.id %}" name="iframe" width="400" height="200" align="right" scrolling="auto"&gt;&lt;p&gt;Widget not supported in your browser&lt;/p&gt;&lt;iframe&gt;</pre>
         </div>
 
         <div class="organization-widget">
-            <p>{% trans "Copy and paste this Block of Code to your Website to show a List of all past Challenges of your Organization and their Participants." %}</p>
+            <p>{% trans "Copy and paste this Block of Code to your Website to show a List of all past Events of your Organization and their Participants." %}</p>
             <pre class="prettyprint">&lt;iframe src="http://{{ request.get_host }}{% url 'organization-iframe-complete' organization.id %}" name="iframe" width="400" height="200" align="right" scrolling="auto"&gt;&lt;p&gt;"Widget not supported in your browser&lt;/p&gt;&lt;/iframe&gt;</pre>
         </div>
     {% endif %}

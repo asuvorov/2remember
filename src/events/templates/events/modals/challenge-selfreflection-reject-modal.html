@@ -1,18 +1,18 @@
 {% load i18n %}
 
-<div class="modal fade" id="challengeParticipationRejectSelfreflectionPopupModal" tabindex="-1" role="dialog" aria-labelledby="challengeParticipationRejectSelfreflectionPopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventParticipationRejectSelfreflectionPopupModal" tabindex="-1" role="dialog" aria-labelledby="eventParticipationRejectSelfreflectionPopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="challengeParticipationRejectSelfreflectionPopupModalLabel">{% trans "Reject Experience Report" %}</h4>
+                <h4 class="modal-title" id="eventParticipationRejectSelfreflectionPopupModalLabel">{% trans "Reject Experience Report" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="challenge-participation-reject-selfreflection-modal-form" action="" method="POST">
+                <form id="event-participation-reject-selfreflection-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="participation_id" value="">
 
                     <div class="form-group">
@@ -35,19 +35,19 @@
     /*** Reject Participation Experience Report                               ***/
     /*************************************************************************/
     function selfreflection_reject() {
-        var selfreflection_rejection_text = $("#challenge-participation-reject-selfreflection-modal-form").find("textarea[name='selfreflection_rejection_text']").val();
-        var challenge_id = $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='challenge_id']").val();
-        var participation_id = $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val();
+        var selfreflection_rejection_text = $("#event-participation-reject-selfreflection-modal-form").find("textarea[name='selfreflection_rejection_text']").val();
+        var event_id = $("#event-participation-reject-selfreflection-modal-form").find("input[name='event_id']").val();
+        var participation_id = $("#event-participation-reject-selfreflection-modal-form").find("input[name='participation_id']").val();
 
-        $.post("{% url 'api-participation-reject-selfreflection' 0 %}".replace("0", challenge_id), {
+        $.post("{% url 'api-participation-reject-selfreflection' 0 %}".replace("0", event_id), {
             "participation_id":                 participation_id,
             "selfreflection_rejection_text":    selfreflection_rejection_text,
-            "csrfmiddlewaretoken":              $("#challenge-participation-reject-selfreflection-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":              $("#event-participation-reject-selfreflection-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#challengeParticipationRejectSelfreflectionPopupModal").modal("hide");
+            $("#eventParticipationRejectSelfreflectionPopupModal").modal("hide");
 
             new Noty({
                 type:   "info",

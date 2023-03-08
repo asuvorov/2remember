@@ -1,17 +1,17 @@
 <!--
 TAB
-Challenge Details - to confirm
+Event Details - to confirm
 -->
 {% load i18n %}
 {% load imagekit %}
 {% load accounttags %}
 
-{% if challenge.challenge_participations.waiting_for_confirmation.count > 0 %}
+{% if event.event_participations.waiting_for_confirmation.count > 0 %}
     <!--
         Mobile View
     -->
     <div class="hidden-sm hidden-md hidden-lg">
-    {% for participation in challenge.challenge_participations.waiting_for_confirmation %}
+    {% for participation in event.event_participations.waiting_for_confirmation %}
         {% need_to_know_profile_details_tag request participation.user as need_to_know_profile_details %}
         {% need_to_know_contact_details_tag request participation.user as need_to_know_contact_details %}
 
@@ -63,8 +63,8 @@ Challenge Details - to confirm
                 <tr>
                     <td>{% trans "Action" %}</td>
                     <td>
-                        <a class="app-accept txt-success" challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
-                        <a class="app-reject txt-danger"  challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
+                        <a class="app-accept txt-success" event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
+                        <a class="app-reject txt-danger"  event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
                     </td>
                 </tr>
             </tbody>
@@ -89,7 +89,7 @@ Challenge Details - to confirm
         </thead>
 
         <tbody>
-        {% for participation in challenge.challenge_participations.waiting_for_confirmation %}
+        {% for participation in event.event_participations.waiting_for_confirmation %}
             {% need_to_know_profile_details_tag request participation.user as need_to_know_profile_details %}
             {% need_to_know_contact_details_tag request participation.user as need_to_know_contact_details %}
 
@@ -139,8 +139,8 @@ Challenge Details - to confirm
                     <span class="desc">{{ participation.application_text }}</span>
                 </td>
                 <td>
-                    <a class="app-accept txt-success" challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
-                    <a class="app-reject txt-danger"  challenge="{{ challenge.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
+                    <a class="app-accept txt-success" event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Accept" %}</a> |
+                    <a class="app-reject txt-danger"  event="{{ event.id}}" participation="{{ participation.id }}" href="#">{% trans "Reject" %}</a>
                 </td>
             </tr>
             {% endwith %}
@@ -160,10 +160,10 @@ Challenge Details - to confirm
     /*** Show Notifications                                                ***/
     /*************************************************************************/
     $(document).ready(function () {
-        {% if challenge.challenge_participations.waiting_for_confirmation.count > 0 %}
+        {% if event.event_participations.waiting_for_confirmation.count > 0 %}
             new Noty({
                 type:   "warning",
-                text:   "You have {{ challenge.challenge_participations.waiting_for_confirmation.count }} Participant(s), waiting for Confirmation"
+                text:   "You have {{ event.event_participations.waiting_for_confirmation.count }} Participant(s), waiting for Confirmation"
             }).show();
         {% endif %}
     })
@@ -174,10 +174,10 @@ Challenge Details - to confirm
     $(".app-accept").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $.post("{% url 'api-participation-accept-application' 0 %}".replace("0", challenge_id), {
+        $.post("{% url 'api-participation-accept-application' 0 %}".replace("0", event_id), {
             "participation_id": participation_id
         }).done(function (data) {
             console.log("Success");
@@ -226,12 +226,12 @@ Challenge Details - to confirm
     $(".app-reject").click(function () {
         element = $(this);
 
-        var challenge_id = $(this).attr("challenge");
+        var event_id = $(this).attr("event");
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-reject-application-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-participation-reject-application-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#event-participation-reject-application-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-participation-reject-application-modal-form").find("input[name='participation_id']").val(participation_id);
 
-        $("#challengeParticipationRejectApplicationPopupModal").modal("show");
+        $("#eventParticipationRejectApplicationPopupModal").modal("show");
     })
 </script>

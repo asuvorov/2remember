@@ -262,7 +262,7 @@ class Event(
         max_length=10,
         choices=recurrence_choices, default=Recurrence.ONCE,
         verbose_name=_("Recurrence"),
-        help_text=_("Challenge Recurrence"))
+        help_text=_("Event Recurrence"))
     # month = SelectMultipleField(
     #     max_length=64,
     #     choices=month_choices, default=MONTH.NONE,
@@ -424,11 +424,11 @@ class Event(
 
         return ""
 
-    event_url.short_description = "Challenge URL"
+    event_url.short_description = "Event URL"
     event_url.allow_tags = True
 
     def email_notify_admin_chl_drafted(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -436,7 +436,7 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully created.</p>") % {
+            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully created.</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -445,15 +445,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_draft_subject.txt",
+                "name":     "events/emails/event_draft_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_draft.txt",
+                "name":     "events/emails/event_draft.txt",
                 "context":  {
                     "user":             self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -471,7 +471,7 @@ class Event(
         )
 
     def email_notify_admin_chl_created(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -479,7 +479,7 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created.</p>") % {
+            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created.</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -488,15 +488,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_created_subject.txt",
+                "name":     "events/emails/event_created_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_created.txt",
+                "name":     "events/emails/event_created.txt",
                 "context":  {
                     "user":             self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -514,7 +514,7 @@ class Event(
         )
 
     def email_notify_alt_person_chl_created(self, request=None):
-        """Send Notification to the Challenge alternative Contact Person."""
+        """Send Notification to the Event alternative Contact Person."""
         if not self.is_alt_person:
             return
 
@@ -525,7 +525,7 @@ class Event(
                 "user":     self.alt_person_fullname,
             }
         htmlbody = _(
-            "<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created, and you were added as a contact Person to it.</p>") % {
+            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created, and you were added as a contact Person to it.</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -534,15 +534,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_created_subject.txt",
+                "name":     "events/emails/event_created_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_created_alt.txt",
+                "name":     "events/emails/event_created_alt.txt",
                 "context":  {
                     "user":             self.alt_person_fullname,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -560,7 +560,7 @@ class Event(
         )
 
     def email_notify_org_subscribers_chl_created(self, request=None):
-        """Send Notification to the Challenge Organization Subscribers."""
+        """Send Notification to the Event Organization Subscribers."""
         if not self.organization:
             return
 
@@ -574,7 +574,7 @@ class Event(
                 }
             htmlbody = _(
                 "<p>Dear, %(user)s,</p>"
-                "<p>The Organization \"<a href=\"%(org_url)s\">%(org_name)s</a>\" has just created new Challenge \"<a href=\"%(chl_url)s\">%(chl_name)s</a>\".</p>"
+                "<p>The Organization \"<a href=\"%(org_url)s\">%(org_name)s</a>\" has just created new Event \"<a href=\"%(chl_url)s\">%(chl_name)s</a>\".</p>"
                 "<p>You have received this Email, because you're subscribed to the Organization\'s Newsletters and Activity Notifications.</p>") % {
                     "user":         subscriber.first_name,
                     "org_name":     self.organization,
@@ -596,8 +596,8 @@ class Event(
                         "user":                 subscriber,
                         "organization":         self.organization,
                         "organization_link":    self.organization.public_url(request),
-                        "challenge":            self,
-                        "challenge_link":       self.public_url(request),
+                        "event":            self,
+                        "event_link":       self.public_url(request),
                     },
                 },
                 template_html={
@@ -615,7 +615,7 @@ class Event(
             )
 
     def email_notify_admin_chl_edited(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -623,7 +623,7 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>") % {
+            "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>") % {
                 "url":          self.public_url(request),
                 "name":         self.title,
             }
@@ -632,15 +632,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_modified_adm_subject.txt",
+                "name":     "events/emails/event_modified_adm_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_modified_adm.txt",
+                "name":     "events/emails/event_modified_adm.txt",
                 "context":  {
                     "admin":            self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -658,7 +658,7 @@ class Event(
         )
 
     def email_notify_alt_person_chl_edited(self, request=None):
-        """Send Notification to the Challenge alternative Contact Person."""
+        """Send Notification to the Event alternative Contact Person."""
         if not self.is_alt_person:
             return
 
@@ -669,7 +669,7 @@ class Event(
                 "user":     self.alt_person_fullname,
             }
         htmlbody = _(
-            "<p>The Challenge \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a contact Person, was modified.</p>") % {
+            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a contact Person, was modified.</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -678,15 +678,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_modified_adm_subject.txt",
+                "name":     "events/emails/event_modified_adm_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_modified_alt.txt",
+                "name":     "events/emails/event_modified_alt.txt",
                 "context":  {
                     "user":             self.alt_person_fullname,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -704,7 +704,7 @@ class Event(
         )
 
     def email_notify_admin_chl_completed(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -712,8 +712,8 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</p>"
-            "<p>Experience Report Requests were sent to all signed up to the Challenge Members.</p>"
+            "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</p>"
+            "<p>Experience Report Requests were sent to all signed up to the Event Members.</p>"
             "<p>Please, don\'t forget to accept, or reject the Members\' Experience Reports.</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
@@ -722,15 +722,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_complete_subject.txt",
+                "name":     "events/emails/event_complete_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_complete.txt",
+                "name":     "events/emails/event_complete.txt",
                 "context":  {
                     "admin":            self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -748,7 +748,7 @@ class Event(
         )
 
     def email_notify_admin_chl_cloned(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -756,7 +756,7 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>") % {
+            "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -764,15 +764,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_cloned_adm_subject.txt",
+                "name":     "events/emails/event_cloned_adm_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_cloned_adm.txt",
+                "name":     "events/emails/event_cloned_adm.txt",
                 "context":  {
                     "admin":            self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -790,7 +790,7 @@ class Event(
         )
 
     def email_notify_admin_chl_closed(self, request=None):
-        """Send Notification to the Challenge Admin."""
+        """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------
         # --- Render HTML Email Content
         greetings = _(
@@ -798,7 +798,7 @@ class Event(
                 "user":     self.author.first_name,
             }
         htmlbody = _(
-            "<p>Your Challenge \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>") % {
+            "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>") % {
                 "url":      self.public_url(request),
                 "name":     self.title,
             }
@@ -806,15 +806,15 @@ class Event(
         # --- Send Email
         send_templated_email(
             template_subj={
-                "name":     "challenges/emails/challenge_closed_adm_subject.txt",
+                "name":     "events/emails/event_closed_adm_subject.txt",
                 "context":  {},
             },
             template_text={
-                "name":     "challenges/emails/challenge_closed_adm.txt",
+                "name":     "events/emails/event_closed_adm.txt",
                 "context":  {
                     "admin":            self.author,
-                    "challenge":        self,
-                    "challenge_link":   self.public_url(request),
+                    "event":        self,
+                    "event_link":   self.public_url(request),
                 },
             },
             template_html={
@@ -873,18 +873,18 @@ class Event(
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
         #
-        #            MEDIA_ROOT/challenges/<id>/avatars/<filename>
+        #            MEDIA_ROOT/events/<id>/avatars/<filename>
         #
         # --- As long as the uploading Path is being generated before
-        #     the Challenge Instance gets assigned with the unique ID,
-        #     the uploading Path for the brand new Challenge looks like:
+        #     the Event Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Event looks like:
         #
-        #            MEDIA_ROOT/challenges/None/avatars/<filename>
+        #            MEDIA_ROOT/events/None/avatars/<filename>
         #
         # --- To fix this:
         #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Challenge Avatar Object;
-        #     3. Save the Challenge Instance. Now the Avatar Image in the
+        #     2. Assign the Avatar File Content to the Event Avatar Object;
+        #     3. Save the Event Instance. Now the Avatar Image in the
         #        correct Path;
         #     4. Delete previous Avatar File;
         #
@@ -894,7 +894,7 @@ class Event(
             self.avatar = avatar
             self.save()
 
-            if "challenges/None/avatars/" in avatar.file.name:
+            if "events/None/avatars/" in avatar.file.name:
                 storage.delete(avatar.file.name)
 
     def pre_delete(self, **kwargs):

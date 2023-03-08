@@ -32,28 +32,28 @@
         {% if request.user.profile.get_upcoming_participations.all.count > 0 %}
             new Noty({
                 type:   "warning",
-                text:   "You have {{ request.user.profile.get_upcoming_participations.all.count }} upcoming Challenge(s), were you participate"
+                text:   "You have {{ request.user.profile.get_upcoming_participations.all.count }} upcoming Event(s), were you participate"
             }).show();
         {% endif %}
 
-        {% if request.user.profile.get_admin_challenges_action_required.all.count > 0 %}
+        {% if request.user.profile.get_admin_events_action_required.all.count > 0 %}
             new Noty({
                 type:   "error",
-                text:   "You have {{ request.user.profile.get_admin_challenges_action_required.all.count }} Challenge(s), that require your Action"
+                text:   "You have {{ request.user.profile.get_admin_events_action_required.all.count }} Event(s), that require your Action"
             }).show();
         {% endif %}
 
-        {% if request.user.profile.get_admin_challenges_upcoming.all.count > 0 %}
+        {% if request.user.profile.get_admin_events_upcoming.all.count > 0 %}
             new Noty({
                 type:   "warning",
-                text:   "You have {{ request.user.profile.get_admin_challenges_upcoming.all.count }} upcoming Challenge(s), organized by you"
+                text:   "You have {{ request.user.profile.get_admin_events_upcoming.all.count }} upcoming Event(s), organized by you"
             }).show();
         {% endif %}
 
-        {% if request.user.profile.get_admin_challenges_draft.all.count > 0 %}
+        {% if request.user.profile.get_admin_events_draft.all.count > 0 %}
             new Noty({
                 type:   "info",
-                text:   "You have {{ request.user.profile.get_admin_challenges_draft.all.count }} draft Challenge(s)"
+                text:   "You have {{ request.user.profile.get_admin_events_draft.all.count }} draft Event(s)"
             }).show();
         {% endif %}
 
@@ -94,9 +94,9 @@
             <p>
                 This is a Requirement:<br/>
                 (1) to show up in Search Results;<br/>
-                (2) to create Challenges (Events) and Organizations;<br/>
-                (3) to participate in Challenges (Events);<br/>
-                (4) to invite and to be invited to Challenges (Events)<br/>
+                (2) to create Events and Organizations;<br/>
+                (3) to participate in Events;<br/>
+                (4) to invite and to be invited to Events<br/>
                 and Organizations.
             </p>
         {% endblocktrans %}

@@ -31,7 +31,7 @@
 
                 {% blocktrans %}
                     Thank you for participating in SaneSide. We hope, you had a great Time here.<br/>
-                    Before you remove your Profile, we'd like to remind you about the Challenges you were signed up for, the Challenges you've created, and the Organization you're affiliated with.<br/>
+                    Before you remove your Profile, we'd like to remind you about the Events you were signed up for, the Events you've created, and the Organization you're affiliated with.<br/>
                     Please, take a look to the Information, listed below.
                 {% endblocktrans %}
                 </div>
@@ -45,9 +45,9 @@
                                 <div class="col-xs-24 col-sm-24 col-md-24">
                                     <div class="section">
                                     {% if request.user.profile.get_upcoming_participations %}
-                                        <h4>{% trans "Challenges, you were signed up for" %}</h4>
+                                        <h4>{% trans "Events, you were signed up for" %}</h4>
                                         {% for participation in request.user.profile.get_upcoming_participations %}
-                                            <a href="{% url 'challenge-details' participation.challenge.slug %}">{{ participation.challenge.name }}</a>
+                                            <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a>
                                             {% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                         {% endfor %}
@@ -56,9 +56,9 @@
 
                                     <div class="section">
                                     {% if request.user.profile.get_completed_participations %}
-                                        <h4>{% trans "Challenges completed, but waiting for Acknowledgment or your Experience Report" %}</h4>
+                                        <h4>{% trans "Events completed, but waiting for Acknowledgment or your Experience Report" %}</h4>
                                         {% for participation in request.user.profile.get_completed_participations %}
-                                            <a href="{% url 'challenge-details' participation.challenge.slug %}">{{ participation.challenge.name }}</a>
+                                            <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a>
                                             {% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                         {% endfor %}
@@ -66,10 +66,10 @@
                                     </div>
 
                                     <div class="section">
-                                    {% if request.user.profile.get_admin_challenges_action_required %}
-                                        <h4>{% trans "Challenges, required your Action" %}</h4>
-                                        {% for challenge in request.user.profile.get_admin_challenges_action_required %}
-                                            <a href="{% url 'challenge-details' challenge.slug %}">{{ challenge.name }}</a>
+                                    {% if request.user.profile.get_admin_events_action_required %}
+                                        <h4>{% trans "Events, required your Action" %}</h4>
+                                        {% for event in request.user.profile.get_admin_events_action_required %}
+                                            <a href="{% url 'event-details' event.slug %}">{{ event.name }}</a>
                                             {% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                         {% endfor %}
@@ -77,10 +77,10 @@
                                     </div>
 
                                     <div class="section">
-                                    {% if request.user.profile.get_admin_challenges_upcoming %}
-                                        <h4>{% trans "Challenges, you've created (upcoming)" %}</h4>
-                                        {% for challenge in request.user.profile.get_admin_challenges_upcoming %}
-                                            <a href="{% url 'challenge-details' challenge.slug %}">{{ challenge.name }}</a>
+                                    {% if request.user.profile.get_admin_events_upcoming %}
+                                        <h4>{% trans "Events, you've created (upcoming)" %}</h4>
+                                        {% for event in request.user.profile.get_admin_events_upcoming %}
+                                            <a href="{% url 'event-details' event.slug %}">{{ event.name }}</a>
                                             {% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                         {% endfor %}
@@ -88,10 +88,10 @@
                                     </div>
 
                                     <div class="section">
-                                    {% if request.user.profile.get_admin_challenges_draft %}
-                                        <h4>{% trans "Challenges, you've created (Drafts)" %}</h4>
-                                        {% for challenge in request.user.profile.get_admin_challenges_draft %}
-                                            <a href="{% url 'challenge-details' challenge.slug %}">{{ challenge.name }}</a>
+                                    {% if request.user.profile.get_admin_events_draft %}
+                                        <h4>{% trans "Events, you've created (Drafts)" %}</h4>
+                                        {% for event in request.user.profile.get_admin_events_draft %}
+                                            <a href="{% url 'event-details' event.slug %}">{{ event.name }}</a>
                                             {% if not forloop.last %}, {% endif %}
                                         {% empty %}
                                         {% endfor %}

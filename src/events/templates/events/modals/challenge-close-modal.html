@@ -1,15 +1,15 @@
 {% load i18n %}
 
-<div class="modal fade" id="challengeClosePopupModal" tabindex="-1" role="dialog" aria-labelledby="challengeClosePopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="eventClosePopupModal" tabindex="-1" role="dialog" aria-labelledby="eventClosePopupModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="challengeClosePopupModalLabel">{% trans "Close Challenge" %}</h4>
+                <h4 class="modal-title" id="eventClosePopupModalLabel">{% trans "Close Event" %}</h4>
             </div>
 
             <div class="modal-body">
-                <form id="challenge-close-modal-form" action="" method="POST">
+                <form id="event-close-modal-form" action="" method="POST">
                     {% csrf_token %}
 
                     <div class="form-group">
@@ -20,7 +20,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="challenge_close();">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-danger" onclick="event_close();">{% trans "Close" %}</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
             </div>
         </div>
@@ -29,19 +29,19 @@
 
 <script>
     /*************************************************************************/
-    /*** Close Challenge                                                   ***/
+    /*** Close Event                                                   ***/
     /*************************************************************************/
-    function challenge_close() {
-        var closing_text = $("#challenge-close-modal-form").find("textarea[name='closing_text']").val();
+    function event_close() {
+        var closing_text = $("#event-close-modal-form").find("textarea[name='closing_text']").val();
 
-        $.post("{% url 'api-challenge-close' challenge.id %}", {
+        $.post("{% url 'api-event-close' event.id %}", {
             "closing_text":         closing_text,
-            "csrfmiddlewaretoken":  $("#challenge-close-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+            "csrfmiddlewaretoken":  $("#event-close-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {
             console.log("Success");
             console.log("Data :", data);
 
-            $("#challengeClosePopupModal").modal("hide");
+            $("#eventClosePopupModal").modal("hide");
 
             new Noty({
                 type:   "info",
@@ -49,7 +49,7 @@
             }).show();
 
             location.reload();
-            //location.replace("{% url 'challenge-details' challenge.slug %}");
+            //location.replace("{% url 'event-details' event.slug %}");
         }).fail(function (data) {
             try {
                 new Noty({
@@ -59,7 +59,7 @@
             } catch (err) {
                 new Noty({
                     type:   "error",
-                    text:   "Failed to close the Challenge."
+                    text:   "Failed to close the Event."
                 }).show();
             };
         });

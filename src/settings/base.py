@@ -178,9 +178,9 @@ TEMPLATES = [
 
                 # "accounts.context_processors.signin_form",
 
-                # "challenges.context_processors.pb_challenge_choices",
-                # "challenges.context_processors.pb_participation_choices",
-                # "challenges.context_processors.pb_recurrence_choices",
+                # "events.context_processors.pb_event_choices",
+                # "events.context_processors.pb_participation_choices",
+                # "events.context_processors.pb_recurrence_choices",
 
                 # "core.context_processors.pb_settings",
                 # "core.context_processors.pb_social_links",
@@ -368,44 +368,41 @@ STATICFILES_FINDERS += (
 )
 
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
-BOWER_PATH = "/usr/local/bin/bower"
+# BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
     "awesome-bootstrap-checkbox",
-    # "bootpag",
-    "bootstrap#3.3.7",
+    "bootpag",
+    "bootstrap#3.3.7",  # 5.2.3
     "bootstrap-maxlength",
-    # "bootstrap-rating",
-    # "bootstrap-select",
-    # "bootstrap-tabcollapse",
-    # "bootstrap-tagsinput",
+    "bootstrap-rating",
+    "bootstrap-select",
+    "bootstrap-tabcollapse",
+    "bootstrap-tagsinput",
     # "bx-slider.js",
-    # "equalheight",
-    "fontawesome#5.6.3",
-    # "font-awesome-animation",
-    "ismobilejs#0.5.0",
-    # "isMobile",
-    # "isotope",
-    "jquery#3.3.1",
-    # "jquery.inputmask",
-    # "jquery.pulsate",
-    # "jquery-colorbox",
-    # "jquery-file-upload",
+    "equalheight",
+    "fontawesome",
+    "ismobilejs#",
+    "isMobile",
+    "jquery#3.6.3",
+    "jquery.inputmask",
+    "jquery-colorbox",
+    "jquery-file-upload",
     "jquery-popup-overlay",
-    # "jquery-scrolltotop",
-    # "jquery-shorten-js",
-    # "jquery-sticky",
+    "jquery-scrolltotop",
+    "jquery-shorten-js",
+    "jquery-sticky",
     # "jquery-ui",
-    # "jt.timepicker",
+    "jt.timepicker",
     # "less.js",
-    # "modernizr#2.8.3",  # 3.5.0
-    "moment#2.24.0",
+    # "modernizr",
+    "moment",
     "noty",
-    # "readmore-js",
-    # "seiyria-bootstrap-slider",
-    # "smooth-scroll.js",
-    # "tablesorter",
+    "readmore-js",
+    "seiyria-bootstrap-slider",
+    "smooth-scroll.js",
+    "tablesorter",
     # "underscore",
-    # "zabuto_calendar",
+    "zabuto_calendar",
 )
 
 

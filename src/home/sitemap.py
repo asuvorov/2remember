@@ -25,7 +25,6 @@ class HomeSitemap(Sitemap):
             "event-new-list",
             "event-dateless-list",
             "event-featured-list",
-            "forum-list",
             "index",
             "privacy-policy",
             "user-agreement",

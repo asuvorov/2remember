@@ -6,7 +6,7 @@
 {% load imagekit %}
 {% load formset_tags %}
 
-{% block title %}{% trans "Edit Challenge" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Edit Event" %} - {{ block.super }}{% endblock %}
 
 {% block extra_style %}
 {% endblock %}
@@ -31,9 +31,9 @@
         <div class="row">
             <div class="col-xs-24 col-sm-24 col-md-24">
                 <div class="breadcrumbs pull-right">
-                    <a href="{% url 'challenge-list' %}">{% trans "Challenges" %}</a>
+                    <a href="{% url 'event-list' %}">{% trans "Events" %}</a>
                     <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'challenge-edit' challenge.slug %}">{% trans "Edit" %}</a>
+                    <a href="{% url 'event-edit' event.slug %}">{% trans "Edit" %}</a>
                 </div>
             </div>
         </div>
@@ -41,17 +41,17 @@
 </div>
 
 <div class="container">
-    <div id="challenge-edit">
+    <div id="event-edit">
         <div class="row">
             <div id="tips" class="col-xs-24 col-sm-24 col-md-24 col-lg-24 right-sidebar">
                 <div class="alert alert-info alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    {% trans "You can edit your Challenge here. After you save Changes, all applied Members will receive appropriate Notifications." %}
+                    {% trans "You can edit your Event here. After you save Changes, all applied Members will receive appropriate Notifications." %}
                 </div>
             </div>
 
             <div class="col-xs-24 col-sm-16 col-md-18">
-                <form id="edit-challenge-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                <form id="edit-event-form" role="form" action="" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
 
                     <div class="row">
@@ -74,7 +74,7 @@
 
                                     <ul class="nav nav-tabs" role="tablist">
                                         <li role="presentation" class="active">
-                                            <a href="#challenge-description" data-toggle="tab" aria-controls="challenge-description" role="tab" title="Description">
+                                            <a href="#event-description" data-toggle="tab" aria-controls="event-description" role="tab" title="Description">
                                                 <span class="round-tab">
                                                     <i class="fa fa-book fa-fw"></i>
                                                 </span>
@@ -82,7 +82,7 @@
                                         </li>
 
                                         <li role="presentation" class="">
-                                            <a href="#challenge-time-and-place" data-toggle="tab" aria-controls="challenge-time-and-place" role="tab" title="Time and Place">
+                                            <a href="#event-time-and-place" data-toggle="tab" aria-controls="event-time-and-place" role="tab" title="Time and Place">
                                                 <span class="round-tab">
                                                     <i class="fa fa-map-marker fa-fw"></i>
                                                 </span>
@@ -90,7 +90,7 @@
                                         </li>
 
                                         <li role="presentation" class="">
-                                            <a href="#challenge-social-links" data-toggle="tab" aria-controls="challenge-social-links" role="tab" title="Social Links">
+                                            <a href="#event-social-links" data-toggle="tab" aria-controls="event-social-links" role="tab" title="Social Links">
                                                 <span class="round-tab">
                                                     <i class="fa fa-handshake-o fa-fw"></i>
                                                 </span>
@@ -98,7 +98,7 @@
                                         </li>
 
                                         <li role="presentation" class="">
-                                            <a href="#challenge-application" data-toggle="tab" aria-controls="challenge-application" role="tab" title="Application">
+                                            <a href="#event-application" data-toggle="tab" aria-controls="event-application" role="tab" title="Application">
                                                 <span class="round-tab">
                                                     <i class="fa fa-exclamation-triangle fa-fw"></i>
                                                 </span>
@@ -106,7 +106,7 @@
                                         </li>
 
                                         <li role="presentation" class="">
-                                            <a href="#challenge-attachments" data-toggle="tab" aria-controls="challenge-attachments" role="tab" title="Attachments">
+                                            <a href="#event-attachments" data-toggle="tab" aria-controls="event-attachments" role="tab" title="Attachments">
                                                 <span class="round-tab">
                                                     <i class="fa fa-file-o fa-fw"></i>
                                                 </span>
@@ -116,7 +116,7 @@
                                 </div>
 
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" role="tabpanel" id="challenge-description">
+                                    <div class="tab-pane fade in active" role="tabpanel" id="event-description">
                                         <ul class="list-inline pull-right">
                                             <li><span><i class="fa fa-chevron-left fa-fw"></i> {% trans "Prev" %}</span></li>
                                             <li><a href="#" class="next-step" style="border-radius:15px;">{% trans "Next" %} <i class="fa fa-chevron-right fa-fw"></i></a></li>
@@ -193,7 +193,7 @@
                                         <div class="alert alert-info">
                                         {% blocktrans %}
                                             If you are looking for the differently skilled Volunteers / Participants, you can add specific Roles and Quantity here (e.g. 1 Driver, 10 Street-cleaners, etc.).<br/>
-                                            If Roles are specified, Members will be offered to choose, which Role they want to take, on signing up to the Challenge / Event.
+                                            If Roles are specified, Members will be offered to choose, which Role they want to take, on signing up to the Event / Event.
                                         {% endblocktrans %}
                                         </div>
 
@@ -256,13 +256,13 @@
                                         </ul>
                                     </div>
 
-                                    <div class="tab-pane fade" role="tabpanel" id="challenge-time-and-place">
+                                    <div class="tab-pane fade" role="tabpanel" id="event-time-and-place">
                                         <ul class="list-inline pull-right">
                                             <li><a href="#" class="prev-step"><i class="fa fa-chevron-left fa-fw"></i> {% trans "Prev" %}</a></li>
                                             <li><a href="#" class="next-step">{% trans "Next" %} <i class="fa fa-chevron-right fa-fw"></i></a></li>
                                         </ul>
 
-                                        <!-- Challenge Location -->
+                                        <!-- Event Location -->
 
                                         <h3>{% trans "Location" %}</h3>
 
@@ -323,7 +323,7 @@
                                             </div>
                                         </address>
 
-                                        <!-- REMINDER: Keep the Address Notes Field outside the <address> Tag, so, for Example, in Case of the addressless Challenge (Address is collapsed) the Admin will be able to provide some Notes, e.g., why the Challenge Location is not specified, some Directions, etc. -->
+                                        <!-- REMINDER: Keep the Address Notes Field outside the <address> Tag, so, for Example, in Case of the addressless Event (Address is collapsed) the Admin will be able to provide some Notes, e.g., why the Event Location is not specified, some Directions, etc. -->
                                         <div class="form-group {% if aform.notes.errors %}has-error{% endif %}">
                                             <label class="control-label">{{ aform.notes.label }}{% if aform.notes.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                                             {{ aform.notes }}
@@ -334,7 +334,7 @@
 
                                         <hr>
 
-                                        <!-- Challenge Contact Person -->
+                                        <!-- Event Contact Person -->
 
                                         <h3>{% trans "Contact Person" %}</h3>
 
@@ -375,7 +375,7 @@
 
                                         <hr>
 
-                                        <!-- Challenge Recurrence -->
+                                        <!-- Event Recurrence -->
 
                                         <h3>Time</h3>
 
@@ -400,7 +400,7 @@
 
                                         <hr>
 
-                                        <!-- Challenge starts at -->
+                                        <!-- Event starts at -->
                                         <h4><strong>Starts at:</strong></h4>
 
                                         <!-- Date, Time, and Time Zone -->
@@ -440,7 +440,7 @@
                                         </ul>
                                     </div>
 
-                                    <div class="tab-pane fade" role="tabpanel" id="challenge-social-links">
+                                    <div class="tab-pane fade" role="tabpanel" id="event-social-links">
                                         <ul class="list-inline pull-right">
                                             <li><a href="#" class="prev-step"><i class="fa fa-chevron-left fa-fw"></i> {% trans "Prev" %}</a></li>
                                             <li><a href="#" class="next-step">{% trans "Next" %} <i class="fa fa-chevron-right fa-fw"></i></a></li>
@@ -507,7 +507,7 @@
                                         </ul>
                                     </div>
 
-                                    <div class="tab-pane fade" role="tabpanel" id="challenge-application">
+                                    <div class="tab-pane fade" role="tabpanel" id="event-application">
                                         <ul class="list-inline pull-right">
                                             <li><a href="#" class="prev-step"><i class="fa fa-chevron-left fa-fw"></i> {% trans "Prev" %}</a></li>
                                             <li><a href="#" class="next-step">{% trans "Next" %} <i class="fa fa-chevron-right fa-fw"></i></a></li>
@@ -549,7 +549,7 @@
                                         </ul>
                                     </div>
 
-                                    <div class="tab-pane fade" role="tabpanel" id="challenge-attachments">
+                                    <div class="tab-pane fade" role="tabpanel" id="event-attachments">
                                         <ul class="list-inline pull-right">
                                             <li><a href="#" class="prev-step"><i class="fa fa-chevron-left fa-fw"></i> {% trans "Prev" %}</a></li>
                                             <li><span>{% trans "Next" %} <i class="fa fa-chevron-right fa-fw"></i></span></li>
@@ -586,12 +586,12 @@
                                             </a>
                                         </div>
 
-                                        <div class="challenge-attachments">
+                                        <div class="event-attachments">
                                             <div id="collapse-attachments" class="collapse">
                                                 <h4>{% trans "Images" %}</h4>
 
                                                 <div class="gallery">
-                                                {% for img in challenge.get_image_list.all %}
+                                                {% for img in event.get_image_list.all %}
                                                     <div class="gallery-container">
                                                         <i class="fa fa-times-circle-o" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                                         <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
@@ -603,7 +603,7 @@
                                                 <h4>{% trans "Documents" %}</h4>
 
                                                 <div class="gallery">
-                                                {% for doc in challenge.get_document_list.all %}
+                                                {% for doc in event.get_document_list.all %}
                                                     <div class="documents-container">
                                                         <i class="fa fa-times-circle-o" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                                         <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
@@ -616,7 +616,7 @@
                                                 <h4>{% trans "Links" %}</h4>
 
                                                 <div class="gallery">
-                                                {% for url in challenge.get_url_list.all %}
+                                                {% for url in event.get_url_list.all %}
                                                     <div class="links-container">
                                                         <i class="fa fa-times-circle-o" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                                         <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
@@ -629,7 +629,7 @@
                                                 <h4>{% trans "Video Links" %}</h4>
 
                                                 <div class="gallery">
-                                                {% for video_url in challenge.get_video_url_list.all %}
+                                                {% for video_url in event.get_video_url_list.all %}
                                                     <div class="video-links-container">
                                                         <i class="fa fa-times-circle-o" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                                         <a href="{{ video_url.url }}">{{ video_url.url }}</a>
@@ -697,7 +697,7 @@
         }
         /*********************************************************************/
 
-        $("form#edit-challenge-form").submit();
+        $("form#edit-event-form").submit();
 
         return true;
     })
@@ -778,7 +778,7 @@
         /*********************************************************************/
         var mySlider = $("input.slider");
 
-        mySlider.bootstrapSlider("setValue", {{ challenge.duration }});
+        mySlider.bootstrapSlider("setValue", {{ event.duration }});
         mySlider.on("slide", function (event) {
             $("#currentSliderValue").text(event.value);
         });
@@ -788,7 +788,7 @@
         );
 
         /*********************************************************************/
-        /*** Challenge has Address?                                        ***/
+        /*** Event has Address?                                            ***/
         /*********************************************************************/
         $("address").show();
 

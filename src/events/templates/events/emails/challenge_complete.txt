@@ -4,14 +4,14 @@
 
 Dear, {{ admin.first_name }}!
 
-Your Challenge "{{ challenge.name }}" was complete!
+Your Event "{{ event.name }}" was complete!
 
-Experience Report Requests were sent to all signed up to Challenge Members.
+Experience Report Requests were sent to all signed up to Event Members.
 
 Please, don't forget to accept, or reject Members' Experience Reports.
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
-Also, you can find Link to this Challenge on your Profile Page.
+Also, you can find Link to this Event on your Profile Page.
 
 Thank you, SaneSide Team.

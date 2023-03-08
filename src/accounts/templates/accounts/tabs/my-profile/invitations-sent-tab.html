@@ -18,8 +18,8 @@ My Profile - Sent Invitations
                     <th colspan="2">
                         {% trans "Invitation to" %} {{ invite.content_type.name.capitalize }}
 
-                    {% if invite.content_type.name == "challenge" %}
-                        <a href="{% url 'challenge-details' invite.content_object.slug %}">
+                    {% if invite.content_type.name == "event" %}
+                        <a href="{% url 'event-details' invite.content_object.slug %}">
                             {{ invite.content_object.name|default:"N/A" }}
                         </a>
                     {% elif invite.content_type.name == "organization" %}
@@ -104,8 +104,8 @@ My Profile - Sent Invitations
         {% for invite in request.user.inviter.get_all_sent.all %}
             <tr is-new="{{ invite.is_new }}">
                 <td>
-                {% if invite.content_type.name == "challenge" %}
-                    <a href="{% url 'challenge-details' invite.content_object.slug %}">
+                {% if invite.content_type.name == "event" %}
+                    <a href="{% url 'event-details' invite.content_object.slug %}">
                     {% if invite.content_object.avatar %}
                         {% generateimage "common:thumbnail_wide" source=invite.content_object.avatar -- alt=invite.content_object.name %}
                     {% endif %}
@@ -126,8 +126,8 @@ My Profile - Sent Invitations
                 </td>
                 <td>{{ invite.content_type.name.capitalize }}</td>
                 <td>
-                {% if invite.content_type.name == "challenge" %}
-                    <a href="{% url 'challenge-details' invite.content_object.slug %}">
+                {% if invite.content_type.name == "event" %}
+                    <a href="{% url 'event-details' invite.content_object.slug %}">
                         {{ invite.content_object.name|default:"N/A" }}
                     </a>
                 {% elif invite.content_type.name == "organization" %}

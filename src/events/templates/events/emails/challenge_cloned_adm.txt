@@ -4,8 +4,8 @@
 
 Dear, {{ admin.first_name }}!
 
-Your Challenge "{{ challenge.name }}" was cloned!
+Your Event "{{ event.name }}" was cloned!
 
-Link to the Challenge Details Page: {{ challenge_link }}
+Link to the Event Details Page: {{ event_link }}
 
 Thank you, SaneSide Team.

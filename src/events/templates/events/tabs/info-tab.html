@@ -1,6 +1,6 @@
 <!--
 TAB
-Challenge Details - Info
+Event Details - Info
 -->
 {% load tz %}
 {% load i18n %}
@@ -10,67 +10,67 @@ Challenge Details - Info
 <div class="row">
     <div class="col-xs-24 col-sm-16 col-md-18">
         <div class="thumbnail">
-        {% if challenge.avatar %}
-            {% generateimage "common:giant_fill_wide" source=challenge.avatar -- alt=challenge.name %}
+        {% if event.avatar %}
+            {% generateimage "common:giant_fill_wide" source=event.avatar -- alt=event.name %}
         {% endif %}
         </div>
 
         <div class="chl-info-section">
-            <div class="challenge-name">
-                <h4 class="hidden-sm hidden-md hidden-lg">{{ challenge.name }} ({{ challenge.duration }}h)</h4>
-                <h2 class="hidden-xs">{{ challenge.name }} ({{ challenge.duration }}h)</h2>
+            <div class="event-name">
+                <h4 class="hidden-sm hidden-md hidden-lg">{{ event.name }} ({{ event.duration }}h)</h4>
+                <h2 class="hidden-xs">{{ event.name }} ({{ event.duration }}h)</h2>
             </div>
 
             <div class="hidden-sm hidden-md hidden-lg">
-                {% include "challenges/fragments/challenge-media-status-breakdown.html" %}
+                {% include "events/fragments/event-media-status-breakdown.html" %}
             </div>
 
-            <div class="challenge-description">
+            <div class="event-description">
                 <blockquote>
-                    <p>{{ challenge.description|escape|linebreaks }}</p>
+                    <p>{{ event.description|escape|linebreaks }}</p>
                 </blockquote>
             </div>
         </div>
 
         <div class="chl-info-section">
-            <div class="challenge-details">
+            <div class="event-details">
                 <p>
                     <i class="fa fa-map-marker fa-fw"></i>
-                {% if challenge.addressless %}
+                {% if event.addressless %}
                     <span class="label label-warning">{% trans "Location is not provided" %}</span>
                 {% else %}
-                    {{ challenge.address.full_address|default:"N/A" }}
-                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#challengeViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+                    {{ event.address.full_address|default:"N/A" }}
+                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
                 {% endif %}
 
-                {% if challenge.address.notes %}
+                {% if event.address.notes %}
                     <blockquote>
-                        <p>{{ challenge.address.notes }}</p>
+                        <p>{{ event.address.notes }}</p>
                     </blockquote>
                 {% endif %}
                 </p>
 
-            {% if challenge.get_start_date_time_tz and not challenge.is_dateless %}
+            {% if event.get_start_date_time_tz and not event.is_dateless %}
                 <table class="table table-striped hidden-sm hidden-md hidden-lg">
                     <tr>
                         <td><strong>{% trans "Venue Local Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i>{{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i>{{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"f a"|default:"12 a.m." }})
+                            <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}<br/>
+                            <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "Your Local Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i> {{ challenge.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i> {{ challenge.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
+                            <i class="fa fa-calendar fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
+                            <i class="fa fa-clock-o fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "UTC Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i>{{ challenge.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i>{{ challenge.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
+                            <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
+                            <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                 </table>
@@ -84,25 +84,25 @@ Challenge Details - Info
                     <tr>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i>{{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i>{{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|timezone:challenge.start_tz.zone|date:"f a"|default:"12 a.m." }})
+                                <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"F j, Y" }}<br/>
+                                <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i> {{ challenge.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i> {{ challenge.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
+                                <i class="fa fa-calendar fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
+                                <i class="fa fa-clock-o fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i>{{ challenge.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i>{{ challenge.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ challenge.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
+                                <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
+                                <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                     </tr>
                 </table>
-            {% elif challenge.is_dateless %}
+            {% elif event.is_dateless %}
                 <p>
                     <i class="fa fa-calendar fa-fw"></i>
                     <span class="label label-warning">{% trans "Dateless" %}</span>
@@ -112,77 +112,77 @@ Challenge Details - Info
         </div>
 
         <div class="chl-info-section">
-            <div class="challenge-category">
-                <p><i class="fa fa-plus-square-o fa-fw"></i><strong>{% trans "Category" %}: </strong>{{ challenge.stat_category_name }}</p>
+            <div class="event-category">
+                <p><i class="fa fa-plus-square-o fa-fw"></i><strong>{% trans "Category" %}: </strong>{{ event.stat_category_name }}</p>
             </div>
 
-            <div class="challenge-tags">
-            {% if challenge.tags.all and challenge.hashtag %}
+            <div class="event-tags">
+            {% if event.tags.all and event.hashtag %}
                 <p>
                     <i class="fa fa-tags fa-fw"></i>
-                {% for tag in challenge.tags.all %}
+                {% for tag in event.tags.all %}
                     <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
                     {% if not forloop.last %}, {% endif %}
                 {% endfor %}
 
                     <span class="vert-delimiter">|</span>
 
-                    <i class="fa fa-hashtag fa-fw"></i>{{ challenge.hashtag }}
+                    <i class="fa fa-hashtag fa-fw"></i>{{ event.hashtag }}
                 </p>
-            {% elif challenge.tags.all %}
+            {% elif event.tags.all %}
                 <p>
                     <i class="fa fa-tags fa-fw"></i>
-                {% for tag in challenge.tags.all %}
+                {% for tag in event.tags.all %}
                     <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
                     {% if not forloop.last %}, {% endif %}
                 {% endfor %}
                 </p>
-            {% elif challenge.hashtag %}
+            {% elif event.hashtag %}
                 <p>
-                    <i class="fa fa-hashtag fa-fw"></i>{{ challenge.hashtag }}
+                    <i class="fa fa-hashtag fa-fw"></i>{{ event.hashtag }}
                 </p>
             {% endif %}
             </div>
 
-            <div class="challenge-organization">
-            {% if challenge.organization and not challenge.organization.is_deleted %}
+            <div class="event-organization">
+            {% if event.organization and not event.organization.is_deleted %}
                 <p>
                     <i class="fa fa-institution fa-fw"></i><strong>{% trans "Organized by" %}</strong>
-                    <a href="{% url 'organization-details' challenge.organization.slug %}">{{ challenge.organization.name }}</a>
+                    <a href="{% url 'organization-details' event.organization.slug %}">{{ event.organization.name }}</a>
                 </p>
             {% endif %}
             </div>
 
-            <div class="challenge-author">
+            <div class="event-author">
                 <p>
-                {% if challenge.author.profile.avatar %}
-                    {% generateimage "header:thumbnail" source=challenge.author.profile.avatar -- alt=challenge.author.profile.auth_name %}
+                {% if event.author.profile.avatar %}
+                    {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
                 {% else %}
                     <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
                 {% endif %}
                     {% trans "Posted by" %}
-                    <a href="{% url 'profile-view' challenge.author_id %}">{{ challenge.author.first_name }}</a>
-                    {{ challenge.created|timesince }} {% trans "ago" %}
+                    <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
+                    {{ event.created|timesince }} {% trans "ago" %}
                 </p>
             </div>
         </div>
 
-        <!-- Challenge Achievements -->
+        <!-- Event Achievements -->
 
-    {% if challenge.achievements and challenge.is_complete %}
-        <div class="challenge-achievements">
+    {% if event.achievements and event.is_complete %}
+        <div class="event-achievements">
             <h4>{% trans "Achievements" %}</h4>
 
         {% autoescape off %}
-            {{ challenge.achievements }}
+            {{ event.achievements }}
         {% endautoescape %}
         </div>
     {% endif %}
 
-        <!-- Challenge Roles -->
+        <!-- Event Roles -->
 
     {% if roles_breakdown %}
-        <div class="challenge-roles-breakdown">
+        <div class="event-roles-breakdown">
             <h4>{% trans "Roles Breakdown" %}
                 <a data-toggle="collapse" href="#collapse-roles-breakdown"  aria-expanded="false" aria-controls="collapse-roles-breakdown"><i class="toggle-icon fa fa-fw fa-chevron-down"></i></a>
             </h4>
@@ -235,19 +235,19 @@ Challenge Details - Info
         </div>
     {% endif %}
 
-    <!-- Challenge Attachments -->
+    <!-- Event Attachments -->
 
-    {% if challenge.is_complete %}
-        {% include "challenges/fragments/challenge-attachments-complete.html" with challenge=challenge %}
+    {% if event.is_complete %}
+        {% include "events/fragments/event-attachments-complete.html" with event=event %}
     {% else %}
-        {% include "challenges/fragments/challenge-attachments-upcoming.html" with challenge=challenge %}
+        {% include "events/fragments/event-attachments-upcoming.html" with event=event %}
     {% endif %}
 
-    <!-- Challenge Comments -->
+    <!-- Event Comments -->
 
-    {% if not challenge.is_draft %}
+    {% if not event.is_draft %}
         <div class="instance-comments">
-            <h4>{% trans "Comments" %} ({{ challenge.get_comment_list.count }})
+            <h4>{% trans "Comments" %} ({{ event.get_comment_list.count }})
                 <a data-toggle="collapse" href="#collapse-comments"  aria-expanded="false" aria-controls="collapse-comments"><i class="toggle-icon fa fa-fw fa-chevron-down"></i></a>
             {% if request.user.is_authenticated %}
                 <a class="add-comment btn btn-rounded pull-right" href="#"><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
@@ -255,7 +255,7 @@ Challenge Details - Info
             </h4>
 
             <div id="collapse-comments" class="collapse">
-            {% for comment in challenge.get_comment_list %}
+            {% for comment in event.get_comment_list %}
                 {% include "common/fragments/comment-hor.html" with comment=comment is_admin=is_admin %}
             {% endfor %}
             </div>
@@ -265,7 +265,7 @@ Challenge Details - Info
 
     <div class="col-xs-24 col-sm-8 col-md-6 right-sidebar">
         <div class="hidden-xs">
-            {% include "challenges/fragments/challenge-media-status-breakdown.html" %}
+            {% include "events/fragments/event-media-status-breakdown.html" %}
         </div>
 
         <!-- Link to th Page -->
@@ -309,7 +309,7 @@ Challenge Details - Info
     {% if request.user.is_authenticated %}
         <div class="panel panel-info">
             <div class="panel-body">
-            {% include "accounts/fragments/contact-person-side.html" with instance=challenge %}
+            {% include "accounts/fragments/contact-person-side.html" with instance=event %}
             </div>
         </div>
     {% else %}
@@ -325,10 +325,10 @@ Challenge Details - Info
     </div>
 </div>
 
-{% if challenge.get_rating_avg > 0 %}
+{% if event.get_rating_avg > 0 %}
 <div class="row">
     <div class="col-xs-24 col-sm-24 col-md-24">
-        {% include "common/fragments/rating-card-hor.html" with instance=challenge %}
+        {% include "common/fragments/rating-card-hor.html" with instance=event %}
     </div>
 </div>
 {% endif %}
@@ -336,9 +336,9 @@ Challenge Details - Info
 <!-- Modals -->
 
 {% if request.user.is_authenticated %}
-    {% if challenge.author == request.user %}
-        {% include "challenges/modals/challenge-clone-modal.html" %}
-        {% include "challenges/modals/challenge-close-modal.html" %}
+    {% if event.author == request.user %}
+        {% include "events/modals/event-clone-modal.html" %}
+        {% include "events/modals/event-close-modal.html" %}
     {% else %}
     {% endif %}
 {% endif %}
@@ -356,9 +356,9 @@ Challenge Details - Info
 
         event.preventDefault();
 
-        var challenge_id = "{{ challenge.id }}";
+        var event_id = "{{ event.id }}";
 
-        $("#comment-add-modal-form").find("input[name='challenge_id']").val(challenge_id);
+        $("#comment-add-modal-form").find("input[name='event_id']").val(event_id);
         $("#commentAddPopupModal").modal("show");
     })
 
@@ -417,10 +417,10 @@ Challenge Details - Info
 
         event.preventDefault();
 
-        var challenge_id = "{{ challenge.id }}";
+        var event_id = "{{ event.id }}";
 
-        $("#challenge-selfreflection-submit-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challengeSelfreflectionSubmitPopupModal").modal("show");
+        $("#event-selfreflection-submit-modal-form").find("input[name='event_id']").val(event_id);
+        $("#eventSelfreflectionSubmitPopupModal").modal("show");
     })
 
     /*************************************************************************/
@@ -433,14 +433,14 @@ Challenge Details - Info
 
         event.preventDefault();
 
-        var challenge_id = "{{ challenge.id }}";
+        var event_id = "{{ event.id }}";
 
-        $("#challenge-not-participated-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challengeDidNotParticipateSubmitPopupModal").modal("show");
+        $("#event-not-participated-modal-form").find("input[name='event_id']").val(event_id);
+        $("#eventDidNotParticipateSubmitPopupModal").modal("show");
     })
 
     /*************************************************************************/
-    /*** Rate the Challenge                                                ***/
+    /*** Rate the Event                                                ***/
     /*************************************************************************/
     $(".add-rating").click(function (event) {
         element = $(this);
@@ -449,24 +449,24 @@ Challenge Details - Info
 
         event.preventDefault();
 
-        var challenge_id = "{{ challenge.id }}";
-    {% if challenge.organization_id %}
-        var organization_id = "{{ challenge.organization_id }}";
+        var event_id = "{{ event.id }}";
+    {% if event.organization_id %}
+        var organization_id = "{{ event.organization_id }}";
     {% else %}
         var organization_id = "";
     {% endif %}
-        var organizer_id = "{{ challenge.author_id }}";
+        var organizer_id = "{{ event.author_id }}";
 
-        $("#challenge-rate-modal-form").find("input[name='challenge_id']").val(challenge_id);
-        $("#challenge-rate-modal-form").find("input[name='organization_id']").val(organization_id);
-        $("#challenge-rate-modal-form").find("input[name='organizer_id']").val(organizer_id);
+        $("#event-rate-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-rate-modal-form").find("input[name='organization_id']").val(organization_id);
+        $("#event-rate-modal-form").find("input[name='organizer_id']").val(organizer_id);
 
-        $("#challengeRatePopupModal").modal("show");
-        $("#challengeRatePopupModal").on("shown.bs.modal", function (event) {
+        $("#eventRatePopupModal").modal("show");
+        $("#eventRatePopupModal").on("shown.bs.modal", function (event) {
             if (organization_id) {
-                $("#challenge-rate-modal-form").find("#organization-form-group").show();
+                $("#event-rate-modal-form").find("#organization-form-group").show();
             } else {
-                $("#challenge-rate-modal-form").find("#organization-form-group").hide();
+                $("#event-rate-modal-form").find("#organization-form-group").hide();
             }
         })
     })
@@ -481,9 +481,9 @@ Challenge Details - Info
 
         event.preventDefault();
 
-        var challenge_id = "{{ challenge.id }}";
+        var event_id = "{{ event.id }}";
 
-        $("#complaint-add-modal-form").find("input[name='challenge_id']").val(challenge_id);
+        $("#complaint-add-modal-form").find("input[name='event_id']").val(event_id);
         $("#complaintAddPopupModal").modal("show");
     })
 
@@ -499,10 +499,10 @@ Challenge Details - Info
         window.open("http://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + document.location.href + "&p[images][0]=&p[title]=&p[summary]=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_tw() {
-        window.open("http://twitter.com/home?status=" + "{{ challenge.name }}".substr(0,100) + " " + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+        window.open("http://twitter.com/home?status=" + "{{ event.name }}".substr(0,100) + " " + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_li() {
-        window.open("http://www.linkedin.com/shareArticle?mini=true&url=" + document.location.href + "&title=" + "{{ challenge.name }}" + "&summary=&source=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+        window.open("http://www.linkedin.com/shareArticle?mini=true&url=" + document.location.href + "&title=" + "{{ event.name }}" + "&summary=&source=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_gp() {
         window.open("https://plus.google.com/share?url=" + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
@@ -512,16 +512,16 @@ Challenge Details - Info
 <!-- Pop-up Overlays -->
 
 {% if is_newly_created %}
-<div id="share-challenge-popup-overlay" class="well" style="display:none;">
+<div id="share-event-popup-overlay" class="well" style="display:none;">
     <div class="popup-overlay-heading">
-        <h4>{% trans "Share the Challenge on social App" %}</h4>
+        <h4>{% trans "Share the Event on social App" %}</h4>
     </div>
 
     <div class="popup-overlay-info">
         <div class="alert alert-success">
         {% blocktrans %}
             You are just one Click away from sharing<br/>
-            your Challenge with all Friends.
+            your Event with all Friends.
         {% endblocktrans %}
         </div>
     </div>
@@ -544,14 +544,14 @@ Challenge Details - Info
         <div class="alert alert-info">
         {% blocktrans %}
             You can also do it later from the<br/>
-            Challenge Details Page.
+            Event Details Page.
         {% endblocktrans %}
         </div>
     </div>
 
     <!-- Add an optional button to close the popup -->
     <div class="popup-overlay-footer">
-        <button class="btn btn-default share-challenge-popup-overlay_close">{% trans "Close" %}</button>
+        <button class="btn btn-default share-event-popup-overlay_close">{% trans "Close" %}</button>
     </div>
 </div>
 
@@ -587,7 +587,7 @@ Challenge Details - Info
             transition:                 "all 0.3s"
         };
 
-        $("#share-challenge-popup-overlay").popup(options);
+        $("#share-event-popup-overlay").popup(options);
     });
 </script>
 {% endif %}

@@ -29,6 +29,14 @@ For more Information on how to work in the Project, check out some of the other 
 
 	npm install -g bower
 
+### Download and install `bower` Applications
+
+	python manage.py bower install 
+
+## Install `lessc` (and optional `recess`):
+
+	npm install -g less recess
+
 # Internationalization
 
 ## Install `gettext`

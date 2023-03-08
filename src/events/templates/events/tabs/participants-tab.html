@@ -1,6 +1,6 @@
 <!--
 TAB
-Challenge Details - Participants
+Event Details - Participants
 -->
 {% load i18n %}
 {% load imagekit %}
@@ -8,11 +8,11 @@ Challenge Details - Participants
 
 <div class="row">
     <div class="col-xs-24 col-sm-24 col-md-24">
-        <h4>{% trans "Members, signed up to Challenge" %}</h4>
+        <h4>{% trans "Members, signed up to Event" %}</h4>
 
         <div id="participant-list" class="row">
-        {% for participation in challenge.challenge_participations.confirmed %}
-            {% include "challenges/fragments/challenge-participant-thumbnail.html" with account=participation.user %}
+        {% for participation in event.event_participations.confirmed %}
+            {% include "events/fragments/event-participant-thumbnail.html" with account=participation.user %}
         {% empty %}
             <div class="col-xs-24 col-sm-24 col-md-24">
                 <p>
@@ -33,7 +33,7 @@ Challenge Details - Participants
 
         var participation_id = $(this).attr("participation");
 
-        $("#challenge-participation-remove-modal-form").find("input[name='participation_id']").val(participation_id);
-        $("#challengeParticipationRemovePopupModal").modal("show");
+        $("#event-participation-remove-modal-form").find("input[name='participation_id']").val(participation_id);
+        $("#eventParticipationRemovePopupModal").modal("show");
     })
 </script>
