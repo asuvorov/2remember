@@ -1,24 +1,36 @@
-SHELL = /bin/bash
-ACTIVATE := . .env/bin/activate
+SHELL := /bin/bash
+WORKDIR := .
+ENVDIR := $(WORKDIR)/.env
+ENV := $(ENVDIR)/bin
+ACTIVATE := . $(ENV)/activate
 
 .PHONY: install
-install:
-	$(ACTIVATE) && pip install -U pip && pip install -r requirements.txt
+install: requirements.txt
+	$(ENV)/pip install -U pip
+	$(ENV)/pip install -Ur requirements.txt
 
 .PHONY: env
 env:
 	$(ACTIVATE)
 
 .PHONY: lint
-lint:
-	@pylint src/ setup.py --reports=y > reports/pylint.report
+lint: env
+	$(ENV)/pylint src/ setup.py --reports=y > reports/pylint.report
 
 .PHONY: test
 test: env
-	@coverage run --source="." ./src/manage.py test --settings=settings.testing
-	@coverage report
-	@coverage html
+	$(ENV)/coverage run --source="." ./src/manage.py test --settings=settings.testing
+	$(ENV)/coverage report
+	$(ENV)/coverage html
 
 .PHONY: messages
 messages: env
-	$(ACTIVATE) && cd src/ && python manage.py makemessages -l de && python manage.py makemessages -l es && python manage.py compilemessages -l de &&python manage.py compilemessages -l es
+	$(ENV)/python manage.py makemessages -l de
+	$(ENV)/python manage.py makemessages -l es
+	$(ENV)/python manage.py compilemessages -l de
+	$(ENV)/python manage.py compilemessages -l es
+
+.PHONY: clean
+clean:
+	rm -rf __pycache__
+	rm -rf venv
