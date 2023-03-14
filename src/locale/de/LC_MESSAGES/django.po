@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-15 13:53-0800\n"
+"POT-Creation-Date: 2023-03-08 11:54-0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
 #: accounts/choices.py:16
 msgid "Female"
 msgstr ""
@@ -66,9 +67,12 @@ msgid "Admins of the upcoming Events on the Platform"
 msgstr ""
 
 #: accounts/forms.py:27 accounts/forms.py:31 accounts/forms.py:115
-#: accounts/forms.py:259 events/forms.py:180 events/models.py:316
-#: home/forms.py:31 organizations/forms.py:113 organizations/models.py:134
-#: organizations/models.py:159
+#: accounts/forms.py:259
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:21
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:35
+#: events/forms.py:180 events/models.py:316 home/forms.py:31
+#: home/templates/home/contact-us.html:70 organizations/forms.py:113
+#: organizations/models.py:134 organizations/models.py:159
 msgid "Email"
 msgstr ""
 
@@ -140,7 +144,8 @@ msgstr ""
 msgid "User Birthday"
 msgstr ""
 
-#: accounts/models.py:119 organizations/models.py:108
+#: accounts/models.py:119 home/templates/home/contact-us.html:64
+#: organizations/models.py:108
 msgid "Address"
 msgstr ""
 
@@ -148,7 +153,10 @@ msgstr ""
 msgid "User Address"
 msgstr ""
 
-#: accounts/models.py:126 organizations/models.py:116
+#: accounts/models.py:126 accounts/templates/accounts/my-profile-edit.html:280
+#: organizations/models.py:116
+#: organizations/templates/organizations/organization-create.html:275
+#: organizations/templates/organizations/organization-edit.html:263
 msgid "Phone Numbers"
 msgstr ""
 
@@ -275,6 +283,7 @@ msgstr ""
 
 #: accounts/models.py:916 organizations/models.py:442
 #: organizations/models.py:443
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:19
 msgid "Position"
 msgstr ""
 
@@ -288,6 +297,1212 @@ msgstr ""
 
 #: accounts/models.py:924
 msgid "team members"
+msgstr ""
+
+#: accounts/templates/accounts/account-list.html:7
+msgid "Members List"
+msgstr ""
+
+#: accounts/templates/accounts/account-list.html:15
+#: accounts/templates/accounts/account-login.html:13
+#: accounts/templates/accounts/account-password-reset.html:13
+#: accounts/templates/accounts/account-signup-confirmation-email-sent.html:13
+#: accounts/templates/accounts/account-signup-confirmation-error.html:13
+#: accounts/templates/accounts/account-signup-confirmation-success.html:13
+#: accounts/templates/accounts/account-signup.html:30
+#: accounts/templates/accounts/foreign-profile-base.html:21
+#: accounts/templates/accounts/my-profile-base.html:13
+#: accounts/templates/accounts/my-profile-delete.html:14
+#: accounts/templates/accounts/my-profile-edit.html:32
+#: accounts/templates/accounts/my-profile-privacy.html:14
+#: accounts/templates/accounts/my-profile-privacy.html:47
+#: templates/fragments/navbar.html:100
+msgid "Members"
+msgstr ""
+
+#: accounts/templates/accounts/account-list.html:33
+msgid "There are no Members at the moment"
+msgstr ""
+
+#: accounts/templates/accounts/account-login.html:5
+#: templates/fragments/navbar.html:74
+msgid "Log in"
+msgstr ""
+
+#: accounts/templates/accounts/account-login.html:15
+#: accounts/templates/accounts/account-password-reset.html:15
+msgid "Sign in"
+msgstr ""
+
+#: accounts/templates/accounts/account-login.html:85
+msgid ""
+"\n"
+"                        <p>Forgot <a class=\"\" title=\"\" data-original-"
+"title=\"\" data-content=\"\" data-placement=\"bottom\" data-"
+"container=\"body\" data-trigger=\"hover\" data-toggle=\"modal\" "
+"href=\"#forgotPasswordPopupModal\" tabindex=\"-1\">Username / Password</a>?</"
+"p>\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/accounts/account-login.html:88
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:39
+msgid "Don't have an Account?"
+msgstr ""
+
+#: accounts/templates/accounts/account-login.html:88
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:39
+msgid "Sign-up now"
+msgstr ""
+
+#: accounts/templates/accounts/account-password-reset.html:5
+#: accounts/templates/accounts/account-password-reset.html:17
+msgid "Password reset"
+msgstr ""
+
+#: accounts/templates/accounts/account-password-reset.html:29
+msgid "Please, enter new Password"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-email-sent.html:5
+msgid "Confirmation Email"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-email-sent.html:15
+#: accounts/templates/accounts/account-signup-confirmation-error.html:15
+#: accounts/templates/accounts/account-signup-confirmation-success.html:15
+#: accounts/templates/accounts/account-signup.html:7
+#: accounts/templates/accounts/account-signup.html:32
+#: accounts/templates/accounts/account-signup.html:175
+#: templates/fragments/navbar.html:69
+msgid "Sign up"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-email-sent.html:28
+msgid "Confirmation Letter has been sent to Email"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-error.html:5
+msgid "Account Confirmation Error"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-error.html:28
+msgid ""
+"\n"
+"                        Thank you for staying on SaneSide.\n"
+"                        Unfortunately, we were not able to confirm your "
+"Account or any other Error has been acquired.\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-success.html:5
+msgid "Account Confirmation Success"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup-confirmation-success.html:28
+msgid ""
+"\n"
+"                        Thank you for staying on SaneSide.\n"
+"                        Your Account was confirmed and now is ready to use.\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:45
+#: accounts/templates/accounts/account-signup.html:188
+msgid ""
+"\n"
+"                    This Information is only visible to People, who need to "
+"see it, and is private by default. To understand, who can see what if this "
+"Information, please read our <a class=\"popover-content ppnua\" title=\"\" "
+"data-original-title=\"\" data-content=\"\" data-placement=\"bottom\" data-"
+"container=\"body\" data-trigger=\"hover\" data-toggle=\"modal\" "
+"href=\"#privacyPolicyPopupModal\" tabindex=\"-1\">Privacy Policy</a>\n"
+"                "
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:52
+#: accounts/templates/accounts/account-signup.html:194
+msgid ""
+"After signing up and successful Confirmation of your Email, you will be "
+"redirected to the Profile Page, where you can add your Location, Contact "
+"Details and social Links."
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:66
+#: accounts/templates/accounts/my-profile-edit.html:82
+#: blog/templates/blog/post-create.html:55
+#: blog/templates/blog/post-edit.html:58
+msgid "Upload Photo"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:73
+msgid ""
+"Add a personal Touch to your Profile. Pictures will automatically resize."
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:77
+#: accounts/templates/accounts/my-profile-edit.html:135
+msgid "Personal Details"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:152
+#: accounts/templates/accounts/foreign-profile-participations.html:36
+#: accounts/templates/accounts/my-profile-challenges.html:38
+#: accounts/templates/accounts/my-profile-edit.html:394
+#: accounts/templates/accounts/my-profile-participations.html:25
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:24
+#: events/choices.py:113 events/templates/events/challenge-create.html:562
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:65
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:102
+#: events/templates/events/modals/challenge-complete-modal.html:27
+#: organizations/templates/organizations/organization-create.html:428
+msgid "Complete"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:166
+msgid ""
+"\n"
+"                                By signing up, you agree to our <a "
+"class=\"popover-content ppnua\" title=\"\" data-original-title=\"\" data-"
+"content=\"\" data-placement=\"bottom\" data-container=\"body\" data-"
+"trigger=\"hover\" data-toggle=\"modal\" href=\"#privacyPolicyPopupModal\" "
+"tabindex=\"-1\">Privacy Policy</a> and <a class=\"popover-content ppnua\" "
+"title=\"\" data-original-title=\"\" data-content=\"\" data-"
+"placement=\"bottom\" data-container=\"body\" data-trigger=\"hover\" data-"
+"toggle=\"modal\" href=\"#userAgreementPopupModal\" tabindex=\"-1\">User "
+"Agreement</a>.\n"
+"                            "
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:185
+#: events/templates/events/challenge-create.html:596
+#: organizations/templates/organizations/organization-create.html:455
+msgid "Tips"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:207
+msgid "Sign-up with social App"
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:219
+msgid ""
+"\n"
+"            You can also go through a regular signing up Process.<br/>\n"
+"            To do this, close this Pop-up.\n"
+"        "
+msgstr ""
+
+#: accounts/templates/accounts/account-signup.html:228
+#: accounts/templates/accounts/my-profile-edit.html:523
+#: blog/templates/blog/modals/post-close-modal.html:22
+#: events/templates/events/modals/challenge-close-modal.html:23
+#: events/templates/events/modals/challenge-view-on-map-modal.html:16
+#: events/templates/events/tabs/info-tab.html:554
+#: home/templates/home/modals/privacy-policy-popup-modal.html:20
+#: home/templates/home/modals/user-agreement-popup-modal.html:20
+#: organizations/templates/organizations/modals/organization-view-on-map-modal.html:16
+#: organizations/templates/organizations/tabs/info-tab.html:501
+msgid "Close"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:19
+#, python-format
+msgid ""
+"\n"
+"            The List of the Events on SaneSide, %(full_name)s participated "
+"in:\n"
+"        "
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:27
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:43
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:59
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:43
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:43
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:104
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:43
+#: events/forms.py:143 events/forms.py:460
+msgid "Event Name"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:28
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:27
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:60
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:27
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:105
+#: events/templates/events/tabs/to-acknowledge-tab.html:54
+#: events/templates/events/tabs/to-acknowledge-tab.html:87
+msgid "What I did"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:29
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:35
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:61
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:35
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:106
+#: events/templates/events/tabs/to-acknowledge-tab.html:60
+#: events/templates/events/tabs/to-acknowledge-tab.html:88
+msgid "What I learned"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:30
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:42
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:62
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:42
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:107
+msgid "Admin replied"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:31
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:69
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:100
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:68
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:99
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:52
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:108
+#: blog/models.py:102 events/models.py:228 events/models.py:1160
+#: invites/models.py:82
+msgid "Status"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:52
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:55
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:139
+msgid "Experience Report rejected"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:54
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:57
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:141
+msgid "Waiting for Experience Report"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:56
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-action-required-tab.html:24
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:59
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:143
+#: events/choices.py:164
+msgid "Waiting for Acknowledgment"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:58
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:61
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:145
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:173
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:153
+msgid "Acknowledged"
+msgstr ""
+
+#: accounts/templates/accounts/export/my-profile-completed-challenges-export.html:64
+msgid "There are no completed Events at the moment."
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-base.html:6
+#: accounts/templates/accounts/foreign-profile-base.html:23
+msgid "Profile"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-base.html:36
+#: accounts/templates/accounts/my-profile-base.html:28
+#: events/templates/events/challenge-details-base.html:43
+#: organizations/templates/organizations/organization-details-base.html:42
+msgid "Information"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-base.html:45
+#: accounts/templates/accounts/my-profile-base.html:48
+msgid "Participations"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-base.html:54
+#: accounts/templates/accounts/foreign-profile-challenges.html:15
+#: accounts/templates/accounts/foreign-profile-challenges.html:16
+msgid "Affiliated with"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:20
+msgid "Participates in Events"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:21
+#: accounts/templates/accounts/my-profile-challenges.html:25
+#: accounts/templates/accounts/my-profile-participations.html:12
+#: events/choices.py:112
+msgid "Upcoming"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:35
+#: accounts/templates/accounts/my-profile-participations.html:24
+#: templates/easy_pdf/base.html:7
+msgid "Participated in Events"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:50
+msgid "Participations, canceled by Member"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:51
+#: accounts/templates/accounts/my-profile-participations.html:39
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:45
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:45
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:45
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:45
+msgid "Canceled"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:65
+#: accounts/templates/accounts/my-profile-participations.html:51
+msgid "Participations, canceled by Event Admin"
+msgstr ""
+
+#: accounts/templates/accounts/foreign-profile-participations.html:66
+#: accounts/templates/accounts/my-profile-participations.html:52
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:76
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:189
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:75
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:187
+#: events/templates/events/tabs/info-tab.html:206 invites/choices.py:19
+msgid "Rejected"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/contact-person-side.html:37
+#: accounts/templates/accounts/fragments/contact-person-side.html:44
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:102
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:104
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:88
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:90
+#: organizations/templates/organizations/tabs/info-tab.html:54
+#: organizations/templates/organizations/tabs/info-tab.html:56
+msgid "ext."
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:12
+#: invites/templates/invites/modals/invite-to-challenge-popup-modal.html:8
+msgid "Invite to Event"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:25
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:8
+msgid "Invite to Organization"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:38
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:187
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:20
+msgid "Disclaimer"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:40
+msgid "You see this Message, because you participated with"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:51
+msgid ""
+"\n"
+"                in the same Event(s) in the Past.<br/>\n"
+"                Let us know, if there's something to complain about this "
+"Person.\n"
+"            "
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:58
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:196
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:29
+msgid "Complain"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:62
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:203
+msgid "Login required"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/foreign-profile-media-status-breakdown.html:63
+msgid "You must have a User Account to see more Details."
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:9
+msgid "Profile Settings"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:12
+#: accounts/templates/accounts/my-profile-edit.html:9
+msgid "Edit Profile"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:13
+#: accounts/templates/accounts/my-profile-privacy.html:6
+msgid "Privacy Settings"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:14
+msgid "Change Password"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:15
+#: accounts/templates/accounts/my-profile-delete.html:6
+msgid "Delete Profile"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:19
+#: events/templates/events/challenge-create.html:8
+#: events/templates/events/modals/challenge-create-modal.html:8
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:11
+msgid "Create Event"
+msgstr ""
+
+#: accounts/templates/accounts/fragments/my-profile-media-status-breakdown.html:20
+#: organizations/templates/organizations/organization-create.html:9
+msgid "Create Organization"
+msgstr ""
+
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:8
+msgid "Forgot Username / Password?"
+msgstr ""
+
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:12
+msgid "Enter your Email below and we'll send out your Contact Details."
+msgstr ""
+
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:38
+msgid "Need Help?"
+msgstr ""
+
+#: accounts/templates/accounts/modals/forgot-password-popup-modal.html:38
+#: home/templates/home/contact-us.html:6 home/templates/home/contact-us.html:16
+#: templates/fragments/footer.html:31 templates/fragments/navbar.html:189
+msgid "Contact us"
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:8
+msgid "Email Address Update"
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:13
+msgid "Please, provide / update your Email Address"
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:14
+msgid ""
+"\n"
+"                        We noticed, that your Email Address hasn't been "
+"provided yet.<br/>\n"
+"                        For the best Experience, it is highly recommended, "
+"that you set your Email Address, so that you can be aware of everything, "
+"what happens to your Events, Participations, etc.\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:21
+msgid "Legal Notice"
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:22
+msgid ""
+"\n"
+"                        We do not use your Email Address for the promotional "
+"Purposes.<br/>\n"
+"                        Our Goal is to keep you informed and updated.\n"
+"                    "
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:48
+msgid "Update"
+msgstr ""
+
+#: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:49
+#: blog/templates/blog/modals/post-close-modal.html:23
+#: blog/templates/blog/modals/post-publish-modal.html:23
+#: events/templates/events/modals/challenge-clone-modal.html:24
+#: events/templates/events/modals/challenge-close-modal.html:24
+#: events/templates/events/modals/challenge-complete-modal.html:28
+#: events/templates/events/modals/challenge-create-modal.html:28
+#: events/templates/events/modals/challenge-not-participated-modal.html:36
+#: events/templates/events/modals/challenge-participation-post-modal.html:46
+#: events/templates/events/modals/challenge-participation-reject-modal.html:27
+#: events/templates/events/modals/challenge-participation-remove-modal.html:26
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:34
+#: events/templates/events/modals/challenge-rate-modal.html:43
+#: events/templates/events/modals/challenge-selfreflection-accept-modal.html:32
+#: events/templates/events/modals/challenge-selfreflection-reject-modal.html:27
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:33
+#: invites/templates/invites/modals/invite-reject-popup-modal.html:26
+#: invites/templates/invites/modals/invite-to-challenge-popup-modal.html:27
+#: invites/templates/invites/modals/invite-to-organization-group-popup-modal.html:28
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:63
+#: invites/templates/invites/modals/invite-to-organization-staff-popup-modal.html:27
+#: organizations/templates/organizations/modals/organization-group-create-modal.html:31
+#: organizations/templates/organizations/modals/organization-group-member-remove-modal.html:27
+#: organizations/templates/organizations/modals/organization-group-remove-modal.html:26
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:32
+#: organizations/templates/organizations/modals/organization-staff-member-remove-modal.html:27
+msgid "Cancel"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-base.html:5
+#: accounts/templates/accounts/my-profile-base.html:15
+#: accounts/templates/accounts/my-profile-delete.html:16
+#: accounts/templates/accounts/my-profile-edit.html:34
+#: accounts/templates/accounts/my-profile-privacy.html:16
+msgid "My Profile"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-base.html:38
+msgid "Invitations"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-base.html:64
+msgid "Events I responsible for"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:11
+msgid "Events required Action"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:12
+msgid "Action required"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:24
+#: organizations/templates/organizations/fragments/organization-iframe-upcoming.html:9
+msgid "Upcoming Events"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:37
+#: organizations/templates/organizations/fragments/organization-iframe-complete.html:9
+msgid "Completed Events"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:50
+msgid "Draft Events"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-challenges.html:51
+msgid "Drafts"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:18
+msgid "Delete"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:30
+msgid "So, you're about removing your Profile from SaneSide"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:32
+msgid ""
+"\n"
+"                    Thank you for participating in SaneSide. We hope, you "
+"had a great Time here.<br/>\n"
+"                    Before you remove your Profile, we'd like to remind you "
+"about the Events you were signed up for, the Events you've created, and the "
+"Organization you're affiliated with.<br/>\n"
+"                    Please, take a look to the Information, listed below.\n"
+"                "
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:48
+msgid "Events, you were signed up for"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:59
+msgid ""
+"Events completed, but waiting for Acknowledgment or your Experience Report"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:70
+msgid "Events, required your Action"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:81
+msgid "Events, you've created (upcoming)"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:92
+msgid "Events, you've created (Drafts)"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:103
+msgid "Organizations, you've created"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:118
+msgid "Delete Profile anyway"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-delete.html:125
+msgid "Take me out of here"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:36
+#: blog/templates/blog/post-edit.html:36
+#: events/templates/events/challenge-edit.html:37
+#: home/templates/home/faq-edit.html:18
+#: organizations/templates/organizations/organization-edit.html:37
+msgid "Edit"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:51
+msgid ""
+"\n"
+"                    Thank you for signing up to SaneSide.<br/>\n"
+"                    Before you start creating the Events, we will need some "
+"more Information about you.<br/>\n"
+"                    Please, complete your personal Information in the Form.\n"
+"                "
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:85
+msgid ""
+"Add a personal touch to your Profile. Pictures will automatically resize."
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:131
+#: accounts/templates/accounts/my-profile-edit.html:202
+#: accounts/templates/accounts/my-profile-edit.html:209
+#: accounts/templates/accounts/my-profile-edit.html:316
+#: accounts/templates/accounts/my-profile-edit.html:323
+#: accounts/templates/accounts/my-profile-edit.html:383
+#: accounts/templates/accounts/my-profile-edit.html:390
+#: accounts/templates/accounts/my-profile-edit.html:402
+#: events/templates/events/challenge-create.html:125
+#: events/templates/events/challenge-create.html:258
+#: events/templates/events/challenge-create.html:265
+#: events/templates/events/challenge-create.html:442
+#: events/templates/events/challenge-create.html:449
+#: events/templates/events/challenge-create.html:509
+#: events/templates/events/challenge-create.html:516
+#: events/templates/events/challenge-create.html:551
+#: events/templates/events/challenge-create.html:558
+#: events/templates/events/challenge-create.html:583
+#: events/templates/events/challenge-edit.html:122
+#: events/templates/events/challenge-edit.html:255
+#: events/templates/events/challenge-edit.html:262
+#: events/templates/events/challenge-edit.html:439
+#: events/templates/events/challenge-edit.html:446
+#: events/templates/events/challenge-edit.html:506
+#: events/templates/events/challenge-edit.html:513
+#: events/templates/events/challenge-edit.html:548
+#: events/templates/events/challenge-edit.html:555
+#: events/templates/events/challenge-edit.html:646
+#: organizations/templates/organizations/organization-create.html:119
+#: organizations/templates/organizations/organization-create.html:193
+#: organizations/templates/organizations/organization-create.html:200
+#: organizations/templates/organizations/organization-create.html:350
+#: organizations/templates/organizations/organization-create.html:357
+#: organizations/templates/organizations/organization-create.html:417
+#: organizations/templates/organizations/organization-create.html:424
+#: organizations/templates/organizations/organization-create.html:442
+#: organizations/templates/organizations/organization-edit.html:108
+#: organizations/templates/organizations/organization-edit.html:181
+#: organizations/templates/organizations/organization-edit.html:188
+#: organizations/templates/organizations/organization-edit.html:338
+#: organizations/templates/organizations/organization-edit.html:345
+#: organizations/templates/organizations/organization-edit.html:405
+#: organizations/templates/organizations/organization-edit.html:412
+#: organizations/templates/organizations/organization-edit.html:499
+msgid "Prev"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:132
+#: accounts/templates/accounts/my-profile-edit.html:203
+#: accounts/templates/accounts/my-profile-edit.html:210
+#: accounts/templates/accounts/my-profile-edit.html:317
+#: accounts/templates/accounts/my-profile-edit.html:324
+#: accounts/templates/accounts/my-profile-edit.html:384
+#: accounts/templates/accounts/my-profile-edit.html:391
+#: accounts/templates/accounts/my-profile-edit.html:403
+#: events/templates/events/challenge-create.html:126
+#: events/templates/events/challenge-create.html:259
+#: events/templates/events/challenge-create.html:266
+#: events/templates/events/challenge-create.html:443
+#: events/templates/events/challenge-create.html:450
+#: events/templates/events/challenge-create.html:510
+#: events/templates/events/challenge-create.html:517
+#: events/templates/events/challenge-create.html:552
+#: events/templates/events/challenge-create.html:559
+#: events/templates/events/challenge-create.html:584
+#: events/templates/events/challenge-edit.html:123
+#: events/templates/events/challenge-edit.html:256
+#: events/templates/events/challenge-edit.html:263
+#: events/templates/events/challenge-edit.html:440
+#: events/templates/events/challenge-edit.html:447
+#: events/templates/events/challenge-edit.html:507
+#: events/templates/events/challenge-edit.html:514
+#: events/templates/events/challenge-edit.html:549
+#: events/templates/events/challenge-edit.html:556
+#: events/templates/events/challenge-edit.html:647
+#: organizations/templates/organizations/organization-create.html:120
+#: organizations/templates/organizations/organization-create.html:194
+#: organizations/templates/organizations/organization-create.html:201
+#: organizations/templates/organizations/organization-create.html:351
+#: organizations/templates/organizations/organization-create.html:358
+#: organizations/templates/organizations/organization-create.html:418
+#: organizations/templates/organizations/organization-create.html:425
+#: organizations/templates/organizations/organization-create.html:443
+#: organizations/templates/organizations/organization-edit.html:109
+#: organizations/templates/organizations/organization-edit.html:182
+#: organizations/templates/organizations/organization-edit.html:189
+#: organizations/templates/organizations/organization-edit.html:339
+#: organizations/templates/organizations/organization-edit.html:346
+#: organizations/templates/organizations/organization-edit.html:406
+#: organizations/templates/organizations/organization-edit.html:413
+#: organizations/templates/organizations/organization-edit.html:500
+msgid "Next"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:213
+#: events/templates/events/challenge-create.html:271
+#: events/templates/events/challenge-edit.html:268
+#: events/templates/events/modals/challenge-view-on-map-modal.html:8
+#: organizations/templates/organizations/modals/organization-view-on-map-modal.html:8
+#: organizations/templates/organizations/organization-create.html:204
+#: organizations/templates/organizations/organization-edit.html:192
+msgid "Location"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:327
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:148
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:120
+#: events/templates/events/challenge-create.html:453
+#: events/templates/events/challenge-edit.html:450
+#: events/templates/events/tabs/info-tab.html:278
+#: organizations/templates/organizations/organization-create.html:361
+#: organizations/templates/organizations/organization-edit.html:349
+#: organizations/templates/organizations/tabs/info-tab.html:194
+msgid "Social Links"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:345
+#: accounts/templates/accounts/my-profile-edit.html:364
+#: events/templates/events/challenge-create.html:220
+#: events/templates/events/challenge-create.html:239
+#: events/templates/events/challenge-create.html:471
+#: events/templates/events/challenge-create.html:490
+#: events/templates/events/challenge-edit.html:217
+#: events/templates/events/challenge-edit.html:236
+#: events/templates/events/challenge-edit.html:468
+#: events/templates/events/challenge-edit.html:487
+#: organizations/templates/organizations/fragments/organization-groups-adm.html:16
+#: organizations/templates/organizations/organization-create.html:379
+#: organizations/templates/organizations/organization-create.html:398
+#: organizations/templates/organizations/organization-edit.html:367
+#: organizations/templates/organizations/organization-edit.html:386
+msgid "Del"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:371
+#: blog/templates/blog/post-details.html:123
+#: events/templates/events/challenge-create.html:246
+#: events/templates/events/challenge-create.html:497
+#: events/templates/events/challenge-edit.html:243
+#: events/templates/events/challenge-edit.html:494
+#: events/templates/events/fragments/challenge-attachments-upcoming.html:14
+#: events/templates/events/tabs/info-tab.html:253
+#: home/templates/home/faq-create.html:18 home/templates/home/faq-list.html:28
+#: organizations/templates/organizations/organization-create.html:405
+#: organizations/templates/organizations/organization-edit.html:393
+#: organizations/templates/organizations/tabs/info-tab.html:108
+#: organizations/templates/organizations/tabs/info-tab.html:170
+msgid "Add"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:417
+#: blog/templates/blog/post-edit.html:114
+#: events/templates/events/challenge-edit.html:660
+#: events/templates/events/challenge-reporting-materials.html:167
+#: home/templates/home/faq-edit.html:70
+#: organizations/templates/organizations/organization-edit.html:513
+msgid "Save Changes"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:502
+msgid "Welcome to SaneSide"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-edit.html:507
+msgid ""
+"\n"
+"            <p>\n"
+"                Thank you for signing up to SaneSide.\n"
+"            </p>\n"
+"\n"
+"            <p>\n"
+"                Before you start creating the Events,<br/>\n"
+"                we will need some more Information about you.<br/>\n"
+"                Please, complete your personal Information in the Form.\n"
+"            </p>\n"
+"        "
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-info.html:84
+#: home/templates/home/index.html:84
+msgid "Welcome"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-info.html:89
+#, python-format
+msgid ""
+"\n"
+"            <p>\n"
+"                Make sure to get your Profile to 80%% complete.\n"
+"            </p>\n"
+"\n"
+"            <p>\n"
+"                This is a Requirement:<br/>\n"
+"                (1) to show up in Search Results;<br/>\n"
+"                (2) to create Events and Organizations;<br/>\n"
+"                (3) to participate in Events;<br/>\n"
+"                (4) to invite and to be invited to Events<br/>\n"
+"                and Organizations.\n"
+"            </p>\n"
+"        "
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-info.html:107
+#, python-format
+msgid ""
+"\n"
+"            <p>\n"
+"                You have %(days_left)s Days of the <strong>GRACE PERIOD</"
+"strong> left.\n"
+"            </p>\n"
+"        "
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-info.html:118
+msgid "Let's go"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-invitations.html:11
+msgid "Received Invitations"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-invitations.html:12
+msgid "Received"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-invitations.html:13
+#: accounts/templates/accounts/my-profile-invitations.html:27
+#: blog/templates/blog/post-list.html:58
+#: organizations/templates/organizations/organization-list.html:60
+msgid "Archive"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-invitations.html:25
+msgid "Sent Invitations"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-invitations.html:26
+msgid "Sent"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-participations.html:11
+msgid "Participate in Events"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-participations.html:26
+msgid "Export to PDF"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-participations.html:38
+msgid "Participations, canceled by Me"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-privacy.html:18
+msgid "Privacy"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-privacy.html:34
+msgid "General"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-privacy.html:103
+msgid "Organizers"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-privacy.html:164
+msgid "Save Changes and leave"
+msgstr ""
+
+#: accounts/templates/accounts/my-profile-privacy.html:165
+msgid "Save Changes and continue editing"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/admin-challenges-tab.html:15
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-upcoming-tab.html:15
+msgid "There are no upcoming Events at the Moment"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:45
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:35
+msgid "Hours spent"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:52
+msgid "Member's Organizations"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:57
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:47
+msgid "There are no Organizations yet."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:62
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:56
+msgid "Related Organizations"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:67
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:61
+msgid "There are no related Organizations yet."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:90
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:70
+msgid "Contact Details"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:112
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:134
+msgid "Information is hidden from Public"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:126
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:104
+#: organizations/models.py:446
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:24
+msgid "Bio"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:26
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:46
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:26
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:46
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:26
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:46
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:26
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:46
+#: organizations/templates/organizations/modals/organization-staff-member-remove-modal.html:19
+msgid "Reason"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:44
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:44
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:44
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:44
+#: events/choices.py:156
+msgid "Signed up"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-canceled-tab.html:72
+#: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:72
+msgid "There are no canceled Participations at the moment."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:19
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:19
+#: events/models.py:1033 events/models.py:1034 events/models.py:1143
+#: events/models.py:1144
+#: events/templates/events/challenge-dateless-list.html:52
+#: events/templates/events/challenge-details-base.html:6
+#: events/templates/events/challenge-list.html:51
+msgid "Event"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:92
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:178
+msgid "There are no completed Participations at the moment."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:72
+#: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:72
+msgid "There are no rejected Participations at the moment"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/foreign-profile/participations-upcoming-tab.html:15
+#: accounts/templates/accounts/tabs/my-profile/participations-upcoming-tab.html:15
+msgid "There are no upcoming Participations at the moment"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-action-required-tab.html:16
+#: events/choices.py:152
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:167
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:147
+msgid "Waiting for Confirmation"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-action-required-tab.html:33
+msgid "There are no Events required Action at the Moment."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-complete-tab.html:15
+msgid "There are no completed Events at the Moment."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/admin-challenges-draft-tab.html:15
+msgid "There are no draft Events at the Moment."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:43
+msgid "My Organizations"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:50
+msgid "Create</a> new Organization."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:73
+#: events/templates/events/modals/challenge-participation-post-modal.html:16
+msgid "Privacy Information"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:74
+msgid ""
+"This Information can only be seen by the Organizers of the Events you "
+"participate in."
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:136
+msgid "Spotlight"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/info-tab.html:141
+#: blog/templates/blog/post-list.html:65
+#: events/templates/events/challenge-category-list.html:45
+#: events/templates/events/challenge-dateless-list.html:158
+#: events/templates/events/challenge-list.html:173
+#: home/templates/home/faq-list.html:43
+#: organizations/templates/organizations/organization-directory.html:47
+#: organizations/templates/organizations/organization-list.html:66
+msgid "Sponsored Links"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:19
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:94
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:19
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:93
+msgid "Invitation to"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:35
+msgid "from"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:54
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:98
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:54
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:97
+#: invites/models.py:100 invites/models.py:101
+msgid "Invitation Text"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:61
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:99
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:61
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:98
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:66
+#: events/templates/events/tabs/to-acknowledge-tab.html:66
+#: events/templates/events/tabs/to-acknowledge-tab.html:89
+#: events/templates/events/tabs/to-confirm-tab.html:64
+#: events/templates/events/tabs/to-confirm-tab.html:87
+#: organizations/templates/organizations/fragments/organization-staff-members-adm.html:56
+msgid "Action"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:63
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:179
+#: events/templates/events/modals/challenge-selfreflection-accept-modal.html:31
+#: events/templates/events/tabs/to-acknowledge-tab.html:68
+#: events/templates/events/tabs/to-acknowledge-tab.html:146
+#: events/templates/events/tabs/to-confirm-tab.html:66
+#: events/templates/events/tabs/to-confirm-tab.html:142
+msgid "Accept"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:64
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:180
+#: events/templates/events/modals/challenge-participation-reject-modal.html:26
+#: events/templates/events/modals/challenge-selfreflection-reject-modal.html:26
+#: events/templates/events/tabs/to-acknowledge-tab.html:69
+#: events/templates/events/tabs/to-acknowledge-tab.html:147
+#: events/templates/events/tabs/to-confirm-tab.html:67
+#: events/templates/events/tabs/to-confirm-tab.html:143
+#: invites/templates/invites/modals/invite-reject-popup-modal.html:25
+msgid "Reject"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:72
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:185
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:71
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:183
+#: invites/choices.py:17 templates/fragments/navbar.html:106
+#: templates/fragments/navbar.html:115
+msgid "New"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:74
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:187
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:73
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:185
+#: invites/choices.py:18
+msgid "Accepted"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:78
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:191
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:77
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:189
+#: invites/choices.py:20
+msgid "Revoked"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:95
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:94
+#: events/forms.py:362 events/forms.py:457 events/models.py:1019
+#: events/templates/events/tabs/info-tab.html:195 home/forms.py:24
+#: home/models.py:58 home/models.py:59 organizations/models.py:555
+msgid "Name"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:96
+msgid "From"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:97
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:96
+#: events/templates/events/tabs/to-acknowledge-tab.html:86
+#: events/templates/events/tabs/to-confirm-tab.html:84
+msgid "Rating"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:170
+msgid "N/A"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:200
+msgid "There are no received Invitations at the moment"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:35
+msgid "to"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:63
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:178
+msgid "Revoke"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:95
+msgid "To"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:198
+msgid "There are no sent Invitations at the moment"
+msgstr ""
+
+#: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:109
+#: organizations/templates/organizations/fragments/organization-staff-members-adm.html:78
+msgid "Actions"
 msgstr ""
 
 #: accounts/views.py:136
@@ -711,7 +1926,8 @@ msgstr ""
 msgid "No Files attached."
 msgstr ""
 
-#: blog/choices.py:16 events/choices.py:111
+#: blog/choices.py:16 blog/templates/blog/fragments/post-thumbnail-hor.html:15
+#: blog/templates/blog/post-details.html:47 events/choices.py:111
 msgid "Draft"
 msgstr ""
 
@@ -765,11 +1981,6 @@ msgstr ""
 msgid "A comma-separated List of Tags."
 msgstr ""
 
-#: blog/models.py:102 events/models.py:228 events/models.py:1160
-#: invites/models.py:82
-msgid "Status"
-msgstr ""
-
 #: blog/models.py:103
 msgid "Post Status"
 msgstr ""
@@ -780,6 +1991,150 @@ msgstr ""
 
 #: blog/models.py:109
 msgid "blog posts"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-media-status-breakdown.html:9
+#: blog/templates/blog/post-edit.html:8
+msgid "Edit Post"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-media-status-breakdown.html:12
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:82
+msgid "This is a Draft."
+msgstr ""
+
+#: blog/templates/blog/fragments/post-media-status-breakdown.html:13
+msgid "Publish this Post when you are ready, so other Members can see it."
+msgstr ""
+
+#: blog/templates/blog/fragments/post-media-status-breakdown.html:16
+#: blog/templates/blog/modals/post-publish-modal.html:8
+msgid "Publish Post"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-thumbnail-hor.html:27
+#: blog/templates/blog/post-details.html:59
+#: events/templates/events/tabs/info-tab.html:163
+msgid "Posted by"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-thumbnail-hor.html:28
+#: blog/templates/blog/fragments/post-thumbnail-search.html:31
+#: blog/templates/blog/post-details.html:60
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:57
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:65
+#: events/templates/events/fragments/challenge-thumbnail-search.html:38
+#: events/templates/events/fragments/challenge-thumbnail-search.html:42
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:40
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:48
+#: events/templates/events/tabs/info-tab.html:165
+#: organizations/templates/organizations/fragments/organization-thumbnail-hor.html:29
+#: organizations/templates/organizations/fragments/organization-thumbnail-search.html:37
+msgid "ago"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-thumbnail-hor.html:88
+#: blog/templates/blog/fragments/post-thumbnail-search.html:39
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:197
+#: events/templates/events/fragments/challenge-thumbnail-search.html:51
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:177
+#: organizations/templates/organizations/fragments/organization-thumbnail-hor.html:119
+#: organizations/templates/organizations/fragments/organization-thumbnail-search.html:45
+msgid "LEARN MORE"
+msgstr ""
+
+#: blog/templates/blog/fragments/post-thumbnail-search.html:31
+#: events/templates/events/fragments/challenge-thumbnail-search.html:38
+#: events/templates/events/fragments/challenge-thumbnail-search.html:42
+msgid "posted by"
+msgstr ""
+
+#: blog/templates/blog/modals/post-close-modal.html:8
+#: blog/templates/blog/post-edit.html:115
+msgid "Close Post"
+msgstr ""
+
+#: blog/templates/blog/modals/post-close-modal.html:16
+msgid "Do you really want to close this Post?"
+msgstr ""
+
+#: blog/templates/blog/modals/post-publish-modal.html:16
+msgid "Do you really want to publish this Post?"
+msgstr ""
+
+#: blog/templates/blog/modals/post-publish-modal.html:22
+msgid "Publish"
+msgstr ""
+
+#: blog/templates/blog/post-create.html:8
+msgid "Create Post"
+msgstr ""
+
+#: blog/templates/blog/post-create.html:31
+#: blog/templates/blog/post-details.html:24
+#: blog/templates/blog/post-edit.html:34 blog/templates/blog/post-list.html:15
+#: templates/error-pages/404.html:34
+msgid "Blog"
+msgstr ""
+
+#: blog/templates/blog/post-create.html:33
+#: events/templates/events/challenge-create.html:33
+#: events/templates/events/modals/challenge-create-modal.html:27
+#: organizations/templates/organizations/modals/organization-group-create-modal.html:30
+#: organizations/templates/organizations/organization-create.html:34
+#: templates/fragments/navbar.html:119
+msgid "Create"
+msgstr ""
+
+#: blog/templates/blog/post-create.html:111
+msgid "Publish this Post"
+msgstr ""
+
+#: blog/templates/blog/post-create.html:112
+#: events/templates/events/challenge-create.html:577
+msgid "Save as a Draft"
+msgstr ""
+
+#: blog/templates/blog/post-details.html:7
+#: blog/templates/blog/post-list.html:28
+msgid "Post"
+msgstr ""
+
+#: blog/templates/blog/post-details.html:26
+#: events/templates/events/challenge-details-base.html:29
+#: organizations/templates/organizations/organization-details-base.html:29
+#: organizations/templates/organizations/organization-populate-newsletter.html:33
+msgid "Details"
+msgstr ""
+
+#: blog/templates/blog/post-details.html:120
+#: events/templates/events/tabs/info-tab.html:250
+#: organizations/templates/organizations/tabs/info-tab.html:167
+msgid "Comments"
+msgstr ""
+
+#: blog/templates/blog/post-details.html:142
+#: events/templates/events/tabs/info-tab.html:273
+#: organizations/templates/organizations/tabs/info-tab.html:188
+msgid "Link to this Page"
+msgstr ""
+
+#: blog/templates/blog/post-details.html:149
+#: events/templates/events/tabs/info-tab.html:294
+#: organizations/templates/organizations/tabs/info-tab.html:210
+msgid "Share"
+msgstr ""
+
+#: blog/templates/blog/post-list.html:7 templates/fragments/footer.html:22
+#: templates/fragments/navbar.html:197
+msgid "Our Blog"
+msgstr ""
+
+#: blog/templates/blog/post-list.html:42
+#: events/templates/events/challenge-dateless-list.html:135
+#: events/templates/events/challenge-list.html:150
+#: organizations/templates/organizations/organization-list.html:44
+msgid "Tag Cloud"
 msgstr ""
 
 #: events/choices.py:22
@@ -818,14 +2173,6 @@ msgstr ""
 msgid "Veterans & Seniors"
 msgstr ""
 
-#: events/choices.py:112
-msgid "Upcoming"
-msgstr ""
-
-#: events/choices.py:113
-msgid "Complete"
-msgstr ""
-
 #: events/choices.py:114
 msgid "Expired"
 msgstr ""
@@ -838,16 +2185,8 @@ msgstr ""
 msgid "Participate only after a confirmed Application"
 msgstr ""
 
-#: events/choices.py:152
-msgid "Waiting for Confirmation"
-msgstr ""
-
 #: events/choices.py:154
 msgid "You were not accepted to this Event"
-msgstr ""
-
-#: events/choices.py:156
-msgid "Signed up"
 msgstr ""
 
 #: events/choices.py:158
@@ -862,15 +2201,15 @@ msgstr ""
 msgid "Please, write your Experience Report"
 msgstr ""
 
-#: events/choices.py:164
-msgid "Waiting for Acknowledgment"
-msgstr ""
-
 #: events/choices.py:166
 msgid "Report acknowledged"
 msgstr ""
 
 #: events/choices.py:177
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:103
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:83
+#: events/templates/events/tabs/info-tab.html:108
+#: templates/fragments/navbar.html:116
 msgid "Dateless"
 msgstr ""
 
@@ -979,10 +2318,6 @@ msgstr ""
 msgid "Separate your Links with a Space"
 msgstr ""
 
-#: events/forms.py:143 events/forms.py:460
-msgid "Event Name"
-msgstr ""
-
 #: events/forms.py:149
 msgid "Event Description"
 msgstr ""
@@ -1004,12 +2339,6 @@ msgstr ""
 msgid "Reserved Word cannot be used as a Event Name."
 msgstr ""
 
-#: events/forms.py:362 events/forms.py:457 events/models.py:1019
-#: home/forms.py:24 home/models.py:58 home/models.py:59
-#: organizations/models.py:555
-msgid "Name"
-msgstr ""
-
 #: events/forms.py:367
 msgid "Qty"
 msgstr ""
@@ -1027,6 +2356,7 @@ msgid "Day"
 msgstr ""
 
 #: events/models.py:102 events/models.py:103 events/models.py:222
+#: events/templates/events/tabs/info-tab.html:116
 msgid "Category"
 msgstr ""
 
@@ -1087,7 +2417,8 @@ msgstr ""
 msgid "Event Status"
 msgstr ""
 
-#: events/models.py:233
+#: events/models.py:233 events/templates/events/challenge-create.html:520
+#: events/templates/events/challenge-edit.html:517
 msgid "Application"
 msgstr ""
 
@@ -1116,7 +2447,7 @@ msgstr ""
 msgid "Event Recurrence"
 msgstr ""
 
-#: events/models.py:288
+#: events/models.py:288 events/templates/events/challenge-list.html:91
 msgid "Start Date"
 msgstr ""
 
@@ -1162,6 +2493,9 @@ msgstr ""
 
 #: events/models.py:331 organizations/models.py:429 organizations/models.py:430
 #: organizations/models.py:566 organizations/models.py:567
+#: organizations/templates/organizations/fragments/organization-thumbnail-search.html:26
+#: organizations/templates/organizations/organization-details-base.html:6
+#: organizations/templates/organizations/organization-list.html:28
 msgid "Organization"
 msgstr ""
 
@@ -1170,6 +2504,8 @@ msgid "Event Organization"
 msgstr ""
 
 #: events/models.py:340 events/models.py:341
+#: events/templates/events/challenge-reporting-materials.html:67
+#: events/templates/events/tabs/info-tab.html:174
 msgid "Achievements"
 msgstr ""
 
@@ -1210,22 +2546,22 @@ msgstr ""
 #: events/models.py:439
 #, python-format
 msgid ""
-"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was "
-"successfully created.</p>"
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully "
+"created.</p>"
 msgstr ""
 
 #: events/models.py:482
 #, python-format
 msgid ""
-"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
-"created.</p>"
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created.</"
+"p>"
 msgstr ""
 
 #: events/models.py:528
 #, python-format
 msgid ""
-"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully "
-"created, and you were added as a contact Person to it.</p>"
+"<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created, "
+"and you were added as a contact Person to it.</p>"
 msgstr ""
 
 #: events/models.py:571
@@ -1245,8 +2581,7 @@ msgstr ""
 
 #: events/models.py:626
 #, python-format
-msgid ""
-"<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
+msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
 msgstr ""
 
 #: events/models.py:672
@@ -1283,11 +2618,6 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: events/models.py:1033 events/models.py:1034 events/models.py:1143
-#: events/models.py:1144
-msgid "Event"
-msgstr ""
-
 #: events/models.py:1048
 msgid "role"
 msgstr ""
@@ -1313,10 +2643,15 @@ msgid "Participation Status"
 msgstr ""
 
 #: events/models.py:1167 events/models.py:1168
+#: events/templates/events/modals/challenge-participation-post-modal.html:26
+#: events/templates/events/tabs/to-confirm-tab.html:58
+#: events/templates/events/tabs/to-confirm-tab.html:86
 msgid "Application Text"
 msgstr ""
 
 #: events/models.py:1171 events/models.py:1172
+#: events/templates/events/modals/challenge-not-participated-modal.html:28
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:26
 msgid "Cancellation Text"
 msgstr ""
 
@@ -1398,6 +2733,741 @@ msgid ""
 "p><p>Please, don't forget to show up!</p>"
 msgstr ""
 
+#: events/templates/events/challenge-category-list.html:7
+msgid "Event Categories List"
+msgstr ""
+
+#: events/templates/events/challenge-category-list.html:15
+msgid "Event Categories"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:31
+#: events/templates/events/challenge-dateless-list.html:15
+#: events/templates/events/challenge-details-base.html:27
+#: events/templates/events/challenge-edit.html:35
+#: events/templates/events/challenge-list.html:15
+#: events/templates/events/challenge-reporting-materials.html:34
+#: templates/fragments/navbar.html:112
+msgid "Events"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:45
+#: events/templates/events/challenge-create.html:599
+msgid ""
+"\n"
+"                You can create your Event here. If you have any Questions, "
+"don't hesitate to <a href=\"mailto:support@saneside.com\">contact Support</"
+"a>.\n"
+"            "
+msgstr ""
+
+#: events/templates/events/challenge-create.html:52
+#: events/templates/events/challenge-create.html:605
+msgid ""
+"After creating the Event, you will be redirected to the Details Page, where "
+"you can attach additional Materials (e.g. Images, Documents, Links, etc.)"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:66
+#: events/templates/events/challenge-edit.html:64
+msgid "Upload Cover"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:129
+#: events/templates/events/challenge-edit.html:126
+#: events/templates/events/modals/challenge-complete-modal.html:20
+#: events/templates/events/modals/challenge-create-modal.html:20
+#: organizations/models.py:559
+#: organizations/templates/organizations/organization-create.html:123
+#: organizations/templates/organizations/organization-edit.html:112
+msgid "Description"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:195
+#: events/templates/events/challenge-edit.html:192
+msgid "Roles"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:198
+msgid ""
+"\n"
+"                                        If you are looking for the "
+"differently skilled Volunteers / Participants, you can add specific Roles "
+"and Quantity here (e.g. 1 Driver, 10 Street-cleaners, etc.).<br/>\n"
+"                                        If Roles are specified, Members will "
+"be offered to choose, which Role they want to take, on signing up to the "
+"Event / Event.\n"
+"                                    "
+msgstr ""
+
+#: events/templates/events/challenge-create.html:343
+#: events/templates/events/challenge-edit.html:340
+#: events/templates/events/tabs/info-tab.html:308
+#: organizations/templates/organizations/organization-create.html:312
+#: organizations/templates/organizations/organization-edit.html:300
+#: organizations/templates/organizations/tabs/info-tab.html:251
+msgid "Contact Person"
+msgstr ""
+
+#: events/templates/events/challenge-create.html:389
+msgid ""
+"\n"
+"                                        Select one of the available Options: "
+"<i>dateless, once, <s>weekly</s>, <s>monthly</s>, <s>annually</s>, "
+"<s>custom</s></i>.\n"
+"                                    "
+msgstr ""
+
+#: events/templates/events/challenge-create.html:564
+#: organizations/templates/organizations/organization-create.html:430
+msgid "You have successfully completed all Steps."
+msgstr ""
+
+#: events/templates/events/challenge-create.html:570
+msgid "Create this Event"
+msgstr ""
+
+#: events/templates/events/challenge-dateless-list.html:7
+#: events/templates/events/challenge-list.html:7
+msgid "Events List"
+msgstr ""
+
+#: events/templates/events/challenge-dateless-list.html:28
+#: events/templates/events/challenge-list.html:27
+msgid "Filter"
+msgstr ""
+
+#: events/templates/events/challenge-dateless-list.html:91
+#: events/templates/events/challenge-list.html:106
+msgid "Apply"
+msgstr ""
+
+#: events/templates/events/challenge-dateless-list.html:151
+#: events/templates/events/challenge-list.html:166
+msgid "Calendar"
+msgstr ""
+
+#: events/templates/events/challenge-details-acknowledge.html:10
+msgid "Members, waiting for Acknowledgment"
+msgstr ""
+
+#: events/templates/events/challenge-details-base.html:51
+msgid "To confirm"
+msgstr ""
+
+#: events/templates/events/challenge-details-base.html:59
+msgid "To acknowledge"
+msgstr ""
+
+#: events/templates/events/challenge-details-confirm.html:10
+msgid "Members, waiting for Confirmation"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:9
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:78
+msgid "Edit Event"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:50
+msgid ""
+"You can edit your Event here. After you save Changes, all applied Members "
+"will receive appropriate Notifications."
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:195
+msgid ""
+"\n"
+"                                            If you are looking for the "
+"differently skilled Volunteers / Participants, you can add specific Roles "
+"and Quantity here (e.g. 1 Driver, 10 Street-cleaners, etc.).<br/>\n"
+"                                            If Roles are specified, Members "
+"will be offered to choose, which Role they want to take, on signing up to "
+"the Event / Event.\n"
+"                                        "
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:386
+msgid ""
+"\n"
+"                                            Select one of the available "
+"Options: <i>dateless, once, <s>weekly</s>, <s>monthly</s>, <s>annually</s>, "
+"<s>custom</s></i>.\n"
+"                                        "
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:559
+#: events/templates/events/challenge-reporting-materials.html:75
+#: events/templates/events/fragments/challenge-attachments-complete.html:10
+#: events/templates/events/fragments/challenge-attachments-upcoming.html:10
+#: organizations/templates/organizations/organization-edit.html:416
+#: organizations/templates/organizations/tabs/info-tab.html:105
+msgid "Attachments"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:592
+#: events/templates/events/challenge-reporting-materials.html:109
+#: organizations/templates/organizations/organization-edit.html:449
+msgid "Images"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:604
+#: events/templates/events/challenge-reporting-materials.html:121
+#: organizations/templates/organizations/organization-edit.html:460
+msgid "Documents"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:617
+#: events/templates/events/challenge-reporting-materials.html:134
+#: organizations/templates/organizations/organization-edit.html:472
+msgid "Links"
+msgstr ""
+
+#: events/templates/events/challenge-edit.html:630
+#: events/templates/events/challenge-reporting-materials.html:147
+#: organizations/templates/organizations/organization-edit.html:484
+msgid "Video Links"
+msgstr ""
+
+#: events/templates/events/challenge-reporting-materials.html:8
+msgid "Event reporting Materials"
+msgstr ""
+
+#: events/templates/events/challenge-reporting-materials.html:36
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:44
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:48
+msgid "Reporting Materials"
+msgstr ""
+
+#: events/templates/events/challenge-reporting-materials.html:49
+msgid ""
+"\n"
+"                    Here you can add the Event reporting Materials, manage "
+"current Attachments, and describe Achievements.<br/>\n"
+"                    After you save Changes, all confirmed Participants will "
+"receive appropriate Notifications.\n"
+"                "
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:17
+msgid "This Event is complete"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:19
+msgid "This Event is closed"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:21
+msgid "This Event already happened"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:25
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:25
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:84
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:65
+msgid "Confirmation required"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:27
+msgid ""
+"You need to write an Application to participate in this Event. The Event "
+"Organizer will use your Application Text and your History on SaneSide to "
+"decide whether you are a good fit for this Event."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:37
+msgid ""
+"\n"
+"                Notification was sent to all Participants.<br/>\n"
+"                Please, allow 3 - 7 Days to submit their Experience Reports, "
+"and come back to accept or reject them.\n"
+"            "
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:45
+msgid ""
+"You can add reporting Materials, manage current Attachments, and describe "
+"Achievements."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:50
+msgid "There is nothing to do here."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:55
+msgid "Please, mark this Event as completed, if it:"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:57
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:94
+msgid "has taken Place as planned;"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:58
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:95
+msgid ""
+"has NOT taken Place, but you would like to all of the Participants to keep "
+"the Hours 'worked'."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:62
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:99
+msgid ""
+"Remember to remove from the Event all the Participants, who did not show up, "
+"so the Event will not appear on their Profiles."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:69
+msgid ""
+"\n"
+"                        You can also clone the Event, if it hasn't taken "
+"Place, but you would like to re-schedule it.<br/>\n"
+"                        All the Participants will be automatically assigned "
+"to the cloned Event.\n"
+"                    "
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:76
+#: events/templates/events/modals/challenge-clone-modal.html:8
+msgid "Clone Event"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:83
+msgid "Post this Event when you are ready, so other Members can see it."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:86
+msgid "Post Event"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:89
+msgid "Dateless."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:90
+msgid ""
+"Unless the Event is intentionally dateless, please, don't forget to provide "
+"its starting Date & Time."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:92
+msgid "You can mark this Event as completed, if it:"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:106
+#: events/templates/events/modals/challenge-close-modal.html:8
+msgid "Close Event"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:113
+msgid ""
+"You have submitted an Application to this Event. You must now wait for the "
+"Organizer to decide whether they want to accept your Offer to help."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:118
+msgid ""
+"You are signed up for this Event. The Organizer is expecting you to be there "
+"and do your best."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:137
+msgid "Event with Roles"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:138
+msgid ""
+"\n"
+"                            Event Author is looking for the differently "
+"skilled Volunteers / Participants.<br/>\n"
+"                            You will be offered to choose, which Role you "
+"want to take, on signing up to the Event / Event.\n"
+"                        "
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:145
+#: events/templates/events/modals/challenge-participation-post-modal.html:45
+msgid "Participate"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:151
+msgid "Application Warning"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:152
+msgid ""
+"Please, be advised, that it's not allowed to apply again to the Event after "
+"withdrawing Application."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:156
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:8
+msgid "Withdraw Application"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:162
+msgid "Your Experience Report was returned to you with the following Note:"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:164
+msgid "Please revise your Experience Report and submit it again."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:167
+msgid "Submit my Experience"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:173
+msgid "I did not participate"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:179
+#: events/templates/events/modals/challenge-rate-modal.html:8
+msgid "Rate the Event"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:189
+msgid ""
+"\n"
+"                            You see this Message, because you participated "
+"in this Event.<br/>\n"
+"                            Let us know, if there's something to complain "
+"about it.\n"
+"                        "
+msgstr ""
+
+#: events/templates/events/fragments/challenge-media-status-breakdown.html:204
+msgid "You must have a User Account to participate in this Event."
+msgstr ""
+
+#: events/templates/events/fragments/challenge-participant-thumbnail.html:64
+#: events/templates/events/modals/challenge-participation-remove-modal.html:25
+#: organizations/templates/organizations/fragments/organization-group-member-thumbnail.html:54
+#: organizations/templates/organizations/modals/organization-group-member-remove-modal.html:26
+#: organizations/templates/organizations/modals/organization-group-remove-modal.html:25
+#: organizations/templates/organizations/modals/organization-staff-member-remove-modal.html:26
+msgid "Remove"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:56
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:64
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:39
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:47
+msgid "by"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:93
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:74
+#: events/templates/events/tabs/info-tab.html:40
+#: organizations/templates/organizations/fragments/organization-thumbnail-hor.html:103
+#: organizations/templates/organizations/tabs/info-tab.html:41
+msgid "Location is not provided"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:165
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:145
+#: events/templates/events/tabs/info-tab.html:210
+msgid "Confirmed"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:169
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:149
+msgid "Waiting for Selfreflection"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:171
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:151
+msgid "Waiting for Acknowledgement"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:179
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:159
+msgid "Confirmed Application(s)"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:183
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:163
+msgid "Pending Application(s)"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:187
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:167
+msgid "Pending Experience Reports"
+msgstr ""
+
+#: events/templates/events/fragments/challenge-thumbnail-hor.html:191
+#: events/templates/events/fragments/challenge-thumbnail-vert.html:171
+msgid "Mark as completed"
+msgstr ""
+
+#: events/templates/events/modals/challenge-clone-modal.html:16
+msgid "Please, enter a Reason for cloning"
+msgstr ""
+
+#: events/templates/events/modals/challenge-clone-modal.html:23
+msgid "Clone"
+msgstr ""
+
+#: events/templates/events/modals/challenge-close-modal.html:16
+#: events/templates/events/modals/challenge-participation-reject-modal.html:19
+#: events/templates/events/modals/challenge-participation-remove-modal.html:18
+#: events/templates/events/modals/challenge-selfreflection-reject-modal.html:19
+#: invites/templates/invites/modals/invite-reject-popup-modal.html:18
+#: invites/templates/invites/modals/invite-to-challenge-popup-modal.html:19
+#: invites/templates/invites/modals/invite-to-organization-group-popup-modal.html:20
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:55
+#: invites/templates/invites/modals/invite-to-organization-staff-popup-modal.html:19
+#: organizations/templates/organizations/modals/organization-group-member-remove-modal.html:19
+#: organizations/templates/organizations/modals/organization-group-remove-modal.html:18
+msgid "Please, enter a Reason"
+msgstr ""
+
+#: events/templates/events/modals/challenge-complete-modal.html:8
+msgid "Complete Event"
+msgstr ""
+
+#: events/templates/events/modals/challenge-complete-modal.html:16
+msgid ""
+"The Event Description will appear on the Resume of the Participants. Please "
+"update the Description if it not longer properly reflects what happened at "
+"the Event."
+msgstr ""
+
+#: events/templates/events/modals/challenge-create-modal.html:16
+msgid "You can update the Description."
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:8
+msgid "Not participated"
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:18
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:16
+msgid "Explain yourself"
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:19
+msgid ""
+"Not participating in the Event could be very inconvenient for the Organizer. "
+"Please, write a Note, explaining why you couldn't make it this Time."
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:23
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:21
+msgid "Warning"
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:24
+msgid ""
+"If you apply to the Event in the future, the Organizer will be able to see "
+"all Events you withdrew from, and the Reason you entered. Seeing fewer "
+"Withdrawals will make you look more trustworthy."
+msgstr ""
+
+#: events/templates/events/modals/challenge-not-participated-modal.html:35
+#: events/templates/events/modals/challenge-rate-modal.html:42
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:32
+#: home/templates/home/contact-us.html:126
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:31
+msgid "Submit"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-post-modal.html:8
+msgid "Participate in Event"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-post-modal.html:17
+msgid ""
+"When you sign up for a Event, the Organizer of the Event can see your "
+"personal Information, including Phone Number, Email, and Birth Date."
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-post-modal.html:20
+msgid "This is important"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-post-modal.html:21
+msgid ""
+"By clicking 'Participate', you agree to take part in this Event and to do "
+"your best."
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-post-modal.html:33
+#: events/templates/events/tabs/to-confirm-tab.html:85
+msgid "Desired Role"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-reject-modal.html:8
+msgid "Reject Application"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-remove-modal.html:8
+msgid "Remove Application"
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:17
+msgid ""
+"Withdrawing from the Event can be very inconvenient for the Organizer. "
+"Please write a Note, explaining why you can't make it this Time."
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:22
+msgid ""
+"If you apply to the Event in the future, the Organizer will be able to see "
+"all Events you withdrew from, and the Reason you entered. Seeing fewer "
+"withdrawals will make you look more trustworthy."
+msgstr ""
+
+#: events/templates/events/modals/challenge-participation-withdraw-modal.html:33
+msgid "Withdraw"
+msgstr ""
+
+#: events/templates/events/modals/challenge-rate-modal.html:19
+msgid ""
+"Thank you for participating! Please take a minute to rate the Event, "
+"Organization and Organizer."
+msgstr ""
+
+#: events/templates/events/modals/challenge-rate-modal.html:22
+msgid "How would you rate the Event?"
+msgstr ""
+
+#: events/templates/events/modals/challenge-rate-modal.html:28
+msgid "How would you rate the Organization?"
+msgstr ""
+
+#: events/templates/events/modals/challenge-rate-modal.html:34
+msgid "How would you rate the Organizer?"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-accept-modal.html:8
+msgid "Accept Experience Report"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-accept-modal.html:19
+msgid "How would you rate the Participant?"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-accept-modal.html:24
+msgid "Please, enter a Feedback"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-reject-modal.html:8
+msgid "Reject Experience Report"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:8
+msgid "Submit Experience Report"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:17
+msgid ""
+"Thank you for participating! Please take a minute to write about your "
+"Experience."
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:20
+msgid "What did you do during this Event?"
+msgstr ""
+
+#: events/templates/events/modals/challenge-selfreflection-submit-modal.html:25
+msgid "What did you learn? What Skills could you practice?"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:43
+#: organizations/templates/organizations/tabs/info-tab.html:44
+msgid "View on Map"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:56
+#: events/templates/events/tabs/info-tab.html:80
+msgid "Venue Local Time"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:63
+#: events/templates/events/tabs/info-tab.html:81
+msgid "Your Local Time"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:70
+#: events/templates/events/tabs/info-tab.html:82
+msgid "UTC Time"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:150
+msgid "Organized by"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:186
+msgid "Roles Breakdown"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:198
+msgid "Required"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:202
+msgid "Applied"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:214
+msgid "Left"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:319
+#: organizations/templates/organizations/tabs/info-tab.html:262
+msgid "Information hidden"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:320
+#: organizations/templates/organizations/tabs/info-tab.html:263
+msgid "Log in to see the Phone # and Email Address of the Contact Person."
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:517
+msgid "Share the Event on social App"
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:522
+msgid ""
+"\n"
+"            You are just one Click away from sharing<br/>\n"
+"            your Event with all Friends.\n"
+"        "
+msgstr ""
+
+#: events/templates/events/tabs/info-tab.html:545
+msgid ""
+"\n"
+"            You can also do it later from the<br/>\n"
+"            Event Details Page.\n"
+"        "
+msgstr ""
+
+#: events/templates/events/tabs/participants-tab.html:11
+msgid "Members, signed up to Event"
+msgstr ""
+
+#: events/templates/events/tabs/participants-tab.html:19
+msgid "There are no Participants, at the moment."
+msgstr ""
+
+#: events/templates/events/tabs/to-acknowledge-tab.html:85
+#: events/templates/events/tabs/to-confirm-tab.html:83
+msgid "Member"
+msgstr ""
+
+#: events/templates/events/tabs/to-acknowledge-tab.html:156
+msgid "There are no Members, waiting for Acknowledgment, at the moment."
+msgstr ""
+
+#: events/templates/events/tabs/to-confirm-tab.html:50
+msgid "applied for the role of"
+msgstr ""
+
+#: events/templates/events/tabs/to-confirm-tab.html:152
+msgid "There are no Members, waiting for Confirmation, at the moment"
+msgstr ""
+
 #: events/views.py:156
 msgid "All Events"
 msgstr ""
@@ -1432,6 +3502,7 @@ msgstr ""
 
 #: home/models.py:66 home/models.py:67 organizations/forms.py:91
 #: organizations/models.py:124
+#: organizations/templates/organizations/tabs/info-tab.html:61
 msgid "Website"
 msgstr ""
 
@@ -1487,20 +3558,305 @@ msgstr ""
 msgid "frequently asked questions"
 msgstr ""
 
-#: invites/choices.py:17
-msgid "New"
+#: home/templates/home/about-us.html:5 home/templates/home/about-us.html:15
+#: templates/fragments/footer.html:30 templates/fragments/navbar.html:188
+msgid "About us"
 msgstr ""
 
-#: invites/choices.py:18
-msgid "Accepted"
+#: home/templates/home/about-us.html:13 home/templates/home/contact-us.html:14
+#: home/templates/home/faq-create.html:14 home/templates/home/faq-edit.html:14
+#: home/templates/home/faq-list.html:13
+#: home/templates/home/our-partners.html:13
+#: home/templates/home/our-team.html:13
+#: home/templates/home/privacy-policy.html:13
+#: home/templates/home/user-agreement.html:13 templates/error-pages/404.html:32
+msgid "Home"
 msgstr ""
 
-#: invites/choices.py:19
-msgid "Rejected"
+#: home/templates/home/about-us.html:27
+msgid "In brief"
 msgstr ""
 
-#: invites/choices.py:20
-msgid "Revoked"
+#: home/templates/home/about-us.html:29
+msgid ""
+"Initially, work on the Project began back in the Year 2012, and the Project "
+"was known as"
+msgstr ""
+
+#: home/templates/home/about-us.html:29
+msgid ""
+"However, due to the lack of Funding, the Work on the Project was suspended "
+"in mid-2013."
+msgstr ""
+
+#: home/templates/home/about-us.html:30
+msgid ""
+"Work on the Project was resumed in the second Half of 2014 by a Team of the "
+"independent Developers and Enthusiasts, and now the Project is experiencing "
+"its second Birth."
+msgstr ""
+
+#: home/templates/home/about-us.html:34
+msgid "Who we are"
+msgstr ""
+
+#: home/templates/home/about-us.html:36
+msgid "We are the Team of independent Developers and Enthusiasts."
+msgstr ""
+
+#: home/templates/home/about-us.html:37
+msgid "Our Motto: Want to be a Human - help others."
+msgstr ""
+
+#: home/templates/home/about-us.html:38
+msgid ""
+"Our Goal: to provide the Promotion and Support of the civil, positively "
+"directed Volunteer Initiatives around the World."
+msgstr ""
+
+#: home/templates/home/about-us.html:39
+msgid "Our Mission"
+msgstr ""
+
+#: home/templates/home/about-us.html:41
+msgid ""
+"With the Help of the Volunteers to achieve concrete Results in solving "
+"various social Problems."
+msgstr ""
+
+#: home/templates/home/about-us.html:42
+msgid "To help young People to disclose Leadership and Volunteer Potential."
+msgstr ""
+
+#: home/templates/home/about-us.html:43
+msgid "To bring to Life best socially significant volunteering Initiatives."
+msgstr ""
+
+#: home/templates/home/about-us.html:44
+msgid ""
+"To create the Conditions for a long-term Partnership of the public "
+"Organizations (Participants of the Project) in carrying out other social "
+"community service Programs involving Volunteers."
+msgstr ""
+
+#: home/templates/home/about-us.html:45
+msgid ""
+"Actively use the Internet to promote the Goals and Objectives of the "
+"volunteering Movement."
+msgstr ""
+
+#: home/templates/home/about-us.html:46
+msgid ""
+"To join Forces of the public Organizations in the Area of solving common "
+"social Problems involving Volunteers."
+msgstr ""
+
+#: home/templates/home/about-us.html:48
+msgid "Check out the"
+msgstr ""
+
+#: home/templates/home/about-us.html:48
+msgid "Team</a> behind SaneSide."
+msgstr ""
+
+#: home/templates/home/about-us.html:52
+msgid "Help us to improve the Website"
+msgstr ""
+
+#: home/templates/home/about-us.html:54
+msgid ""
+"We work hard on our Project, and therefore your Opinion is very important "
+"for us."
+msgstr ""
+
+#: home/templates/home/about-us.html:55
+msgid ""
+"All your Suggestions for improving the Website you can send to the Technical "
+"Support Team from the"
+msgstr ""
+
+#: home/templates/home/about-us.html:55
+msgid "Contact us</a> Page."
+msgstr ""
+
+#: home/templates/home/contact-us.html:30
+msgid "We would love to hear from you"
+msgstr ""
+
+#: home/templates/home/contact-us.html:31
+msgid ""
+"Our Los Angeles based Team are on hand to respond to your Emails everyday"
+msgstr ""
+
+#: home/templates/home/contact-us.html:40
+#: organizations/templates/organizations/tabs/info-tab.html:225
+msgid "Twitter Feed"
+msgstr ""
+
+#: home/templates/home/contact-us.html:60
+msgid "Contact Info"
+msgstr ""
+
+#: home/templates/home/contact-us.html:76
+msgid "Phone"
+msgstr ""
+
+#: home/templates/home/contact-us.html:82
+msgid "Online Support"
+msgstr ""
+
+#: home/templates/home/contact-us.html:88
+msgid "Send us a Message"
+msgstr ""
+
+#: home/templates/home/faq-create.html:6
+msgid "Add FAQ"
+msgstr ""
+
+#: home/templates/home/faq-create.html:16 home/templates/home/faq-edit.html:16
+#: home/templates/home/faq-list.html:5 home/templates/home/faq-list.html:15
+#: templates/fragments/footer.html:16 templates/fragments/navbar.html:209
+msgid "FAQ"
+msgstr ""
+
+#: home/templates/home/faq-create.html:70
+msgid "Add this FAQ"
+msgstr ""
+
+#: home/templates/home/faq-edit.html:6
+msgid "Edit FAQ"
+msgstr ""
+
+#: home/templates/home/index.html:47
+msgid ""
+"\n"
+"                    Have Fun<br/>\n"
+"                    Meet new People<br/>\n"
+"                    Make the World a better Place\n"
+"                "
+msgstr ""
+
+#: home/templates/home/index.html:61
+msgid "Online Platform for volunteering work"
+msgstr ""
+
+#: home/templates/home/index.html:64 home/templates/home/index.html:68
+#: templates/emails/base.html:785 templates/emails/base.html:789
+msgid "Find out more"
+msgstr ""
+
+#: home/templates/home/index.html:86
+msgid "SaneSide is an online Platform for volunteering Work"
+msgstr ""
+
+#: home/templates/home/index.html:88
+msgid ""
+"On SaneSide you can find and post Opportunities to volunteer your Time for a "
+"good Cause."
+msgstr ""
+
+#: home/templates/home/index.html:89
+msgid ""
+"Do you want to meet new People, have fun, and make the World a better Place?"
+msgstr ""
+
+#: home/templates/home/index.html:90
+msgid "Find your first Event on SaneSide."
+msgstr ""
+
+#: home/templates/home/index.html:93
+msgid "Right Now"
+msgstr ""
+
+#: home/templates/home/index.html:103
+msgid "How it works"
+msgstr ""
+
+#: home/templates/home/index.html:108
+msgid "Tell us, where you need the Help or what Activity you offer"
+msgstr ""
+
+#: home/templates/home/index.html:109
+msgid ""
+"After signing up to our Platform, you can start creating your Events. You "
+"will be asked to describe your Event (Description, Time &amp; Place, "
+"Category, etc.), which will help other Members to find your Event with ease."
+msgstr ""
+
+#: home/templates/home/index.html:114
+msgid "All interested Members will apply for the Event"
+msgstr ""
+
+#: home/templates/home/index.html:115
+msgid ""
+"Registered Members will apply for your Event. You can review their Profiles, "
+"Examples of current and/or past Experience, and other Members' Reviews. Your "
+"contact Details are hidden from the unregistered Users."
+msgstr ""
+
+#: home/templates/home/index.html:120
+msgid "Make a Decision"
+msgstr ""
+
+#: home/templates/home/index.html:121
+msgid ""
+"Our Platform allows you to engage with applied Members before accepting "
+"their Participation in your Event. Ask Questions, provide them with "
+"additional Information, and ensure, that they are as excited about your "
+"Event as you are."
+msgstr ""
+
+#: home/templates/home/index.html:126
+msgid "Accomplish your Event"
+msgstr ""
+
+#: home/templates/home/index.html:127
+msgid ""
+"Once you have found the right Participants for the Event, confirm their "
+"Participation in the Event, and get it done. After the Event has taken its "
+"Place, review Experience Reports, and leave Feedback for each Person, "
+"participated in."
+msgstr ""
+
+#: home/templates/home/index.html:140
+msgid "Latest from Twitter"
+msgstr ""
+
+#: home/templates/home/index.html:169
+msgid "Follow"
+msgstr ""
+
+#: home/templates/home/modals/privacy-policy-popup-modal.html:8
+#: home/templates/home/privacy-policy.html:5
+#: home/templates/home/privacy-policy.html:15
+#: templates/fragments/footer.html:14 templates/fragments/navbar.html:207
+msgid "Privacy Policy"
+msgstr ""
+
+#: home/templates/home/modals/user-agreement-popup-modal.html:8
+#: home/templates/home/user-agreement.html:5
+#: home/templates/home/user-agreement.html:15
+#: templates/fragments/footer.html:15 templates/fragments/navbar.html:208
+msgid "User Agreement"
+msgstr ""
+
+#: home/templates/home/our-partners.html:5
+#: home/templates/home/our-partners.html:15 templates/fragments/footer.html:24
+#: templates/fragments/navbar.html:199
+msgid "Our Partners"
+msgstr ""
+
+#: home/templates/home/our-team.html:5 home/templates/home/our-team.html:15
+#: templates/fragments/footer.html:23 templates/fragments/navbar.html:198
+msgid "Our Team"
+msgstr ""
+
+#: home/templates/home/our-team.html:27
+msgid "Check out the Team behind the SaneSide"
+msgstr ""
+
+#: home/templates/home/our-team.html:40
+msgid "There are no Team Members at the moment"
 msgstr ""
 
 #: invites/models.py:68 invites/models.py:69
@@ -1513,10 +3869,6 @@ msgstr ""
 
 #: invites/models.py:83
 msgid "Invite Status"
-msgstr ""
-
-#: invites/models.py:100 invites/models.py:101
-msgid "Invitation Text"
 msgstr ""
 
 #: invites/models.py:104
@@ -1549,6 +3901,53 @@ msgstr ""
 
 #: invites/models.py:148
 msgid "invites"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-reject-popup-modal.html:8
+msgid "Reject Invitation"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-challenge-popup-modal.html:26
+#: invites/templates/invites/modals/invite-to-organization-group-popup-modal.html:27
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:62
+#: invites/templates/invites/modals/invite-to-organization-staff-popup-modal.html:26
+#: organizations/templates/organizations/fragments/organization-groups-adm.html:37
+#: organizations/templates/organizations/tabs/staff-adm-tab.html:32
+msgid "Invite"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-group-popup-modal.html:8
+msgid "Invite to Organization Group"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:21
+msgid "Warning!!!"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:22
+msgid ""
+"\n"
+"                                We noticed, that your Organization doesn't "
+"have Groups.<br/>\n"
+"                                The Invitee will be added to the "
+"Organization as a Staff Member by default.\n"
+"                            "
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:31
+msgid "Notice"
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-popup-modal.html:32
+msgid ""
+"\n"
+"                                Please, choose, where you'd like to add the "
+"Invitee.\n"
+"                            "
+msgstr ""
+
+#: invites/templates/invites/modals/invite-to-organization-staff-popup-modal.html:8
+msgid "Invite to Organization Staff"
 msgstr ""
 
 #: organizations/forms.py:41
@@ -1595,6 +3994,7 @@ msgid "Organization Website"
 msgstr ""
 
 #: organizations/models.py:129
+#: organizations/templates/organizations/tabs/info-tab.html:63
 msgid "Video"
 msgstr ""
 
@@ -1603,6 +4003,7 @@ msgid "Organization Informational Video"
 msgstr ""
 
 #: organizations/models.py:147
+#: organizations/templates/organizations/tabs/info-tab.html:271
 msgid "Subscribers"
 msgstr ""
 
@@ -1638,10 +4039,6 @@ msgstr ""
 msgid "Organization Staff Member"
 msgstr ""
 
-#: organizations/models.py:446
-msgid "Bio"
-msgstr ""
-
 #: organizations/models.py:447
 msgid "Short Bio"
 msgstr ""
@@ -1660,10 +4057,6 @@ msgstr ""
 
 #: organizations/models.py:556
 msgid "Organiztion Group Name"
-msgstr ""
-
-#: organizations/models.py:559
-msgid "Description"
 msgstr ""
 
 #: organizations/models.py:560
@@ -1686,6 +4079,288 @@ msgstr ""
 msgid "organization groups"
 msgstr ""
 
+#: organizations/templates/organizations/fragments/organization-groups-adm.html:35
+#: organizations/templates/organizations/tabs/staff-adm-tab.html:30
+msgid "Find and invite"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-groups-adm.html:78
+#: organizations/templates/organizations/fragments/organization-groups.html:27
+msgid "This Group has no Members at the moment."
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-groups-adm.html:90
+#: organizations/templates/organizations/fragments/organization-groups.html:43
+msgid "This Organization has no Groups at the moment."
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-iframe-complete.html:42
+msgid "Completed Events on SaneSide"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-iframe-complete.html:75
+msgid "This Organization has no closed Events at the moment"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-iframe-complete.html:81
+msgid "Total Number of Hours received for the Organization"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-iframe-upcoming.html:42
+msgid "Upcoming Events on SaneSide"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-iframe-upcoming.html:65
+msgid "This Organization has no open Events at the moment"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:9
+#: organizations/templates/organizations/organization-edit.html:9
+msgid "Edit Organization"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:10
+msgid "Populate Newsletter"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:14
+msgid "Subscribe"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-media-status-breakdown.html:22
+msgid ""
+"\n"
+"                You see this Message, because in the you participated in the "
+"Event(s), organized by this Organization.<br/>\n"
+"                Let us know, if there's something to complain about it.\n"
+"            "
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-staff-members-adm.html:76
+#: organizations/templates/organizations/fragments/organization-staff-members.html:59
+msgid "Avatar"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-staff-members-adm.html:77
+#: organizations/templates/organizations/fragments/organization-staff-members.html:60
+msgid "Info"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-staff-members-adm.html:123
+#: organizations/templates/organizations/fragments/organization-staff-members.html:94
+msgid "This Organization has no Staff Members at the moment."
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-thumbnail-hor.html:28
+msgid "Created by"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-thumbnail-hor.html:85
+msgid "Current Events"
+msgstr ""
+
+#: organizations/templates/organizations/fragments/organization-thumbnail-search.html:37
+msgid "created by"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-group-create-modal.html:8
+msgid "Create Organization Group"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-group-create-modal.html:18
+msgid "Group Name"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-group-create-modal.html:23
+msgid "Group Description"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-group-member-remove-modal.html:8
+msgid "Remove Group Member"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-group-remove-modal.html:8
+msgid "Remove Group"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:8
+msgid "Edit Staff Member"
+msgstr ""
+
+#: organizations/templates/organizations/modals/organization-staff-member-remove-modal.html:8
+msgid "Remove Staff Member"
+msgstr ""
+
+#: organizations/templates/organizations/organization-create.html:32
+#: organizations/templates/organizations/organization-details-base.html:27
+#: organizations/templates/organizations/organization-directory.html:14
+#: organizations/templates/organizations/organization-edit.html:35
+#: organizations/templates/organizations/organization-list.html:15
+#: organizations/templates/organizations/organization-populate-newsletter.html:31
+#: templates/fragments/navbar.html:125
+msgid "Organizations"
+msgstr ""
+
+#: organizations/templates/organizations/organization-create.html:47
+#: organizations/templates/organizations/organization-create.html:458
+msgid ""
+"\n"
+"                    You can create your Organization here. If you have any "
+"questions, don't hesitate to <a href=\"mailto:support@saneside.com\">contact "
+"Support</a>.\n"
+"                "
+msgstr ""
+
+#: organizations/templates/organizations/organization-create.html:54
+#: organizations/templates/organizations/organization-create.html:464
+msgid ""
+"After creating the Organization, you will be redirected to the Details Page, "
+"where you can attach related Images, Documents and Links."
+msgstr ""
+
+#: organizations/templates/organizations/organization-create.html:68
+#: organizations/templates/organizations/organization-edit.html:57
+msgid "Upload Logo"
+msgstr ""
+
+#: organizations/templates/organizations/organization-create.html:436
+msgid "Create this Organization"
+msgstr ""
+
+#: organizations/templates/organizations/organization-details-base.html:50
+msgid "Staff"
+msgstr ""
+
+#: organizations/templates/organizations/organization-details-base.html:59
+msgid "Groups"
+msgstr ""
+
+#: organizations/templates/organizations/organization-directory.html:6
+msgid "Organizations Directory"
+msgstr ""
+
+#: organizations/templates/organizations/organization-directory.html:16
+#: organizations/templates/organizations/organization-list.html:30
+msgid "Directory"
+msgstr ""
+
+#: organizations/templates/organizations/organization-list.html:7
+msgid "Organizations List"
+msgstr ""
+
+#: organizations/templates/organizations/organization-populate-newsletter.html:8
+msgid "Create and populate Newsletter"
+msgstr ""
+
+#: organizations/templates/organizations/organization-populate-newsletter.html:35
+msgid "Newsletter"
+msgstr ""
+
+#: organizations/templates/organizations/organization-populate-newsletter.html:77
+msgid "Populate this Newsletter"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/challenges-completed-tab.html:9
+msgid "Organization's past Events"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/challenges-completed-tab.html:19
+msgid "This Organization has no past Events at the moment."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/challenges-upcoming-tab.html:9
+msgid "Organization's upcoming Events"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/challenges-upcoming-tab.html:19
+msgid "This Organization has no upcoming Events at the moment."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/groups-adm-tab.html:10
+#: organizations/templates/organizations/tabs/groups-tab.html:9
+msgid "Organization Groups"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/groups-adm-tab.html:12
+#: organizations/templates/organizations/tabs/groups-adm-tab.html:16
+msgid "Group"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/groups-adm-tab.html:21
+msgid ""
+"Here you can create the Organization Groups and invite SaneSide Members to "
+"them."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/groups-adm-tab.html:26
+msgid ""
+"\n"
+"            <strong>!!! IMPORTANT !!!</strong><br/>\n"
+"            If the Organization <strong>is hidden</strong> from the Public, "
+"only the Staff and Groups' Members will be able to see the Organization "
+"Activity, so this helps to keep the Privacy under Control.\n"
+"        "
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:99
+msgid "Hours received"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:291
+msgid "Widgets"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:294
+msgid ""
+"Copy and paste this Block of Code to your Website to show a List of all "
+"upcoming Events of your Organization."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:299
+msgid ""
+"Copy and paste this Block of Code to your Website to show a List of all past "
+"Events of your Organization and their Participants."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:464
+msgid "Share the Organization on social App"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:469
+msgid ""
+"\n"
+"            You are just one Click away from sharing<br/>\n"
+"            your Organization with all Friends.\n"
+"        "
+msgstr ""
+
+#: organizations/templates/organizations/tabs/info-tab.html:492
+msgid ""
+"\n"
+"            You can also do it later from the<br/>\n"
+"            Organization Details Page.\n"
+"        "
+msgstr ""
+
+#: organizations/templates/organizations/tabs/staff-adm-tab.html:9
+#: organizations/templates/organizations/tabs/staff-tab.html:9
+msgid "Organization's Staff Members"
+msgstr ""
+
+#: organizations/templates/organizations/tabs/staff-adm-tab.html:13
+msgid "Staff Members can create Events on behalf of this Organization."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/staff-adm-tab.html:18
+msgid ""
+"You can use the Search Form below to find and invite SaneSide Members to "
+"become the Staff Members of the Organization."
+msgstr ""
+
+#: organizations/templates/organizations/tabs/staff-tab.html:13
+msgid "These Members can create Events on behalf of this Organization."
+msgstr ""
+
 #: settings/base.py:114
 msgid "English"
 msgstr ""
@@ -1696,4 +4371,162 @@ msgstr ""
 
 #: settings/base.py:116
 msgid "Spanish"
+msgstr ""
+
+#: templates/base-error.html:8
+msgid "We've got some Trouble"
+msgstr ""
+
+#: templates/base-error.html:24
+msgid "Technical Contact:"
+msgstr ""
+
+#: templates/emails/base.html:18
+msgid "Online Platform for volunteering Work"
+msgstr ""
+
+#: templates/emails/base.html:769 templates/emails/base.html:890
+msgid "SaneSide"
+msgstr ""
+
+#: templates/emails/base.html:773
+msgid "ONLINE PLATFORM FOR VOLUNTEERING WORK"
+msgstr ""
+
+#: templates/emails/base.html:819
+msgid "Want to be a Human - help others"
+msgstr ""
+
+#: templates/emails/base.html:844
+msgid "Thank you, SaneSide Team."
+msgstr ""
+
+#: templates/emails/base.html:897
+msgid ""
+"\n"
+"                                    This email was sent to you, because you "
+"signed up on <a href=\"https://www.saneside.com/\">SaneSide</a>.<br/>\n"
+"                                    Please add us to your contacts to ensure "
+"the newsletters land in your inbox.\n"
+"                                "
+msgstr ""
+
+#: templates/emails/base.html:930
+msgid "Unsubscribe"
+msgstr ""
+
+#: templates/error-pages/400.html:5
+msgid "400 - Bad Request"
+msgstr ""
+
+#: templates/error-pages/400.html:9
+msgid "Bad Request"
+msgstr ""
+
+#: templates/error-pages/400.html:10
+msgid "Error 400"
+msgstr ""
+
+#: templates/error-pages/400.html:12
+msgid ""
+"The Server cannot process the Request due to something, that is perceived to "
+"be a Client Error."
+msgstr ""
+
+#: templates/error-pages/403.html:5
+msgid "403 - Access Denied"
+msgstr ""
+
+#: templates/error-pages/403.html:9
+msgid "Access Denied"
+msgstr ""
+
+#: templates/error-pages/403.html:10
+msgid "Error 403"
+msgstr ""
+
+#: templates/error-pages/403.html:12
+msgid "The requested Resource requires an Authentication."
+msgstr ""
+
+#: templates/error-pages/404.html:5
+msgid "404 - Resource not found"
+msgstr ""
+
+#: templates/error-pages/404.html:9
+msgid "Resource not found"
+msgstr ""
+
+#: templates/error-pages/404.html:10
+msgid "Error 404"
+msgstr ""
+
+#: templates/error-pages/404.html:12
+msgid ""
+"The requested Resource could not be found, but may be available again in the "
+"Future."
+msgstr ""
+
+#: templates/error-pages/404.html:33
+msgid "About"
+msgstr ""
+
+#: templates/error-pages/404.html:35
+msgid "Contact"
+msgstr ""
+
+#: templates/error-pages/500.html:5
+msgid "500 - Web-service currently unavailable"
+msgstr ""
+
+#: templates/error-pages/500.html:9
+msgid "Web-service currently unavailable"
+msgstr ""
+
+#: templates/error-pages/500.html:10
+msgid "Error 500"
+msgstr ""
+
+#: templates/error-pages/500.html:12
+msgid "An unexpected Condition was encountered."
+msgstr ""
+
+#: templates/error-pages/500.html:13
+msgid "Our service team has been dispatched to bring it back online."
+msgstr ""
+
+#: templates/fragments/footer.html:12
+msgid "Terms &amp; Conditions"
+msgstr ""
+
+#: templates/fragments/footer.html:20
+msgid "Media"
+msgstr ""
+
+#: templates/fragments/footer.html:28
+msgid "Feedback"
+msgstr ""
+
+#: templates/fragments/navbar.html:57
+msgid "Log out"
+msgstr ""
+
+#: templates/fragments/navbar.html:102 templates/fragments/navbar.html:114
+msgid "Near you"
+msgstr ""
+
+#: templates/fragments/navbar.html:104
+msgid "Might know"
+msgstr ""
+
+#: templates/fragments/navbar.html:107
+msgid "Online"
+msgstr ""
+
+#: templates/fragments/navbar.html:117
+msgid "Featured"
+msgstr ""
+
+#: templates/fragments/navbar.html:180
+msgid "Search"
 msgstr ""
