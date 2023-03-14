@@ -7,6 +7,20 @@ ENV := $(ENVDIR)/bin
 ACTIVATE := . $(ENV)/activate
 
 # =============================================================================
+# === Set-up Targets.
+# =============================================================================
+##@ Set-up
+setup: ## Initiate Virtual Environment.
+	$(info Initiating Virtual Environment)
+	@virtualenv .env
+.PHONY: setup
+
+env: setup ## Activate Virtual Environment.
+	$(info Activating Virtual Environment)
+	$(ACTIVATE)
+.PHONY: env
+
+# =============================================================================
 # === Development Targets.
 # =============================================================================
 ##@ Dependencies
@@ -14,15 +28,11 @@ deps:  ## Check Dependencies.
 	$(info Checking and getting Dependencies)
 .PHONY: deps
 
-install: requirements.txt ## Install Requirements.
+install: env requirements.txt ## Install Requirements.
 	$(info Installing Requirements)
 	$(ENV)/pip install -U pip
 	$(ENV)/pip install -Ur requirements.txt
 .PHONY: install
-
-env:
-	$(ACTIVATE)
-.PHONY: env
 
 lint: env ## Run Linter.
 	$(info Running Linter)
