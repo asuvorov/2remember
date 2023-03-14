@@ -1,3 +1,8 @@
+SHELL := /bin/bash
+
+install:
+	@pip install -U pip && pip install -r requirements.txt
+
 env:
 	@source .env/bin/activate
 
