@@ -1,0 +1,4 @@
+SELECT 'CREATE DATABASE epa'
+WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'epa')\gexec
+
+CREATE USER epa WITH PASSWORD 'epa' CREATEDB;
