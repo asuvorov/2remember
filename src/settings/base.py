@@ -1,4 +1,11 @@
-"""Base Settings."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import os
 import os.path
@@ -215,7 +222,7 @@ WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = (
     # --- Django Apps
-    "grappelli",
+    # "grappelli",
 
     "django.contrib.admin",
     "django.contrib.auth",
@@ -224,23 +231,23 @@ INSTALLED_APPS = (
     "django.contrib.sitemaps",
     "django.contrib.sites",
     "django.contrib.messages",
-    "whitenoise.runserver_nostatic",
+    # "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
     "ddcore",
 
-    "adminsortable2",
-    "bootstrap3_datetime",
-    "djangosecure",
-    "django_countries",
-    "jquery",
+    # "adminsortable2",
+    # "bootstrap3_datetime",
+    # "djangosecure",
+    # "django_countries",
+    # "jquery",
     "djangoformsetjs",
     # "papertrail",
     "rangefilter",
-    "sslserver",
-    "storages",
-    "timezone_field",
+    # "sslserver",
+    # "storages",
+    # "timezone_field",
     "twitter_tag",
     "url_tools",
 
@@ -253,7 +260,7 @@ INSTALLED_APPS = (
     "home",
     "invites",
     "organizations",
-    "tests",
+    # "tests",
 )
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
@@ -265,7 +272,10 @@ SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
 CACHES = {
     "default": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
-    }
+    },
+    "some-other-cache": {
+        "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
+    },
 }
 
 
@@ -349,10 +359,10 @@ AUTHENTICATION_BACKENDS = (
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
 
-EVENT_NAME_RESERVED_WORDS = [
+EVENT_TITLE_RESERVED_WORDS = [
     "near-you", "new", "dateless", "featured", "categories",
 ]
-ORGANIZATION_NAME_RESERVED_WORDS = [
+ORGANIZATION_TITLE_RESERVED_WORDS = [
     "directory", "create",
 ]
 
@@ -370,212 +380,212 @@ STATICFILES_FINDERS += (
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
 # BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
-    "awesome-bootstrap-checkbox",
-    "bootpag",
-    "bootstrap#3.3.7",  # 5.2.3
-    "bootstrap-maxlength",
-    "bootstrap-rating",
-    "bootstrap-select",
-    "bootstrap-tabcollapse",
-    "bootstrap-tagsinput",
+    # "awesome-bootstrap-checkbox",
+    # "bootpag",
+    "bootstrap#5.3.3",
+    # "bootstrap-maxlength",
+    # "bootstrap-rating",
+    # "bootstrap-select",
+    # "bootstrap-tabcollapse",
+    # "bootstrap-tagsinput",
     # "bx-slider.js",
-    "equalheight",
-    "fontawesome",
-    "ismobilejs#",
-    "isMobile",
-    "jquery#3.6.3",
-    "jquery.inputmask",
-    "jquery-colorbox",
-    "jquery-file-upload",
-    "jquery-popup-overlay",
-    "jquery-scrolltotop",
-    "jquery-shorten-js",
-    "jquery-sticky",
-    # "jquery-ui",
-    "jt.timepicker",
-    # "less.js",
+    # "equalheight",
+    # "fontawesome",
+    # "ismobilejs#",
+    # "isMobile",
+    "jquery#3.7.1",
+    # "jquery.inputmask",
+    # "jquery-colorbox",
+    "jquery-file-upload#10.32.0",
+    # "jquery-popup-overlay",
+    # "jquery-scrolltotop",
+    # "jquery-shorten-js",
+    # "jquery-sticky",
+    "jquery-ui#1.12.1",
+    # "jt.timepicker",
+    "less.js#4.2.0",
     # "modernizr",
-    "moment",
-    "noty",
-    "readmore-js",
-    "seiyria-bootstrap-slider",
-    "smooth-scroll.js",
-    "tablesorter",
+    # "moment",
+    # "noty",
+    # "readmore-js",
+    # "seiyria-bootstrap-slider",
+    # "smooth-scroll.js",
+    # "tablesorter",
     # "underscore",
-    "zabuto_calendar",
+    # "zabuto_calendar",
 )
 
 
 ###############################################################################
 ### DJANGO CKEDITOR                                                         ###
 ###############################################################################
-INSTALLED_APPS += (
-    "ckeditor",
-    "ckeditor_uploader",
-)
+# INSTALLED_APPS += (
+#     "ckeditor",
+#     "ckeditor_uploader",
+# )
 
-AWS_QUERYSTRING_AUTH = False
+# AWS_QUERYSTRING_AUTH = False
 
-CKEDITOR_BROWSE_SHOW_DIRS = True
-CKEDITOR_IMAGE_BACKEND = "pillow"
-CKEDITOR_RESTRICT_BY_DATE = True
-CKEDITOR_RESTRICT_BY_USER = False
-CKEDITOR_UPLOAD_PATH = "uploads/"
-CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
+# CKEDITOR_BROWSE_SHOW_DIRS = True
+# CKEDITOR_IMAGE_BACKEND = "pillow"
+# CKEDITOR_RESTRICT_BY_DATE = True
+# CKEDITOR_RESTRICT_BY_USER = False
+# CKEDITOR_UPLOAD_PATH = "uploads/"
+# CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 
-CKEDITOR_CONFIGS = {
-    "default": {
-        "toolbar":      "full",
-        "height":       300,
-        "width":        300,
-    },
-    "awesome_ckeditor": {
-        "toolbar_CustomToolbarConfig": [
-            {
-                "name":     "document",
-                "items": [
-                    "Source", "-",
-                    "Save", "NewPage", "Preview", "Print", "-",
-                    "Templates",
-                ]
-            },
-            {
-                "name":     "clipboard",
-                "items": [
-                    "Cut", "Copy", "Paste", "PasteText", "PasteFromWord", "-",
-                    "Undo", "Redo",
-                ]
-            },
-            {
-                "name":     "editing",
-                "items": [
-                    "Find", "Replace", "-",
-                    "SelectAll",
-                ]
-            },
-            {
-                "name":     "forms",
-                "items": [
-                    "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button", "ImageButton", "HiddenField",
-                ]
-            },
-            "/",
-            {
-                "name":     "basicstyles",
-                "items": [
-                    "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-",
-                    "RemoveFormat",
-                ]
-            },
-            {
-                "name":     "paragraph",
-                "items": [
-                    "NumberedList", "BulletedList", "-",
-                    "Outdent", "Indent", "-",
-                    "Blockquote", "CreateDiv", "-",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-",
-                    "BidiLtr", "BidiRtl", "Language",
-                ]
-            },
-            {
-                "name":     "links",
-                "items": [
-                    "Link", "Unlink", "Anchor",
-                ]
-            },
-            {
-                "name":     "insert",
-                "items": [
-                    "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar", "PageBreak", "Iframe",
-                ]
-            },
-            "/",
-            {
-                "name":     "styles",
-                "items": [
-                    "Styles", "Format", "Font", "FontSize",
-                ]
-            },
-            {
-                "name":     "colors",
-                "items": [
-                    "TextColor", "BGColor",
-                ]
-            },
-            {
-                "name":     "tools",
-                "items": [
-                    "Maximize", "ShowBlocks",
-                ]
-            },
-            {
-                "name":     "about",
-                "items": [
-                    "About",
-                ]
-            },
-        ],
-        "toolbar_CustomToolbarSmallConfig": [
-            {
-                "name":     "document",
-                "items": [
-                    "Source",
-                ]
-            },
-            {
-                "name":     "clipboard",
-                "items": [
-                    "Undo", "Redo",
-                ]
-            },
-            {
-                "name":     "tools",
-                "items": [
-                    "Maximize", "ShowBlocks", "About",
-                ]
-            },
-            "/",
-            {
-                "name":     "basicstyles",
-                "items": [
-                    "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-",
-                    "Outdent", "Indent", "-",
-                ]
-            },
-            {
-                "name":     "paragraph",
-                "items": [
-                    "NumberedList", "BulletedList", "-",
-                    "Blockquote", "CreateDiv", "-",
-                    "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock",
-                ]
-            },
-            {
-                "name":     "insert",
-                "items": [
-                    "Link", "Image", "Table", "HorizontalRule", "Smiley", "SpecialChar",
-                ]
-            },
-            "/",
-            {
-                "name":     "styles",
-                "items": [
-                    "Styles", "Format", "Font", "FontSize", "TextColor", "BGColor",
-                ]
-            },
-        ],
-        "toolbar":      "CustomToolbarSmallConfig",
-        # "skin":         "moono",
-        "height":       200,
-        "width":        "100%",
-        "tabSpaces":    4,
-    },
-}
+# CKEDITOR_CONFIGS = {
+#     "default": {
+#         "toolbar":      "full",
+#         "height":       300,
+#         "width":        300,
+#     },
+#     "awesome_ckeditor": {
+#         "toolbar_CustomToolbarConfig": [
+#             {
+#                 "name":     "document",
+#                 "items": [
+#                     "Source", "-",
+#                     "Save", "NewPage", "Preview", "Print", "-",
+#                     "Templates",
+#                 ]
+#             },
+#             {
+#                 "name":     "clipboard",
+#                 "items": [
+#                     "Cut", "Copy", "Paste", "PasteText", "PasteFromWord", "-",
+#                     "Undo", "Redo",
+#                 ]
+#             },
+#             {
+#                 "name":     "editing",
+#                 "items": [
+#                     "Find", "Replace", "-",
+#                     "SelectAll",
+#                 ]
+#             },
+#             {
+#                 "name":     "forms",
+#                 "items": [
+#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button", "ImageButton", "HiddenField",
+#                 ]
+#             },
+#             "/",
+#             {
+#                 "name":     "basicstyles",
+#                 "items": [
+#                     "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-",
+#                     "RemoveFormat",
+#                 ]
+#             },
+#             {
+#                 "name":     "paragraph",
+#                 "items": [
+#                     "NumberedList", "BulletedList", "-",
+#                     "Outdent", "Indent", "-",
+#                     "Blockquote", "CreateDiv", "-",
+#                     "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock", "-",
+#                     "BidiLtr", "BidiRtl", "Language",
+#                 ]
+#             },
+#             {
+#                 "name":     "links",
+#                 "items": [
+#                     "Link", "Unlink", "Anchor",
+#                 ]
+#             },
+#             {
+#                 "name":     "insert",
+#                 "items": [
+#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar", "PageBreak", "Iframe",
+#                 ]
+#             },
+#             "/",
+#             {
+#                 "name":     "styles",
+#                 "items": [
+#                     "Styles", "Format", "Font", "FontSize",
+#                 ]
+#             },
+#             {
+#                 "name":     "colors",
+#                 "items": [
+#                     "TextColor", "BGColor",
+#                 ]
+#             },
+#             {
+#                 "name":     "tools",
+#                 "items": [
+#                     "Maximize", "ShowBlocks",
+#                 ]
+#             },
+#             {
+#                 "name":     "about",
+#                 "items": [
+#                     "About",
+#                 ]
+#             },
+#         ],
+#         "toolbar_CustomToolbarSmallConfig": [
+#             {
+#                 "name":     "document",
+#                 "items": [
+#                     "Source",
+#                 ]
+#             },
+#             {
+#                 "name":     "clipboard",
+#                 "items": [
+#                     "Undo", "Redo",
+#                 ]
+#             },
+#             {
+#                 "name":     "tools",
+#                 "items": [
+#                     "Maximize", "ShowBlocks", "About",
+#                 ]
+#             },
+#             "/",
+#             {
+#                 "name":     "basicstyles",
+#                 "items": [
+#                     "Bold", "Italic", "Underline", "Strike", "Subscript", "Superscript", "-",
+#                     "Outdent", "Indent", "-",
+#                 ]
+#             },
+#             {
+#                 "name":     "paragraph",
+#                 "items": [
+#                     "NumberedList", "BulletedList", "-",
+#                     "Blockquote", "CreateDiv", "-",
+#                     "JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock",
+#                 ]
+#             },
+#             {
+#                 "name":     "insert",
+#                 "items": [
+#                     "Link", "Image", "Table", "HorizontalRule", "Smiley", "SpecialChar",
+#                 ]
+#             },
+#             "/",
+#             {
+#                 "name":     "styles",
+#                 "items": [
+#                     "Styles", "Format", "Font", "FontSize", "TextColor", "BGColor",
+#                 ]
+#             },
+#         ],
+#         "toolbar":      "CustomToolbarSmallConfig",
+#         # "skin":         "moono",
+#         "height":       200,
+#         "width":        "100%",
+#         "tabSpaces":    4,
+#     },
+# }
 
-IMAGE_QUALITY = 60
-THUMBNAIL_SIZE = (300, 300)
+# IMAGE_QUALITY = 60
+# THUMBNAIL_SIZE = (300, 300)
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
+# X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
 ###############################################################################
@@ -589,9 +599,12 @@ STATICFILES_FINDERS += (
 )
 
 COMPRESS_PRECOMPILERS = (
+    ("text/coffeescript", "coffee --compile --stdio"),
     ("text/less", "lessc {infile} {outfile}"),
+    ("text/x-sass", "sass {infile} {outfile}"),
+    ("text/x-scss", "sass --scss {infile} {outfile}"),
+    ("text/stylus", "stylus < {infile} > {outfile}"),
 )
-
 COMPRESS_CSS_FILTERS = [
     "compressor.filters.css_default.CssAbsoluteFilter",
     "compressor.filters.cssmin.CSSMinFilter",
@@ -601,7 +614,6 @@ COMPRESS_JS_FILTERS = [
     "compressor.filters.jsmin.JSMinFilter",
     "compressor.filters.jsmin.SlimItFilter",
 ]
-
 COMPRESS_ENABLED = True
 
 
@@ -619,9 +631,18 @@ COMPRESS_ENABLED = True
 
 
 ###############################################################################
-### DJANGO GEOIP                                                            ###
+### DJANGO GEOIP EXTRAS                                                     ###
 ###############################################################################
+# INSTALLED_APPS += (
+#     "geoip2_extras",
+# )
+MIDDLEWARE += (
+    "geoip2_extras.middleware.GeoIP2Middleware",
+)
 GEOIP_PATH = os.path.join(PROJECT_PATH, "geoip/")
+GEOIP2_EXTRAS_CACHE_NAME = "some-other-cache"
+GEOIP2_EXTRAS_CACHE_TIMEOUT = 3600
+GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 
 
 ###############################################################################
@@ -639,19 +660,19 @@ GRAPPELLI_SWITCH_USER = True
 ###############################################################################
 ### DJANGO HAYSTACK                                                         ###
 ###############################################################################
-INSTALLED_APPS += (
-    "haystack",
-)
+# INSTALLED_APPS += (
+#     "haystack",
+# )
 
-HAYSTACK_CONNECTIONS = {
-    "default": {
-        "ENGINE":       "haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine",
-        "URL":          "http://127.0.0.1:9200/",
-        "INDEX_NAME":   "haystack",
-    },
-}
-HAYSTACK_DEFAULT_OPERATOR = "AND"
-HAYSTACK_SEARCH_RESULTS_PER_PAGE = 50
+# HAYSTACK_CONNECTIONS = {
+#     "default": {
+#         "ENGINE":       "haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine",
+#         "URL":          "http://127.0.0.1:9200/",
+#         "INDEX_NAME":   "haystack",
+#     },
+# }
+# HAYSTACK_DEFAULT_OPERATOR = "AND"
+# HAYSTACK_SEARCH_RESULTS_PER_PAGE = 50
 
 
 ###############################################################################
@@ -671,19 +692,19 @@ IMAGEKIT_SPEC_CACHEFILE_NAMER = "imagekit.cachefiles.namers.source_name_as_path"
 ###############################################################################
 ### DJANGO MPTT                                                             ###
 ###############################################################################
-INSTALLED_APPS += (
-    "mptt",
-)
+# INSTALLED_APPS += (
+#     "mptt",
+# )
 
-MPTT_ADMIN_LEVEL_INDENT = 20
+# MPTT_ADMIN_LEVEL_INDENT = 20
 
 
 ###############################################################################
 ### DJANGO MPTT ADMIN                                                       ###
 ###############################################################################
-INSTALLED_APPS += (
-    "django_mptt_admin",
-)
+# INSTALLED_APPS += (
+#     "django_mptt_admin",
+# )
 
 
 ###############################################################################
@@ -723,11 +744,11 @@ PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit 
 ###############################################################################
 ### DJANGO PHONE NUMBER FIELD                                               ###
 ###############################################################################
-INSTALLED_APPS += (
-    "phonenumber_field",
-)
+# INSTALLED_APPS += (
+#     "phonenumber_field",
+# )
 
-PHONENUMBER_DB_FORMAT = "INTERNATIONAL"
+# PHONENUMBER_DB_FORMAT = "INTERNATIONAL"
 
 
 ###############################################################################
@@ -745,7 +766,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": (
         "rest_framework.renderers.BrowsableAPIRenderer",
         "rest_framework.renderers.JSONRenderer",
-        "rest_framework_jsonp.renderers.JSONPRenderer",
+        # "rest_framework_jsonp.renderers.JSONPRenderer",
     ),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.TokenAuthentication",
@@ -764,75 +785,75 @@ REST_FRAMEWORK = {
 ###############################################################################
 ### DJANGO REST FRAMEWORK SWAGGER                                           ###
 ###############################################################################
-INSTALLED_APPS += (
-    "rest_framework_swagger",
-)
-SWAGGER_SETTINGS = {
-    "exclude_namespaces":           [],
-    "api_version":                  "1.0",
-    "api_path":                     "/",
-    "enabled_methods": [
-        "get",
-        "post",
-        "put",
-        "patch",
-        "delete",
-    ],
-    "api_key":                      "",
-    "is_authenticated":             True,
-    "is_superuser":                 False,
-    "unauthenticated_user":         "django.contrib.auth.models.AnonymousUser",
-    "permission_denied_handler":    "app.views.permission_denied_handler",
-    "resource_access_handler":      "app.views.resource_access_handler",
-    #"base_path":                    "helloreverb.com/docs",
-    "info": {
-        "contact":                  "artem.suvorov@gmail.com",
-        "description":              "This is a sample Server Petstore Server. You can find out more about Swagger at <a href=\"http://swagger.wordnik.com\">http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger. For this Sample, you can use the API Key \"special-key\" to test the authorization Filters",
-        "license":                  "Apache 2.0",
-        "licenseUrl":
-            "http://www.apache.org/licenses/LICENSE-2.0.html",
-        "termsOfServiceUrl":        "http://helloreverb.com/terms/",
-        "title":                    "SaneSide - Swagger API Docs",
-    },
-    "doc_expansion":                "list",
-}
+# INSTALLED_APPS += (
+#     "rest_framework_swagger",
+# )
+# SWAGGER_SETTINGS = {
+#     "exclude_namespaces":           [],
+#     "api_version":                  "1.0",
+#     "api_path":                     "/",
+#     "enabled_methods": [
+#         "get",
+#         "post",
+#         "put",
+#         "patch",
+#         "delete",
+#     ],
+#     "api_key":                      "",
+#     "is_authenticated":             True,
+#     "is_superuser":                 False,
+#     "unauthenticated_user":         "django.contrib.auth.models.AnonymousUser",
+#     "permission_denied_handler":    "app.views.permission_denied_handler",
+#     "resource_access_handler":      "app.views.resource_access_handler",
+#     #"base_path":                    "helloreverb.com/docs",
+#     "info": {
+#         "contact":                  "artem.suvorov@gmail.com",
+#         "description":              "This is a sample Server Petstore Server. You can find out more about Swagger at <a href=\"http://swagger.wordnik.com\">http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger. For this Sample, you can use the API Key \"special-key\" to test the authorization Filters",
+#         "license":                  "Apache 2.0",
+#         "licenseUrl":
+#             "http://www.apache.org/licenses/LICENSE-2.0.html",
+#         "termsOfServiceUrl":        "http://helloreverb.com/terms/",
+#         "title":                    "SaneSide - Swagger API Docs",
+#     },
+#     "doc_expansion":                "list",
+# }
 
 
 ###############################################################################
 ### DJANGO ROSETTA                                                          ###
 ###############################################################################
-INSTALLED_APPS += (
-    "rosetta",
-)
+# INSTALLED_APPS += (
+#     "rosetta",
+# )
 
-ROSETTA_MESSAGES_PER_PAGE = 20
-ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+# ROSETTA_MESSAGES_PER_PAGE = 20
+# ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
-YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
+# YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
 
-AZURE_CLIENT_ID = None
-AZURE_CLIENT_SECRET = None
+# AZURE_CLIENT_ID = None
+# AZURE_CLIENT_SECRET = None
 
-ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = "en"
-ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = "English"
+# ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = "en"
+# ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = "English"
 
-ROSETTA_WSGI_AUTO_RELOAD = False
-ROSETTA_UWSGI_AUTO_RELOAD = False
+# ROSETTA_WSGI_AUTO_RELOAD = False
+# ROSETTA_UWSGI_AUTO_RELOAD = False
 
-ROSETTA_EXCLUDED_APPLICATIONS = ()
-ROSETTA_EXCLUDED_PATHS = ()
+# ROSETTA_EXCLUDED_APPLICATIONS = ()
+# ROSETTA_EXCLUDED_PATHS = ()
 
-ROSETTA_REQUIRES_AUTH = True
+# ROSETTA_REQUIRES_AUTH = True
 
-ROSETTA_POFILE_WRAP_WIDTH = 0
-ROSETTA_POFILENAMES = ("django.po", "djangojs.po")
+# ROSETTA_POFILE_WRAP_WIDTH = 0
+# ROSETTA_POFILENAMES = ("django.po", "djangojs.po")
 
-ROSETTA_STORAGE_CLASS = "rosetta.storage.CacheRosettaStorage"
-ROSETTA_ACCESS_CONTROL_FUNCTION = None
+# ROSETTA_STORAGE_CLASS = "rosetta.storage.CacheRosettaStorage"
+# ROSETTA_ACCESS_CONTROL_FUNCTION = None
 
-ROSETTA_LANGUAGE_GROUPS = False
+# ROSETTA_LANGUAGE_GROUPS = False
 
-ROSETTA_AUTO_COMPILE = True
+# ROSETTA_AUTO_COMPILE = True
 
 
 ###############################################################################
@@ -846,82 +867,82 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### DJANGO SIMPLE CAPTCHA                                                   ###
 ###############################################################################
-INSTALLED_APPS += (
-    "captcha",
-)
+# INSTALLED_APPS += (
+#     "captcha",
+# )
 
-CAPTCHA_FONT_SIZE = 22
-CAPTCHA_BACKGROUND_COLOR = "#ffffff"
-CAPTCHA_FOREGROUND_COLOR = "#001100"
-CAPTCHA_PUNCTUATION = '''_"',.;:-'''
-CAPTCHA_TIMEOUT = 5  # Minutes
-CAPTCHA_LENGTH = 4  # Chars
-CAPTCHA_IMAGE_BEFORE_FIELD = True
-CAPTCHA_DICTIONARY_MIN_LENGTH = 0
-CAPTCHA_DICTIONARY_MAX_LENGTH = 99
-CAPTCHA_TEST_MODE = False
+# CAPTCHA_FONT_SIZE = 22
+# CAPTCHA_BACKGROUND_COLOR = "#ffffff"
+# CAPTCHA_FOREGROUND_COLOR = "#001100"
+# CAPTCHA_PUNCTUATION = '''_"',.;:-'''
+# CAPTCHA_TIMEOUT = 5  # Minutes
+# CAPTCHA_LENGTH = 4  # Chars
+# CAPTCHA_IMAGE_BEFORE_FIELD = True
+# CAPTCHA_DICTIONARY_MIN_LENGTH = 0
+# CAPTCHA_DICTIONARY_MAX_LENGTH = 99
+# CAPTCHA_TEST_MODE = False
 
 
 ###############################################################################
 ### PYTHON/DJANGO SOCIAL AUTH                                               ###
 ###############################################################################
-INSTALLED_APPS += (
-    "social_django",
-)
+# INSTALLED_APPS += (
+#     "social_django",
+# )
 
-AUTHENTICATION_BACKENDS += (
-    "social_core.backends.facebook.FacebookAppOAuth2",
-    "social_core.backends.facebook.FacebookOAuth2",
-    "social_core.backends.twitter.TwitterOAuth",
-    "social_core.backends.linkedin.LinkedinOAuth2",
-)
+# AUTHENTICATION_BACKENDS += (
+#     "social_core.backends.facebook.FacebookAppOAuth2",
+#     "social_core.backends.facebook.FacebookOAuth2",
+#     "social_core.backends.twitter.TwitterOAuth",
+#     "social_core.backends.linkedin.LinkedinOAuth2",
+# )
 
-SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
-SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
+# SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
+# SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
 
-LOGIN_URL = "/accounts/login/"
-LOGIN_REDIRECT_URL = "/accounts/my-profile/"
-#LOGIN_ERROR_URL    = "/login-error/"
+# LOGIN_URL = "/accounts/login/"
+# LOGIN_REDIRECT_URL = "/accounts/my-profile/"
+# #LOGIN_ERROR_URL    = "/login-error/"
 
-#SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
-#SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
-#SOCIAL_AUTH_LOGIN_URL = "/login-url/"
-#SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
-#SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
-#SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
-#SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
+# #SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
+# #SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
+# #SOCIAL_AUTH_LOGIN_URL = "/login-url/"
+# #SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
+# #SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
+# #SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
+# #SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
 
-#SOCIAL_AUTH_USER_MODEL = "foo.bar.User"
+# #SOCIAL_AUTH_USER_MODEL = "foo.bar.User"
 
-SOCIAL_AUTH_UUID_LENGTH = 16
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
-SOCIAL_AUTH_SLUGIFY_USERNAMES = False
-SOCIAL_AUTH_CLEAN_USERNAMES = True
+# SOCIAL_AUTH_UUID_LENGTH = 16
+# SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+# SOCIAL_AUTH_SLUGIFY_USERNAMES = False
+# SOCIAL_AUTH_CLEAN_USERNAMES = True
 
-SOCIAL_AUTH_COMPLETE_URL_NAME = "socialauth_complete"
-SOCIAL_AUTH_ASSOCIATE_URL_NAME = "socialauth_associate_complete"
+# SOCIAL_AUTH_COMPLETE_URL_NAME = "socialauth_complete"
+# SOCIAL_AUTH_ASSOCIATE_URL_NAME = "socialauth_associate_complete"
 
-SOCIAL_AUTH_DEFAULT_USERNAME = lambda: random.choice([
-    "Darth_Vader", "Obi-Wan_Kenobi", "R2-D2", "C-3PO", "Yoda"
-])
-SOCIAL_AUTH_CREATE_USERS = True
+# SOCIAL_AUTH_DEFAULT_USERNAME = lambda: random.choice([
+#     "Darth_Vader", "Obi-Wan_Kenobi", "R2-D2", "C-3PO", "Yoda"
+# ])
+# SOCIAL_AUTH_CREATE_USERS = True
 
-SOCIAL_AUTH_PIPELINE = (
-    "social_core.pipeline.social_auth.social_details",
-    "social_core.pipeline.social_auth.social_uid",
-    "social_core.pipeline.social_auth.auth_allowed",
-    "social_core.pipeline.social_auth.social_user",
-    "social_core.pipeline.user.get_username",
-    "social_core.pipeline.mail.mail_validation",
-    "social_core.pipeline.social_auth.associate_by_email",
-    "social_core.pipeline.user.create_user",
-    "social_core.pipeline.social_auth.associate_user",
-    "social_core.pipeline.debug.debug",
-    "social_core.pipeline.social_auth.load_extra_data",
-    "social_core.pipeline.user.user_details",
+# SOCIAL_AUTH_PIPELINE = (
+#     "social_core.pipeline.social_auth.social_details",
+#     "social_core.pipeline.social_auth.social_uid",
+#     "social_core.pipeline.social_auth.auth_allowed",
+#     "social_core.pipeline.social_auth.social_user",
+#     "social_core.pipeline.user.get_username",
+#     "social_core.pipeline.mail.mail_validation",
+#     "social_core.pipeline.social_auth.associate_by_email",
+#     "social_core.pipeline.user.create_user",
+#     "social_core.pipeline.social_auth.associate_user",
+#     "social_core.pipeline.debug.debug",
+#     "social_core.pipeline.social_auth.load_extra_data",
+#     "social_core.pipeline.user.user_details",
 
-    "accounts.auth_pipelines.save_profile",
-)
+#     "accounts.auth_pipelines.save_profile",
+# )
 
 # -----------------------------------------------------------------------------
 # --- FACEBOOK

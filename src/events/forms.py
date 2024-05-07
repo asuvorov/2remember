@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.conf import settings
@@ -14,13 +21,12 @@ from taggit.forms import TagWidget
 
 from ddcore.models.Attachment import TemporaryFile
 
-from .choices import (
-    Recurrence,
-    month_choices,
-    day_of_month_choices)
 from .models import (
     Event,
-    Role)
+    Recurrence,
+    Role,
+    month_choices,
+    day_of_month_choices)
 
 
 # -----------------------------------------------------------------------------
@@ -128,13 +134,16 @@ class CreateEditEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "avatar", "title", "description", "category", "tags", "hashtag",
-            "duration", "addressless", "is_alt_person",
-            "alt_person_fullname", "alt_person_email", "alt_person_phone",
-            "recurrence",
-            "start_date", "start_time", "start_tz",
-            "organization", "application", "allow_reenter",
-            "accept_automatically", "acceptance_text",
+            "preview", "title", "description", "category", "tags", "hashtag",
+            # "duration",
+            "addressless",
+            # "is_alt_person",
+            # "alt_person_fullname", "alt_person_email", "alt_person_phone",
+            # "recurrence",
+            # "start_date", "start_time", "start_tz",
+            "organization",
+            # "application", "allow_reenter",
+            # "accept_automatically", "acceptance_text",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -214,10 +223,10 @@ class CreateEditEventForm(forms.ModelForm):
     def clean(self):
         """Clean."""
         # ---------------------------------------------------------------------
-        # --- Validate `name` Field
-        if self.cleaned_data["name"].lower() in settings.EVENT_NAME_RESERVED_WORDS:
-            self._errors["name"] = self.error_class(
-                [_("Reserved Word cannot be used as a Event Name.")])
+        # --- Validate `title` Field
+        if self.cleaned_data["title"].lower() in settings.EVENT_TITLE_RESERVED_WORDS:
+            self._errors["title"] = self.error_class(
+                [_("Reserved Word cannot be used as a Event Title.")])
 
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields
@@ -310,10 +319,10 @@ class AddEventMaterialsForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "achievements",
+            # "achievements",
         ]
         widgets = {
-            "achievements": CKEditorUploadingWidget(),
+            # "achievements": CKEditorUploadingWidget(),
         }
 
     def clean(self):
@@ -353,13 +362,19 @@ class RoleForm(forms.ModelForm):
     class Meta:
         model = Role
         fields = [
-            "name", "quantity",
+            "title", "description", "quantity",
         ]
         widgets = {
-            "name": forms.TextInput(
+            "title": forms.TextInput(
                 attrs={
                     "class":        "form-control",
-                    "placeholder":  _("Name")
+                    "placeholder":  _("Title")
+                }),
+            "description": forms.Textarea(
+                attrs={
+                    "class":        "form-control",
+                    "placeholder":  _("Event Description"),
+                    "maxlength":    1000,
                 }),
             "quantity": forms.TextInput(
                 attrs={
@@ -373,11 +388,11 @@ class RoleForm(forms.ModelForm):
         try:
             if not self.cleaned_data["DELETE"]:
                 # -------------------------------------------------------------
-                # --- Validate `name` Field
-                if not self.cleaned_data["name"]:
-                    self._errors["name"] = self.error_class([_("This Field is required.")])
+                # --- Validate `title` Field
+                if not self.cleaned_data["title"]:
+                    self._errors["title"] = self.error_class([_("This Field is required.")])
 
-                    del self.cleaned_data["name"]
+                    del self.cleaned_data["title"]
 
                 # -------------------------------------------------------------
                 # --- Validate `quantity` Field
@@ -453,11 +468,11 @@ class FilterEventForm(forms.Form):
             del self.fields["month"]
             del self.fields["day"]
 
-    name = forms.CharField(
-        label=_("Name"),
+    title = forms.CharField(
+        label=_("Title"),
         widget=forms.TextInput(
             attrs={
-                "placeholder": _("Event Name"),
+                "placeholder": _("Event Title"),
             }),
         required=False,
     )

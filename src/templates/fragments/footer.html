@@ -1,13 +1,13 @@
 {% load i18n %}
 {% load static %}
 
-<footer>
+<footer class="container">
     <div class="row footer-top">
         <div class="container">
-            <div class="col-xs-24 col-sm-4 col-md-4 logo">
+            <div class="col-lg-12 logo">
             </div>
 
-            <div class="col-xs-24 col-sm-12 col-md-12 site-map">
+            <div class="col-lg-12 site-map">
                 <ul>
                     <p>{% trans "Terms &amp; Conditions" %}</p>
 
@@ -32,7 +32,7 @@
                 </ul>
             </div>
 
-            <div class="col-xs-24 col-sm-8 col-md-8 social-buttons" align="right">
+            <div class="col-lg-12 social-buttons" align="right">
                 <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_FACEBOOK }}';" class="btn btn-facebook">
                     <i class="fa fa-facebook fa-fw"></i>
                 </button>
@@ -66,14 +66,16 @@
 
     <div class="row footer-bottom">
         <div class="container">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <p>Copyright &copy; 2014-2018 - SaneSide <span class="pull-right">{{ product_version_num }}</span></p>
+            <p class="float-end"><a href="#">Back to Top</a></p>
+            <p>Copyright &copy; 2017–2024 SaneSide &middot; {{ product_version_num }}</p>
+
+            <div class="col-lg-12">
                 <a href="/humans.txt" class="pull-right">
                     <img alt="humans.txt" src="{% static 'img/humanstxt-transparent-color.png' %}" alt="SaneSide Platform." />
                 </a>
-                <a href="/docs" class="pull-right">
+<!--                 <a href="/docs" class="pull-right">
                     <img alt="humans.txt" src="{% static 'img/swagger-logo.png' %}" alt="SaneSide Platform." />
-                </a>
+                </a> -->
             </div>
         </div>
     </div>

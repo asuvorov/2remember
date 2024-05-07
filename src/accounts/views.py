@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 
@@ -31,7 +38,9 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
-from ddcore.models.SocialLink import SocialLink
+from ddcore.models import (
+    SocialLink,
+    UserLogin)
 from ddcore.Utilities import (
     make_json_cond,
     get_client_ip,
@@ -43,10 +52,10 @@ from app.forms import (
     AddressForm,
     PhoneForm,
     SocialLinkFormSet)
-from events.choices import (
+from events.models import (
     EventStatus,
+    Participation,
     ParticipationStatus)
-from events.models import Participation
 from organizations.models import OrganizationStaff
 
 from .forms import (
@@ -59,7 +68,6 @@ from .forms import (
     UserProfileEditForm,
     UserProfileForm)
 from .models import (
-    UserLogin,
     UserPrivacyAdmins,
     UserPrivacyGeneral,
     UserPrivacyMembers,
@@ -142,11 +150,11 @@ def account_list(request):
 @cache_page(60 * 5)
 def account_near_you_list(request):
     """List of the Members."""
-    geo = GeoIP()
-    ip_addr = get_client_ip(request)
-    # ip = "108.162.209.69"
-    country = geo.country(ip_addr)
-    city = geo.city(ip_addr)
+    # geo = GeoIP()
+    # ip_addr = get_client_ip(request)
+    # # ip = "108.162.209.69"
+    # country = geo.country(ip_addr)
+    # city = geo.city(ip_addr)
 
     accounts = _retrieve_account_list_with_privacy(request)
 
@@ -156,21 +164,20 @@ def account_near_you_list(request):
     # -------------------------------------------------------------------------
     members_logins = UserLogin.objects.filter(user__is_active=True)
 
-    if city:
-        if city["country_code"]:
-            members_logins = members_logins.filter(
-                city__icontains=make_json_cond(
-                    "country_code", city["country_code"]))
+    if request.geo_data["country_code"]:
+        members_logins = members_logins.filter(
+            city__icontains=make_json_cond(
+                "country_code", request.geo_data["country_code"]))
 
-        if city["region"]:
-            members_logins = members_logins.filter(
-                city__icontains=make_json_cond(
-                    "region", city["region"]))
+    if request.geo_data["region"]:
+        members_logins = members_logins.filter(
+            city__icontains=make_json_cond(
+                "region", request.geo_data["region"]))
 
-        if city["area_code"]:
-            members_logins = members_logins.filter(
-                city__icontains=make_json_cond(
-                    "area_code", city["area_code"]))
+    if request.geo_data["area_code"]:
+        members_logins = members_logins.filter(
+            city__icontains=make_json_cond(
+                "area_code", request.geo_data["area_code"]))
 
     members_user_ids = list(set(
         members_logins.values_list(
@@ -219,7 +226,7 @@ def account_might_know_list(request):
     # -------------------------------------------------------------------------
     members_might_know = accounts.filter()
 
-    if request.user.is_authenticated() and request.user.profile.address:
+    if request.user.is_authenticated and request.user.profile.address:
         # ---------------------------------------------------------------------
         # --- Filter by Country and City.
         if (
@@ -358,9 +365,9 @@ def account_online_list(request):
 # -----------------------------------------------------------------------------
 def account_signup(request):
     """Sign up."""
-    g = GeoIP()
-    ip_addr = get_client_ip(request)
-    country_code = geo.country_code(ip_addr)
+    # g = GeoIP()
+    # ip_addr = get_client_ip(request)
+    # country_code = geo.country_code(ip_addr)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -371,7 +378,7 @@ def account_signup(request):
         request.POST or None, request.FILES or None)
 
     if request.method == "GET":
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             return HttpResponseRedirect(
                 reverse("my-profile-view"))
 
@@ -483,8 +490,8 @@ def account_signup_confirm(request, uidb36=None, token=None):
 @csrf_exempt
 def account_login(request):
     """Log in."""
-    g = GeoIP()
-    ip_addr = get_client_ip(request)
+    # g = GeoIP()
+    # ip_addr = get_client_ip(request)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -493,7 +500,7 @@ def account_login(request):
     redirect_to = request.GET.get("next", "")
 
     if request.method == "GET":
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             if redirect_to:
                 return HttpResponseRedirect(redirect_to)
 
@@ -877,7 +884,7 @@ def profile_view(request, user_id):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Account.
         is_complained = account.profile.is_complained_by_user(request.user)
@@ -905,7 +912,7 @@ def profile_view(request, user_id):
     #     a Group Member.
     group_member_organizations = account.profile.group_member_organizations.all()
 
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Retrieve the List of Organizations, created by User.
         created_organizations = account.created_organizations.filter(
@@ -1006,7 +1013,7 @@ def profile_participations(request, user_id):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         participations = Participation.objects.filter(
             Q(event__organization=None) |
             Q(event__organization__is_hidden=False) |
@@ -1125,7 +1132,7 @@ def profile_events(request, user_id):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         admin_events = get_admin_events(account).filter(
             Q(organization=None) |
             Q(organization__is_hidden=False) |

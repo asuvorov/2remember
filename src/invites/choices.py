@@ -1,21 +1,8 @@
-"""Define Choices."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
 
-from django.utils.translation import gettext_lazy as _
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
 
-from ddcore import enum
-
-
-# -----------------------------------------------------------------------------
-# --- INVITE STATUS CHOICES
-# -----------------------------------------------------------------------------
-InviteStatus = enum(
-    NEW="0",
-    ACCEPTED="1",
-    REJECTED="2",
-    REVOKED="4")
-invite_status_choices = [
-    (InviteStatus.NEW,         _("New")),
-    (InviteStatus.ACCEPTED,    _("Accepted")),
-    (InviteStatus.REJECTED,    _("Rejected")),
-    (InviteStatus.REVOKED,     _("Revoked")),
-]
+"""

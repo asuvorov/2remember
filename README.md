@@ -13,6 +13,7 @@ For more Information on how to work in the Project, check out some of the other 
 
 1. MacOS
 
+		export PATH=/opt/homebrew/bin:$PATH
 		brew install nodejs npm
 
 2. Ubuntu

@@ -1,9 +1,16 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 
 # from djangoseo.admin import register_seo_admin
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from ddcore.models.Address import Address
 from ddcore.models.Attachment import (
@@ -63,6 +70,7 @@ class AddressAdmin(admin.ModelAdmin):
         "zip_code", "country",
     ]
 
+
 admin.site.register(Address, AddressAdmin)
 
 
@@ -85,6 +93,7 @@ class AttachedImageAdmin(admin.ModelAdmin):
         "name", "image", "content_object",
     ]
 
+
 admin.site.register(AttachedImage, AttachedImageAdmin)
 
 
@@ -103,6 +112,7 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
     search_fields = [
         "name", "document", "content_object",
     ]
+
 
 admin.site.register(AttachedDocument, AttachedDocumentAdmin)
 
@@ -123,6 +133,7 @@ class AttachedUrlAdmin(admin.ModelAdmin):
         "url", "title", "content_object",
     ]
 
+
 admin.site.register(AttachedUrl, AttachedUrlAdmin)
 
 
@@ -142,6 +153,7 @@ class AttachedVideoUrlAdmin(admin.ModelAdmin):
         "url", "content_object",
     ]
 
+
 admin.site.register(AttachedVideoUrl, AttachedVideoUrlAdmin)
 
 
@@ -155,19 +167,18 @@ class PhoneAdmin(admin.ModelAdmin):
         ("", {
             "classes":  (""),
             "fields":   (
-                ("phone_number", "phone_number_ext",),
-                ("mobile_phone_number", "mobile_phone_number_ext",),
+                ("phone_number", "phone_number_ext", "phone_type"),
             ),
         }),
     )
 
     list_display = [
         "id",
-        "phone_number", "mobile_phone_number",
+        "phone_number",
         "created", "modified",
     ]
     list_display_links = [
-        "id", "phone_number", "mobile_phone_number",
+        "id", "phone_number",
     ]
     list_filter = [
         ("created", DateRangeFilter),
@@ -176,6 +187,7 @@ class PhoneAdmin(admin.ModelAdmin):
     search_fields = [
         "phone_number", "mobile_phone_number",
     ]
+
 
 admin.site.register(Phone, PhoneAdmin)
 
@@ -198,6 +210,7 @@ class TemporaryFileAdmin(admin.ModelAdmin):
     search_fields = [
         "file", "name",
     ]
+
 
 admin.site.register(TemporaryFile, TemporaryFileAdmin)
 
@@ -224,6 +237,7 @@ class ViewAdmin(admin.ModelAdmin):
         "user", "content_type",
     ]
 
+
 admin.site.register(View, ViewAdmin)
 
 
@@ -249,6 +263,7 @@ class CommentAdmin(admin.ModelAdmin):
         "user", "content_type",
     ]
 
+
 admin.site.register(Comment, CommentAdmin)
 
 
@@ -259,12 +274,14 @@ def mark_as_processed(modeladmin, request, queryset):
     """Docstring."""
     queryset.update(is_processed=True)
 
+
 mark_as_processed.short_description = "Mark selected Complaints as processed"
 
 
 def mark_as_deleted(modeladmin, request, queryset):
     """Docstring."""
     queryset.update(is_deleted=True)
+
 
 mark_as_deleted.short_description = "Mark selected Complaints as deleted"
 
@@ -295,6 +312,7 @@ class ComplaintAdmin(admin.ModelAdmin):
         mark_as_deleted,
     ]
 
+
 admin.site.register(Complaint, ComplaintAdmin)
 
 
@@ -319,6 +337,7 @@ class RatingAdmin(admin.ModelAdmin):
     search_fields = [
         "author", "content_type",
     ]
+
 
 admin.site.register(Rating, RatingAdmin)
 
@@ -346,6 +365,7 @@ class NewsletterAdmin(admin.ModelAdmin):
         "author", "title", "content_type",
     ]
 
+
 admin.site.register(Newsletter, NewsletterAdmin)
 
 
@@ -371,5 +391,6 @@ class SocialLinkAdmin(admin.ModelAdmin):
     search_fields = [
         "social_app", "url", "content_type",
     ]
+
 
 admin.site.register(SocialLink, SocialLinkAdmin)

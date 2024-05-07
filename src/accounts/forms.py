@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.contrib.auth.models import User
@@ -7,7 +14,7 @@ from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
 
 from annoying.functions import get_object_or_None
-from captcha.fields import CaptchaField
+# from captcha.fields import CaptchaField
 from passwords.fields import PasswordField
 
 from .models import (
@@ -160,7 +167,7 @@ class UserProfileForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
-    captcha = CaptchaField()
+    # captcha = CaptchaField()
     birth_day = forms.DateField(
         input_formats=("%m/%d/%Y",),
         widget=forms.DateInput(

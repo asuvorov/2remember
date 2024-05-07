@@ -1,20 +1,26 @@
-"""Define Template Tags."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import template
 from django.db.models import Sum, Q
 
 # pylint: disable=import-error
-from events.choices import (
-    EventStatus,
-    ParticipationStatus)
 from events.models import (
     Event,
-    Participation)
+    EventStatus,
+    Participation,
+    ParticipationStatus)
 from organizations.models import (
     Organization,
     OrganizationStaff)
 
-from .. choices import (
+from .. models import (
     WhoCanSeeMembers,
     WhoCanSeeAdmins)
 
@@ -39,7 +45,7 @@ def check_privacy(request, account, flag_members, flag_admins):
     # -------------------------------------------------------------------------
     # --- Platform Admins.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated() and request.user.is_staff:
+    if request.user.is_authenticated and request.user.is_staff:
         return True
 
     # -------------------------------------------------------------------------
@@ -53,7 +59,7 @@ def check_privacy(request, account, flag_members, flag_admins):
         result = False
     elif (
             flag_members == WhoCanSeeMembers.REGISTERED and
-            request.user.is_authenticated()):
+            request.user.is_authenticated):
         # --- Registered Users only.
 
         # --- Return True.
@@ -61,8 +67,8 @@ def check_privacy(request, account, flag_members, flag_admins):
         #     the registered Users can create the Events.
         return True
     elif (
-            flag_members == WhoCanSeeMembers.CHL_MEMBERS and
-            request.user.is_authenticated()):
+            flag_members == WhoCanSeeMembers.EVENT_MEMBERS and
+            request.user.is_authenticated):
         # --- Participants of the Events, the User participate in as well.
         event_ids = account.user_participations.confirmed().values_list(
             "event_id",
@@ -80,7 +86,7 @@ def check_privacy(request, account, flag_members, flag_admins):
         result = False
     elif (
             flag_members == WhoCanSeeMembers.ORG_MEMBERS and
-            request.user.is_authenticated()):
+            request.user.is_authenticated):
         # --- Staff/Group Members of the Organization(s), the User
         #     affiliated with.
 
@@ -150,7 +156,7 @@ def check_privacy(request, account, flag_members, flag_admins):
         result = False
     elif (
             flag_admins == WhoCanSeeAdmins.PARTICIPATED and
-            request.user.is_authenticated()):
+            request.user.is_authenticated):
         # --- Admins of the Events, I participate(-d) in.
         event_ids = account.user_participations.confirmed().values_list(
             "event_id",
@@ -166,7 +172,7 @@ def check_privacy(request, account, flag_members, flag_admins):
         result = False
     elif (
             flag_admins == WhoCanSeeAdmins.ALL and
-            request.user.is_authenticated()):
+            request.user.is_authenticated):
         # --- Admins of the upcoming Events on the Platform.
         events = Event.objects.filter(
             author=request.user,

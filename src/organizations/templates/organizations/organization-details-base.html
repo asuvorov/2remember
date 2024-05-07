@@ -8,7 +8,7 @@
 {% block extra_meta %}
     {% get_metadata %}
 
-    <link rel="image_src" href="{{ organization.avatar.url }}" />
+    <link rel="image_src" href="{{ organization.cover.url }}" />
     <meta name="description" content="{{ organization.description|truncatechars:300 }}" />
 {% endblock %}
 

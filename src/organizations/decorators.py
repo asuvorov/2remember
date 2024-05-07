@@ -1,4 +1,11 @@
-"""Define Decorators."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.db.models import Q
 from django.http import Http404
@@ -66,7 +73,7 @@ def organization_access_check_required(func):
         organization_id = request.POST.get("organization_id", "")
 
         if slug:
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 organization = get_object_or_404(
                     Organization,
                     Q(is_hidden=False) |
@@ -93,7 +100,7 @@ def organization_access_check_required(func):
                     is_hidden=False,
                     is_deleted=False)
         elif organization_id:
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 organization = get_object_or_404(
                     Organization,
                     Q(is_hidden=False) |

@@ -36,22 +36,13 @@ services:
       - ALLOW_EMPTY_PASSWORD=yes
 
   db:
-    image:    postgres:14.7-alpine
-    # image:    docker.io/bitnami/postgresql:14
+    image:    mysql:8.4.0
+    restart:  always
     volumes:
       - postgres-data:/var/lib/postgresql/data/
       - ./docker_config/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_HOST=localhost
-      - POSTGRES_USER=epa
-      - POSTGRES_USERNAME=epa
-      - POSTGRES_PASSWORD=epa
-      - POSTGRES_DB=epa
-      - DATABASE_ADMIN_USERNAME=epa
-      - TWX_DATABASE_USERNAME=epa
-      - TZ=UTC
-      - PGTZ=UTC
+      - MYSQL_ROOT_PASSWORD=root
     ports:
       - 5432:5432
     healthcheck:

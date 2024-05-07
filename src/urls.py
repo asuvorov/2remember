@@ -1,4 +1,11 @@
-"""Define URL Paths."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.conf import settings
 from django.conf.urls.static import static
@@ -10,7 +17,7 @@ from django.urls import (
     re_path)
 from django.views.generic.base import TemplateView
 
-from rest_framework_swagger.views import get_swagger_view
+# from rest_framework_swagger.views import get_swagger_view
 
 # pylint: disable=import-error
 from accounts.sitemap import AccountSitemap
@@ -22,7 +29,7 @@ from organizations.sitemap import OrganizationSitemap
 
 admin.autodiscover()
 
-schema_view = get_swagger_view(title="SaneSide API")
+# schema_view = get_swagger_view(title="SaneSide API")
 
 
 sitemaps = {
@@ -35,16 +42,16 @@ sitemaps = {
 
 
 urlpatterns = [
-    re_path(r"", include("social_django.urls", namespace="social")),
+    # re_path(r"", include("social_django.urls", namespace="social")),
 
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
-    re_path(r"^grappelli/", include("grappelli.urls")),
+    # re_path(r"^grappelli/", include("grappelli.urls")),
     re_path(r"^admin/", admin.site.urls),
-    re_path(r"^captcha/", include("captcha.urls")),
-    re_path(r"^docs/", schema_view),
+    # re_path(r"^captcha/", include("captcha.urls")),
+    # re_path(r"^docs/", schema_view),
     re_path(r"^i18n/", include("django.conf.urls.i18n")),
-    re_path(r"^rosetta/", include("rosetta.urls")),
-    re_path(r"^search/", include("haystack.urls")),
+    # re_path(r"^rosetta/", include("rosetta.urls")),
+    # re_path(r"^search/", include("haystack.urls")),
     re_path(r"^sitemap\.xml$", sitemap, {
             "sitemaps":     sitemaps,
         },
@@ -70,9 +77,9 @@ urlpatterns = [
 # handler404 = "app.views.handler404"
 # handler500 = "app.views.handler500"
 
-if settings.DEBUG_TOOLBAR:
-    import debug_toolbar
+# if settings.DEBUG_TOOLBAR:
+#     import debug_toolbar
 
-    urlpatterns += [
-        re_path(r"^debug/", include(debug_toolbar.urls)),
-    ]
+#     urlpatterns += [
+#         re_path(r"^debug/", include(debug_toolbar.urls)),
+#     ]

@@ -1,25 +1,35 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 
 from adminsortable2.admin import (
     SortableAdminMixin,
     SortableInlineAdminMixin)
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
+
+from ddcore.models import UserLogin
 
 from .models import (
     Team,
     TeamMember,
-    UserLogin,
     UserPrivacyGeneral,
     UserPrivacyMembers,
     UserPrivacyAdmins,
     UserProfile)
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PROFILE ADMIN
+# ===
+# =============================================================================
 class UserProfileAdmin(admin.ModelAdmin):
     """User Profile Admin."""
 
@@ -93,12 +103,15 @@ class UserProfileAdmin(admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(UserProfile, UserProfileAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE PRIVACY
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PROFILE PRIVACY ADMIN
+# ===
+# =============================================================================
 class UserPrivacyGeneralAdmin(admin.ModelAdmin):
     """User Profile Privacy General."""
 
@@ -117,6 +130,7 @@ class UserPrivacyGeneralAdmin(admin.ModelAdmin):
     search_fields = [
         "user",
     ]
+
 
 admin.site.register(UserPrivacyGeneral, UserPrivacyGeneralAdmin)
 
@@ -140,6 +154,7 @@ class UserPrivacyMembersAdmin(admin.ModelAdmin):
         "user",
     ]
 
+
 admin.site.register(UserPrivacyMembers, UserPrivacyMembersAdmin)
 
 
@@ -162,12 +177,15 @@ class UserPrivacyAdminsAdmin(admin.ModelAdmin):
         "user",
     ]
 
+
 admin.site.register(UserPrivacyAdmins, UserPrivacyAdminsAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- USER LOGIN ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER LOGIN ADMIN
+# ===
+# =============================================================================
 class UserLoginAdmin(admin.ModelAdmin):
     """User Login Admin."""
 
@@ -195,12 +213,15 @@ class UserLoginAdmin(admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(UserLogin, UserLoginAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- TEAM ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === TEAM ADMIN
+# ===
+# =============================================================================
 class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
     """Team Member Inline."""
 
@@ -245,12 +266,10 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
 
         return super().formfield_for_dbfield(db_field, **kwargs)
 
+
 admin.site.register(Team, TeamAdmin)
 
 
-# -----------------------------------------------------------------------------
-# -- TEAM MEMBER ADMIN
-# -----------------------------------------------------------------------------
 class TeamMemberAdmin(admin.ModelAdmin):
     """Team Member Admin."""
 
@@ -293,5 +312,6 @@ class TeamMemberAdmin(admin.ModelAdmin):
             db_field.default = current_order_count
 
         return super().formfield_for_dbfield(db_field, **kwargs)
+
 
 admin.site.register(TeamMember, TeamMemberAdmin)

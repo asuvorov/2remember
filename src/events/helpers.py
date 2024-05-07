@@ -1,4 +1,11 @@
-"""Define Helpers."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.db.models import Q
 
@@ -19,7 +26,7 @@ def get_event_list(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         events = Event.objects.filter(
             Q(organization=None) |
             Q(organization__is_hidden=False) |
@@ -44,8 +51,9 @@ def get_event_list(request):
             Q(organization__is_hidden=False),
         )
 
-    event_filter = EventFilter(
-        request.GET,
-        queryset=events)
+    # event_filter = EventFilter(
+    #     request.GET,
+    #     queryset=events)
 
-    return event_filter.qs
+    # return event_filter.qs
+    return events

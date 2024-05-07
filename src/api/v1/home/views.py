@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -149,7 +156,7 @@ class ContactUsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send the Message
         # ---------------------------------------------------------------------
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             from_name = "{name} (registered as {account_name} <{account_email}>".format(
                 name=name,
                 account_name=request.user.get_full_name(),
