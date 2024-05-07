@@ -39,3 +39,7 @@ Generating Atom/RSS Feed
 https://www.tutorialspoint.com/django/django_rss.htm
 
 
+===============================================================================
+Generating random Address
+===============================================================================
+https://www.editpad.org/tool/fake-address-generator.
