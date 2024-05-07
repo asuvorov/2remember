@@ -1,0 +1,4 @@
+"""Define URL Paths."""
+
+
+urlpatterns = []

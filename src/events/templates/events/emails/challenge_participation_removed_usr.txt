@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user.first_name }}!
+
+Your Application to Event "{{ event.name }}" was removed due to the Reason:
+
+{{ cancellation_text }}
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, SaneSide Team.

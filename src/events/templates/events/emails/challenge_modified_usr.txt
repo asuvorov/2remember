@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user.first_name }}!
+
+The Event "{{ event.name }}", you signed up for, was modified.
+
+You are now signed up for the Event on {{ event.start_date }} at {{ event.start_time|date:"G:i"|default:"0:00" }}. Please don’t forget to show up!
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, SaneSide Team.

@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user.first_name }}!
+
+Your Experience Report to Event "{{ event.name }}" was rejected due to the Reason:
+
+{{ selfreflection_rejection_text }}
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, SaneSide Team.

@@ -1,0 +1,19 @@
+<!--
+TAB
+My Profile - Admin upcoming Events.
+-->
+{% load i18n %}
+
+<div class="row">
+{% for event in request.user.profile.get_admin_events_upcoming %}
+    <div class="col-xs-24 col-sm-8 col-md-6 col-lg-6">
+        {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True chl_admin=True %}
+    </div>
+{% empty %}
+    <div class="col-xs-24 col-sm-24 col-md-24">
+        <p>
+            <span class="label label-info">{% trans "There are no upcoming Events at the Moment" %}</span>
+        </p>
+    </div>
+{% endfor %}
+</div>

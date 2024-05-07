@@ -1,0 +1,14 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ admin.first_name }}!
+
+Your Event "{{ event.name }}" is overdue!
+
+If this Event has taken place as planned, please, mark it as completed.
+Remember to remove all Participants from the Event, who did not show up to help, so the Event will not appear on their Profiles.
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, SaneSide Team.

@@ -1,0 +1,38 @@
+{% extends "events/event-details-base.html" %}
+
+{% load i18n %}
+
+{% block extra_content %}
+<div class="container">
+    <div id="event-acknowledge">
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <h4 class="hidden-xs">{% trans "Members, waiting for Acknowledgment" %}</h4>
+
+                <div id="event-acknowledge-section">
+                    {% include "events/tabs/to-acknowledge-tab.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+{% if request.user.is_authenticated %}
+    {% if event.author == request.user %}
+        {% include "events/modals/event-selfreflection-accept-modal.html" %}
+        {% include "events/modals/event-selfreflection-reject-modal.html" %}
+    {% endif %}
+{% endif %}
+
+<!-- Scripts -->
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var participation_id;
+    var element;
+</script>
+{% endblock %}

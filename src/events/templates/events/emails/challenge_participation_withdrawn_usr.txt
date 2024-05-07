@@ -1,0 +1,11 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user.first_name }}!
+
+You have withdrawn your Participation in Event "{{ event.name }}"!
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, SaneSide Team.
