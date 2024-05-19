@@ -1,20 +1,20 @@
 """
-WSGI config for SaneSide project.
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
 
-It exposes the WSGI callable as a module-level variable named ``application``.
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
 
-For more information on this file, see
-https://docs.djangoproject.com/en/1.6/howto/deployment/wsgi/
 """
 
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-from whitenoise import WhiteNoise
+# from whitenoise import WhiteNoise
 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
 
 application = get_wsgi_application()
-application = WhiteNoise(application, root="/opt/apps/saneside/src/staticserve")
+# application = WhiteNoise(application, root="/opt/apps/saneside/src/staticserve")

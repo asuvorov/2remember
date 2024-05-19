@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 
@@ -17,12 +24,13 @@ from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
-from events.choices import ParticipationStatus
 from events.models import (
     Event,
-    Participation)
-from invites.choices import InviteStatus
-from invites.models import Invite
+    Participation,
+    ParticipationStatus)
+from invites.models import (
+    Invite,
+    InviteStatus)
 from organizations.models import (
     Organization,
     OrganizationGroup,

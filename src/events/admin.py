@@ -1,9 +1,16 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 from django.contrib.contenttypes import admin as ct_admin
 
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from ddcore.models.Comment import Comment
 from ddcore.models.Complaint import Complaint
@@ -64,6 +71,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "image_tag",
     ]
     inlines = []
+
 
 admin.site.register(Category, CategoryAdmin)
 
@@ -228,16 +236,23 @@ class EventAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", "image_tag", "status", "event_url",
-        "start_date", "start_time", "start_tz",
-        "organization", "application", "author",
+        "title", "image_tag",
+        # "status",
+        "event_url",
+        # "start_date", "start_time", "start_tz",
+        "organization",
+        # "application",
+        "author",
         "created", "modified",
     ]
     list_display_links = [
         "title",
     ]
     list_filter = [
-        "status", "organization", "application", "author",
+        # "status",
+        "organization",
+        # "application",
+        "author",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
@@ -285,6 +300,7 @@ class EventAdmin(admin.ModelAdmin):
             "complaint-deleted",
         ),
     }
+
 
 admin.site.register(Event, EventAdmin)
 
@@ -360,5 +376,6 @@ class ParticipationAdmin(admin.ModelAdmin):
     readonly_fields = [
         "image_tag",
     ]
+
 
 admin.site.register(Participation, ParticipationAdmin)

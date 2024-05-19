@@ -26,31 +26,30 @@
     </head>
 
     <body>
-        <div id="spinner">
+<!--         <div id="spinner">
             <img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Loading..."/>
         </div>
+ -->
+        <header data-bs-theme="dark">
+        {% block navbar %}
+            {% include "fragments/navbar.html" %}
+        {% endblock %}
 
-        <div id="wrapper">
-            <div id="navbar">
-            {% block navbar %}
-                {% include "fragments/navbar.html" %}
-            {% endblock %}
-            </div>
+        {% block breadcrumbs %}
+        {% endblock %}
+        </header>
 
-            <div id="content">
-            {% block content %}
-            {% endblock %}
+        <main>
+        {% block content %}
+        {% endblock %}
 
-            {% block extra_content %}
-            {% endblock %}
-            </div>
+        {% block extra_content %}
+        {% endblock %}
 
-            <div id="footer">
-            {% block footer %}
-                {% include "fragments/footer.html" %}
-            {% endblock %}
-            </div>
-        </div>
+        {% block footer %}
+            {% include "fragments/footer.html" %}
+        {% endblock %}
+        </main>
 
         <!-- Modals -->
     {% if not request.user.is_authenticated %}

@@ -1,4 +1,11 @@
-"""Define Template Tags."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 
@@ -23,5 +30,6 @@ def pretty_timestamp(timestamp):
     # Specify Format here.
     # return time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(t_s))
     return local_tz.localize(datetime.datetime.fromtimestamp(t_s))
+
 
 register.filter(pretty_timestamp)

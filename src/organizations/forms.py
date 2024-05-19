@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.conf import settings
@@ -54,13 +61,12 @@ class CreateEditOrganizationForm(forms.ModelForm):
             attrs={
                 "placeholder":  _("Separate your Links with a Space"),
             }),
-        required=False,
-    )
+        required=False)
 
     class Meta:
         model = Organization
         fields = [
-            "avatar", "title", "description", "tags", "hashtag",
+            "preview", "cover", "title", "description", "tags", "hashtag",
             "addressless", "is_hidden", "website", "video", "email",
             "is_alt_person", "alt_person_fullname",
             "alt_person_email", "alt_person_phone",
@@ -123,13 +129,13 @@ class CreateEditOrganizationForm(forms.ModelForm):
     def clean(self):
         """Clean."""
         # ---------------------------------------------------------------------
-        # --- Validate `name` Field
-        if self.cleaned_data["name"].lower() in settings.ORGANIZATION_NAME_RESERVED_WORDS:
-            self._errors["name"] = self.error_class(
+        # --- Validate `title` Field.
+        if self.cleaned_data["title"].lower() in settings.ORGANIZATION_TITLE_RESERVED_WORDS:
+            self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as an Organization Name.")])
 
         # ---------------------------------------------------------------------
-        # --- Validate `alt_person` Fields
+        # --- Validate `alt_person` Fields.
         if self.cleaned_data["contact"] == "me":
             self.cleaned_data["is_alt_person"] = False
         else:

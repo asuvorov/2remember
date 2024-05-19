@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 import logging
@@ -48,10 +55,6 @@ from app.forms import (
     AddressForm,
     SocialLinkFormSet)
 
-from .choices import (
-    EventStatus,
-    ParticipationStatus,
-    Recurrence)
 from .decorators import (
     event_access_check_required,
     event_org_staff_member_required)
@@ -64,21 +67,22 @@ from .helpers import get_event_list
 from .models import (
     Category,
     Event,
+    EventStatus,
     Participation,
+    ParticipationStatus,
+    Recurrence,
     Role)
 
 
 logger = logging.getLogger("py.warnings")
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT LIST
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === EVENT LIST
+# ===
+# =============================================================================
+@cache_page(60)
 def event_list(request):
     """List of the all Events."""
     # -------------------------------------------------------------------------
@@ -88,13 +92,16 @@ def event_list(request):
 
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
+    #
+    # --- FIXME
     # -------------------------------------------------------------------------
-    events = get_event_list(request).filter(
-        status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today(),
-    ).exclude(
-        recurrence=Recurrence.DATELESS,
-    )
+    # events = get_event_list(request).filter(
+    #     status=EventStatus.UPCOMING,
+    #     start_date__gte=datetime.date.today(),
+    # ).exclude(
+    #     recurrence=Recurrence.DATELESS,
+    # )
+    events = get_event_list(request)
 
     if category_slug:
         category = get_object_or_None(
@@ -152,7 +159,7 @@ def event_list(request):
 
     return render(
         request, "events/event-list.html", {
-            "events":   events,
+            "events":       events,
             "page_title":   _("All Events"),
             "page_total":   paginator.num_pages,
             "page_number":  events.number,
@@ -160,14 +167,14 @@ def event_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def event_near_you_list(request):
     """List of the Events, near the User."""
-    g = GeoIP()
-    ip = get_client_ip(request)
+    # g = GeoIP()
+    # ip = get_client_ip(request)
     # ip = "108.162.209.69"
-    country = g.country(ip)
-    city = g.city(ip)
+    # country = g.country(ip)
+    # city = g.city(ip)
 
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
@@ -190,7 +197,7 @@ def event_near_you_list(request):
     # --- Events near.
     #     According to the Location, specified in the User Profile.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated() and request.user.profile.address:
+    if request.user.is_authenticated and request.user.profile.address:
         # ---------------------------------------------------------------------
         # --- Filter by Country and City
         if (
@@ -209,14 +216,14 @@ def event_near_you_list(request):
                 address__zip_code=request.user.profile.address.zip_code)
         else:
             events = []
-    elif city:
+    elif request.geo_data:
         # ---------------------------------------------------------------------
         # --- Filter by Country and City
-        if city["country_code"]:
-            events = events.filter(address__country=city["country_code"])
+        if request.geo_data["country_code"]:
+            events = events.filter(address__country=request.geo_data["country_code"])
 
-        if city["city"]:
-            events = events.filter(address__city__icontains=city["city"])
+        if request.geo_data["city"]:
+            events = events.filter(address__city__icontains=request.geo_data["city"])
     else:
         events = []
 
@@ -259,7 +266,7 @@ def event_near_you_list(request):
 
     return render(
         request, "events/event-list.html", {
-            "events":   events,
+            "events":       events,
             "page_title":   _("Events near you"),
             "page_total":   paginator.num_pages,
             "page_number":  events.number,
@@ -267,7 +274,7 @@ def event_near_you_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def event_new_list(request):
     """List of the new Events."""
     # -------------------------------------------------------------------------
@@ -330,7 +337,7 @@ def event_new_list(request):
 
     return render(
         request, "events/event-list.html", {
-            "events":   events,
+            "events":       events,
             "page_title":   _("New Events"),
             "page_total":   paginator.num_pages,
             "page_number":  events.number,
@@ -338,7 +345,7 @@ def event_new_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def event_dateless_list(request):
     """List of the dateless Events."""
     events = get_event_list(request).filter(
@@ -391,7 +398,7 @@ def event_dateless_list(request):
 
     return render(
         request, "events/event-dateless-list.html", {
-            "events":   events,
+            "events":       events,
             "page_title":   _("Dateless Events"),
             "page_total":   paginator.num_pages,
             "page_number":  events.number,
@@ -399,7 +406,7 @@ def event_dateless_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def event_featured_list(request):
     """List of the featured Events."""
     events = get_event_list(request).filter(
@@ -455,7 +462,7 @@ def event_featured_list(request):
 
     return render(
         request, "events/event-list.html", {
-            "events":   events,
+            "events":       events,
             "page_title":   _("Featured Events"),
             "page_total":   paginator.num_pages,
             "page_number":  events.number,
@@ -463,14 +470,12 @@ def event_featured_list(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT CATEGORY LIST
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === EVENT CATEGORY LIST
+# ===
+# =============================================================================
+@cache_page(60)
 def event_category_list(request):
     """List of the all Event Categories."""
     # -------------------------------------------------------------------------
@@ -484,13 +489,11 @@ def event_category_list(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT CREATE
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === EVENT CREATE
+# ===
+# =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 def event_create(request):
@@ -509,9 +512,9 @@ def event_create(request):
     # -------------------------------------------------------------------------
     # --- Geo IP.
     # -------------------------------------------------------------------------
-    g = GeoIP()
-    ip = get_client_ip(request)
-    country_code = g.country_code(ip)
+    # g = GeoIP()
+    # ip = get_client_ip(request)
+    # country_code = g.country_code(ip)
 
     tz_name = request.session.get("django_timezone")
 
@@ -525,8 +528,8 @@ def event_create(request):
         tz_name=tz_name)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
-        country_code=country_code)
+        required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     formset_roles = RoleFormSet(
         request.POST or None, request.FILES or None,
@@ -572,13 +575,13 @@ def event_create(request):
 
                 # -------------------------------------------------------------
                 # --- Send Email Notification(s).
-                event.email_notify_admin_chl_drafted(request)
+                event.email_notify_admin_event_drafted(request)
             else:
                 # -------------------------------------------------------------
                 # --- Send Email Notification(s).
-                event.email_notify_admin_chl_created(request)
-                event.email_notify_alt_person_chl_created(request)
-                event.email_notify_org_subscribers_chl_created(request)
+                event.email_notify_admin_event_created(request)
+                event.email_notify_alt_person_event_created(request)
+                event.email_notify_org_subscribers_event_created(request)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
@@ -596,13 +599,11 @@ def event_create(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT DETAILS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === EVENT DETAILS
+# ===
+# =============================================================================
 @cache_page(60 * 1)
 @event_access_check_required
 def event_details(request, slug):
@@ -638,7 +639,7 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
         is_admin = is_event_admin(
@@ -803,7 +804,7 @@ def event_confirm(request, slug):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
         is_admin = is_event_admin(
@@ -836,7 +837,7 @@ def event_acknowledge(request, slug):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
         is_admin = is_event_admin(
@@ -850,13 +851,11 @@ def event_acknowledge(request, slug):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT EDIT
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === EVENT EDIT
+# ===
+# =============================================================================
 @login_required
 @event_org_staff_member_required
 def event_edit(request, slug):
@@ -883,7 +882,7 @@ def event_edit(request, slug):
         instance=event)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
+        required=not request.POST.get("addressless", False),
         instance=event.address)
 
     formset_roles = RoleFormSet(
@@ -965,15 +964,15 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).
-            event.email_notify_admin_chl_edited(request)
-            event.email_notify_alt_person_chl_edited(request)
+            event.email_notify_admin_event_edited(request)
+            event.email_notify_alt_person_event_edited(request)
 
             # -----------------------------------------------------------------
             # --- Is Date/Time changed?
             if (
                     "start_date" in form.changed_data or
                     "start_time" in form.changed_data):
-                Participation.email_notify_participants_datetime_chl_edited(
+                Participation.email_notify_participants_datetime_event_edited(
                     request=request,
                     event=event)
 
@@ -982,7 +981,7 @@ def event_edit(request, slug):
             if (
                     "application" in form.changed_data and
                     event.is_free_for_all):
-                Participation.email_notify_participants_application_chl_edited(
+                Participation.email_notify_participants_application_event_edited(
                     request=request,
                     event=event)
 
@@ -995,7 +994,7 @@ def event_edit(request, slug):
                     "zip_code" in form.changed_data or
                     "province" in form.changed_data or
                     "country" in form.changed_data):
-                Participation.email_notify_participants_location_chl_edited(
+                Participation.email_notify_participants_location_event_edited(
                     request=request,
                     event=event)
 
@@ -1085,10 +1084,10 @@ def event_reporting_materials(request, slug):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).
-            event.email_notify_admin_chl_edited(request)
-            event.email_notify_alt_person_chl_edited(request)
+            event.email_notify_admin_event_edited(request)
+            event.email_notify_alt_person_event_edited(request)
 
-            Participation.email_notify_participants_chl_reporting_materials(
+            Participation.email_notify_participants_event_reporting_materials(
                 request=request,
                 event=event)
 
@@ -1101,6 +1100,6 @@ def event_reporting_materials(request, slug):
 
     return render(
         request, "events/event-reporting-materials.html", {
-            "form":             form,
-            "event":        event,
+            "form":     form,
+            "event":    event,
         })

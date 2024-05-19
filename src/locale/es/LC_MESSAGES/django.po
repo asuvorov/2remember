@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-08 11:55-0800\n"
+"POT-Creation-Date: 2024-05-10 09:46-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,285 +18,228 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: accounts/choices.py:16
-msgid "Female"
-msgstr ""
-
-#: accounts/choices.py:17
-msgid "Male"
-msgstr ""
-
-#: accounts/choices.py:18
-msgid "Other"
-msgstr ""
-
-#: accounts/choices.py:29
+#: accounts/choices.py:22
 msgid "Paranoid"
 msgstr ""
 
-#: accounts/choices.py:30
+#: accounts/choices.py:23
 msgid "Normal"
 msgstr ""
 
-#: accounts/choices.py:44 accounts/choices.py:57
-msgid "No-one"
-msgstr ""
-
-#: accounts/choices.py:45
-msgid "Registered Users"
-msgstr ""
-
-#: accounts/choices.py:46
-msgid "Participants of the Events, I participate in too"
-msgstr ""
-
-#: accounts/choices.py:48
-msgid "Staff/Group Members of the Organization(s), I affiliated with"
-msgstr ""
-
-#: accounts/choices.py:49
-msgid "Everyone"
-msgstr ""
-
-#: accounts/choices.py:58
-msgid "Admins of the Events, I participate(-d) in"
-msgstr ""
-
-#: accounts/choices.py:59
-msgid "Admins of the upcoming Events on the Platform"
-msgstr ""
-
-#: accounts/forms.py:27 accounts/forms.py:31 accounts/forms.py:115
-#: accounts/forms.py:259
+#: accounts/forms.py:34 accounts/forms.py:38 accounts/forms.py:122
+#: accounts/forms.py:266
 #: accounts/templates/accounts/modals/forgot-password-popup-modal.html:21
 #: accounts/templates/accounts/modals/no-email-provided-popup-modal.html:35
-#: events/forms.py:180 events/models.py:316 home/forms.py:31
-#: home/templates/home/contact-us.html:70 organizations/forms.py:113
-#: organizations/models.py:134 organizations/models.py:159
+#: events/forms.py:189 home/forms.py:31 home/templates/home/contact-us.html:70
+#: organizations/forms.py:113 organizations/models/Organization.py:146
+#: organizations/models/Organization.py:171
 msgid "Email"
 msgstr ""
 
-#: accounts/forms.py:35 accounts/forms.py:41 accounts/forms.py:74
-#: accounts/forms.py:80 accounts/forms.py:322 accounts/forms.py:328
+#: accounts/forms.py:42 accounts/forms.py:48 accounts/forms.py:81
+#: accounts/forms.py:87 accounts/forms.py:329 accounts/forms.py:335
 msgid "Password"
 msgstr ""
 
-#: accounts/forms.py:45
+#: accounts/forms.py:52
 msgid "Keep me logged-in on this Computer"
 msgstr ""
 
-#: accounts/forms.py:90 accounts/forms.py:337
+#: accounts/forms.py:97 accounts/forms.py:344
 msgid "Retry"
 msgstr ""
 
-#: accounts/forms.py:103 accounts/forms.py:243
+#: accounts/forms.py:110 accounts/forms.py:250
 msgid "First Name"
 msgstr ""
 
-#: accounts/forms.py:109 accounts/forms.py:251
+#: accounts/forms.py:116 accounts/forms.py:258
 msgid "Last Name"
 msgstr ""
 
-#: accounts/forms.py:127
+#: accounts/forms.py:134
 msgid "User already exists."
 msgstr ""
 
-#: accounts/forms.py:135 accounts/forms.py:345
+#: accounts/forms.py:142 accounts/forms.py:352
 msgid "Passwords don't match."
 msgstr ""
 
-#: accounts/forms.py:182 accounts/forms.py:281 accounts/models.py:93
+#: accounts/forms.py:189 accounts/forms.py:288
 msgid "Nickname"
 msgstr ""
 
-#: accounts/forms.py:188 accounts/forms.py:287
+#: accounts/forms.py:195 accounts/forms.py:294
 msgid "Tell us a bit about yourself."
 msgstr ""
 
-#: accounts/models.py:84 accounts/models.py:85 accounts/models.py:439
-#: accounts/models.py:440 accounts/models.py:508 accounts/models.py:509
-#: accounts/models.py:630 accounts/models.py:631 accounts/models.py:776
-#: accounts/models.py:777 events/models.py:1136
+#: accounts/models/Team.py:52 accounts/models/Team.py:130
+#: accounts/models/Team.py:131
+msgid "Team"
+msgstr ""
+
+#: accounts/models/Team.py:53
+msgid "Team Name"
+msgstr ""
+
+#: accounts/models/Team.py:59
+msgid "team"
+msgstr ""
+
+#: accounts/models/Team.py:60
+msgid "teams"
+msgstr ""
+
+#: accounts/models/Team.py:122 accounts/models/Team.py:123
+msgid "Team Member"
+msgstr ""
+
+#: accounts/models/Team.py:136 organizations/models/OrganizationStaff.py:87
+#: organizations/models/OrganizationStaff.py:88
+#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:19
+msgid "Position"
+msgstr ""
+
+#: accounts/models/Team.py:137
+msgid "Team Member Position"
+msgstr ""
+
+#: accounts/models/Team.py:143
+msgid "team member"
+msgstr ""
+
+#: accounts/models/Team.py:144
+msgid "team members"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:43 accounts/models/UserPrivacy.py:56
+msgid "No-one"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:44
+msgid "Registered Users"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:45
+msgid "Participants of the Events, I participate in too"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:46
+msgid "Staff/Group Members of the Organization(s), I affiliated with"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:48
+msgid "Everyone"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:57
+msgid "Admins of the Events, I participate(-d) in"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:58
+msgid "Admins of the upcoming Events on the Platform"
+msgstr ""
+
+#: accounts/models/UserPrivacy.py:87 accounts/models/UserPrivacy.py:88
+#: accounts/models/UserPrivacy.py:170 accounts/models/UserPrivacy.py:171
+#: accounts/models/UserPrivacy.py:306 accounts/models/UserPrivacy.py:307
+#: events/models/Participation.py:123
 msgid "User"
 msgstr ""
 
-#: accounts/models.py:94
-msgid "User Nickname"
-msgstr ""
-
-#: accounts/models.py:99
-msgid "User Bio"
-msgstr ""
-
-#: accounts/models.py:104
-msgid "Gender"
-msgstr ""
-
-#: accounts/models.py:105
-msgid "User Gender"
-msgstr ""
-
-#: accounts/models.py:109
-msgid "Birthday"
-msgstr ""
-
-#: accounts/models.py:110
-msgid "User Birthday"
-msgstr ""
-
-#: accounts/models.py:119 home/templates/home/contact-us.html:64
-#: organizations/models.py:108
-msgid "Address"
-msgstr ""
-
-#: accounts/models.py:120
-msgid "User Address"
-msgstr ""
-
-#: accounts/models.py:126 accounts/templates/accounts/my-profile-edit.html:280
-#: organizations/models.py:116
-#: organizations/templates/organizations/organization-create.html:275
-#: organizations/templates/organizations/organization-edit.html:263
-msgid "Phone Numbers"
-msgstr ""
-
-#: accounts/models.py:127
-msgid "User Phone Numbers"
-msgstr ""
-
-#: accounts/models.py:133 accounts/models.py:134
-msgid "I would like to receive Email Updates"
-msgstr ""
-
-#: accounts/models.py:148
-msgid "user profile"
-msgstr ""
-
-#: accounts/models.py:149
-msgid "user profiles"
-msgstr ""
-
-#: accounts/models.py:446 accounts/models.py:447
+#: accounts/models/UserPrivacy.py:94 accounts/models/UserPrivacy.py:95
 msgid "Hide my Profile from the Search Results"
 msgstr ""
 
-#: accounts/models.py:450 accounts/models.py:451
+#: accounts/models/UserPrivacy.py:98 accounts/models/UserPrivacy.py:99
 msgid "Hide my Profile from the Members' List"
 msgstr ""
 
-#: accounts/models.py:456 accounts/models.py:457
+#: accounts/models/UserPrivacy.py:104 accounts/models/UserPrivacy.py:105
 msgid "user privacy (general)"
 msgstr ""
 
-#: accounts/models.py:518 accounts/models.py:520 accounts/models.py:640
-#: accounts/models.py:642
+#: accounts/models/UserPrivacy.py:180 accounts/models/UserPrivacy.py:182
+#: accounts/models/UserPrivacy.py:316 accounts/models/UserPrivacy.py:318
 msgid ""
 "Who can see my Profile Details (e.g. Avatar, Name, Bio, Gender, Birthday)"
 msgstr ""
 
-#: accounts/models.py:526 accounts/models.py:528 accounts/models.py:648
-#: accounts/models.py:650
+#: accounts/models/UserPrivacy.py:188 accounts/models/UserPrivacy.py:190
+#: accounts/models/UserPrivacy.py:324 accounts/models/UserPrivacy.py:326
 msgid "Who can see my Contact Details (e.g. Address, Phone #, Email)"
 msgstr ""
 
-#: accounts/models.py:535 accounts/models.py:537 accounts/models.py:657
-#: accounts/models.py:659
+#: accounts/models/UserPrivacy.py:197 accounts/models/UserPrivacy.py:199
+#: accounts/models/UserPrivacy.py:333 accounts/models/UserPrivacy.py:335
 msgid ""
 "Who can see the List of Events, I'm going to participate in (upcoming Events)"
 msgstr ""
 
-#: accounts/models.py:543 accounts/models.py:545 accounts/models.py:665
-#: accounts/models.py:667
+#: accounts/models/UserPrivacy.py:205 accounts/models/UserPrivacy.py:207
+#: accounts/models/UserPrivacy.py:341 accounts/models/UserPrivacy.py:343
 msgid "Who can see the List of Events, I participated in (completed Events)"
 msgstr ""
 
-#: accounts/models.py:552 accounts/models.py:554 accounts/models.py:674
-#: accounts/models.py:676
+#: accounts/models/UserPrivacy.py:214 accounts/models/UserPrivacy.py:216
+#: accounts/models/UserPrivacy.py:350 accounts/models/UserPrivacy.py:352
 msgid "Who can see the List of Events, I affiliated with "
 msgstr ""
 
-#: accounts/models.py:561 accounts/models.py:563 accounts/models.py:683
-#: accounts/models.py:685
+#: accounts/models/UserPrivacy.py:223 accounts/models/UserPrivacy.py:225
+#: accounts/models/UserPrivacy.py:359 accounts/models/UserPrivacy.py:361
 msgid ""
 "Who can see the List of Participations, canceled by me (withdrawn "
 "Participations)"
 msgstr ""
 
-#: accounts/models.py:569 accounts/models.py:572 accounts/models.py:691
-#: accounts/models.py:694
+#: accounts/models/UserPrivacy.py:231 accounts/models/UserPrivacy.py:234
+#: accounts/models/UserPrivacy.py:367 accounts/models/UserPrivacy.py:370
 msgid ""
 "Who can see the List of Participations, canceled by the Event Organizer/"
 "Admin (rejected Participations)"
 msgstr ""
 
-#: accounts/models.py:578 accounts/models.py:579
+#: accounts/models/UserPrivacy.py:240 accounts/models/UserPrivacy.py:241
 msgid "user privacy (members)"
 msgstr ""
 
-#: accounts/models.py:700 accounts/models.py:701
+#: accounts/models/UserPrivacy.py:376 accounts/models/UserPrivacy.py:377
 msgid "user privacy (admins)"
 msgstr ""
 
-#: accounts/models.py:781
-msgid "IP"
+#: accounts/models/UserProfile.py:74 events/models/Event.py:217
+#: home/templates/home/contact-us.html:64
+#: organizations/models/Organization.py:120
+msgid "Address"
 msgstr ""
 
-#: accounts/models.py:782
-msgid "User IP Address"
+#: accounts/models/UserProfile.py:75
+msgid "User Address"
 msgstr ""
 
-#: accounts/models.py:786
-msgid "Provider"
+#: accounts/models/UserProfile.py:81
+#: accounts/templates/accounts/my-profile-edit.html:280
+#: organizations/models/Organization.py:128
+#: organizations/templates/organizations/organization-create.html:275
+#: organizations/templates/organizations/organization-edit.html:263
+msgid "Phone Numbers"
 msgstr ""
 
-#: accounts/models.py:787
-msgid "User Internet Provider"
+#: accounts/models/UserProfile.py:82
+msgid "User Phone Numbers"
 msgstr ""
 
-#: accounts/models.py:799
-msgid "user login"
+#: accounts/models/UserProfile.py:88 accounts/models/UserProfile.py:89
+msgid "I would like to receive Email Updates"
 msgstr ""
 
-#: accounts/models.py:800
-msgid "user logins"
+#: accounts/models/UserProfile.py:103
+msgid "user profile"
 msgstr ""
 
-#: accounts/models.py:846 accounts/models.py:910 accounts/models.py:911
-msgid "Team"
-msgstr ""
-
-#: accounts/models.py:847
-msgid "Team Name"
-msgstr ""
-
-#: accounts/models.py:853
-msgid "team"
-msgstr ""
-
-#: accounts/models.py:854
-msgid "teams"
-msgstr ""
-
-#: accounts/models.py:902 accounts/models.py:903
-msgid "Team Member"
-msgstr ""
-
-#: accounts/models.py:916 organizations/models.py:442
-#: organizations/models.py:443
-#: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:19
-msgid "Position"
-msgstr ""
-
-#: accounts/models.py:917
-msgid "Team Member Position"
-msgstr ""
-
-#: accounts/models.py:923
-msgid "team member"
-msgstr ""
-
-#: accounts/models.py:924
-msgid "team members"
+#: accounts/models/UserProfile.py:104
+msgid "user profiles"
 msgstr ""
 
 #: accounts/templates/accounts/account-list.html:7
@@ -451,7 +394,7 @@ msgstr ""
 #: accounts/templates/accounts/my-profile-edit.html:394
 #: accounts/templates/accounts/my-profile-participations.html:25
 #: accounts/templates/accounts/tabs/my-profile/info-tab.html:24
-#: events/choices.py:113 events/templates/events/challenge-create.html:562
+#: events/models/Event.py:66 events/templates/events/challenge-create.html:562
 #: events/templates/events/fragments/challenge-media-status-breakdown.html:65
 #: events/templates/events/fragments/challenge-media-status-breakdown.html:102
 #: events/templates/events/modals/challenge-complete-modal.html:27
@@ -521,7 +464,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:43
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:104
 #: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:43
-#: events/forms.py:143 events/forms.py:460
+#: events/forms.py:152 events/forms.py:469
 msgid "Event Name"
 msgstr ""
 
@@ -560,8 +503,8 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:99
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:52
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:108
-#: blog/models.py:102 events/models.py:228 events/models.py:1160
-#: invites/models.py:82
+#: blog/models/Blog.py:116 events/models/Participation.py:147
+#: invites/models.py:82 invites/models/Invite.py:110
 msgid "Status"
 msgstr ""
 
@@ -581,7 +524,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/admin-challenges-action-required-tab.html:24
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:59
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:143
-#: events/choices.py:164
+#: events/models/Participation.py:66
 msgid "Waiting for Acknowledgment"
 msgstr ""
 
@@ -627,7 +570,7 @@ msgstr ""
 #: accounts/templates/accounts/foreign-profile-participations.html:21
 #: accounts/templates/accounts/my-profile-challenges.html:25
 #: accounts/templates/accounts/my-profile-participations.html:12
-#: events/choices.py:112
+#: events/models/Event.py:65
 msgid "Upcoming"
 msgstr ""
 
@@ -661,7 +604,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:189
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:75
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:187
-#: events/templates/events/tabs/info-tab.html:206 invites/choices.py:19
+#: events/templates/events/tabs/info-tab.html:206 invites/models/Invite.py:38
 msgid "Rejected"
 msgstr ""
 
@@ -1269,7 +1212,7 @@ msgstr ""
 
 #: accounts/templates/accounts/tabs/foreign-profile/info-tab.html:126
 #: accounts/templates/accounts/tabs/my-profile/info-tab.html:104
-#: organizations/models.py:446
+#: organizations/models/OrganizationStaff.py:91
 #: organizations/templates/organizations/modals/organization-staff-member-edit-modal.html:24
 msgid "Bio"
 msgstr ""
@@ -1290,7 +1233,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/foreign-profile/participations-rejected-tab.html:44
 #: accounts/templates/accounts/tabs/my-profile/participations-canceled-tab.html:44
 #: accounts/templates/accounts/tabs/my-profile/participations-rejected-tab.html:44
-#: events/choices.py:156
+#: events/models/Participation.py:60
 msgid "Signed up"
 msgstr ""
 
@@ -1301,8 +1244,8 @@ msgstr ""
 
 #: accounts/templates/accounts/tabs/foreign-profile/participations-complete-tab.html:19
 #: accounts/templates/accounts/tabs/my-profile/participations-complete-tab.html:19
-#: events/models.py:1033 events/models.py:1034 events/models.py:1143
-#: events/models.py:1144
+#: events/models/Participation.py:130 events/models/Participation.py:131
+#: events/models/Role.py:75 events/models/Role.py:76
 #: events/templates/events/challenge-dateless-list.html:52
 #: events/templates/events/challenge-details-base.html:6
 #: events/templates/events/challenge-list.html:51
@@ -1325,7 +1268,7 @@ msgid "There are no upcoming Participations at the moment"
 msgstr ""
 
 #: accounts/templates/accounts/tabs/my-profile/admin-challenges-action-required-tab.html:16
-#: events/choices.py:152
+#: events/models/Participation.py:58
 #: events/templates/events/fragments/challenge-thumbnail-hor.html:167
 #: events/templates/events/fragments/challenge-thumbnail-vert.html:147
 msgid "Waiting for Confirmation"
@@ -1392,7 +1335,8 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:98
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:54
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:97
-#: invites/models.py:100 invites/models.py:101
+#: invites/models.py:100 invites/models.py:101 invites/models/Invite.py:128
+#: invites/models/Invite.py:129
 msgid "Invitation Text"
 msgstr ""
 
@@ -1435,7 +1379,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:185
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:71
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:183
-#: invites/choices.py:17 templates/fragments/navbar.html:106
+#: invites/models/Invite.py:36 templates/fragments/navbar.html:106
 #: templates/fragments/navbar.html:115
 msgid "New"
 msgstr ""
@@ -1444,7 +1388,7 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:187
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:73
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:185
-#: invites/choices.py:18
+#: invites/models/Invite.py:37
 msgid "Accepted"
 msgstr ""
 
@@ -1452,15 +1396,15 @@ msgstr ""
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:191
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:77
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:189
-#: invites/choices.py:20
+#: invites/models/Invite.py:39
 msgid "Revoked"
 msgstr ""
 
 #: accounts/templates/accounts/tabs/my-profile/invitations-received-tab.html:95
 #: accounts/templates/accounts/tabs/my-profile/invitations-sent-tab.html:94
-#: events/forms.py:362 events/forms.py:457 events/models.py:1019
+#: events/forms.py:371 events/forms.py:466 events/models/Role.py:61
 #: events/templates/events/tabs/info-tab.html:195 home/forms.py:24
-#: home/models.py:58 home/models.py:59 organizations/models.py:555
+#: home/models.py:58 home/models.py:59
 msgid "Name"
 msgstr ""
 
@@ -1505,31 +1449,31 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: accounts/views.py:136
+#: accounts/views.py:144
 msgid "All Members"
 msgstr ""
 
-#: accounts/views.py:205
+#: accounts/views.py:213
 msgid "Members near you"
 msgstr ""
 
-#: accounts/views.py:266
+#: accounts/views.py:274
 msgid "Members you might know"
 msgstr ""
 
-#: accounts/views.py:308
+#: accounts/views.py:316
 msgid "New Members"
 msgstr ""
 
-#: accounts/views.py:350
+#: accounts/views.py:358
 msgid "Members online"
 msgstr ""
 
-#: accounts/views.py:535
+#: accounts/views.py:543
 msgid "Sorry, you have entered wrong Email or Password"
 msgstr ""
 
-#: accounts/views.py:1214
+#: accounts/views.py:1222
 msgid "An Error has occurred."
 msgstr ""
 
@@ -1557,11 +1501,11 @@ msgstr ""
 msgid "Successfully sent the Password Renewal Link."
 msgstr ""
 
-#: api/v1/blog/views.py:65 api/v1/events/views.py:83
+#: api/v1/blog/views.py:65 api/v1/events/views.py:89
 msgid "No Year provided."
 msgstr ""
 
-#: api/v1/blog/views.py:70 api/v1/events/views.py:88
+#: api/v1/blog/views.py:70 api/v1/events/views.py:94
 msgid "No Month provided."
 msgstr ""
 
@@ -1581,22 +1525,22 @@ msgstr ""
 msgid "Successfully closed the Post."
 msgstr ""
 
-#: api/v1/events/views.py:153 api/v1/events/views.py:238
-#: api/v1/events/views.py:327 api/v1/events/views.py:455
-#: api/v1/events/views.py:553
+#: api/v1/events/views.py:159 api/v1/events/views.py:244
+#: api/v1/events/views.py:333 api/v1/events/views.py:461
+#: api/v1/events/views.py:559
 msgid "Event ID is not provided."
 msgstr ""
 
-#: api/v1/events/views.py:158 api/v1/events/views.py:243
-#: api/v1/events/views.py:332 api/v1/events/views.py:460
+#: api/v1/events/views.py:164 api/v1/events/views.py:249
+#: api/v1/events/views.py:338 api/v1/events/views.py:466
 msgid "No Description Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:166 api/v1/events/views.py:251
-#: api/v1/events/views.py:340 api/v1/events/views.py:468
-#: api/v1/events/views.py:561 api/v1/events/views.py:794
-#: api/v1/events/views.py:894 api/v1/events/views.py:1014
-#: api/v1/events/views.py:1247 api/v1/events/views.py:1369
+#: api/v1/events/views.py:172 api/v1/events/views.py:257
+#: api/v1/events/views.py:346 api/v1/events/views.py:474
+#: api/v1/events/views.py:567 api/v1/events/views.py:800
+#: api/v1/events/views.py:900 api/v1/events/views.py:1020
+#: api/v1/events/views.py:1253 api/v1/events/views.py:1375
 #: api/v1/home/views.py:69 api/v1/organizations/views.py:103
 #: api/v1/organizations/views.py:183 api/v1/organizations/views.py:263
 #: api/v1/organizations/views.py:337 api/v1/organizations/views.py:402
@@ -1605,102 +1549,102 @@ msgstr ""
 msgid "You don't have Permissions to perform the Action."
 msgstr ""
 
-#: api/v1/events/views.py:178 api/v1/events/views.py:263
-#: api/v1/events/views.py:352 api/v1/events/views.py:480
-#: api/v1/events/views.py:573 api/v1/events/views.py:699
-#: api/v1/events/views.py:806 api/v1/events/views.py:906
-#: api/v1/events/views.py:1026 api/v1/events/views.py:1132
-#: api/v1/events/views.py:1259 api/v1/events/views.py:1381
-#: api/v1/invites/views.py:135
+#: api/v1/events/views.py:184 api/v1/events/views.py:269
+#: api/v1/events/views.py:358 api/v1/events/views.py:486
+#: api/v1/events/views.py:579 api/v1/events/views.py:705
+#: api/v1/events/views.py:812 api/v1/events/views.py:912
+#: api/v1/events/views.py:1032 api/v1/events/views.py:1138
+#: api/v1/events/views.py:1265 api/v1/events/views.py:1387
+#: api/v1/invites/views.py:143
 msgid "Event not found."
 msgstr ""
 
-#: api/v1/events/views.py:196
+#: api/v1/events/views.py:202
 msgid "Successfully published the Event."
 msgstr ""
 
-#: api/v1/events/views.py:284
+#: api/v1/events/views.py:290
 msgid "Successfully completed the Event."
 msgstr ""
 
-#: api/v1/events/views.py:411
+#: api/v1/events/views.py:417
 msgid "Successfully cloned the Event."
 msgstr ""
 
-#: api/v1/events/views.py:501
+#: api/v1/events/views.py:507
 msgid "Successfully closed the Event."
 msgstr ""
 
-#: api/v1/events/views.py:640
+#: api/v1/events/views.py:646
 msgid "Successfully posted the Participation."
 msgstr ""
 
-#: api/v1/events/views.py:682 api/v1/events/views.py:776
-#: api/v1/events/views.py:881 api/v1/events/views.py:996
-#: api/v1/events/views.py:1110 api/v1/events/views.py:1229
-#: api/v1/events/views.py:1351
+#: api/v1/events/views.py:688 api/v1/events/views.py:782
+#: api/v1/events/views.py:887 api/v1/events/views.py:1002
+#: api/v1/events/views.py:1116 api/v1/events/views.py:1235
+#: api/v1/events/views.py:1357
 msgid "No Event ID provided."
 msgstr ""
 
-#: api/v1/events/views.py:687 api/v1/events/views.py:786
-#: api/v1/events/views.py:1006
+#: api/v1/events/views.py:693 api/v1/events/views.py:792
+#: api/v1/events/views.py:1012
 msgid "No Cancellation Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:712 api/v1/events/views.py:819
-#: api/v1/events/views.py:919 api/v1/events/views.py:1039
-#: api/v1/events/views.py:1145 api/v1/events/views.py:1272
-#: api/v1/events/views.py:1394
+#: api/v1/events/views.py:718 api/v1/events/views.py:825
+#: api/v1/events/views.py:925 api/v1/events/views.py:1045
+#: api/v1/events/views.py:1151 api/v1/events/views.py:1278
+#: api/v1/events/views.py:1400
 msgid "Participation not found."
 msgstr ""
 
-#: api/v1/events/views.py:731
+#: api/v1/events/views.py:737
 msgid "Successfully withdrew the Participation."
 msgstr ""
 
-#: api/v1/events/views.py:781 api/v1/events/views.py:886
-#: api/v1/events/views.py:1001 api/v1/events/views.py:1234
-#: api/v1/events/views.py:1356
+#: api/v1/events/views.py:787 api/v1/events/views.py:892
+#: api/v1/events/views.py:1007 api/v1/events/views.py:1240
+#: api/v1/events/views.py:1362
 msgid "No Participation ID provided."
 msgstr ""
 
-#: api/v1/events/views.py:838
+#: api/v1/events/views.py:844
 msgid "Successfully removed the Participant."
 msgstr ""
 
-#: api/v1/events/views.py:950
+#: api/v1/events/views.py:956
 msgid "Successfully accepted the Participation Request."
 msgstr ""
 
-#: api/v1/events/views.py:1058
+#: api/v1/events/views.py:1064
 msgid "Successfully rejected the Participation Request."
 msgstr ""
 
-#: api/v1/events/views.py:1115
+#: api/v1/events/views.py:1121
 msgid "No Activity Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:1120
+#: api/v1/events/views.py:1126
 msgid "No Learning Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:1181
+#: api/v1/events/views.py:1187
 msgid "Successfully submitted the Experience Report."
 msgstr ""
 
-#: api/v1/events/views.py:1239
+#: api/v1/events/views.py:1245
 msgid "No Acknowledgment Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:1306
+#: api/v1/events/views.py:1312
 msgid "Successfully accepted the Experience Report."
 msgstr ""
 
-#: api/v1/events/views.py:1361 api/v1/invites/views.py:441
+#: api/v1/events/views.py:1367 api/v1/invites/views.py:449
 msgid "No Rejection Text provided."
 msgstr ""
 
-#: api/v1/events/views.py:1413
+#: api/v1/events/views.py:1419
 msgid "Successfully rejected the Experience Report."
 msgstr ""
 
@@ -1724,68 +1668,68 @@ msgstr ""
 msgid "Successfully sent the Message."
 msgstr ""
 
-#: api/v1/invites/views.py:87
+#: api/v1/invites/views.py:95
 msgid "No Invitee ID provided."
 msgstr ""
 
-#: api/v1/invites/views.py:92
+#: api/v1/invites/views.py:100
 msgid "Neither Event, nor Organization, nor Organization Group ID provided."
 msgstr ""
 
-#: api/v1/invites/views.py:97
+#: api/v1/invites/views.py:105
 msgid "No Invitation Text provided."
 msgstr ""
 
-#: api/v1/invites/views.py:109
+#: api/v1/invites/views.py:117
 msgid "Invitee not found."
 msgstr ""
 
-#: api/v1/invites/views.py:164 api/v1/organizations/views.py:414
+#: api/v1/invites/views.py:172 api/v1/organizations/views.py:414
 #: api/v1/organizations/views.py:675
 msgid "Organization not found."
 msgstr ""
 
-#: api/v1/invites/views.py:181 api/v1/organizations/views.py:509
+#: api/v1/invites/views.py:189 api/v1/organizations/views.py:509
 #: api/v1/organizations/views.py:598
 msgid "Organization Group not found."
 msgstr ""
 
-#: api/v1/invites/views.py:210
+#: api/v1/invites/views.py:218
 msgid "Successfully sent the Invitation."
 msgstr ""
 
-#: api/v1/invites/views.py:254
+#: api/v1/invites/views.py:262
 msgid "No Kind provided."
 msgstr ""
 
-#: api/v1/invites/views.py:282
+#: api/v1/invites/views.py:290
 msgid "Successfully archived the Invitations."
 msgstr ""
 
-#: api/v1/invites/views.py:323 api/v1/invites/views.py:436
-#: api/v1/invites/views.py:522
+#: api/v1/invites/views.py:331 api/v1/invites/views.py:444
+#: api/v1/invites/views.py:530
 msgid "No Invite ID provided."
 msgstr ""
 
-#: api/v1/invites/views.py:336 api/v1/invites/views.py:454
-#: api/v1/invites/views.py:535
+#: api/v1/invites/views.py:344 api/v1/invites/views.py:462
+#: api/v1/invites/views.py:543
 msgid "Invite not found."
 msgstr ""
 
-#: api/v1/invites/views.py:341 api/v1/invites/views.py:459
-#: api/v1/invites/views.py:540
+#: api/v1/invites/views.py:349 api/v1/invites/views.py:467
+#: api/v1/invites/views.py:548
 msgid "Invite Status has been changed already."
 msgstr ""
 
-#: api/v1/invites/views.py:392
+#: api/v1/invites/views.py:400
 msgid "Successfully accepted the Invitation."
 msgstr ""
 
-#: api/v1/invites/views.py:478
+#: api/v1/invites/views.py:486
 msgid "Successfully rejected the Invitation."
 msgstr ""
 
-#: api/v1/invites/views.py:558
+#: api/v1/invites/views.py:566
 msgid "Successfully revoked the Invitation."
 msgstr ""
 
@@ -1894,30 +1838,30 @@ msgstr ""
 msgid "Enter your Notes here..."
 msgstr ""
 
-#: app/forms.py:143 events/forms.py:186 events/models.py:320
-#: organizations/forms.py:119 organizations/models.py:163
+#: app/forms.py:142 events/forms.py:195 organizations/forms.py:119
+#: organizations/models/Organization.py:175
 msgid "Phone Number"
 msgstr ""
 
-#: app/forms.py:148 app/forms.py:159
+#: app/forms.py:147
 msgid "Ext."
 msgstr ""
 
-#: app/forms.py:154
-msgid "Mobile Phone Number"
+#: app/forms.py:153
+msgid "Phone Type"
 msgstr ""
 
-#: app/forms.py:206
+#: app/forms.py:199
 msgid "Newsletter Title"
 msgstr ""
 
-#: app/forms.py:266
+#: app/forms.py:259
 msgid "URL"
 msgstr ""
 
-#: app/forms.py:278 events/forms.py:231 events/forms.py:237 events/forms.py:245
-#: events/forms.py:255 events/forms.py:261 events/forms.py:270
-#: events/forms.py:378 events/forms.py:385 organizations/forms.py:140
+#: app/forms.py:271 events/forms.py:240 events/forms.py:246 events/forms.py:254
+#: events/forms.py:264 events/forms.py:270 events/forms.py:279
+#: events/forms.py:387 events/forms.py:394 organizations/forms.py:140
 #: organizations/forms.py:146 organizations/forms.py:154
 msgid "This Field is required."
 msgstr ""
@@ -1926,70 +1870,62 @@ msgstr ""
 msgid "No Files attached."
 msgstr ""
 
-#: blog/choices.py:16 blog/templates/blog/fragments/post-thumbnail-hor.html:15
-#: blog/templates/blog/post-details.html:47 events/choices.py:111
+#: blog/choices.py:16 blog/models/Blog.py:49
+#: blog/templates/blog/fragments/post-thumbnail-hor.html:15
+#: blog/templates/blog/post-details.html:47 events/models/Event.py:64
 msgid "Draft"
 msgstr ""
 
-#: blog/choices.py:17
+#: blog/choices.py:17 blog/models/Blog.py:50
 msgid "Visible"
 msgstr ""
 
-#: blog/choices.py:18 events/choices.py:115
+#: blog/choices.py:18 blog/models/Blog.py:51 events/models/Event.py:68
 msgid "Closed"
 msgstr ""
 
-#: blog/forms.py:36 blog/models.py:71
+#: blog/forms.py:36
 msgid "Post Title"
 msgstr ""
 
-#: blog/forms.py:45 blog/models.py:94 blog/models.py:95 events/forms.py:160
-#: events/models.py:217 events/models.py:218 organizations/forms.py:85
-#: organizations/models.py:94 organizations/models.py:95
+#: blog/forms.py:45 blog/models/Blog.py:108 blog/models/Blog.py:109
+#: events/forms.py:169 events/models/Event.py:186 events/models/Event.py:187
+#: organizations/forms.py:85 organizations/models/Organization.py:106
+#: organizations/models/Organization.py:107
 msgid "Hashtag"
 msgstr ""
 
-#: blog/models.py:63 blog/models.py:64
+#: blog/models/Blog.py:89 blog/models/Blog.py:90
 msgid "Post Author"
 msgstr ""
 
-#: blog/models.py:70 home/models.py:155
-msgid "Title"
-msgstr ""
-
-#: blog/models.py:75
-msgid "Short Description"
-msgstr ""
-
-#: blog/models.py:76
-msgid "Post short Description"
-msgstr ""
-
-#: blog/models.py:80
+#: blog/models/Blog.py:96
 msgid "Content"
 msgstr ""
 
-#: blog/models.py:81
+#: blog/models/Blog.py:97
 msgid "Post Content"
 msgstr ""
 
-#: blog/models.py:89 events/models.py:212 organizations/models.py:89
+#: blog/models/Blog.py:103 events/models/Event.py:181
+#: organizations/models/Organization.py:101
 msgid "Tags"
 msgstr ""
 
-#: blog/models.py:90 events/models.py:213 organizations/models.py:90
+#: blog/models/Blog.py:104 events/models/Event.py:182
+#: organizations/models/Organization.py:102
 msgid "A comma-separated List of Tags."
 msgstr ""
 
-#: blog/models.py:103
+#: blog/models/Blog.py:117
 msgid "Post Status"
 msgstr ""
 
-#: blog/models.py:108
+#: blog/models/Blog.py:122
 msgid "blog post"
 msgstr ""
 
-#: blog/models.py:109
+#: blog/models/Blog.py:123
 msgid "blog posts"
 msgstr ""
 
@@ -2137,75 +2073,146 @@ msgstr ""
 msgid "Tag Cloud"
 msgstr ""
 
-#: events/choices.py:22
+#: events/forms.py:71 organizations/forms.py:29
+#, python-format
+msgid "Me (%s)"
+msgstr ""
+
+#: events/forms.py:72 organizations/forms.py:30
+msgid "Affiliate different Person"
+msgstr ""
+
+#: events/forms.py:126 events/forms.py:311
+msgid "Related Links"
+msgstr ""
+
+#: events/forms.py:129 events/forms.py:314 organizations/forms.py:55
+msgid "Separate your Links with a Space"
+msgstr ""
+
+#: events/forms.py:158
+msgid "Event Description"
+msgstr ""
+
+#: events/forms.py:183 organizations/forms.py:107
+#: organizations/models/Organization.py:167
+msgid "Full Name"
+msgstr ""
+
+#: events/forms.py:209
+msgid "Write the Feedback here..."
+msgstr ""
+
+#: events/forms.py:219
+msgid "Duration should be greater, than 0"
+msgstr ""
+
+#: events/forms.py:229
+msgid "Reserved Word cannot be used as a Event Name."
+msgstr ""
+
+#: events/forms.py:376
+msgid "Qty"
+msgstr ""
+
+#: events/forms.py:477
+msgid "Year"
+msgstr ""
+
+#: events/forms.py:485
+msgid "Month"
+msgstr ""
+
+#: events/forms.py:493
+msgid "Day"
+msgstr ""
+
+#: events/models/Category.py:42
 msgid "Animals"
 msgstr ""
 
-#: events/choices.py:23
+#: events/models/Category.py:43
 msgid "Arts & Culture"
 msgstr ""
 
-#: events/choices.py:24
+#: events/models/Category.py:44
 msgid "Children & Youth"
 msgstr ""
 
-#: events/choices.py:25
+#: events/models/Category.py:45
 msgid "Community"
 msgstr ""
 
-#: events/choices.py:26
+#: events/models/Category.py:46
 msgid "Education & Literacy"
 msgstr ""
 
-#: events/choices.py:27
+#: events/models/Category.py:47
 msgid "Environment"
 msgstr ""
 
-#: events/choices.py:28
+#: events/models/Category.py:48
 msgid "Health & Wellness"
 msgstr ""
 
-#: events/choices.py:29
+#: events/models/Category.py:49
 msgid "Sports & Recreation"
 msgstr ""
 
-#: events/choices.py:30
+#: events/models/Category.py:50
 msgid "Veterans & Seniors"
 msgstr ""
 
-#: events/choices.py:114
+#: events/models/Category.py:164 events/models/Category.py:165
+#: events/models/Event.py:191 events/templates/events/tabs/info-tab.html:116
+msgid "Category"
+msgstr ""
+
+#: events/models/Category.py:169
+msgid "Color"
+msgstr ""
+
+#: events/models/Category.py:170
+msgid "Category Color"
+msgstr ""
+
+#: events/models/Category.py:174
+msgid "Icon"
+msgstr ""
+
+#: events/models/Category.py:175
+msgid "Category Icon"
+msgstr ""
+
+#: events/models/Category.py:179
+msgid "Image"
+msgstr ""
+
+#: events/models/Category.py:180
+msgid "Category Image"
+msgstr ""
+
+#: events/models/Category.py:185
+msgid "category"
+msgstr ""
+
+#: events/models/Category.py:186
+msgid "categories"
+msgstr ""
+
+#: events/models/Event.py:67
 msgid "Expired"
 msgstr ""
 
-#: events/choices.py:122
+#: events/models/Event.py:75
 msgid "Anyone can participate."
 msgstr ""
 
-#: events/choices.py:123
+#: events/models/Event.py:76
 msgid "Participate only after a confirmed Application"
 msgstr ""
 
-#: events/choices.py:154
-msgid "You were not accepted to this Event"
-msgstr ""
-
-#: events/choices.py:158
-msgid "The Organizer removed you from this Event"
-msgstr ""
-
-#: events/choices.py:160
-msgid "You withdrew your Participation to this Event"
-msgstr ""
-
-#: events/choices.py:162
-msgid "Please, write your Experience Report"
-msgstr ""
-
-#: events/choices.py:166
-msgid "Report acknowledged"
-msgstr ""
-
-#: events/choices.py:177
+#: events/models/Event.py:83
 #: events/templates/events/fragments/challenge-thumbnail-hor.html:103
 #: events/templates/events/fragments/challenge-thumbnail-vert.html:83
 #: events/templates/events/tabs/info-tab.html:108
@@ -2213,363 +2220,177 @@ msgstr ""
 msgid "Dateless"
 msgstr ""
 
-#: events/choices.py:178
+#: events/models/Event.py:84
 msgid "Once"
 msgstr ""
 
-#: events/choices.py:196 events/choices.py:221 events/choices.py:232
+#: events/models/Event.py:102 events/models/Event.py:127
+#: events/models/Event.py:138
 msgid "----------"
 msgstr ""
 
-#: events/choices.py:197
+#: events/models/Event.py:103
 msgid "January"
 msgstr ""
 
-#: events/choices.py:198
+#: events/models/Event.py:104
 msgid "February"
 msgstr ""
 
-#: events/choices.py:199
+#: events/models/Event.py:105
 msgid "March"
 msgstr ""
 
-#: events/choices.py:200
+#: events/models/Event.py:106
 msgid "April"
 msgstr ""
 
-#: events/choices.py:201
+#: events/models/Event.py:107
 msgid "May"
 msgstr ""
 
-#: events/choices.py:202
+#: events/models/Event.py:108
 msgid "June"
 msgstr ""
 
-#: events/choices.py:203
+#: events/models/Event.py:109
 msgid "July"
 msgstr ""
 
-#: events/choices.py:204
+#: events/models/Event.py:110
 msgid "August"
 msgstr ""
 
-#: events/choices.py:205
+#: events/models/Event.py:111
 msgid "September"
 msgstr ""
 
-#: events/choices.py:206
+#: events/models/Event.py:112
 msgid "October"
 msgstr ""
 
-#: events/choices.py:207
+#: events/models/Event.py:113
 msgid "November"
 msgstr ""
 
-#: events/choices.py:208
+#: events/models/Event.py:114
 msgid "December"
 msgstr ""
 
-#: events/choices.py:222
+#: events/models/Event.py:128
 msgid "Sunday"
 msgstr ""
 
-#: events/choices.py:223
+#: events/models/Event.py:129
 msgid "Monday"
 msgstr ""
 
-#: events/choices.py:224
+#: events/models/Event.py:130
 msgid "Tuesday"
 msgstr ""
 
-#: events/choices.py:225
+#: events/models/Event.py:131
 msgid "Wednesday"
 msgstr ""
 
-#: events/choices.py:226
+#: events/models/Event.py:132
 msgid "Thursday"
 msgstr ""
 
-#: events/choices.py:227
+#: events/models/Event.py:133
 msgid "Friday"
 msgstr ""
 
-#: events/choices.py:228
+#: events/models/Event.py:134
 msgid "Saturday"
 msgstr ""
 
-#: events/choices.py:233
+#: events/models/Event.py:139
 msgid "Last Day of Month"
 msgstr ""
 
-#: events/forms.py:65 organizations/forms.py:29
-#, python-format
-msgid "Me (%s)"
-msgstr ""
-
-#: events/forms.py:66 organizations/forms.py:30
-msgid "Affiliate different Person"
-msgstr ""
-
-#: events/forms.py:120 events/forms.py:302
-msgid "Related Links"
-msgstr ""
-
-#: events/forms.py:123 events/forms.py:305 organizations/forms.py:55
-msgid "Separate your Links with a Space"
-msgstr ""
-
-#: events/forms.py:149
-msgid "Event Description"
-msgstr ""
-
-#: events/forms.py:174 events/models.py:312 organizations/forms.py:107
-#: organizations/models.py:155
-msgid "Full Name"
-msgstr ""
-
-#: events/forms.py:200
-msgid "Write the Feedback here..."
-msgstr ""
-
-#: events/forms.py:210
-msgid "Duration should be greater, than 0"
-msgstr ""
-
-#: events/forms.py:220
-msgid "Reserved Word cannot be used as a Event Name."
-msgstr ""
-
-#: events/forms.py:367
-msgid "Qty"
-msgstr ""
-
-#: events/forms.py:468
-msgid "Year"
-msgstr ""
-
-#: events/forms.py:476
-msgid "Month"
-msgstr ""
-
-#: events/forms.py:484
-msgid "Day"
-msgstr ""
-
-#: events/models.py:102 events/models.py:103 events/models.py:222
-#: events/templates/events/tabs/info-tab.html:116
-msgid "Category"
-msgstr ""
-
-#: events/models.py:107
-msgid "Color"
-msgstr ""
-
-#: events/models.py:108
-msgid "Category Color"
-msgstr ""
-
-#: events/models.py:112
-msgid "Icon"
-msgstr ""
-
-#: events/models.py:113
-msgid "Category Icon"
-msgstr ""
-
-#: events/models.py:117
-msgid "Image"
-msgstr ""
-
-#: events/models.py:118
-msgid "Category Image"
-msgstr ""
-
-#: events/models.py:123
-msgid "category"
-msgstr ""
-
-#: events/models.py:124
-msgid "categories"
-msgstr ""
-
-#: events/models.py:191
-msgid "event"
-msgstr ""
-
-#: events/models.py:192
-msgid "events"
-msgstr ""
-
-#: events/models.py:203 home/models.py:149 organizations/models.py:81
-#: organizations/models.py:422 organizations/models.py:550
+#: events/models/Event.py:172 home/models.py:149
+#: organizations/models/Organization.py:93
+#: organizations/models/OrganizationGroup.py:68
+#: organizations/models/OrganizationStaff.py:67
 msgid "Author"
 msgstr ""
 
-#: events/models.py:204
+#: events/models/Event.py:173
 msgid "Event Author"
 msgstr ""
 
-#: events/models.py:223
+#: events/models/Event.py:192
 msgid "Event Category"
 msgstr ""
 
-#: events/models.py:229
-msgid "Event Status"
-msgstr ""
-
-#: events/models.py:233 events/templates/events/challenge-create.html:520
-#: events/templates/events/challenge-edit.html:517
-msgid "Application"
-msgstr ""
-
-#: events/models.py:234
-msgid "Event Application"
-msgstr ""
-
-#: events/models.py:241 events/models.py:242 organizations/models.py:101
-#: organizations/models.py:102
+#: events/models/Event.py:210 events/models/Event.py:211
+#: organizations/models/Organization.py:113
+#: organizations/models/Organization.py:114
 msgid "I will provide the Location later, if any."
 msgstr ""
 
-#: events/models.py:255
-msgid "Duration (hours)"
+#: events/models/Event.py:218
+msgid "Event Location"
 msgstr ""
 
-#: events/models.py:256
-msgid "Event Duration"
-msgstr ""
-
-#: events/models.py:264
-msgid "Recurrence"
-msgstr ""
-
-#: events/models.py:265
-msgid "Event Recurrence"
-msgstr ""
-
-#: events/models.py:288 events/templates/events/challenge-list.html:91
-msgid "Start Date"
-msgstr ""
-
-#: events/models.py:289
-msgid "Event Start Date"
-msgstr ""
-
-#: events/models.py:293
-msgid "Start Time"
-msgstr ""
-
-#: events/models.py:294
-msgid "Event Start Time"
-msgstr ""
-
-#: events/models.py:297
-msgid "Timezone"
-msgstr ""
-
-#: events/models.py:298
-msgid "Event Timezone"
-msgstr ""
-
-#: events/models.py:303
-msgid "Start Date/Time with TZ"
-msgstr ""
-
-#: events/models.py:304
-msgid "Event Start Date/Time with TZ"
-msgstr ""
-
-#: events/models.py:313
-msgid "Event Contact Person full Name"
-msgstr ""
-
-#: events/models.py:317
-msgid "Event Contact Person Email"
-msgstr ""
-
-#: events/models.py:321 organizations/models.py:164
-msgid "Please, use the International Format, e.g. +1-202-555-0114."
-msgstr ""
-
-#: events/models.py:331 organizations/models.py:429 organizations/models.py:430
-#: organizations/models.py:566 organizations/models.py:567
+#: events/models/Event.py:301 organizations/models/OrganizationGroup.py:75
+#: organizations/models/OrganizationGroup.py:76
+#: organizations/models/OrganizationStaff.py:74
+#: organizations/models/OrganizationStaff.py:75
 #: organizations/templates/organizations/fragments/organization-thumbnail-search.html:26
 #: organizations/templates/organizations/organization-details-base.html:6
 #: organizations/templates/organizations/organization-list.html:28
 msgid "Organization"
 msgstr ""
 
-#: events/models.py:332
+#: events/models/Event.py:302
 msgid "Event Organization"
 msgstr ""
 
-#: events/models.py:340 events/models.py:341
-#: events/templates/events/challenge-reporting-materials.html:67
-#: events/templates/events/tabs/info-tab.html:174
-msgid "Achievements"
+#: events/models/Event.py:350
+msgid "event"
 msgstr ""
 
-#: events/models.py:348 events/models.py:349
-msgid "Reason for closing"
+#: events/models/Event.py:351
+msgid "events"
 msgstr ""
 
-#: events/models.py:359 events/models.py:361
-msgid ""
-"Allow Members to apply again to the Event after withdrawing their "
-"Application."
-msgstr ""
-
-#: events/models.py:366 events/models.py:368
-msgid ""
-"Automatically accept Participants' Experience Reports after the Event "
-"completed."
-msgstr ""
-
-#: events/models.py:372
-msgid "Acceptance Text"
-msgstr ""
-
-#: events/models.py:374
-msgid ""
-"This Text will automatically appear as an Acknowledgment Text for each "
-"Participant after Event has been marked as completed."
-msgstr ""
-
-#: events/models.py:435 events/models.py:478 events/models.py:524
-#: events/models.py:622 events/models.py:668 events/models.py:711
-#: events/models.py:755 events/models.py:797 events/tasks.py:49
-#: events/tasks.py:118
+#: events/models/Event.py:420 events/models/Event.py:463
+#: events/models/Event.py:509 events/models/Event.py:607
+#: events/models/Event.py:653 events/models/Event.py:696
+#: events/models/Event.py:740 events/models/Event.py:782
 #, python-format
 msgid "Dear, %(user)s."
 msgstr ""
 
-#: events/models.py:439
+#: events/models/Event.py:424
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully "
 "created.</p>"
 msgstr ""
 
-#: events/models.py:482
+#: events/models/Event.py:467
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created.</"
 "p>"
 msgstr ""
 
-#: events/models.py:528
+#: events/models/Event.py:513
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created, "
 "and you were added as a contact Person to it.</p>"
 msgstr ""
 
-#: events/models.py:571
+#: events/models/Event.py:556
 #, python-format
 msgid "The \"<a href=\"%(url)s\">%(name)s</a>\" recent Activity."
 msgstr ""
 
-#: events/models.py:576
+#: events/models/Event.py:561
 #, python-format
 msgid ""
 "<p>Dear, %(user)s,</p><p>The Organization \"<a "
@@ -2579,19 +2400,19 @@ msgid ""
 "Notifications.</p>"
 msgstr ""
 
-#: events/models.py:626
+#: events/models/Event.py:611
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
 msgstr ""
 
-#: events/models.py:672
+#: events/models/Event.py:657
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a "
 "contact Person, was modified.</p>"
 msgstr ""
 
-#: events/models.py:715
+#: events/models/Event.py:700
 #, python-format
 msgid ""
 "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</"
@@ -2600,137 +2421,141 @@ msgid ""
 "Experience Reports.</p>"
 msgstr ""
 
-#: events/models.py:759
+#: events/models/Event.py:744
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>"
 msgstr ""
 
-#: events/models.py:801
+#: events/models/Event.py:786
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>"
 msgstr ""
 
-#: events/models.py:1020
-msgid "Role Name"
+#: events/models/Participation.py:59
+msgid "You were not accepted to this Event"
 msgstr ""
 
-#: events/models.py:1022 events/models.py:1023
-msgid "Quantity"
+#: events/models/Participation.py:61
+msgid "The Organizer removed you from this Event"
 msgstr ""
 
-#: events/models.py:1048
-msgid "role"
+#: events/models/Participation.py:63
+msgid "You withdrew your Participation to this Event"
 msgstr ""
 
-#: events/models.py:1049
-msgid "roles"
+#: events/models/Participation.py:65
+msgid "Please, write your Experience Report"
 msgstr ""
 
-#: events/models.py:1137
+#: events/models/Participation.py:67
+msgid "Report acknowledged"
+msgstr ""
+
+#: events/models/Participation.py:124
 msgid "Participant"
 msgstr ""
 
-#: events/models.py:1151
+#: events/models/Participation.py:138
 msgid "Role"
 msgstr ""
 
-#: events/models.py:1152
+#: events/models/Participation.py:139
 msgid "Role, if applicable"
 msgstr ""
 
-#: events/models.py:1161
+#: events/models/Participation.py:148
 msgid "Participation Status"
 msgstr ""
 
-#: events/models.py:1167 events/models.py:1168
+#: events/models/Participation.py:154 events/models/Participation.py:155
 #: events/templates/events/modals/challenge-participation-post-modal.html:26
 #: events/templates/events/tabs/to-confirm-tab.html:58
 #: events/templates/events/tabs/to-confirm-tab.html:86
 msgid "Application Text"
 msgstr ""
 
-#: events/models.py:1171 events/models.py:1172
+#: events/models/Participation.py:158 events/models/Participation.py:159
 #: events/templates/events/modals/challenge-not-participated-modal.html:28
 #: events/templates/events/modals/challenge-participation-withdraw-modal.html:26
 msgid "Cancellation Text"
 msgstr ""
 
-#: events/models.py:1175 events/models.py:1176
+#: events/models/Participation.py:162 events/models/Participation.py:163
 msgid "Experience Report - Activity Text"
 msgstr ""
 
-#: events/models.py:1179 events/models.py:1180
+#: events/models/Participation.py:166 events/models/Participation.py:167
 msgid "Experience Report - learning Text"
 msgstr ""
 
-#: events/models.py:1183 events/models.py:1184
+#: events/models/Participation.py:170 events/models/Participation.py:171
 msgid "Experience Report - Rejection Text"
 msgstr ""
 
-#: events/models.py:1187 events/models.py:1188
+#: events/models/Participation.py:174 events/models/Participation.py:175
 msgid "Acknowledgement Text"
 msgstr ""
 
-#: events/models.py:1195 events/models.py:1196
+#: events/models/Participation.py:182 events/models/Participation.py:183
 msgid "Date created"
 msgstr ""
 
-#: events/models.py:1200 events/models.py:1201 invites/models.py:112
-#: invites/models.py:113
+#: events/models/Participation.py:187 events/models/Participation.py:188
+#: invites/models.py:112 invites/models.py:113 invites/models/Invite.py:140
+#: invites/models/Invite.py:141
 msgid "Date accepted"
 msgstr ""
 
-#: events/models.py:1205 events/models.py:1206
+#: events/models/Participation.py:192 events/models/Participation.py:193
 msgid "Date canceled"
 msgstr ""
 
-#: events/models.py:1210
+#: events/models/Participation.py:197
 msgid "Date of the Experience Report"
 msgstr ""
 
-#: events/models.py:1211
+#: events/models/Participation.py:198
 msgid "Date of receiving of the Experience Report"
 msgstr ""
 
-#: events/models.py:1215
+#: events/models/Participation.py:202
 msgid "Date of the Experience Report Rejection"
 msgstr ""
 
-#: events/models.py:1216
+#: events/models/Participation.py:203
 msgid "Date of Rejection of the Experience Report"
 msgstr ""
 
-#: events/models.py:1220
+#: events/models/Participation.py:207
 msgid "Date acknowledged"
 msgstr ""
 
-#: events/models.py:1221
+#: events/models/Participation.py:208
 msgid "Date of acknowledging of the Experience Report"
 msgstr ""
 
-#: events/models.py:1226
+#: events/models/Participation.py:213
 msgid "participation"
 msgstr ""
 
-#: events/models.py:1227
+#: events/models/Participation.py:214
 msgid "participations"
 msgstr ""
 
-#: events/tasks.py:53
-#, python-format
-msgid ""
-"<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" is overdue!</p><p>If this "
-"Event has taken place as planned, please, mark it as completed.</"
-"p><p>Remember to remove all Participants from the Event, who did not show up "
-"to help, so the Event will not appear on their Profiles.</p>"
+#: events/models/Role.py:62
+msgid "Role Name"
 msgstr ""
 
-#: events/tasks.py:122
-#, python-format
-msgid ""
-"<p>Don't forget that you are signed up for the Event \"<a "
-"href=\"%(url)s\">%(name)s</a>\" on %(start_date)s at %(start_time)s.</"
-"p><p>Please, don't forget to show up!</p>"
+#: events/models/Role.py:64 events/models/Role.py:65
+msgid "Quantity"
+msgstr ""
+
+#: events/models/Role.py:90
+msgid "role"
+msgstr ""
+
+#: events/models/Role.py:91
+msgid "roles"
 msgstr ""
 
 #: events/templates/events/challenge-category-list.html:7
@@ -2777,7 +2602,6 @@ msgstr ""
 #: events/templates/events/challenge-edit.html:126
 #: events/templates/events/modals/challenge-complete-modal.html:20
 #: events/templates/events/modals/challenge-create-modal.html:20
-#: organizations/models.py:559
 #: organizations/templates/organizations/organization-create.html:123
 #: organizations/templates/organizations/organization-edit.html:112
 msgid "Description"
@@ -2816,6 +2640,11 @@ msgid ""
 "<i>dateless, once, <s>weekly</s>, <s>monthly</s>, <s>annually</s>, "
 "<s>custom</s></i>.\n"
 "                                    "
+msgstr ""
+
+#: events/templates/events/challenge-create.html:520
+#: events/templates/events/challenge-edit.html:517
+msgid "Application"
 msgstr ""
 
 #: events/templates/events/challenge-create.html:564
@@ -2928,6 +2757,10 @@ msgstr ""
 msgid "Video Links"
 msgstr ""
 
+#: events/templates/events/challenge-list.html:91
+msgid "Start Date"
+msgstr ""
+
 #: events/templates/events/challenge-reporting-materials.html:8
 msgid "Event reporting Materials"
 msgstr ""
@@ -2946,6 +2779,11 @@ msgid ""
 "                    After you save Changes, all confirmed Participants will "
 "receive appropriate Notifications.\n"
 "                "
+msgstr ""
+
+#: events/templates/events/challenge-reporting-materials.html:67
+#: events/templates/events/tabs/info-tab.html:174
+msgid "Achievements"
 msgstr ""
 
 #: events/templates/events/fragments/challenge-media-status-breakdown.html:17
@@ -3468,23 +3306,23 @@ msgstr ""
 msgid "There are no Members, waiting for Confirmation, at the moment"
 msgstr ""
 
-#: events/views.py:156
+#: events/views.py:162
 msgid "All Events"
 msgstr ""
 
-#: events/views.py:263
+#: events/views.py:269
 msgid "Events near you"
 msgstr ""
 
-#: events/views.py:334
+#: events/views.py:340
 msgid "New Events"
 msgstr ""
 
-#: events/views.py:395
+#: events/views.py:401
 msgid "Dateless Events"
 msgstr ""
 
-#: events/views.py:459
+#: events/views.py:465
 msgid "Featured Events"
 msgstr ""
 
@@ -3501,7 +3339,7 @@ msgid "Question"
 msgstr ""
 
 #: home/models.py:66 home/models.py:67 organizations/forms.py:91
-#: organizations/models.py:124
+#: organizations/models/Organization.py:136
 #: organizations/templates/organizations/tabs/info-tab.html:61
 msgid "Website"
 msgstr ""
@@ -3516,6 +3354,10 @@ msgstr ""
 
 #: home/models.py:150
 msgid "Section Author"
+msgstr ""
+
+#: home/models.py:155
+msgid "Title"
 msgstr ""
 
 #: home/models.py:156
@@ -3859,47 +3701,53 @@ msgstr ""
 msgid "There are no Team Members at the moment"
 msgstr ""
 
-#: invites/models.py:68 invites/models.py:69
+#: invites/models.py:68 invites/models.py:69 invites/models/Invite.py:96
+#: invites/models/Invite.py:97
 msgid "Inviter"
 msgstr ""
 
-#: invites/models.py:75 invites/models.py:76
+#: invites/models.py:75 invites/models.py:76 invites/models/Invite.py:103
+#: invites/models/Invite.py:104
 msgid "Invitee"
 msgstr ""
 
-#: invites/models.py:83
+#: invites/models.py:83 invites/models/Invite.py:111
 msgid "Invite Status"
 msgstr ""
 
-#: invites/models.py:104
+#: invites/models.py:104 invites/models/Invite.py:132
 msgid "Rejection Text"
 msgstr ""
 
-#: invites/models.py:105
+#: invites/models.py:105 invites/models/Invite.py:133
 msgid "Rejection"
 msgstr ""
 
-#: invites/models.py:117 invites/models.py:118
+#: invites/models.py:117 invites/models.py:118 invites/models/Invite.py:145
+#: invites/models/Invite.py:146
 msgid "Date rejected"
 msgstr ""
 
-#: invites/models.py:122 invites/models.py:123
+#: invites/models.py:122 invites/models.py:123 invites/models/Invite.py:150
+#: invites/models/Invite.py:151
 msgid "Date revoked"
 msgstr ""
 
-#: invites/models.py:129 invites/models.py:130
+#: invites/models.py:129 invites/models.py:130 invites/models/Invite.py:157
+#: invites/models/Invite.py:158
 msgid "Archived for Inviter"
 msgstr ""
 
-#: invites/models.py:133 invites/models.py:134
+#: invites/models.py:133 invites/models.py:134 invites/models/Invite.py:161
+#: invites/models/Invite.py:162
 msgid "Archived for Invitee"
 msgstr ""
 
-#: invites/models.py:147
+#: invites/models.py:147 invites/models/Invite.py:175
 msgid "invite"
 msgstr ""
 
-#: invites/models.py:148
+#: invites/models.py:148 invites/models/Invite.py:176
 msgid "invites"
 msgstr ""
 
@@ -3969,7 +3817,7 @@ msgstr ""
 msgid "Embedded Video (Link)"
 msgstr ""
 
-#: organizations/forms.py:101 organizations/models.py:135
+#: organizations/forms.py:101 organizations/models/Organization.py:147
 msgid "Organization Email"
 msgstr ""
 
@@ -3977,106 +3825,102 @@ msgstr ""
 msgid "Reserved Word cannot be used as an Organization Name."
 msgstr ""
 
-#: organizations/models.py:82
+#: organizations/models/Organization.py:94
 msgid "Organization Author"
 msgstr ""
 
-#: organizations/models.py:109
+#: organizations/models/Organization.py:121
 msgid "Organization Address"
 msgstr ""
 
-#: organizations/models.py:117
+#: organizations/models/Organization.py:129
 msgid "Organization Phone Numbers"
 msgstr ""
 
-#: organizations/models.py:125
+#: organizations/models/Organization.py:137
 msgid "Organization Website"
 msgstr ""
 
-#: organizations/models.py:129
+#: organizations/models/Organization.py:141
 #: organizations/templates/organizations/tabs/info-tab.html:63
 msgid "Video"
 msgstr ""
 
-#: organizations/models.py:130
+#: organizations/models/Organization.py:142
 msgid "Organization Informational Video"
 msgstr ""
 
-#: organizations/models.py:147
+#: organizations/models/Organization.py:159
 #: organizations/templates/organizations/tabs/info-tab.html:271
 msgid "Subscribers"
 msgstr ""
 
-#: organizations/models.py:148
+#: organizations/models/Organization.py:160
 msgid "Organization Subscribers"
 msgstr ""
 
-#: organizations/models.py:156
+#: organizations/models/Organization.py:168
 msgid "Organization contact Person full Name"
 msgstr ""
 
-#: organizations/models.py:160
+#: organizations/models/Organization.py:172
 msgid "Organization contact Person Email"
 msgstr ""
 
-#: organizations/models.py:175
+#: organizations/models/Organization.py:176
+msgid "Please, use the International Format, e.g. +1-202-555-0114."
+msgstr ""
+
+#: organizations/models/Organization.py:187
 msgid "organization"
 msgstr ""
 
-#: organizations/models.py:176
+#: organizations/models/Organization.py:188
 msgid "organizations"
 msgstr ""
 
-#: organizations/models.py:423
-msgid "Organization Staff Member Author"
-msgstr ""
-
-#: organizations/models.py:437
-msgid "Staff Member"
-msgstr ""
-
-#: organizations/models.py:438
-msgid "Organization Staff Member"
-msgstr ""
-
-#: organizations/models.py:447
-msgid "Short Bio"
-msgstr ""
-
-#: organizations/models.py:457
-msgid "organization staff member"
-msgstr ""
-
-#: organizations/models.py:458
-msgid "organization staff members"
-msgstr ""
-
-#: organizations/models.py:551
+#: organizations/models/OrganizationGroup.py:69
 msgid "Organization Group Author"
 msgstr ""
 
-#: organizations/models.py:556
-msgid "Organiztion Group Name"
-msgstr ""
-
-#: organizations/models.py:560
-msgid "Organization Group Description"
-msgstr ""
-
-#: organizations/models.py:573
+#: organizations/models/OrganizationGroup.py:82
 msgid "Group Member"
 msgstr ""
 
-#: organizations/models.py:574
+#: organizations/models/OrganizationGroup.py:83
 msgid "Organization Group Member"
 msgstr ""
 
-#: organizations/models.py:582
+#: organizations/models/OrganizationGroup.py:91
 msgid "organization group"
 msgstr ""
 
-#: organizations/models.py:583
+#: organizations/models/OrganizationGroup.py:92
 msgid "organization groups"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:68
+msgid "Organization Staff Member Author"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:82
+msgid "Staff Member"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:83
+msgid "Organization Staff Member"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:92
+msgid "Short Bio"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:102
+msgid "organization staff member"
+msgstr ""
+
+#: organizations/models/OrganizationStaff.py:103
+msgid "organization staff members"
 msgstr ""
 
 #: organizations/templates/organizations/fragments/organization-groups-adm.html:35
@@ -4361,15 +4205,15 @@ msgstr ""
 msgid "These Members can create Events on behalf of this Organization."
 msgstr ""
 
-#: settings/base.py:114
+#: settings/base.py:121
 msgid "English"
 msgstr ""
 
-#: settings/base.py:115
+#: settings/base.py:122
 msgid "Deutsch"
 msgstr ""
 
-#: settings/base.py:116
+#: settings/base.py:123
 msgid "Spanish"
 msgstr ""
 

@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 
@@ -20,14 +27,13 @@ from ddcore.models.Rating import Rating
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
-from events.choices import (
-    EventStatus,
-    EventMode,
-    ParticipationStatus,
-    Recurrence)
 from events.models import (
     Event,
+    EventMode,
+    EventStatus,
     Participation,
+    ParticipationStatus,
+    Recurrence,
     Role)
 
 from .utils import (
@@ -185,8 +191,8 @@ class EventCreateViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        event.email_notify_admin_chl_created(request)
-        event.email_notify_alt_person_chl_created(request)
+        event.email_notify_admin_event_created(request)
+        event.email_notify_alt_person_event_created(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -270,11 +276,11 @@ class EventCompleteViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        Participation.email_notify_participants_chl_completed(
+        Participation.email_notify_participants_event_completed(
             request=request,
             event=event)
 
-        event.email_notify_admin_chl_completed(request)
+        event.email_notify_admin_event_completed(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -397,9 +403,9 @@ class EventCloneViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        cloned_event.email_notify_admin_chl_cloned(request)
+        cloned_event.email_notify_admin_event_cloned(request)
 
-        Participation.email_notify_participants_chl_cloned(
+        Participation.email_notify_participants_event_cloned(
             request=request,
             event=cloned_event)
 
@@ -487,9 +493,9 @@ class EventCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        event.email_notify_admin_chl_closed(request)
+        event.email_notify_admin_event_closed(request)
 
-        Participation.email_notify_participants_chl_closed(
+        Participation.email_notify_participants_event_closed(
             request=request,
             event=event)
 
@@ -619,16 +625,16 @@ class ParticipationPostViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s)
-            participation.email_notify_chl_participant_confirmed(request)
-            participation.email_notify_chl_admin_participant_confirmed(request)
+            participation.email_notify_event_participant_confirmed(request)
+            participation.email_notify_event_admin_participant_confirmed(request)
         else:
             participation.status =\
                 ParticipationStatus.WAITING_FOR_CONFIRMATION
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s)
-            participation.email_notify_chl_participant_waiting_conf(request)
-            participation.email_notify_chl_admin_participant_waiting_conf(request)
+            participation.email_notify_event_participant_waiting_conf(request)
+            participation.email_notify_event_admin_participant_waiting_conf(request)
 
         participation.save()
 
@@ -720,8 +726,8 @@ class ParticipationWithdrawViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send EMail Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_withdrew(request)
-        participation.email_notify_chl_admin_participant_withdrew(request)
+        participation.email_notify_event_participant_withdrew(request)
+        participation.email_notify_event_admin_participant_withdrew(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -827,8 +833,8 @@ class ParticipationRemoveViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_removed(request)
-        participation.email_notify_chl_admin_participant_removed(request)
+        participation.email_notify_event_participant_removed(request)
+        participation.email_notify_event_admin_participant_removed(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -926,8 +932,8 @@ class ParticipationAcceptApplicationViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_confirmed(request)
-        participation.email_notify_chl_admin_participant_confirmed(request)
+        participation.email_notify_event_participant_confirmed(request)
+        participation.email_notify_event_admin_participant_confirmed(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -1047,8 +1053,8 @@ class ParticipationRejectApplicationViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_rejected(request)
-        participation.email_notify_chl_admin_participant_rejected(request)
+        participation.email_notify_event_participant_rejected(request)
+        participation.email_notify_event_admin_participant_rejected(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -1160,7 +1166,7 @@ class SelfreflectionSubmitViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s)
-            participation.email_notify_chl_participant_sr_accepted(request)
+            participation.email_notify_event_participant_sr_accepted(request)
 
         else:
             participation.status =\
@@ -1170,8 +1176,8 @@ class SelfreflectionSubmitViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s)
-            participation.email_notify_chl_participant_sr_submitted(request)
-            participation.email_notify_chl_admin_participant_sr_submitted(request)
+            participation.email_notify_event_participant_sr_submitted(request)
+            participation.email_notify_event_admin_participant_sr_submitted(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -1295,8 +1301,8 @@ class SelfreflectionAcceptViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_sr_accepted(request)
-        participation.email_notify_chl_admin_participant_sr_accepted(request)
+        participation.email_notify_event_participant_sr_accepted(request)
+        participation.email_notify_event_admin_participant_sr_accepted(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -1402,8 +1408,8 @@ class SelfreflectionRejectViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        participation.email_notify_chl_participant_sr_rejected(request)
-        participation.email_notify_chl_admin_participant_sr_rejected(request)
+        participation.email_notify_event_participant_sr_rejected(request)
+        participation.email_notify_event_admin_participant_sr_rejected(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log

@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import mimetypes
 
@@ -22,12 +29,13 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from ddcore.models.Attachment import AttachedDocument
-from ddcore.models.Attachment import AttachedImage
-from ddcore.models.Attachment import AttachedUrl
-from ddcore.models.Attachment import AttachedVideoUrl
-from ddcore.models.SocialLink import SocialLink
-from ddcore.models.choices import SocialApp
+from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
+    SocialApp,
+    SocialLink)
 from ddcore.Utilities import (
     get_client_ip,
     get_website_title,
@@ -41,12 +49,11 @@ from app.forms import (
     CreateNewsletterForm,
     PhoneForm,
     SocialLinkFormSet)
-from events.choices import (
-    EventStatus,
-    ParticipationStatus)
 from events.models import (
     Event,
-    Participation)
+    EventStatus,
+    Participation,
+    ParticipationStatus)
 
 from .decorators import (
     organization_access_check_required,
@@ -57,14 +64,12 @@ from .models import (
     OrganizationStaff)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION LIST
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === ORGANIZATION LIST
+# ===
+# =============================================================================
+@cache_page(60)
 def organization_list(request):
     """List of the all Organizations."""
     # -------------------------------------------------------------------------
@@ -74,7 +79,7 @@ def organization_list(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         organizations = Organization.objects.filter(
             Q(is_hidden=False) |
             Q(
@@ -146,7 +151,7 @@ def organization_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
@@ -156,7 +161,7 @@ def organization_directory(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         organizations = Organization.objects.filter(
             Q(is_hidden=False) |
             Q(
@@ -187,20 +192,18 @@ def organization_directory(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION CREATE
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION CREATE
+# ===
+# =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 def organization_create(request):
     """Create Organization."""
-    geo = GeoIP()
-    ip_addr = get_client_ip(request)
-    country_code = geo.country_code(ip_addr)
+    # geo = GeoIP()
+    # ip_addr = get_client_ip(request)
+    # country_code = geo.country_code(ip_addr)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -210,8 +213,8 @@ def organization_create(request):
         user=request.user)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
-        country_code=country_code)
+        required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
     nform = PhoneForm(
         request.POST or None, request.FILES or None)
 
@@ -269,13 +272,11 @@ def organization_create(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION DETAILS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION DETAILS
+# ===
+# =============================================================================
 @cache_page(60 * 1)
 @organization_access_check_required
 def organization_details(request, slug=None):
@@ -298,7 +299,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     # -------------------------------------------------------------------------
@@ -330,7 +331,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
         is_complained = organization.is_complained_by_user(request.user)
@@ -420,7 +421,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     return render(
@@ -449,7 +450,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     return render(
@@ -459,13 +460,11 @@ def organization_groups(request, slug=None):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION EDIT
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION EDIT
+# ===
+# =============================================================================
 @login_required
 @organization_staff_member_required
 def organization_edit(request, slug=None):
@@ -482,7 +481,7 @@ def organization_edit(request, slug=None):
         user=request.user, instance=organization)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
+        required=not request.POST.get("addressless", False),
         instance=organization.address)
     nform = PhoneForm(
         request.POST or None, request.FILES or None,
@@ -578,13 +577,11 @@ def organization_edit(request, slug=None):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION POPULATE NEWSLETTER
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION POPULATE NEWSLETTER
+# ===
+# =============================================================================
 @login_required
 @organization_staff_member_required
 def organization_populate_newsletter(request, slug=None):
@@ -632,14 +629,12 @@ def organization_populate_newsletter(request, slug=None):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION IFRAMES
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === ORGANIZATION IFRAMES
+# ===
+# =============================================================================
+@cache_page(60)
 def organization_iframe_upcoming(request, organization_id):
     """Organization iFrame for upcoming Events."""
     organization = get_object_or_404(
@@ -657,7 +652,7 @@ def organization_iframe_upcoming(request, organization_id):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def organization_iframe_complete(request, organization_id):
     """Organization iFrame for completed Events."""
     organization = get_object_or_404(
