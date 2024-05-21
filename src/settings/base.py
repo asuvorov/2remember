@@ -222,7 +222,7 @@ WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = (
     # --- Django Apps
-    # "grappelli",
+    "grappelli",
 
     "django.contrib.admin",
     "django.contrib.auth",
@@ -247,7 +247,7 @@ INSTALLED_APPS = (
     "rangefilter",
     # "sslserver",
     # "storages",
-    # "timezone_field",
+    "timezone_field",
     "twitter_tag",
     "url_tools",
 
@@ -260,6 +260,7 @@ INSTALLED_APPS = (
     "home",
     "invites",
     "organizations",
+    "places",
     # "tests",
 )
 
@@ -350,7 +351,7 @@ LOGGING = {
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
 )
-# AUTH_USER_MODEL = "accounts.User"
+AUTH_USER_MODEL = "ddcore.User"
 
 
 ###############################################################################
@@ -385,19 +386,15 @@ BOWER_INSTALLED_APPS = (
     "bootstrap#5.3.3",
     # "bootstrap-maxlength",
     # "bootstrap-rating",
-    # "bootstrap-select",
     # "bootstrap-tabcollapse",
     # "bootstrap-tagsinput",
     # "bx-slider.js",
     # "equalheight",
-    # "fontawesome",
-    # "ismobilejs#",
-    # "isMobile",
     "jquery#3.7.1",
     # "jquery.inputmask",
     # "jquery-colorbox",
     "jquery-file-upload#10.32.0",
-    # "jquery-popup-overlay",
+    "jquery-popup-overlay#1.6.0",
     # "jquery-scrolltotop",
     # "jquery-shorten-js",
     # "jquery-sticky",
@@ -405,8 +402,8 @@ BOWER_INSTALLED_APPS = (
     # "jt.timepicker",
     "less.js#4.2.0",
     # "modernizr",
-    # "moment",
-    # "noty",
+    "moment#2.30.1",
+    "noty#3.1.4",
     # "readmore-js",
     # "seiyria-bootstrap-slider",
     # "smooth-scroll.js",
@@ -648,7 +645,7 @@ GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 ###############################################################################
 ### DJANGO GRAPPELLI                                                        ###
 ###############################################################################
-GRAPPELLI_ADMIN_TITLE = "Cuddly Disco Admin"
+GRAPPELLI_ADMIN_TITLE = "2Remember Admin"
 GRAPPELLI_AUTOCOMPLETE_LIMIT = 25
 # GRAPPELLI_AUTOCOMPLETE_SEARCH_FIELDS
 GRAPPELLI_SWITCH_USER = True
@@ -821,39 +818,39 @@ REST_FRAMEWORK = {
 
 ###############################################################################
 ### DJANGO ROSETTA                                                          ###
-###############################################################################
-# INSTALLED_APPS += (
-#     "rosetta",
-# )
+##############################################################################
+INSTALLED_APPS += (
+    "rosetta",
+)
 
-# ROSETTA_MESSAGES_PER_PAGE = 20
-# ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
+ROSETTA_MESSAGES_PER_PAGE = 20
+ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
-# YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
+YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
 
-# AZURE_CLIENT_ID = None
-# AZURE_CLIENT_SECRET = None
+AZURE_CLIENT_ID = None
+AZURE_CLIENT_SECRET = None
 
-# ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = "en"
-# ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = "English"
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_CODE = "en"
+ROSETTA_MESSAGES_SOURCE_LANGUAGE_NAME = "English"
 
-# ROSETTA_WSGI_AUTO_RELOAD = False
-# ROSETTA_UWSGI_AUTO_RELOAD = False
+ROSETTA_WSGI_AUTO_RELOAD = False
+ROSETTA_UWSGI_AUTO_RELOAD = False
 
-# ROSETTA_EXCLUDED_APPLICATIONS = ()
-# ROSETTA_EXCLUDED_PATHS = ()
+ROSETTA_EXCLUDED_APPLICATIONS = ()
+ROSETTA_EXCLUDED_PATHS = ()
 
-# ROSETTA_REQUIRES_AUTH = True
+ROSETTA_REQUIRES_AUTH = True
 
-# ROSETTA_POFILE_WRAP_WIDTH = 0
-# ROSETTA_POFILENAMES = ("django.po", "djangojs.po")
+ROSETTA_POFILE_WRAP_WIDTH = 0
+ROSETTA_POFILENAMES = ("django.po", "djangojs.po")
 
-# ROSETTA_STORAGE_CLASS = "rosetta.storage.CacheRosettaStorage"
-# ROSETTA_ACCESS_CONTROL_FUNCTION = None
+ROSETTA_STORAGE_CLASS = "rosetta.storage.CacheRosettaStorage"
+ROSETTA_ACCESS_CONTROL_FUNCTION = None
 
-# ROSETTA_LANGUAGE_GROUPS = False
+ROSETTA_LANGUAGE_GROUPS = False
 
-# ROSETTA_AUTO_COMPILE = True
+ROSETTA_AUTO_COMPILE = True
 
 
 ###############################################################################
@@ -900,9 +897,9 @@ REST_FRAMEWORK = {
 # SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
 
-# LOGIN_URL = "/accounts/login/"
-# LOGIN_REDIRECT_URL = "/accounts/my-profile/"
-# #LOGIN_ERROR_URL    = "/login-error/"
+LOGIN_URL = "/accounts/signin/"
+LOGIN_REDIRECT_URL = "/accounts/my-profile/"
+# LOGIN_ERROR_URL = "/login-error/"
 
 # #SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
 # #SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
@@ -1001,6 +998,7 @@ INSTALLED_APPS += (
 )
 
 TAGGIT_CASE_INSENSITIVE = True
+TAGGIT_STRIP_UNICODE_WHEN_SLUGIFYING = True
 TAGGIT_TAGCLOUD_MIN = 1.0
 TAGGIT_TAGCLOUD_MAX = 5.0
 TAGGIT_LIMIT = 32

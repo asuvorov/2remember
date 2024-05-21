@@ -12,17 +12,6 @@
 {% endblock %}
 
 {% block extra_script %}
-    <!-- NavBar Wizard -->
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/navbar-wizard.js' %}"></script>
-    {% endcompress %}
-
-    <!-- Wire up Events -->
-    {% comment %}
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/wire-up-events.js' %}"></script>
-    {% endcompress %}
-    {% endcomment %}
 {% endblock %}
 
 {% block content %}

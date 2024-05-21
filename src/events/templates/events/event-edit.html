@@ -12,17 +12,6 @@
 {% endblock %}
 
 {% block extra_script %}
-    <!-- NavBar Wizard -->
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/navbar-wizard.js' %}"></script>
-    {% endcompress %}
-
-    <!-- Wire up Events -->
-    {% comment %}
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/wire-up-events.js' %}"></script>
-    {% endcompress %}
-    {% endcomment %}
 {% endblock %}
 
 {% block content %}
@@ -371,31 +360,6 @@
 
                                                 <span class="help-block">{{ form.alt_person_phone.help_text }} {% if form.alt_person_phone.errors %}{% for error in form.alt_person_phone.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                             </div>
-                                        </div>
-
-                                        <hr>
-
-                                        <!-- Event Recurrence -->
-
-                                        <h3>Time</h3>
-
-                                        <h4><strong>How often:</strong></h4>
-
-                                        <div class="alert alert-info">
-                                        {% blocktrans %}
-                                            Select one of the available Options: <i>dateless, once, <s>weekly</s>, <s>monthly</s>, <s>annually</s>, <s>custom</s></i>.
-                                        {% endblocktrans %}
-                                        </div>
-
-                                        <!-- Recurrence -->
-                                        <div id="chl-recurrence" class="form-group {% if form.recurrence.errors %}has-error{% endif %}">
-                                            <label class="control-label">{{ form.recurrence.label }}{% if form.recurrence.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                            <div class="input-group">
-                                                {{ form.recurrence }}
-                                                <div class="input-group-addon"><i class="fa fa-refresh fa-fw"></i></div>
-                                            </div>
-
-                                            <span class="help-block">{% if form.recurrence.errors %}{% for error in form.recurrence.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
 
                                         <hr>
@@ -799,27 +763,6 @@
         $("#id_addressless").click(function () {
             $("address").toggle("slow");
         });
-
-        /*********************************************************************/
-        /*** Recurrence UX                                                 ***/
-        /*********************************************************************/
-        recurrence($("#id_recurrence").val());
-
-        $("#id_recurrence").change(function() {
-            recurrence(this.value);
-        });
-
-        function recurrence(value) {
-            if (value == {{ RECURRENCE.DATELESS }}) {
-                $("#chl-tz").hide();
-                $("#chl-sd").hide();
-                $("#chl-st").hide();
-            } else if (value == {{ RECURRENCE.ONCE }}) {
-                $("#chl-tz").show();
-                $("#chl-sd").show();
-                $("#chl-st").show();
-            }
-        }
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/

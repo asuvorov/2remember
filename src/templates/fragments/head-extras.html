@@ -36,16 +36,6 @@
     <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
 {% endcompress %}
 
-    <!-- Bootsnav -->
-{% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/animate.css' %}">
-    {# <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/bootsnav.css' %}"> #}
-    <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/style.css' %}">
-{% endcompress %}
-{% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'plugins/bootsnav/js/bootsnav.js' %}"></script>
-{% endcompress %}
-
     <!-- Less CSS -->
 {% compress css %}
     <link rel="stylesheet" type="text/less" href="{% static 'less/imports.less' %}">
@@ -65,16 +55,16 @@
 {% endcompress %}
 
     <!-- Twitter Bootstrap Datepicker/Timepicker Mobile -->
+{% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'modernizr/modernizr.js' %}"></script> -->
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'moment/moment.js' %}"></script> -->
-{% comment %}
+    <script type="text/javascript" charset="utf-8" src="{% static 'moment/moment.js' %}"></script>
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'js/datepicker-mobile.js' %}"></script> -->
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'js/timepicker-mobile.js' %}"></script> -->
-{% endcomment %}
+{% endcompress %}
 
     <!-- Twitter Bootstrap Max Length-->
 {% compress js %}
-    <!-- <script src="{% static 'bootstrap-maxlength/src/bootstrap-maxlength.js' %}"></script> -->
+    <script src="{% static 'bootstrap-maxlength/src/bootstrap-maxlength.js' %}"></script>
 {% endcompress %}
 
     <!-- Twitter Bootstrap Rating -->
@@ -114,15 +104,14 @@
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script> -->
 {% endcompress %}
 
-    <!-- Font Awesome -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}"> -->
-
     <!-- Font Flat Icon -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'fonts/flaticon/flaticon.css' %}"> -->
+{% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'fonts/flaticon/flaticon.css' %}">
+{% endcompress %}
 
     <!-- Social Buttons -->
 {% compress css %}
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social-buttons/social-buttons-3.css' %}"> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap-social-buttons/social-buttons-3.css' %}">
 {% endcompress %}
 
     <!-- jQuery File Upload -->
@@ -170,7 +159,7 @@
 
     <!-- jQuery pop-up Overlay -->
 {% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-popup-overlay/jquery.popupoverlay.js' %}"></script> -->
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-popup-overlay/jquery.popupoverlay.js' %}"></script>
 {% endcompress %}
 
     <!-- jQuery Scroll to Top -->
@@ -206,10 +195,10 @@
 
     <!-- jQuery Noty -->
 {% compress css %}
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'noty/lib/noty.css' %}" /> -->
+    <link rel="stylesheet" type="text/css" href="{% static 'noty/lib/noty.css' %}" />
 {% endcompress %}
 {% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'noty/lib/noty.min.js' %}"></script> -->
+    <script type="text/javascript" charset="utf-8" src="{% static 'noty/lib/noty.min.js' %}"></script>
 {% endcompress %}
 
 <!-- jQuery Read More -->
@@ -231,11 +220,6 @@
 {% endcompress %}
 {% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'zabuto_calendar/zabuto_calendar.min.js' %}"></script> -->
-{% endcompress %}
-
-    <!-- jQuery isMobile -->
-{% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'ismobilejs/src/isMobile.js' %}"></script> -->
 {% endcompress %}
 
     <!--[if lt IE 9]>

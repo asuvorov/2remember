@@ -42,14 +42,14 @@ urlpatterns = [
     re_path(r"^signup/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
         views.account_signup_confirm,
         name="signup-confirm"),
-    re_path(r"^login/$",
-        views.account_login,
-        name="login"),
-    re_path(r"^logout/$",
-        views.account_logout, {
+    re_path(r"^signin/$",
+        views.account_signin,
+        name="signin"),
+    re_path(r"^signout/$",
+        views.account_signout, {
             "next_page":    "/"
         },
-        name="logout"),
+        name="signout"),
 
     # -------------------------------------------------------------------------
     # --- My Profile.
@@ -93,9 +93,9 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Freiwilligenausweis.
     # -------------------------------------------------------------------------
-    re_path(r"^my-profile/events/export/$",
-        views.my_profile_events_export,
-        name="my-profile-events-export"),
+    # re_path(r"^my-profile/events/export/$",
+    #     views.my_profile_events_export,
+    #     name="my-profile-events-export"),
     # re_path(r"^my-profile/events/export.pdf$",
     #     CompletedEventsPDF.as_view()),
 

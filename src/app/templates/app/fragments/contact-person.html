@@ -1,0 +1,57 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Entity Form
+{% endcomment %}
+
+<div class="form-group">
+{% for choice in form.contact %}
+    <div class="radio radio-primary">
+        {{ choice.tag }}
+        <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
+    </div>
+{% endfor %}
+</div>
+
+<div id="alt_person_creds" class="row g-3">
+    <div class="form-floating col-md-4 {% if form.alt_person_fullname.errors %}has-error{% endif %}">
+        {{ form.alt_person_fullname }}
+        {{ form.alt_person_fullname.label_tag }}
+        <span class="help-block">{% if form.alt_person_fullname.errors %}{% for error in form.alt_person_fullname.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+    </div>
+    <div class="form-floating col-md-4 {% if form.alt_person_email.errors %}has-error{% endif %}">
+        {{ form.alt_person_email }}
+        {{ form.alt_person_email.label_tag }}
+        <span class="help-block">{% if form.alt_person_email.errors %}{% for error in form.alt_person_email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+    </div>
+    <div class="form-floating col-md-4 {% if form.alt_person_phone.errors %}has-error{% endif %}">
+        {{ form.alt_person_phone }}
+        {{ form.alt_person_phone.label_tag }}
+        <span class="help-block">{{ form.alt_person_phone.help_text }} {% if form.alt_person_phone.errors %}{% for error in form.alt_person_phone.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Contact Person UX                                             ***/
+        /*********************************************************************/
+        $("#alt_person_creds").hide();
+
+        var selected = $("input[type='radio']:checked");
+        if (selected.val() == "he") {
+            $("#alt_person_creds").show("slow");
+        }
+
+        $("#id_contact_0").click(function () {
+            $("#alt_person_creds").hide("slow");
+        });
+
+        $("#id_contact_1").click(function () {
+            $("#alt_person_creds").show("slow");
+        })
+    });
+</script>

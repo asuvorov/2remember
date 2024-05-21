@@ -1,0 +1,17 @@
+[
+    {
+        "model":    "ddcore.User",
+        "fields": {
+            "first_name":   "Artem",
+            "last_name":    "Suvorov",
+            "username":     "admin",
+            "email":        "admin@2remember.com",
+            "password":     "pbkdf2_sha256$600000$yegBmCRvGllFovCDN3DGaz$EkWe1oz928/o1fw7qE9GD+tBkRlI0gifIXvkjEMGHsE=",
+            "is_active":    true,
+            "is_staff":     true,
+            "is_superuser": true,
+            "date_joined":  "2024-01-01",
+            "last_login":   "2024-01-01"
+        }
+    }
+]

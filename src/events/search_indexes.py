@@ -15,7 +15,6 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 
 # from .choices import (
 #     EventStatus,
-#     Recurrence)
 # from .models import Event
 
 
@@ -52,5 +51,4 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 #             Q(organization=None) |
 #             Q(organization__is_hidden=False),
 #             Q(recurrence=Recurrence.DATELESS) |
-#             Q(start_date__gte=datetime.date.today()),
 #             status=EventStatus.UPCOMING)

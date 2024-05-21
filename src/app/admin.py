@@ -32,10 +32,11 @@ from ddcore.models.View import View
 
 # register_seo_admin(admin.site, Metadata)
 
-
-# -----------------------------------------------------------------------------
-# --- ADDRESS ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === ADDRESS ADMIN
+# ===
+# =============================================================================
 class AddressAdmin(admin.ModelAdmin):
     """Address Admin."""
 
@@ -74,9 +75,11 @@ class AddressAdmin(admin.ModelAdmin):
 admin.site.register(Address, AddressAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- ATTACHMENTS ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === ATTACHMENTS ADMIN
+# ===
+# =============================================================================
 class AttachedImageAdmin(admin.ModelAdmin):
     """Attahced Image Admin."""
 
@@ -157,9 +160,11 @@ class AttachedVideoUrlAdmin(admin.ModelAdmin):
 admin.site.register(AttachedVideoUrl, AttachedVideoUrlAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- PHONE ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === PHONE ADMIN
+# ===
+# =============================================================================
 class PhoneAdmin(admin.ModelAdmin):
     """Phone Admin."""
 
@@ -192,9 +197,11 @@ class PhoneAdmin(admin.ModelAdmin):
 admin.site.register(Phone, PhoneAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- TEMPORARY FILE ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === TEMPORARY FILE ADMIN
+# ===
+# =============================================================================
 class TemporaryFileAdmin(admin.ModelAdmin):
     """Temporary File Admin."""
 
@@ -215,61 +222,67 @@ class TemporaryFileAdmin(admin.ModelAdmin):
 admin.site.register(TemporaryFile, TemporaryFileAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- VIEW ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === VIEW ADMIN
+# ===
+# =============================================================================
 class ViewAdmin(admin.ModelAdmin):
     """View Admin."""
 
     list_display = [
         "id",
-        "user", "content_type", "object_id", "content_object",
+        "viewer", "content_type", "object_id", "content_object",
         "created", "modified",
     ]
     list_display_links = [
-        "id", "user",
+        "id", "viewer",
     ]
     list_filter = [
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "user", "content_type",
+        "viewer", "content_type",
     ]
 
 
 admin.site.register(View, ViewAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- COMMENT ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === COMMENT ADMIN
+# ===
+# =============================================================================
 class CommentAdmin(admin.ModelAdmin):
     """Comment Admin."""
 
     list_display = [
         "id",
-        "user", "content_type", "object_id", "content_object",
+        "author", "content_type", "object_id", "content_object",
         "created", "modified",
     ]
     list_display_links = [
-        "user",
+        "author",
     ]
     list_filter = [
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "user", "content_type",
+        "author", "content_type",
     ]
 
 
 admin.site.register(Comment, CommentAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- COMPLAINT ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === COMPLAINT ADMIN
+# ===
+# =============================================================================
 def mark_as_processed(modeladmin, request, queryset):
     """Docstring."""
     queryset.update(is_processed=True)
@@ -291,13 +304,13 @@ class ComplaintAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "user", "content_type", "object_id", "content_object",
+        "author", "content_type", "object_id", "content_object",
         "text",
         "is_processed", "is_deleted",
         "created", "modified",
     ]
     list_display_links = [
-        "user",
+        "author",
     ]
     list_filter = [
         "is_processed", "is_deleted",
@@ -305,7 +318,7 @@ class ComplaintAdmin(admin.ModelAdmin):
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "user", "content_type",
+        "author", "content_type",
     ]
     actions = [
         mark_as_processed,
@@ -316,9 +329,11 @@ class ComplaintAdmin(admin.ModelAdmin):
 admin.site.register(Complaint, ComplaintAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- RATING ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === RATING ADMIN
+# ===
+# =============================================================================
 class RatingAdmin(admin.ModelAdmin):
     """Rating Admin."""
 
@@ -342,9 +357,11 @@ class RatingAdmin(admin.ModelAdmin):
 admin.site.register(Rating, RatingAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- NEWSLETTER ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === NEWSLETTER ADMIN
+# ===
+# =============================================================================
 class NewsletterAdmin(admin.ModelAdmin):
     """Newsletter Admin."""
 
@@ -369,9 +386,11 @@ class NewsletterAdmin(admin.ModelAdmin):
 admin.site.register(Newsletter, NewsletterAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- SOCIAL LINK ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === SOCIAL LINK ADMIN
+# ===
+# =============================================================================
 class SocialLinkAdmin(admin.ModelAdmin):
     """Social Link Admin."""
 

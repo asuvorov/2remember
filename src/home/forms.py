@@ -91,7 +91,7 @@ class CreateEditFAQForm(forms.ModelForm):
             "answer": CKEditorUploadingWidget(),
             "section": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             }
 

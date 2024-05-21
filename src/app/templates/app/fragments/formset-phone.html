@@ -1,0 +1,74 @@
+{% load i18n %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<formset_phone> - Phone Numbers Formset
+{% endcomment %}
+
+<div id="formset-phone" data-formset-prefix="{{ formset_phone.prefix }}" style="display:inline-block; width:100%">
+    {{ formset_phone.management_form }}
+
+    <div data-formset-body>
+        <!-- New Forms will be inserted in here -->
+    {% for fs in formset_phone %}
+        <div class="row g-4" data-formset-form>
+            {{ fs.id }}
+            <div class="form-floating col-2">
+                {{ fs.phone_type }}
+                {{ fs.phone_type.label_tag }}
+            </div>
+            <div class="form-floating col-5">
+                {{ fs.phone_number }}
+                {{ fs.phone_number.label_tag }}
+            </div>
+            <div class="form-floating col-2">
+                {{ fs.phone_number_ext }}
+                {{ fs.phone_number_ext.label_tag }}
+            </div>
+            <div class="col-3">
+                <div class="hidden">{{ fs.DELETE }}</div>
+                <a type="button" class="btn btn-rounded pull-right" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+    <!-- The empty form template. By wrapping this in a <script> tag, the __prefix__ placeholder can easily be replaced in both attributes and any scripts -->
+    <script type="form-template" data-formset-empty-form>
+    {% escapescript %}
+        <div class="row g-4" data-formset-form>
+            {{ formset_phone.empty_form.id }}
+            <div class="form-floating col-2">
+                {{ formset_phone.empty_form.phone_type }}
+                {{ formset_phone.empty_form.phone_type.label_tag }}
+            </div>
+            <div class="form-floating col-5">
+                {{ formset_phone.empty_form.phone_number }}
+                {{ formset_phone.empty_form.phone_number.label_tag }}
+            </div>
+            <div class="form-floating col-2">
+                {{ formset_phone.empty_form.phone_number_ext }}
+                {{ formset_phone.empty_form.phone_number_ext.label_tag }}
+            </div>
+            <div class="col-3">
+                <div class="hidden">{{ formset_phone.empty_form.DELETE }}</div>
+                <a type="button" class="btn btn-rounded pull-right" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+            </div>
+        </div>
+    {% endescapescript %}
+    </script>
+
+    <!-- This Button will add a new Form, when clicked -->
+    <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-add><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+
+    <script>
+        jQuery(function ($) {
+            $("#formset-phone").formset({
+                animateForms:   true
+            });
+        });
+    </script>
+</div>

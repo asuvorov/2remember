@@ -18,18 +18,17 @@
         <meta name="robots" content="index,follow" />
     {% endblock %}
 
-    {% block extra_meta %}
-    {% endblock %}
+    {% block extra_meta %}{% endblock %}
     {% block extra_style %}{% endblock %}
     {% block extra_script %}{% endblock %}
     {% block extra_head %}{% endblock %}
     </head>
 
     <body>
-<!--         <div id="spinner">
+        <div id="spinner">
             <img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Loading..."/>
         </div>
- -->
+
         <header data-bs-theme="dark">
         {% block navbar %}
             {% include "fragments/navbar.html" %}
@@ -37,9 +36,15 @@
 
         {% block breadcrumbs %}
         {% endblock %}
+
+        {% block header %}
+        {% endblock %}
+
+        {% block carousel %}
+        {% endblock %}
         </header>
 
-        <main>
+        <main class="container">
         {% block content %}
         {% endblock %}
 

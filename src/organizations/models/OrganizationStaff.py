@@ -7,8 +7,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 
 """
 
-
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -60,7 +59,7 @@ class OrganizationStaff(BaseModel, AttachmentMixin, CommentMixin, RatingMixin, V
     # -------------------------------------------------------------------------
     # --- Basics
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="organization_staff_members_created",
@@ -74,7 +73,7 @@ class OrganizationStaff(BaseModel, AttachmentMixin, CommentMixin, RatingMixin, V
         verbose_name=_("Organization"),
         help_text=_("Organization"))
     member = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         null=True, blank=True,
@@ -129,7 +128,6 @@ class OrganizationStaff(BaseModel, AttachmentMixin, CommentMixin, RatingMixin, V
 # -----------------------------------------------------------------------------
 # --- Organization Staff Model Mixin.
 # -----------------------------------------------------------------------------
-@autoconnect
 class OrganizationStaffMixin:
     """Organization Staff Mixin Class."""
 
@@ -148,15 +146,3 @@ class OrganizationStaffMixin:
         )
 
         return organizations
-
-    def pre_save(self, **kwargs):
-        """Docstring."""
-
-    def post_save(self, created, **kwargs):
-        """Docstring."""
-
-    def pre_delete(self, **kwargs):
-        """Docstring."""
-
-    def post_delete(self, **kwargs):
-        """Docstring."""

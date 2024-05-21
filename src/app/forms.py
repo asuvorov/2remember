@@ -92,8 +92,8 @@ class AddressForm(forms.ModelForm):
                 }),
             "country": forms.Select(
                 attrs={
-                    "class":            "form-control selectpicker",
-                    # "data-live-search": "true",
+                    "class":        "form-control form-select",
+                    "aria-label":   _("Select Country..."),
                 }),
             "notes": forms.Textarea(
                 attrs={
@@ -161,7 +161,7 @@ class PhoneForm(forms.ModelForm):
                 }),
             "phone_type":   forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             }
 
@@ -278,8 +278,7 @@ class SocialLinkForm(forms.ModelForm):
         widgets = {
             "social_app": forms.Select(
                 attrs={
-                    # "class":        "form-control selectpicker",
-                    "class":        "form-control",
+                    "class":        "form-control form-select",
                 }),
             "url": forms.TextInput(
                 attrs={

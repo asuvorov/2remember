@@ -8,6 +8,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 """
 
 import datetime
+import uuid
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -68,13 +69,28 @@ class OrganizationManager(models.Manager):
 # -----------------------------------------------------------------------------
 # --- Organization Model.
 # -----------------------------------------------------------------------------
-def organization_directory_path(instance, filename):
-    """Organization Directory Path."""
-    # --- File will be uploaded to
-    #     MEDIA_ROOT/organizations/<id>/avatars/<filename>
+def organization_preview_directory_path(instance, filename):
+    """Organization Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/organizations/<id>/previews/<filename>
+    """
     fname = get_unique_filename(filename.split("/")[-1])
 
-    return f"organizations/{instance.id}/avatars/{fname}"
+    return f"organizations/{instance.id}/previews/{fname}"
+
+
+def organization_cover_directory_path(instance, filename):
+    """Organization Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/organizations/<id>/covers/<filename>
+    """
+    fname = get_unique_filename(filename.split("/")[-1])
+
+    return f"organizations/{instance.id}/covers/{fname}"
 
 
 @autoconnect
@@ -85,15 +101,21 @@ class Organization(
 
     # -------------------------------------------------------------------------
     # --- Basics
+    uid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        primary_key=False,
+        editable=False)
+
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="created_organizations",
         verbose_name=_("Author"),
         help_text=_("Organization Author"))
-    preview = models.ImageField(upload_to=organization_directory_path)
-    cover = models.ImageField(upload_to=organization_directory_path)
+    preview = models.ImageField(upload_to=organization_preview_directory_path)
+    cover = models.ImageField(upload_to=organization_cover_directory_path)
 
     # -------------------------------------------------------------------------
     # --- Tags
@@ -153,7 +175,7 @@ class Organization(
     # -------------------------------------------------------------------------
     # --- Subscribers
     subscribers = models.ManyToManyField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         blank=True,
         related_name="organization_subscribers",
@@ -166,11 +188,11 @@ class Organization(
     alt_person_fullname = models.CharField(
         max_length=80, null=True, blank=True,
         verbose_name=_("Full Name"),
-        help_text=_("Organization contact Person full Name"))
+        help_text=_("Organization Contact Person Full Name"))
     alt_person_email = models.EmailField(
         max_length=80, null=True, blank=True,
         verbose_name=_("Email"),
-        help_text=_("Organization contact Person Email"))
+        help_text=_("Organization Contact Person Email"))
     alt_person_phone = PhoneNumberField(
         blank=True,
         verbose_name=_("Phone Number"),
@@ -227,8 +249,9 @@ class Organization(
         """Docstring."""
 
         # pylint: disable=import-error,import-outside-toplevel
-        from events.choices import EventStatus
-        from events.models import Event
+        from events.models import (
+            Event,
+            EventStatus)
 
         hours_worked = Event.objects.filter(
             status=EventStatus.COMPLETE,
@@ -241,8 +264,9 @@ class Organization(
         """Docstring."""
 
         # pylint: disable=import-error,import-outside-toplevel
-        from events.choices import EventStatus
-        from events.models import Event
+        from events.models import (
+            Event,
+            EventStatus)
 
         upcoming_events = Event.objects.filter(
             organization=self,
@@ -343,14 +367,17 @@ class Organization(
 
         # ---------------------------------------------------------------------
         # --- Update/insert SEO Model Instance Metadata
-        update_seo_model_instance_metadata(
-            title=self.title,
-            description=self.description,
-            keywords=", ".join(self.tags.names()),
-            heading=self.title,
-            path=self.get_absolute_url(),
-            object_id=self.id,
-            content_type_id=ContentType.objects.get_for_model(self).id)
+        #
+        # --- FIXME
+        #
+        # update_seo_model_instance_metadata(
+        #     title=self.title,
+        #     description=self.description,
+        #     keywords=", ".join(self.tags.names()),
+        #     heading=self.title,
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:

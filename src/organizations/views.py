@@ -14,7 +14,6 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.gis.geoip2 import GeoIP2 as GeoIP
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
@@ -29,11 +28,16 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
+from termcolor import (
+    colored,
+    cprint)
+
 from ddcore.models import (
     AttachedDocument,
     AttachedImage,
     AttachedUrl,
     AttachedVideoUrl,
+    Phone,
     SocialApp,
     SocialLink)
 from ddcore.Utilities import (
@@ -47,7 +51,7 @@ from accounts.views import is_profile_complete
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
-    PhoneForm,
+    PhoneFormSet,
     SocialLinkFormSet)
 from events.models import (
     Event,
@@ -97,12 +101,12 @@ def organization_list(request):
                 is_hidden=True,
             ),
             is_deleted=False,
-        ).order_by("name")
+        ).order_by("title")
     else:
         organizations = Organization.objects.filter(
             is_hidden=False,
             is_deleted=False,
-        ).order_by("name")
+        ).order_by("title")
 
     # -------------------------------------------------------------------------
     # --- Filter the QuerySet by Tag ID.
@@ -214,29 +218,43 @@ def organization_create(request):
     aform = AddressForm(
         request.POST or None, request.FILES or None,
         required=not request.POST.get("addressless", False),
-        country_code=request.geo_data["country_code"])
-    nform = PhoneForm(
-        request.POST or None, request.FILES or None)
+        country_code="US")  # FIXME: request.geo_data["country_code"])
 
+    formset_phone = PhoneFormSet(
+        request.POST or None, request.FILES or None,
+        queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
         request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        cprint(f"                  {formset_phone.is_valid()=}", "yellow")
+        cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
-                form.is_valid() and aform.is_valid() and nform.is_valid() and
+                form.is_valid() and
+                aform.is_valid() and
+                formset_phone.is_valid() and
                 formset_social.is_valid()):
             organization = form.save(commit=False)
             organization.address = aform.save(commit=True)
-            organization.phone_number = nform.save(commit=True)
             organization.save()
 
             form.save_m2m()
 
             # -----------------------------------------------------------------
+            # --- Save Phone Numbers.
+            phones = formset_phone.save(commit=True)
+            for phone in phones:
+                phone.content_type = ContentType.objects.get_for_model(organization)
+                phone.object_id = organization.id
+                phone.save()
+
+            # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
-
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -267,7 +285,7 @@ def organization_create(request):
         request, "organizations/organization-create.html", {
             "form":             form,
             "aform":            aform,
-            "nform":            nform,
+            "formset_phone":    formset_phone,
             "formset_social":   formset_social,
         })
 
@@ -483,10 +501,12 @@ def organization_edit(request, slug=None):
         request.POST or None, request.FILES or None,
         required=not request.POST.get("addressless", False),
         instance=organization.address)
-    nform = PhoneForm(
-        request.POST or None, request.FILES or None,
-        instance=organization.phone_number)
 
+    formset_phone = PhoneFormSet(
+        request.POST or None, request.FILES or None,
+        queryset=Phone.objects.filter(
+            content_type=ContentType.objects.get_for_model(organization),
+            object_id=organization.id))
     formset_social = SocialLinkFormSet(
         request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.filter(
@@ -495,24 +515,31 @@ def organization_edit(request, slug=None):
 
     if request.method == "POST":
         if (
-                form.is_valid() and aform.is_valid() and nform.is_valid() and
+                form.is_valid() and
+                aform.is_valid() and
+                formset_phone.is_valid() and
                 formset_social.is_valid()):
             form.save()
             form.save_m2m()
 
             organization.address = aform.save(commit=True)
-            organization.phone_number = nform.save(commit=True)
             organization.save()
 
             # -----------------------------------------------------------------
-            # --- Save Social Links
+            # --- Save Phones.
+            phones = formset_phone.save(commit=True)
+            for phone in phones:
+                phone.content_type = ContentType.objects.get_for_model(organization)
+                phone.object_id = organization.id
+                phone.save()
+
+            # -----------------------------------------------------------------
+            # --- Save Social Links.
             # SocialLink.objects.filter(
             #     content_type=ContentType.objects.get_for_model(organization),
             #     object_id=organization.id
             #     ).delete()
-
             social_links = formset_social.save(commit=True)
-
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -571,7 +598,7 @@ def organization_edit(request, slug=None):
         request, "organizations/organization-edit.html", {
             "form":             form,
             "aform":            aform,
-            "nform":            nform,
+            "formset_phone":    formset_phone,
             "formset_social":   formset_social,
             "organization":     organization,
         })

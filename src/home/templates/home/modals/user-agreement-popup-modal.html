@@ -1,11 +1,11 @@
 {% load i18n %}
 
-<div class="modal fade" id="userAgreementPopupModal" tabindex="-1" role="dialog" aria-labelledby="userAgreementPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+<div id="userAgreementPopupModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="userAgreementPopupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="userAgreementPopupModalLabel">{% trans "User Agreement" %}</h4>
+                <h5 class="modal-title" id="userAgreementPopupModalLabel">{% trans "User Agreement" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
@@ -17,7 +17,7 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Close" %}</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

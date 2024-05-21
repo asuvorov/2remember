@@ -5,39 +5,25 @@
 
 {% block title %}{{ block.super }}{% endblock %}
 
+{% block breadcrumbs %}
+{% endblock %}
+
+{% block carousel %}
+    {% include "home/fragments/carousel.html" %}
+{% endblock %}
+
 {% block content %}
-<div id="index-carousel" class="carousel slide" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-        <li data-target="#index-carousel" data-slide-to="0" class="active"></li>
-        <li data-target="#index-carousel" data-slide-to="1"></li>
-        <li data-target="#index-carousel" data-slide-to="2"></li>
-    </ol>
+<!-- START HERO -->
+<!--  END  HERO -->
 
-    <!-- Wrapper for Slides -->
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <img src="{{ STATIC_URL }}img/DSC02177.jpg" alt="SaneSide Platform - Volunteering and Community Service made easy." />
-            <div class="container">
-                <div class="carousel-caption"></div>
-            </div>
-        </div>
+<!-- START MARKETING MESSAGES -->
+<!--  END  MARKETING MESSAGES -->
 
-        <div class="item">
-            <img src="{{ STATIC_URL }}img/DSC02160.jpg" alt="SaneSide Platform - Volunteering and Community Service made easy." />
-            <div class="container">
-                <div class="carousel-caption"></div>
-            </div>
-        </div>
+<!-- START FEATURETTES -->
+<!--  END  FEATURETTES -->
 
-        <div class="item">
-            <img src="{{ STATIC_URL }}img/DSC02173.jpg" alt="SaneSide Platform - Volunteering and Community Service made easy." />
-            <div class="container">
-                <div class="carousel-caption"></div>
-            </div>
-        </div>
-    </div>
-</div>
+<!-- START TWITTER FEED -->
+<!--  END  TWITTER FEED -->
 
 <div id="body-navs" class="hero">
     <div id="index" class="container">
@@ -171,17 +157,12 @@
     </div>
 </div>
 
+<!-- START SCRIPT -->
 <script>
-    $(document).ready(function() {
-        //---------------------------------------------------------------------
-        if (!isMobile.any) {
-            equalHeight($(".feature > p"));
-        }
-    })
-
     //-------------------------------------------------------------------------
     //--- Twitter Follow Button
     //-------------------------------------------------------------------------
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
 </script>
+<!--  END  SCRIPT -->
 {% endblock %}

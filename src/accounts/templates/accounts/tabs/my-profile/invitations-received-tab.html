@@ -6,6 +6,11 @@ My Profile - Received Invitations
 {% load imagekit %}
 {% load accounttags %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
 {% if request.user.invitee.get_all_received.count > 0 %}
     <!--
         Mobile View

@@ -66,13 +66,28 @@ class PostManager(models.Manager):
 # -----------------------------------------------------------------------------
 # --- Blog Post Model.
 # -----------------------------------------------------------------------------
-def blog_directory_path(instance, filename):
-    """Blog Directory Path."""
-    # --- File will be uploaded to
-    #     MEDIA_ROOT/blog/<id>/avatars/<filename>
+def blog_preview_directory_path(instance, filename):
+    """Blog Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/blog/<id>/previews/<filename>
+    """
     fname = get_unique_filename(filename.split("/")[-1])
 
-    return f"blog/{instance.id}/avatars/{fname}"
+    return f"blog/{instance.id}/previews/{fname}"
+
+
+def blog_cover_directory_path(instance, filename):
+    """Blog Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/blog/<id>/covers/<filename>
+    """
+    fname = get_unique_filename(filename.split("/")[-1])
+
+    return f"blog/{instance.id}/covers/{fname}"
 
 
 @autoconnect
@@ -82,13 +97,16 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
     # -------------------------------------------------------------------------
     # --- Basics
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="posted_posts",
         verbose_name=_("Post Author"),
         help_text=_("Post Author"))
-    avatar = models.ImageField(upload_to=blog_directory_path)
+    preview = models.ImageField(upload_to=blog_preview_directory_path)
+    cover = models.ImageField(
+        upload_to=blog_cover_directory_path,
+        blank=True)
 
     content = RichTextUploadingField(
         config_name="awesome_ckeditor",
