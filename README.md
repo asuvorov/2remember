@@ -3,7 +3,7 @@ For more Information on how to work in the Project, check out some of the other 
 <!--ts-->
 * [Building](docs/BUILDING.md)
 * [Contributing](docs/CONTRIBUTING.md)
-* [Developer](docs/CDEVELOPER.md)
+* [Developer](docs/DEVELOPER.md)
 * [Telemetry](docs/TELEMETRY.md)
 <!--te-->
 
@@ -32,7 +32,7 @@ For more Information on how to work in the Project, check out some of the other 
 
 ### Download and install `bower` Applications
 
-	python manage.py bower install 
+	python manage.py bower install
 
 ## Install `lessc` (and optional `recess`):
 

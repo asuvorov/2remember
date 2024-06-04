@@ -180,8 +180,8 @@ TEMPLATES = [
 
                 "url_tools.context_processors.current_url",
 
-                # "social_django.context_processors.backends",
-                # "social_django.context_processors.login_redirect",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
 
                 # "accounts.context_processors.signin_form",
 
@@ -883,16 +883,16 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### PYTHON/DJANGO SOCIAL AUTH                                               ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "social_django",
-# )
+INSTALLED_APPS += (
+    "social_django",
+)
 
-# AUTHENTICATION_BACKENDS += (
-#     "social_core.backends.facebook.FacebookAppOAuth2",
-#     "social_core.backends.facebook.FacebookOAuth2",
-#     "social_core.backends.twitter.TwitterOAuth",
-#     "social_core.backends.linkedin.LinkedinOAuth2",
-# )
+AUTHENTICATION_BACKENDS += (
+    "social_core.backends.facebook.FacebookAppOAuth2",
+    "social_core.backends.facebook.FacebookOAuth2",
+    "social_core.backends.twitter.TwitterOAuth",
+    "social_core.backends.linkedin.LinkedinOAuth2",
+)
 
 # SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
@@ -924,22 +924,22 @@ LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # ])
 # SOCIAL_AUTH_CREATE_USERS = True
 
-# SOCIAL_AUTH_PIPELINE = (
-#     "social_core.pipeline.social_auth.social_details",
-#     "social_core.pipeline.social_auth.social_uid",
-#     "social_core.pipeline.social_auth.auth_allowed",
-#     "social_core.pipeline.social_auth.social_user",
-#     "social_core.pipeline.user.get_username",
-#     "social_core.pipeline.mail.mail_validation",
-#     "social_core.pipeline.social_auth.associate_by_email",
-#     "social_core.pipeline.user.create_user",
-#     "social_core.pipeline.social_auth.associate_user",
-#     "social_core.pipeline.debug.debug",
-#     "social_core.pipeline.social_auth.load_extra_data",
-#     "social_core.pipeline.user.user_details",
+SOCIAL_AUTH_PIPELINE = (
+    "social_core.pipeline.social_auth.social_details",
+    "social_core.pipeline.social_auth.social_uid",
+    "social_core.pipeline.social_auth.auth_allowed",
+    "social_core.pipeline.social_auth.social_user",
+    "social_core.pipeline.user.get_username",
+    "social_core.pipeline.mail.mail_validation",
+    "social_core.pipeline.social_auth.associate_by_email",
+    "social_core.pipeline.user.create_user",
+    "social_core.pipeline.social_auth.associate_user",
+    "social_core.pipeline.debug.debug",
+    "social_core.pipeline.social_auth.load_extra_data",
+    "social_core.pipeline.user.user_details",
 
-#     "accounts.auth_pipelines.save_profile",
-# )
+    "accounts.auth_pipelines.save_profile",
+)
 
 # -----------------------------------------------------------------------------
 # --- FACEBOOK
