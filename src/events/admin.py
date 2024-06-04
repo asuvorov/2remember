@@ -1,9 +1,16 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 from django.contrib.contenttypes import admin as ct_admin
 
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from ddcore.models.Comment import Comment
 from ddcore.models.Complaint import Complaint
@@ -16,13 +23,11 @@ from .models import (
     Role)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT CATEGORY ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === EVENT CATEGORY ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -38,7 +43,7 @@ class CategoryAdmin(admin.ModelAdmin):
         ("", {
             "classes":  (""),
             "fields":   (
-                ("avatar", "image_tag"),
+                ("preview", "image_tag"),
                 "title",
                 "description",
                 "category",
@@ -49,7 +54,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", "avatar", "image_tag",
+        "title", "preview", "image_tag",
         "category", "color", "icon", "image",
         "created", "modified",
     ]
@@ -65,16 +70,15 @@ class CategoryAdmin(admin.ModelAdmin):
     ]
     inlines = []
 
+
 admin.site.register(Category, CategoryAdmin)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ EVENT ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === EVENT ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -188,15 +192,6 @@ class EventAdmin(admin.ModelAdmin):
                 ("addressless", "address"),
             ),
         }),
-        ("Recurrence", {
-            "classes":  (
-                "grp-collapse grp-open",
-            ),
-            "fields":   (
-                "recurrence",
-        #         ("month", "day_of_week", "day_of_month"),
-            ),
-        }),
         ("Start Date/Time", {
             "classes":  (
                 "grp-collapse grp-open",
@@ -228,16 +223,23 @@ class EventAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", "image_tag", "status", "event_url",
-        "start_date", "start_time", "start_tz",
-        "organization", "application", "author",
+        "title", "image_tag",
+        # "status",
+        "event_url",
+        # "start_date", "start_time", "start_tz",
+        "organization",
+        # "application",
+        "author",
         "created", "modified",
     ]
     list_display_links = [
         "title",
     ]
     list_filter = [
-        "status", "organization", "application", "author",
+        # "status",
+        "organization",
+        # "application",
+        "author",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
@@ -286,16 +288,15 @@ class EventAdmin(admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(Event, EventAdmin)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ PARTICIPATION ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === PARTICIPATION ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -360,5 +361,6 @@ class ParticipationAdmin(admin.ModelAdmin):
     readonly_fields = [
         "image_tag",
     ]
+
 
 admin.site.register(Participation, ParticipationAdmin)

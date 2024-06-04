@@ -1,25 +1,115 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 
 from adminsortable2.admin import (
     SortableAdminMixin,
     SortableInlineAdminMixin)
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
+
+from ddcore.models import (
+    User,
+    UserLogin)
 
 from .models import (
     Team,
     TeamMember,
-    UserLogin,
     UserPrivacyGeneral,
     UserPrivacyMembers,
     UserPrivacyAdmins,
     UserProfile)
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER ADMIN
+# ===
+# =============================================================================
+class UserAdmin(admin.ModelAdmin):
+    """User Admin.
+
+    "password", "last_login", "is_superuser", "username", "first_name", "last_name", "email",
+    "is_staff", "is_active", "date_joined", "id", "groups", "user_permissions"
+    """
+
+    fieldsets = (
+        ("", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                "id",
+                ("first_name", "last_name"),
+                ("username", "email", "password"),
+            ),
+        }),
+        ("Flags", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("is_active", "is_staff", "is_superuser"),
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("date_joined", "last_login"),
+            ),
+        }),
+    )
+
+    list_display = [
+        "id", "first_name", "last_name", "username", "email",
+        "is_active", "is_staff", "is_superuser",
+        "date_joined", "last_login",
+    ]
+    list_display_links = []
+    list_filter = [
+        ("date_joined", DateRangeFilter),
+        ("last_login", DateRangeFilter),
+    ]
+    search_fields = []
+    readonly_fields = ["id"]
+
+    papertrail_type_filters = {
+        "Account Events": (
+            "new-user-signed-up",
+            "new-user-sign-up-confirmed",
+            "user-logged-in",
+        ),
+        "Account Exceptions": (
+            "exception-create-user-privacy",
+        ),
+        "Profile Events": (
+            "user-profile-save-failed",
+            "user-profile-privacy-save-failed",
+        ),
+        "Complaint Events": (
+            "complaint-created",
+            "complaint-processed",
+            "complaint-deleted",
+        ),
+    }
+
+
+admin.site.register(User, UserAdmin)
+
+
+# =============================================================================
+# ===
+# === USER PROFILE ADMIN
+# ===
+# =============================================================================
 class UserProfileAdmin(admin.ModelAdmin):
     """User Profile Admin."""
 
@@ -57,7 +147,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         "id",
         "user", "image_tag",
         "is_newly_created",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -93,19 +183,22 @@ class UserProfileAdmin(admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(UserProfile, UserProfileAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE PRIVACY
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PROFILE PRIVACY ADMIN
+# ===
+# =============================================================================
 class UserPrivacyGeneralAdmin(admin.ModelAdmin):
     """User Profile Privacy General."""
 
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -117,6 +210,7 @@ class UserPrivacyGeneralAdmin(admin.ModelAdmin):
     search_fields = [
         "user",
     ]
+
 
 admin.site.register(UserPrivacyGeneral, UserPrivacyGeneralAdmin)
 
@@ -127,7 +221,7 @@ class UserPrivacyMembersAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -139,6 +233,7 @@ class UserPrivacyMembersAdmin(admin.ModelAdmin):
     search_fields = [
         "user",
     ]
+
 
 admin.site.register(UserPrivacyMembers, UserPrivacyMembersAdmin)
 
@@ -149,7 +244,7 @@ class UserPrivacyAdminsAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -162,30 +257,34 @@ class UserPrivacyAdminsAdmin(admin.ModelAdmin):
         "user",
     ]
 
+
 admin.site.register(UserPrivacyAdmins, UserPrivacyAdminsAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- USER LOGIN ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER LOGIN ADMIN
+# ===
+# =============================================================================
 class UserLoginAdmin(admin.ModelAdmin):
     """User Login Admin."""
 
     list_display = [
         "id",
-        "user", "ip", "provider", "country", "city",
+        "user", "ip", "provider", "geo_data",
+        # "created_by", "created", "modified_by", "modified",
         "created", "modified",
     ]
     list_display_links = [
         "user",
     ]
     list_filter = [
-        "provider", "country", "city",
+        "provider", "geo_data",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "user", "ip", "provider", "country", "city",
+        "user", "ip", "provider", "geo_data",
     ]
 
     papertrail_type_filters = {
@@ -195,12 +294,15 @@ class UserLoginAdmin(admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(UserLogin, UserLoginAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- TEAM ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === TEAM ADMIN
+# ===
+# =============================================================================
 class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
     """Team Member Inline."""
 
@@ -245,12 +347,10 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
 
         return super().formfield_for_dbfield(db_field, **kwargs)
 
+
 admin.site.register(Team, TeamAdmin)
 
 
-# -----------------------------------------------------------------------------
-# -- TEAM MEMBER ADMIN
-# -----------------------------------------------------------------------------
 class TeamMemberAdmin(admin.ModelAdmin):
     """Team Member Admin."""
 
@@ -293,5 +393,6 @@ class TeamMemberAdmin(admin.ModelAdmin):
             db_field.default = current_order_count
 
         return super().formfield_for_dbfield(db_field, **kwargs)
+
 
 admin.site.register(TeamMember, TeamMemberAdmin)

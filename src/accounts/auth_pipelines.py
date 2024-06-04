@@ -1,4 +1,11 @@
-"""Define Auth Pipelines."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import requests
 
@@ -6,9 +13,8 @@ from django.core.files.base import ContentFile
 
 from requests import HTTPError
 
-from .models import (
-    UserProfile,
-    UserLogin)
+from ddcore.models import UserLogin
+from .models import UserProfile
 
 
 def save_profile(
@@ -25,7 +31,7 @@ def save_profile(
         profile = UserProfile.objects.create(user=user)
 
     # -------------------------------------------------------------------------
-    # --- FACEBOOK.
+    # --- FACEBOOK
     # -------------------------------------------------------------------------
     if is_new and backend.name == "facebook":
         # profile.gender = response.get("gender").capitalize()
@@ -34,17 +40,16 @@ def save_profile(
         avatar_url =f"http://graph.facebook.com/{response.get('id')}/picture?type=large"
 
     # -------------------------------------------------------------------------
-    # --- LINKEDIN.
+    # --- TWITTER
     # -------------------------------------------------------------------------
-    if backend.name == "linkedin":
+    if backend.name == "twitter":
         pass
 
     # -------------------------------------------------------------------------
-    # --- GOOGLE-PLUS.
+    # --- LINKEDIN
     # -------------------------------------------------------------------------
-    if backend.name == "google-oauth2":
-        if response.get("image") and response["image"].get("url"):
-            avatar_url = response["image"].get("url")
+    if backend.name == "linkedin":
+        pass
 
     # -------------------------------------------------------------------------
     # --- Import social Profile Avatar.

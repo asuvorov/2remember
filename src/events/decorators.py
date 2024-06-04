@@ -1,4 +1,11 @@
-"""Define Decorators."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.db.models import Q
 from django.http import Http404
@@ -82,7 +89,7 @@ def event_access_check_required(func):
         event_id = request.POST.get("event_id", "")
 
         if slug:
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 event = get_object_or_404(
                     Event,
                     Q(organization=None) |
@@ -111,7 +118,7 @@ def event_access_check_required(func):
                     slug=slug,
                 )
         elif event_id:
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 event = get_object_or_404(
                     Event,
                     Q(organization=None) |

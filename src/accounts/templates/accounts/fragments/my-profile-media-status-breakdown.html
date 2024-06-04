@@ -2,19 +2,23 @@
 
 {% comment %}
     Input Parameters:
-        :<request>
+        :<request> - Request
 {% endcomment %}
 
-<div class="btn-group">
-    <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown"><i class="fa fa-address-card-o fa-fw"></i> {% trans "Profile Settings" %} <span class="caret"></span></a>
+<div class="btn-group-vertical" role="group" aria-label="Vertical button group">
+    <div class="btn-group" role="group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            {% trans "Profile Settings" %}
+        </button>
+        <ul class="dropdown-menu">
+            <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-edit' %}"><i class="bi bi-pen"></i> {% trans "Edit Profile" %}</a></li>
+            <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-privacy' %}"><i class="bi bi-key"></i> {% trans "Privacy Settings" %}</a></li>
+            <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'password-reset' %}"><i class="bi bi-lock"></i> {% trans "Change Password" %}</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item dropdown-item-danger d-flex gap-2 align-items-center" href="{% url 'my-profile-delete' %}"><i class="bi bi-trash"></i> {% trans "Delete Profile" %}</a></li>
+        </ul>
+    </div>
 
-    <ul class="dropdown-menu" role="menu">
-        <li><a href="{% url 'my-profile-edit' %}"><i class="fa fa-edit fa-fw"></i> {% trans "Edit Profile" %}</a></li>
-        <li><a href="{% url 'my-profile-privacy' %}"><i class="fa fa-key fa-fw"></i> {% trans "Privacy Settings" %}</a></li>
-        <li><a href="{% url 'password-reset' %}"><i class="fa fa-lock fa-fw"></i> {% trans "Change Password" %}</a></li>
-        <li><a href="{% url 'my-profile-delete' %}"><i class="fa fa-trash-o fa-fw"></i> {% trans "Delete Profile" %}</a></li>
-    </ul>
+    <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Event" %}</a>
+    <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="fa fa-building-o fa-fw"></i> {% trans "Create Organization" %}</a>
 </div>
-
-<a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Event" %}</a>
-<a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="fa fa-building-o fa-fw"></i> {% trans "Create Organization" %}</a>

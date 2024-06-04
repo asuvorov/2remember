@@ -1,4 +1,11 @@
-"""Define Views."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import mimetypes
 
@@ -7,7 +14,6 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.gis.geoip2 import GeoIP2 as GeoIP
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
@@ -22,12 +28,18 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from ddcore.models.Attachment import AttachedDocument
-from ddcore.models.Attachment import AttachedImage
-from ddcore.models.Attachment import AttachedUrl
-from ddcore.models.Attachment import AttachedVideoUrl
-from ddcore.models.SocialLink import SocialLink
-from ddcore.models.choices import SocialApp
+from termcolor import (
+    colored,
+    cprint)
+
+from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
+    Phone,
+    SocialApp,
+    SocialLink)
 from ddcore.Utilities import (
     get_client_ip,
     get_website_title,
@@ -39,14 +51,13 @@ from accounts.views import is_profile_complete
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
-    PhoneForm,
+    PhoneFormSet,
     SocialLinkFormSet)
-from events.choices import (
-    EventStatus,
-    ParticipationStatus)
 from events.models import (
     Event,
-    Participation)
+    EventStatus,
+    Participation,
+    ParticipationStatus)
 
 from .decorators import (
     organization_access_check_required,
@@ -57,14 +68,12 @@ from .models import (
     OrganizationStaff)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION LIST
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === ORGANIZATION LIST
+# ===
+# =============================================================================
+@cache_page(60)
 def organization_list(request):
     """List of the all Organizations."""
     # -------------------------------------------------------------------------
@@ -74,7 +83,7 @@ def organization_list(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         organizations = Organization.objects.filter(
             Q(is_hidden=False) |
             Q(
@@ -92,12 +101,12 @@ def organization_list(request):
                 is_hidden=True,
             ),
             is_deleted=False,
-        ).order_by("name")
+        ).order_by("title")
     else:
         organizations = Organization.objects.filter(
             is_hidden=False,
             is_deleted=False,
-        ).order_by("name")
+        ).order_by("title")
 
     # -------------------------------------------------------------------------
     # --- Filter the QuerySet by Tag ID.
@@ -146,7 +155,7 @@ def organization_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
@@ -156,7 +165,7 @@ def organization_directory(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         organizations = Organization.objects.filter(
             Q(is_hidden=False) |
             Q(
@@ -187,20 +196,18 @@ def organization_directory(request):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION CREATE
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION CREATE
+# ===
+# =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 def organization_create(request):
     """Create Organization."""
-    geo = GeoIP()
-    ip_addr = get_client_ip(request)
-    country_code = geo.country_code(ip_addr)
+    # geo = GeoIP()
+    # ip_addr = get_client_ip(request)
+    # country_code = geo.country_code(ip_addr)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -210,30 +217,44 @@ def organization_create(request):
         user=request.user)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
-        country_code=country_code)
-    nform = PhoneForm(
-        request.POST or None, request.FILES or None)
+        required=not request.POST.get("addressless", False),
+        country_code="US")  # FIXME: request.geo_data["country_code"])
 
+    formset_phone = PhoneFormSet(
+        request.POST or None, request.FILES or None,
+        queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
         request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        cprint(f"                  {formset_phone.is_valid()=}", "yellow")
+        cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
-                form.is_valid() and aform.is_valid() and nform.is_valid() and
+                form.is_valid() and
+                aform.is_valid() and
+                formset_phone.is_valid() and
                 formset_social.is_valid()):
             organization = form.save(commit=False)
             organization.address = aform.save(commit=True)
-            organization.phone_number = nform.save(commit=True)
             organization.save()
 
             form.save_m2m()
 
             # -----------------------------------------------------------------
+            # --- Save Phone Numbers.
+            phones = formset_phone.save(commit=True)
+            for phone in phones:
+                phone.content_type = ContentType.objects.get_for_model(organization)
+                phone.object_id = organization.id
+                phone.save()
+
+            # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
-
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -264,18 +285,16 @@ def organization_create(request):
         request, "organizations/organization-create.html", {
             "form":             form,
             "aform":            aform,
-            "nform":            nform,
+            "formset_phone":    formset_phone,
             "formset_social":   formset_social,
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION DETAILS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION DETAILS
+# ===
+# =============================================================================
 @cache_page(60 * 1)
 @organization_access_check_required
 def organization_details(request, slug=None):
@@ -298,7 +317,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     # -------------------------------------------------------------------------
@@ -330,7 +349,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
         is_complained = organization.is_complained_by_user(request.user)
@@ -420,7 +439,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     return render(
@@ -449,7 +468,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     return render(
@@ -459,13 +478,11 @@ def organization_groups(request, slug=None):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION EDIT
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION EDIT
+# ===
+# =============================================================================
 @login_required
 @organization_staff_member_required
 def organization_edit(request, slug=None):
@@ -482,12 +499,14 @@ def organization_edit(request, slug=None):
         user=request.user, instance=organization)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=False if request.POST.get("addressless", False) else True,
+        required=not request.POST.get("addressless", False),
         instance=organization.address)
-    nform = PhoneForm(
-        request.POST or None, request.FILES or None,
-        instance=organization.phone_number)
 
+    formset_phone = PhoneFormSet(
+        request.POST or None, request.FILES or None,
+        queryset=Phone.objects.filter(
+            content_type=ContentType.objects.get_for_model(organization),
+            object_id=organization.id))
     formset_social = SocialLinkFormSet(
         request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.filter(
@@ -496,24 +515,31 @@ def organization_edit(request, slug=None):
 
     if request.method == "POST":
         if (
-                form.is_valid() and aform.is_valid() and nform.is_valid() and
+                form.is_valid() and
+                aform.is_valid() and
+                formset_phone.is_valid() and
                 formset_social.is_valid()):
             form.save()
             form.save_m2m()
 
             organization.address = aform.save(commit=True)
-            organization.phone_number = nform.save(commit=True)
             organization.save()
 
             # -----------------------------------------------------------------
-            # --- Save Social Links
+            # --- Save Phones.
+            phones = formset_phone.save(commit=True)
+            for phone in phones:
+                phone.content_type = ContentType.objects.get_for_model(organization)
+                phone.object_id = organization.id
+                phone.save()
+
+            # -----------------------------------------------------------------
+            # --- Save Social Links.
             # SocialLink.objects.filter(
             #     content_type=ContentType.objects.get_for_model(organization),
             #     object_id=organization.id
             #     ).delete()
-
             social_links = formset_social.save(commit=True)
-
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -572,19 +598,17 @@ def organization_edit(request, slug=None):
         request, "organizations/organization-edit.html", {
             "form":             form,
             "aform":            aform,
-            "nform":            nform,
+            "formset_phone":    formset_phone,
             "formset_social":   formset_social,
             "organization":     organization,
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION POPULATE NEWSLETTER
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION POPULATE NEWSLETTER
+# ===
+# =============================================================================
 @login_required
 @organization_staff_member_required
 def organization_populate_newsletter(request, slug=None):
@@ -632,14 +656,12 @@ def organization_populate_newsletter(request, slug=None):
         })
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION IFRAMES
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === ORGANIZATION IFRAMES
+# ===
+# =============================================================================
+@cache_page(60)
 def organization_iframe_upcoming(request, organization_id):
     """Organization iFrame for upcoming Events."""
     organization = get_object_or_404(
@@ -657,7 +679,7 @@ def organization_iframe_upcoming(request, organization_id):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60)
 def organization_iframe_complete(request, organization_id):
     """Organization iFrame for completed Events."""
     organization = get_object_or_404(

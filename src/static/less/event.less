@@ -77,7 +77,6 @@
 #event-category-list {
     // --- Mixin
     #instance.page-list-no-btn();
-
 }
 
 // ----------------------------------------------------------------------------
@@ -89,15 +88,6 @@
 #event-reporting-materials {
     // --- Mixin
     #instance.page-create-edit();
-
-    // --- Overrides for NavBar Tab Wizard
-    .wizard .nav-tabs > li {
-        width:              20%;
-
-        &:after {
-            left:           41%;
-        }
-    }
 }
 
 // ----------------------------------------------------------------------------
@@ -108,7 +98,7 @@
     #instance.page-details();
 
     #info {
-        .chl-info-section {
+        .event-info-section {
             background-color:   @white;
             padding:            10px;
             margin-bottom:      10px;
@@ -413,16 +403,11 @@
     }
     #event-create,
     #event-edit {
-        .wizard .nav-tabs > li {
-            &:after {
-                left:       33%;
-            }
-        }
     }
 
-    #chl-navigation,
-    #chl-tag-cloud,
-    #chl-calendar {
+    #event-navigation,
+    #event-tag-cloud,
+    #event-calendar {
         display:            none;
     }
 
@@ -474,16 +459,11 @@
     }
     #event-create,
     #event-edit {
-        .wizard .nav-tabs > li {
-            &:after {
-                left:       40%;
-            }
-        }
     }
 
-    #chl-navigation,
-    #chl-tag-cloud,
-    #chl-calendar {
+    #event-navigation,
+    #event-tag-cloud,
+    #event-calendar {
         display:            none;
     }
 
@@ -503,11 +483,6 @@
     /* <= 768px <= 991px */
     #event-create,
     #event-edit {
-        .wizard .nav-tabs > li {
-            &:after {
-                left:       40%;
-            }
-        }
     }
 }
 @media (min-width: @screen-md-min) and (max-width: @screen-md-max) {

@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.conf import settings
@@ -11,9 +18,11 @@ from ddcore.models.Attachment import TemporaryFile
 from .models import Organization
 
 
-# -----------------------------------------------------------------------------
-# --- CREATE/EDIT ORGANIZATION FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === CREATE/EDIT ORGANIZATION FORM
+# ===
+# =============================================================================
 class CreateEditOrganizationForm(forms.ModelForm):
     """Create/edit Organization Form."""
 
@@ -26,13 +35,16 @@ class CreateEditOrganizationForm(forms.ModelForm):
             pass
 
         self.contact_choices = [
+            # ("no", _("None")),
             ("me", _("Me (%s)") % (self.user.email)),
             ("he", _("Affiliate different Person")),
         ]
         self.fields["contact"].choices = self.contact_choices
         self.fields["contact"].initial = "me"
 
-        if self.instance and self.instance.is_alt_person:
+        if (
+                self.instance and
+                self.instance.is_alt_person):
             self.fields["contact"].initial = "he"
 
         # ---------------------------------------------------------------------
@@ -54,13 +66,12 @@ class CreateEditOrganizationForm(forms.ModelForm):
             attrs={
                 "placeholder":  _("Separate your Links with a Space"),
             }),
-        required=False,
-    )
+        required=False)
 
     class Meta:
         model = Organization
         fields = [
-            "avatar", "title", "description", "tags", "hashtag",
+            "preview", "cover", "title", "description", "tags", "hashtag",
             "addressless", "is_hidden", "website", "video", "email",
             "is_alt_person", "alt_person_fullname",
             "alt_person_email", "alt_person_phone",
@@ -84,6 +95,14 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Hashtag"),
                     "maxlength":    80,
+                }),
+            "addressless": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                }),
+            "is_alt_person": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
                 }),
             "website": forms.URLInput(
                 attrs={
@@ -123,13 +142,13 @@ class CreateEditOrganizationForm(forms.ModelForm):
     def clean(self):
         """Clean."""
         # ---------------------------------------------------------------------
-        # --- Validate `name` Field
-        if self.cleaned_data["name"].lower() in settings.ORGANIZATION_NAME_RESERVED_WORDS:
-            self._errors["name"] = self.error_class(
+        # --- Validate `title` Field.
+        if self.cleaned_data["title"].lower() in settings.ORGANIZATION_TITLE_RESERVED_WORDS:
+            self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as an Organization Name.")])
 
         # ---------------------------------------------------------------------
-        # --- Validate `alt_person` Fields
+        # --- Validate `alt_person` Fields.
         if self.cleaned_data["contact"] == "me":
             self.cleaned_data["is_alt_person"] = False
         else:

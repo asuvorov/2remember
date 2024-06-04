@@ -14,8 +14,6 @@
     /*************************************************************************/
     /*** Custom Scripts                                                    ***/
     /*************************************************************************/
-    console.log(">>> isMobile?", isMobile.any);
-
     // ------------------------------------------------------------------------
     // --- Avatar Preview
     function readURL(input) {
@@ -84,21 +82,21 @@
 
     // ------------------------------------------------------------------------
     // --- Wrapper for Avatar Image File Input Field
-    var wrapper = $("<div/>").css({
-        height:         0,
-        width:          0,
-        "overflow":     "hidden"
-    });
-    var fileInput = $("#id_avatar:file").wrap(wrapper);
+    // var wrapper = $("<div/>").css({
+    //     height:         0,
+    //     width:          0,
+    //     "overflow":     "hidden"
+    // });
+    // var fileInput = $("#id_avatar:file").wrap(wrapper);
 
-    fileInput.change(function () {
-        $this = $(this);
-        //$("#file").val($this.val());
-    })
+    // fileInput.change(function () {
+    //     $this = $(this);
+    //     $("#file").val($this.val());
+    // })
 
-    $("#file").click(function () {
-        fileInput.click();
-    }).show();
+    // $("#file").click(function () {
+    //     fileInput.click();
+    // }).show();
 
     /*************************************************************************/
     /*** Bootstrap Plug-ins                                                ***/
@@ -129,35 +127,22 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Max Length
-    $("input[maxlength]").maxlength({
+    $("[maxlength]").maxlength({
         alwaysShow:         false,
         threshold:          10,
         warningClass:       "label label-success",
         limitReachedClass:  "label label-danger",
-        placement:          "bottom-right",
+        placement:          "top-right",
         validate:           true
     });
-    $("textarea[maxlength]").maxlength({
+    $("[maxlength]").maxlength({
         alwaysShow:         false,
         threshold:          100,
         warningClass:       "label label-success",
         limitReachedClass:  "label label-danger",
-        placement:          "bottom-right",
+        placement:          "top-right",
         validate:           true
     });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Select Picker
-    $(document).ready(function () {
-        $(".selectpicker").selectpicker({
-            style:          "btn-select",
-            size:           10
-        });
-
-        if (isMobile.any) {
-            $(".selectpicker").selectpicker("mobile");
-        }
-    })
 
     // ------------------------------------------------------------------------
     // --- Initialize Slider
@@ -184,20 +169,11 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Tool Tips
-    if (!isMobile.any) {
-        $("[data-toggle='tooltip']").tooltip({
-            animation:          true,
-            delay:              0,
-            trigger:            "hover focus",
-        });
-    } else {
-        $("[data-toggle='tooltip']").tooltip({
-            animation:          true,
-            delay:              0,
-            trigger:            "hover",
-        });
-    }
-    // $("[data-toggle='tooltip']").tooltip("destroy");
+    $("[data-toggle='tooltip']").tooltip({
+        animation:          true,
+        delay:              0,
+        trigger:            "hover",
+    });
 
     /*************************************************************************/
     /*** jQuery Plugins                                                    ***/
@@ -301,7 +277,7 @@
     // ------------------------------------------------------------------------
     // --- Initialize Pulsate
     $(".tab-pane:first-child .next-step").pulsate({
-        color:          "#428bca",     // set the color of the pulse
+        color:          "#428bca",  // set the color of the pulse
         reach:          20,         // how far the pulse goes in px
         speed:          1000,       // how long one pulse takes in ms
         pause:          0,          // how long the pause between pulses is in ms
@@ -397,13 +373,6 @@
         after:          function () {
             console.log(">>> INSIDE : `after`");
         }
-    });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Sticky
-    $(".wizard-inner").sticky({
-        topSpacing:     50,
-        zIndex:         10,
     });
 
     // ------------------------------------------------------------------------

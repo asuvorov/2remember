@@ -9,7 +9,7 @@
 
     <!-- Animate CSS -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'css/animate.css' %}"> -->
 {% endcompress %}
 
     <!-- jQuery -->
@@ -18,52 +18,49 @@
 {% endcompress %}
 
     <!-- jQuery UI -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui/themes/base/all.css' %}"> -->
+{% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'jquery-ui/themes/base/all.css' %}">
+{% endcompress %}
 {% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script> -->
+    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
 {% endcompress %}
 
     <!-- Twitter Bootstrap -->
     <!-- REMINDER: Twitter Bootstrap Styles (`bootstrap.less`) are being loaded in `less/imports.less` above. -->
+{% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/scss/bootstrap.scss' %}">
+{% endcompress %}
 {% compress js %}
     <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
-{% endcompress %}
-
-    <!-- Bootsnav -->
-{% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/animate.css' %}">
-    {# <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/bootsnav.css' %}"> #}
-    <link rel="stylesheet" type="text/css" href="{% static 'plugins/bootsnav/css/style.css' %}">
-{% endcompress %}
-{% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'plugins/bootsnav/js/bootsnav.js' %}"></script>
+    <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap/dist/js/bootstrap.bundle.min.js' %}"></script>
 {% endcompress %}
 
     <!-- Less CSS -->
 {% compress css %}
     <link rel="stylesheet" type="text/less" href="{% static 'less/imports.less' %}">
 {% endcompress %}
-{% comment %}
-    <script type="text/javascript" src="{% static 'less/dist/less.min.js' %}"></script>
-{% endcomment %}
+{% compress js %}
+    <script type="text/javascript" src="{% static 'less.js/dist/less.min.js' %}"></script>
+{% endcompress %}
 
     <!-- Twitter Bootpag -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bootpag/lib/jquery.bootpag.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootpag/lib/jquery.bootpag.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Awesome Checkbox -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.css' %}"> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Datepicker/Timepicker Mobile -->
-    <script type="text/javascript" charset="utf-8" src="{% static 'modernizr/modernizr.js' %}"></script>
+{% compress js %}
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'modernizr/modernizr.js' %}"></script> -->
     <script type="text/javascript" charset="utf-8" src="{% static 'moment/moment.js' %}"></script>
-{% comment %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'js/datepicker-mobile.js' %}"></script>
-    <script type="text/javascript" charset="utf-8" src="{% static 'js/timepicker-mobile.js' %}"></script>
-{% endcomment %}
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'js/datepicker-mobile.js' %}"></script> -->
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'js/timepicker-mobile.js' %}"></script> -->
+{% endcompress %}
 
     <!-- Twitter Bootstrap Max Length-->
 {% compress js %}
@@ -72,46 +69,45 @@
 
     <!-- Twitter Bootstrap Rating -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-rating/bootstrap-rating.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-rating/bootstrap-rating.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-rating/bootstrap-rating.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-rating/bootstrap-rating.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Select -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-select/dist/css/bootstrap-select.min.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-select/dist/css/bootstrap-select.min.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-select/dist/js/bootstrap-select.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Slider -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'seiyria-bootstrap-slider/dist/css/bootstrap-slider.min.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'seiyria-bootstrap-slider/dist/bootstrap-slider.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'seiyria-bootstrap-slider/dist/bootstrap-slider.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Tab Collapse -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tabcollapse/bootstrap-tabcollapse.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tabcollapse/bootstrap-tabcollapse.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Tags Input -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js' %}"></script> -->
 {% endcompress %}
 
-    <!-- Font Awesome -->
-    <link rel="stylesheet" type="text/css" href="{% static 'font-awesome/css/font-awesome.min.css' %}">
-
     <!-- Font Flat Icon -->
+{% compress css %}
     <link rel="stylesheet" type="text/css" href="{% static 'fonts/flaticon/flaticon.css' %}">
+{% endcompress %}
 
     <!-- Social Buttons -->
 {% compress css %}
@@ -132,33 +128,33 @@
 
     <!-- jQuery ColorBox -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-colorbox/example3/colorbox.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-colorbox/example3/colorbox.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-colorbox/jquery.colorbox-min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-colorbox/jquery.colorbox-min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Tablesorter -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'tablesorter/jquery.tablesorter.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'tablesorter/jquery.tablesorter.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery bxSlider -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'bxslider-4/dist/jquery.bxslider.css' %}" />
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'bxslider-4/dist/jquery.bxslider.css' %}" /> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'bxslider-4/dist/jquery.bxslider.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bxslider-4/dist/jquery.bxslider.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Equal Height -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'equalheight/dist/jquery.equalheight.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'equalheight/dist/jquery.equalheight.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Input Mask -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'inputmask/dist/jquery.inputmask.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'inputmask/dist/jquery.inputmask.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery pop-up Overlay -->
@@ -168,28 +164,28 @@
 
     <!-- jQuery Scroll to Top -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.css' %}" />
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.css' %}" /> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Smooth Scroll -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'smooth-scroll.js/dist/smooth-scroll.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'smooth-scroll.js/dist/smooth-scroll.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Sticky -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-sticky/jquery.sticky.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-sticky/jquery.sticky.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery TimePicker -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jt.timepicker/jquery.timepicker.css' %}" />
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jt.timepicker/jquery.timepicker.css' %}" /> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jt.timepicker/jquery.timepicker.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jt.timepicker/jquery.timepicker.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery FormSet -->
@@ -207,28 +203,23 @@
 
 <!-- jQuery Read More -->
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'readmore-js/readmore.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'readmore-js/readmore.min.js' %}"></script> -->
 {% endcompress %}
 
 <!-- jQuery Shorten -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'jquery-shorten-js/dist/css/shorten.min.css' %}" />
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-shorten-js/dist/css/shorten.min.css' %}" /> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'jquery-shorten-js/dist/jquery-shorten.min.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-shorten-js/dist/jquery-shorten.min.js' %}"></script> -->
 {% endcompress %}
 
     <!-- jQuery Zabuto Calendar -->
 {% compress css %}
-    <link rel="stylesheet" type="text/css" href="{% static 'zabuto_calendar/zabuto_calendar.min.css' %}">
+    <!-- <link rel="stylesheet" type="text/css" href="{% static 'zabuto_calendar/zabuto_calendar.min.css' %}"> -->
 {% endcompress %}
 {% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'zabuto_calendar/zabuto_calendar.min.js' %}"></script>
-{% endcompress %}
-
-    <!-- jQuery isMobile -->
-{% compress js %}
-    <script type="text/javascript" charset="utf-8" src="{% static 'ismobilejs/src/isMobile.js' %}"></script>
+    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'zabuto_calendar/zabuto_calendar.min.js' %}"></script> -->
 {% endcompress %}
 
     <!--[if lt IE 9]>

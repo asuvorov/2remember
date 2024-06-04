@@ -1,4 +1,12 @@
-"""Local Configuration."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
+
 from decouple import config
 
 # pylint: disable=wildcard-import
@@ -46,7 +54,7 @@ AWS_HEADERS = {
 
 S3_URL = f"http://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 # STATIC_URL = S3_URL + "/static/"
-MEDIA_URL = S3_URL + "/media/"
+# MEDIA_URL = S3_URL + "/media/"
 
 
 ###############################################################################

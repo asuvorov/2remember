@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.utils.translation import gettext_lazy as _
@@ -27,7 +34,7 @@ class CreateEditPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            "avatar", "title", "description", "content", "tags", "hashtag",
+            "preview", "cover", "title", "description", "content", "tags", "hashtag",
         ]
         widgets = {
             "title": forms.TextInput(

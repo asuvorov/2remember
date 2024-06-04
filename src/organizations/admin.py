@@ -1,4 +1,11 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 from django.contrib.contenttypes import admin as ct_admin
@@ -6,7 +13,7 @@ from django.contrib.contenttypes import admin as ct_admin
 from adminsortable2.admin import (
     SortableAdminBase,
     SortableInlineAdminMixin)
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from ddcore.models.SocialLink import SocialLink
 
@@ -19,13 +26,11 @@ from .models import (
     OrganizationStaff)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -40,7 +45,7 @@ class EventInline(admin.TabularInline):
         "grp-collapse grp-closed",
     ]
     exclude = [
-        "avatar", "description", "hashtag",
+        "preview", "description", "hashtag",
         "addressless", "address",
         "month", "day_of_week", "day_of_month",
         "start_date", "start_time", "start_tz",
@@ -102,7 +107,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
             "classes":  (""),
             "fields":   (
                 "author",
-                ("avatar", "image_tag",),
+                ("preview", "image_tag",),
                 "title",
                 "description",
                 "subscribers",
@@ -195,16 +200,15 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
         ),
     }
 
+
 admin.site.register(Organization, OrganizationAdmin)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION STAFF ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION STAFF ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -229,16 +233,15 @@ class OrganizationStaffAdmin(admin.ModelAdmin):
         "member",
     ]
 
+
 admin.site.register(OrganizationStaff, OrganizationStaffAdmin)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ ORGANIZATION GROUP ADMIN
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ORGANIZATION GROUP ADMIN
+# ===
+# =============================================================================
 
 # -----------------------------------------------------------------------------
 # --- Inlines.
@@ -251,16 +254,16 @@ class OrganizationGroupAdmin(admin.ModelAdmin):
     """Organization Group Admin."""
 
     list_display = [
-        "name", "organization", "author",
+        "title", "organization", "author",
         "created", "modified",
     ]
     list_filter = [
-        "name", "organization", "author",
+        "title", "organization", "author",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "name",
+        "title",
     ]
 
     papertrail_type_filters = {
@@ -271,5 +274,6 @@ class OrganizationGroupAdmin(admin.ModelAdmin):
             "invite-revoked",
         ),
     }
+
 
 admin.site.register(OrganizationGroup, OrganizationGroupAdmin)

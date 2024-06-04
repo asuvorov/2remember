@@ -1,14 +1,20 @@
-"""Define Sitemap."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 import datetime
 
 from django.contrib.sitemaps import Sitemap
 from django.db.models import Q
 
-from .choices import (
-    EventStatus,
-    Recurrence)
-from .models import Event
+from .models import (
+    Event,
+    EventStatus)
 
 
 class EventSitemap(Sitemap):
@@ -21,8 +27,7 @@ class EventSitemap(Sitemap):
     def items(self):
         """Docstring."""
         return Event.objects.filter(
-            Q(start_date__gte=datetime.date.today()) |
-            Q(recurrence=Recurrence.DATELESS),
+            start_date__gte=datetime.date.today(),
             status=EventStatus.UPCOMING)
 
     def lastmod(self, obj):

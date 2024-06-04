@@ -1,9 +1,16 @@
-"""Define Admin."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django.contrib import admin
 
 from adminsortable2.admin import SortableAdminMixin
-from rangefilter.filter import DateRangeFilter
+from rangefilter.filters import DateRangeFilter
 
 from .models import (
     Partner,
@@ -11,9 +18,11 @@ from .models import (
     FAQ)
 
 
-# -----------------------------------------------------------------------------
-# --- Partner ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === PARTNER ADMIN
+# ===
+# =============================================================================
 class PartnerAdmin(admin.ModelAdmin):
     """Partner Admin."""
 
@@ -58,9 +67,11 @@ class PartnerAdmin(admin.ModelAdmin):
 admin.site.register(Partner, PartnerAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- FAQ SECTION ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === FAQ SECTION ADMIN
+# ===
+# =============================================================================
 class FAQInline(admin.TabularInline):
     """FAQ Inline."""
 
@@ -113,9 +124,11 @@ class SectionAdmin(SortableAdminMixin, admin.ModelAdmin):
 admin.site.register(Section, SectionAdmin)
 
 
-# -----------------------------------------------------------------------------
-# --- FAQ ADMIN
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === FAQ ADMIN
+# ===
+# =============================================================================
 class FAQAdmin(admin.ModelAdmin):
     """FAQ Admin."""
 

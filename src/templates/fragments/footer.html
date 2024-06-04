@@ -1,80 +1,58 @@
 {% load i18n %}
 {% load static %}
 
-<footer>
-    <div class="row footer-top">
-        <div class="container">
-            <div class="col-xs-24 col-sm-4 col-md-4 logo">
-            </div>
-
-            <div class="col-xs-24 col-sm-12 col-md-12 site-map">
-                <ul>
-                    <p>{% trans "Terms &amp; Conditions" %}</p>
-
-                    <li><a href="{% url 'privacy-policy' %}">{% trans "Privacy Policy" %}</a></li>
-                    <li><a href="{% url 'user-agreement' %}">{% trans "User Agreement" %}</a></li>
-                    <li><a href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
-                </ul>
-
-                <ul>
-                    <p>{% trans "Media" %}</p>
-
-                    <li><a href="{% url 'post-list' %}">{% trans "Our Blog" %}</a></li>
-                    <li><a href="{% url 'our-team' %}">{% trans "Our Team" %}</a></li>
-                    <li><a href="{% url 'our-partners' %}">{% trans "Our Partners" %}</a></li>
-                </ul>
-
-                <ul>
-                    <p>{% trans "Feedback" %}</p>
-
-                    <li><a href="{% url 'about-us' %}">{% trans "About us" %}</a></li>
-                    <li><a href="{% url 'contact-us' %}">{% trans "Contact us" %}</a></li>
+<div class="container">
+    <footer class="py-5">
+        <div class="row">
+            <div class="col-6 col-md-2 mb-3">
+                <h5>{% trans "Terms &amp; Conditions" %}</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'privacy-policy' %}">{% trans "Privacy Policy" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'user-agreement' %}">{% trans "User Agreement" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'faq' %}">{% trans "FAQ" %}</a></li>
                 </ul>
             </div>
 
-            <div class="col-xs-24 col-sm-8 col-md-8 social-buttons" align="right">
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_FACEBOOK }}';" class="btn btn-facebook">
-                    <i class="fa fa-facebook fa-fw"></i>
-                </button>
+            <div class="col-6 col-md-2 mb-3">
+                <h5>{% trans "Media" %}</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'post-list' %}">{% trans "Our Blog" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'our-team' %}">{% trans "Our Team" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'our-partners' %}">{% trans "Our Partners" %}</a></li>
+                </ul>
+            </div>
 
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_TWITTER }}';" class="btn btn-twitter">
-                    <i class="fa fa-twitter fa-fw"></i>
-                </button>
+            <div class="col-6 col-md-2 mb-3">
+                <h5>{% trans "Feedback" %}</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'about-us' %}">{% trans "About us" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'contact-us' %}">{% trans "Contact us" %}</a></li>
+                </ul>
+            </div>
 
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_LINKEDIN }}';" class="btn btn-linkedin">
-                    <i class="fa fa-linkedin fa-fw"></i>
-                </button>
-
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_GOOGLE }}';" class="btn btn-google-plus">
-                    <i class="fa fa-google-plus fa-fw"></i>
-                </button>
-
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_PINTEREST }}';" class="btn btn-pinterest">
-                    <i class="fa fa-pinterest fa-fw"></i>
-                </button>
-
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_INSTAGRAM }}';" class="btn btn-instagram">
-                    <i class="fa fa-instagram fa-fw"></i>
-                </button>
-
-                <button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_TUMBLR }}';" class="btn btn-tumblr">
-                    <i class="fa fa-tumblr fa-fw"></i>
-                </button>
+            <div class="col-md-5 offset-md-1 mb-3">
+                <form>
+                    <h5>Subscribe to our newsletter</h5>
+                    <p>Monthly digest of what's new and exciting from us.</p>
+                    <div class="d-flex flex-column flex-sm-row w-100 gap-2">
+                        <label for="newsletter1" class="visually-hidden">Email address</label>
+                        <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </div>
 
-    <div class="row footer-bottom">
-        <div class="container">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <p>Copyright &copy; 2014-2018 - SaneSide <span class="pull-right">{{ product_version_num }}</span></p>
-                <a href="/humans.txt" class="pull-right">
-                    <img alt="humans.txt" src="{% static 'img/humanstxt-transparent-color.png' %}" alt="SaneSide Platform." />
-                </a>
-                <a href="/docs" class="pull-right">
-                    <img alt="humans.txt" src="{% static 'img/swagger-logo.png' %}" alt="SaneSide Platform." />
-                </a>
-            </div>
+        <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
+            <!-- <p class="float-end"><a href="#">Back to Top</a></p> -->
+            <p>Copyright &copy; 2017–2024 2Remember &middot; {{ product_version_num }}</p>
+            <ul class="list-unstyled d-flex">
+                <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
+                <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
+                <li class="ms-3">
+                    <a class="link-body-emphasis" href="#">Instagram</a>
+                </li>
+            </ul>
         </div>
-    </div>
-</footer>
+    </footer>
+</div>

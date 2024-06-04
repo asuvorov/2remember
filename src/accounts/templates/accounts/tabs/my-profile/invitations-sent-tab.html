@@ -6,6 +6,11 @@ My Profile - Sent Invitations
 {% load imagekit %}
 {% load accounttags %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
 {% if request.user.inviter.get_all_sent.count > 0 %}
     <!--
         Mobile View

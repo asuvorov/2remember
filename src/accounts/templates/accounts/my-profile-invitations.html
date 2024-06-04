@@ -2,35 +2,42 @@
 
 {% load i18n %}
 
-{% block extra_content %}
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+{% block breadcrumbs %}
 <div class="container">
-    <div id="my-profile-invitations">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <h4 >
-                    <span class="hidden-xs">{% trans "Received Invitations" %}</span>
-                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Received" %}</span>
-                    <a class="btn btn-rounded btn-danger pull-right inv-received-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a>
-                </h4>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my-profile-invitations' %}">{% trans "Invitations" %}</a></li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
 
-                <div id="invitations-received-section">
-                    {% include "accounts/tabs/my-profile/invitations-received-tab.html" %}
-                </div>
-            </div>
-        </div>
+{% block extra_content %}
+<div id="my-profile-invitations" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-12">
+            <!-- START PROFILE RECEIVED INVITATIONS -->
+            <section id="profile-invitations-received">
+                <h3>{% trans "Received Invitations" %} <a class="btn btn-rounded btn-danger pull-right inv-received-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a></h3>
+                {% include "accounts/tabs/my-profile/invitations-received-tab.html" %}
+            </section>
+            <!--  END  PROFILE RECEIVED INVITATIONS -->
 
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <h4>
-                    <span class="hidden-xs">{% trans "Sent Invitations" %}</span>
-                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Sent" %}</span>
-                    <a class="btn btn-rounded btn-danger pull-right inv-sent-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a>
-                </h4>
+            <hr>
 
-                <div id="invitations-sent-section">
-                    {% include "accounts/tabs/my-profile/invitations-sent-tab.html" %}
-                </div>
-            </div>
+            <!-- START PROFILE SENT INVITATIONS -->
+            <section id="profile-invitations-sent">
+                <h3>{% trans "Sent Invitations" %} <a class="btn btn-rounded btn-danger pull-right inv-sent-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a></h3>
+                {% include "accounts/tabs/my-profile/invitations-sent-tab.html" %}
+            </section>
+            <!--  END  PROFILE SENT INVITATIONS -->
         </div>
     </div>
 </div>

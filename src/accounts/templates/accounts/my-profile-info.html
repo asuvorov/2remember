@@ -1,11 +1,187 @@
 {% extends "accounts/my-profile-base.html" %}
 
 {% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
 
-{% block extra_content %}
-<div class="container">
-    <div id="my-profile-info">
-        {% include "accounts/tabs/my-profile/info-tab.html" %}
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+{% block content %}
+
+
+<div id="my-profile-info" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START PROFILE CARD -->
+            <section id="profile-card">
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                        {% if request.user.profile.avatar %}
+                            {% generateimage "common:thumbnail_bigger" source=request.user.profile.avatar -- alt=request.user.profile.auth_name %}
+                        {% else %}
+                            <img src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="200" width="200" alt="" />
+                        {% endif %}
+                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:200px;">
+                                <div class="progress-bar overflow-visible bg-{% if request.user.profile.completeness_total > 75 %}success{% elif request.user.profile.completeness_total > 50 %}info{% elif request.user.profile.completeness_total > 25 %}warning{% else %}danger{% endif %} progress-bar-striped active" role="progressbar" style="width:{{ request.user.profile.completeness_total }}%">{{ request.user.profile.completeness_total }}% {% trans "Complete" %}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ request.user.profile.full_name }}</h4>
+
+                                <hr>
+
+                                <h5>{% trans "Bio" %}</h5>
+                                <blockquote>
+                                    <p>{{ request.user.profile.bio|default:"N/A" }}</p>
+                                </blockquote>
+
+                                <hr>
+
+                                <h5>{% trans "Contact Details" %}</h5>
+                                <span class="badge text-bg-warning">{% trans "This Information can only be seen by the Organizers of the Events you participate in." %}</span>
+
+                                <address>
+                                    <p><i class="bi bi-pin-map"></i>{{ request.user.profile.address.full_address|default:"N/A" }}</p>
+                                {% if request.user.profile.address.notes %}
+                                    <blockquote>
+                                        <p>{{ request.user.profile.address.notes }}</p>
+                                    </blockquote>
+                                {% endif %}
+
+                                    <p>
+                                        <i class="bi bi-telephone"></i>{{ request.user.profile.phone_number.phone_number|default:"N/A" }}{% if request.user.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ request.user.profile.phone_number.phone_number_ext }}){% endif %}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-phone"></i>{{ request.user.profile.phone_number.mobile_phone_number|default:"N/A" }}{% if request.user.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ request.user.profile.phone_number.mobile_phone_number_ext }}){% endif %}
+                                    </p>
+                                    <p><i class="bi bi-envelope"></i>{{ request.user.profile.user.email }}</p>
+                                    <p><i class="bi bi-calendar"></i>{{ request.user.profile.birth_day }}</p>
+                                </address>
+
+                                <hr>
+
+                                <p>
+                                    <span class="label label-success">{% trans "My Organizations" %}</span><br/>
+                                {% for organization in created_organizations %}
+                                    <a href="{% url 'organization-details' organization.slug %}">{{ organization.name }}</a>{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    {% trans "There are no Organizations yet." %}<br/>
+
+                                    {% if request.user.profile.is_completed %}
+                                        <a href="{% url 'organization-create' %}"><i class="fa fa-plus fa-fw"></i> {% blocktrans %}Create</a> new Organization.{% endblocktrans %}
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                                <p>
+                                    <span class="label label-info">{% trans "Related Organizations" %}</span><br/>
+                                {% for organization in related_organizations %}
+                                    <a href="{% url 'organization-details' organization.slug %}">{{ organization.name }}</a>
+                                    {% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    {% trans "There are no related Organizations yet." %}
+                                {% endfor %}
+                                </p>
+
+                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  END  PROFILE CARD -->
+
+            <!-- START PROFILE COMPLETE -->
+            <section id="profile-complete">
+                <div>
+                {% comment %}
+                    <p>
+                        <strong>{% trans "Hours spent" %}</strong>
+                        <span class="badge pull-right">{{ sum_of_hours_spent }}</span>
+                    </p>
+                {% endcomment %}
+                </div>
+            </section>
+            <!--  END  PROFILE COMPLETE -->
+
+            <!-- START PROFILE COMPLETE -->
+            <section id="profile-complete">
+            </section>
+            <!--  END  PROFILE COMPLETE -->
+
+            <!-- START PROFILE COMPLETE -->
+            <section id="profile-complete">
+            </section>
+            <!--  END  PROFILE COMPLETE -->
+
+            <!-- START PROFILE COMPLETE -->
+            <section id="profile-complete">
+            </section>
+            <!--  END  PROFILE COMPLETE -->
+
+            <!-- START PROFILE COMPLETE -->
+            <section id="profile-complete">
+            </section>
+            <!--  END  PROFILE COMPLETE -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            {% if request.user.profile.get_rating_avg > 0 %}
+            <div class="row">
+                <div class="d-grid gap-2 col-12 mx-auto">
+                    {% include "common/fragments/rating-card-hor.html" with instance=request.user.profile %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="row">
+                <div class="d-grid gap-2 col-12 mx-auto">
+                    {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
+                </div>
+            </div>
+
+            <!-- Social Links -->
+        {% if social_links %}
+            <h4>{% trans "Social Links" %}</h4>
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="social-buttons">
+                    {% for social_link in social_links %}
+                        <button onclick="javascript:document.location.href='{{ social_link.url }}';" class="{{ social_link.stat_social_app_button }}">
+                            <i class="{{ social_link.stat_social_app_icon }}"></i>
+                        </button>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+            <div id="spotlight">
+                <h4>{% trans "Spotlight" %}</h4>
+            </div>
+
+            <div id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+
+                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                <!-- Unit1 -->
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-9496875666537518"
+                     data-ad-slot="6843889782"
+                     data-ad-format="auto"></ins>
+                <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+                </script>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -79,7 +255,7 @@
 <!-- Pop-up Overlays -->
 
 {% if request.user.profile.completeness_total < 80 %}
-<div id="profile-completeness-popup-overlay" class="well" style="display:none;">
+<div id="profile-completeness-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
     <div class="popup-overlay-heading">
         <h4>{% trans "Welcome" %}, {{ request.user.profile.auth_name }}</h4>
     </div>
@@ -115,7 +291,7 @@
 
     <!-- Add an optional Button to close the Pop-up -->
     <div class="popup-overlay-footer">
-        <button class="btn btn-default profile-completeness-popup-overlay_close">{% trans "Let's go" %}</button>
+        <button class="btn btn-primary profile-completeness-popup-overlay_close">{% trans "Let's go" %}</button>
     </div>
 </div>
 
@@ -124,31 +300,34 @@
 <script>
     $(document).ready(function () {
         /*********************************************************************/
-        /*** jQuery Pop-up Overlay                                         ***/
+        /*** jQuery pop-up Overlay                                         ***/
         /*********************************************************************/
+        /***
+         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
+        ***/
         var options = {
-            type:                       "overlay",      //      "tooltip"
-            autoopen:                   true,           // def. false
-            scrolllock:                 true,           // def. false
-            background:                 true,
-            backgroundactive:           false,
-            color:                      "#000",
-            opacity:                    0.5,
-            horizontal:                 "center",
-            vertical:                   "center",
-            offsettop:                  0,
-            offsetleft:                 0,
-            escape:                     true,
-            blur:                       true,
-            setzindex:                  true,
-            autozindex:                 false,
-            keepfocus:                  true,
-            focusdelay:                 50,
-            outline:                    false,
-            detach:                     false,
-            //openelement:                ".{popup_id}_open",
-            //closeelement:               ".{popup_id}_close",
-            transition:                 "all 0.3s"
+            type:               "overlay",      // "tooltip"
+            autoopen:           true,           // def. false
+            scrolllock:         true,           // def. false
+            background:         true,
+            backgroundactive:   false,
+            color:              "#000",
+            opacity:            0.5,
+            horizontal:         "center",
+            vertical:           "center",
+            offsettop:          0,
+            offsetleft:         0,
+            escape:             true,
+            blur:               true,
+            setzindex:          true,
+            autozindex:         false,
+            keepfocus:          true,
+            focusdelay:         50,
+            outline:            false,
+            detach:             false,
+            // openelement:        ".{popup_id}_open",
+            // closeelement:       ".{popup_id}_close",
+            transition:         "all 0.5s"
         };
 
         $("#profile-completeness-popup-overlay").popup(options);

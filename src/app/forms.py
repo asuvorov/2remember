@@ -1,4 +1,11 @@
-"""Define Forms."""
+"""
+(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+
+The Copyright Owner has not given any Authority for any Publication of this Work.
+This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
+Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
+
+"""
 
 from django import forms
 from django.forms import BaseModelFormSet
@@ -85,8 +92,8 @@ class AddressForm(forms.ModelForm):
                 }),
             "country": forms.Select(
                 attrs={
-                    "class":            "form-control selectpicker",
-                    # "data-live-search": "true",
+                    "class":        "form-control form-select",
+                    "aria-label":   _("Select Country..."),
                 }),
             "notes": forms.Textarea(
                 attrs={
@@ -113,7 +120,7 @@ class AddressForm(forms.ModelForm):
 
 # =============================================================================
 # ===
-# === PHONE FORM
+# === PHONE FORM & FORMSET
 # ===
 # =============================================================================
 class PhoneForm(forms.ModelForm):
@@ -130,11 +137,15 @@ class PhoneForm(forms.ModelForm):
         if self.required:
             self.fields["phone_number"].required = True
 
+    class Media:
+        js = formset_media_js + (
+            # Other form media here
+        )
+
     class Meta:
         model = Phone
         fields = [
-            "phone_number", "mobile_phone_number",
-            "phone_number_ext", "mobile_phone_number_ext",
+            "phone_number", "phone_number_ext", "phone_type",
         ]
         widgets = {
             "phone_number": forms.TextInput(
@@ -148,16 +159,9 @@ class PhoneForm(forms.ModelForm):
                     "placeholder":  _("Ext."),
                     "maxlength":    8,
                 }),
-            "mobile_phone_number": forms.TextInput(
+            "phone_type":   forms.Select(
                 attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Mobile Phone Number"),
-                }),
-            "mobile_phone_number_ext": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Ext."),
-                    "maxlength":    8,
+                    "class":        "form-control form-select",
                 }),
             }
 
@@ -175,6 +179,23 @@ class PhoneForm(forms.ModelForm):
             instance.save()
 
         return instance
+
+
+class PhoneModelFormSet(BaseModelFormSet):
+    """Docstring."""
+
+    def clean(self):
+        """Docstring."""
+        super().clean()
+
+
+PhoneFormSet = modelformset_factory(
+    Phone,
+    form=PhoneForm,
+    formset=PhoneModelFormSet,
+    max_num=3,
+    extra=0,
+    can_delete=True)
 
 
 # =============================================================================
@@ -257,8 +278,7 @@ class SocialLinkForm(forms.ModelForm):
         widgets = {
             "social_app": forms.Select(
                 attrs={
-                    # "class":        "form-control selectpicker",
-                    "class":        "form-control",
+                    "class":        "form-control form-select",
                 }),
             "url": forms.TextInput(
                 attrs={
@@ -300,6 +320,7 @@ class SocialLinkModelFormSet(BaseModelFormSet):
     def clean(self):
         """Docstring."""
         super().clean()
+
 
 SocialLinkFormSet = modelformset_factory(
     SocialLink,

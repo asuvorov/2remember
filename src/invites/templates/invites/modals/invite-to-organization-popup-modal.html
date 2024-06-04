@@ -45,7 +45,7 @@
                             </div>
                         </div>
 
-                        <select id="id_group" name="group" class="form-control selectpicker" data-live-search="true" title="Choose one of the following..." data-size="5">
+                        <select id="id_group" name="group" class="form-control form-select" data-live-search="true" title="Choose one of the following..." data-size="5">
                         </select>
                     </div>
 
@@ -104,10 +104,6 @@
                         "<option value=\"" + value.id + "\">" + value.name + "</option>"
                     );
                 });
-
-                // ------------------------------------------------------------
-                // --- Refresh Drop-down.
-                $(".selectpicker").selectpicker("refresh");
             } else {
                 invite_to_staff_only = true;
 
