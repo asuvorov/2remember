@@ -18,9 +18,11 @@ from ddcore.models.Attachment import TemporaryFile
 from .models import Organization
 
 
-# -----------------------------------------------------------------------------
-# --- CREATE/EDIT ORGANIZATION FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === CREATE/EDIT ORGANIZATION FORM
+# ===
+# =============================================================================
 class CreateEditOrganizationForm(forms.ModelForm):
     """Create/edit Organization Form."""
 
@@ -33,13 +35,16 @@ class CreateEditOrganizationForm(forms.ModelForm):
             pass
 
         self.contact_choices = [
+            # ("no", _("None")),
             ("me", _("Me (%s)") % (self.user.email)),
             ("he", _("Affiliate different Person")),
         ]
         self.fields["contact"].choices = self.contact_choices
         self.fields["contact"].initial = "me"
 
-        if self.instance and self.instance.is_alt_person:
+        if (
+                self.instance and
+                self.instance.is_alt_person):
             self.fields["contact"].initial = "he"
 
         # ---------------------------------------------------------------------
@@ -90,6 +95,14 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Hashtag"),
                     "maxlength":    80,
+                }),
+            "addressless": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                }),
+            "is_alt_person": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
                 }),
             "website": forms.URLInput(
                 attrs={

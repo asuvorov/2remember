@@ -42,15 +42,14 @@ sitemaps = {
 
 
 urlpatterns = [
-    # re_path(r"", include("social_django.urls", namespace="social")),
-
+    re_path(r"", include("social_django.urls", namespace="social")),
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
-    # re_path(r"^grappelli/", include("grappelli.urls")),
+    re_path(r"^grappelli/", include("grappelli.urls")),
     re_path(r"^admin/", admin.site.urls),
     # re_path(r"^captcha/", include("captcha.urls")),
     # re_path(r"^docs/", schema_view),
     re_path(r"^i18n/", include("django.conf.urls.i18n")),
-    # re_path(r"^rosetta/", include("rosetta.urls")),
+    re_path(r"^rosetta/", include("rosetta.urls")),
     # re_path(r"^search/", include("haystack.urls")),
     re_path(r"^sitemap\.xml$", sitemap, {
             "sitemaps":     sitemaps,

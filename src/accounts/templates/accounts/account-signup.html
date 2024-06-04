@@ -4,194 +4,172 @@
 {% load static %}
 {% load compress %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<uform> - User Account Form
+        :<pform> - User Profile Form
+{% endcomment %}
+
 {% block title %}{% trans "Sign up" %} - {{ block.super }}{% endblock %}
 
-{% block extra_script %}
-    <!-- NavBar Wizard -->
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/navbar-wizard.js' %}"></script>
-    {% endcompress %}
+{% block extra_style %}
+{% endblock %}
 
-    <!-- Wire up Events -->
-    {% comment %}
-    {% compress js %}
-        <script type="text/javascript" charset="utf-8" src="{% static 'js/wire-up-events.js' %}"></script>
-    {% endcompress %}
-    {% endcomment %}
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'signup' %}">{% trans "Sign up" %}</a></li>
+        </ol>
+    </nav>
+</a>
 {% endblock %}
 
 {% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'account-list' %}">{% trans "Members" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'signup' %}">{% trans "Sign up" %}</a>
-                </div>
+<div id="account-signup" class="bg-body-tertiary p-3">
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% blocktrans %}
+                This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a>.
+            {% endblocktrans %}
+            </div>
+
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
             </div>
         </div>
     </div>
-</div>
 
-<div class="container">
-    <div id="account-signup">
-        <div class="row">
-            <div id="tips" class="col-xs-24 hidden-sm hidden-md hidden-lg right-sidebar">
-                <div class="alert alert-info alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                {% blocktrans %}
-                    This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="popover-content ppnua" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#privacyPolicyPopupModal" tabindex="-1">Privacy Policy</a>
-                {% endblocktrans %}
-                </div>
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="signup-form" class="needs-validation was-validated" enctype="multipart/form-data" action="" method="POST" role="form" novalidate>
+                {% csrf_token %}
 
-                <div class="alert alert-success alert-dismissible" role="alert">
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
-                </div>
-            </div>
+                <!-- START PROFILE APPEARENCE -->
+                <section id="profile-appearance">
+                    <h3>{% trans "Appearance" %}</h3>
 
-            <div class="col-xs-24 col-sm-16 col-md-18">
-                <form id="signup-form" enctype="multipart/form-data" action="" method="POST" role="form">
-                    {% csrf_token %}
-
-                    <div class="row">
-                        <div id="pfl-avatar" class="col-xs-24 col-sm-24 col-md-8">
-                            <div class="thumbnail avatar" style="display:none; padding-bottom:10px;">
-                                <img id="avatar" src="#" alt="Add a personal Touch to your Profile." />
-                            </div>
-
-                            <a class="btn btn-primary btn-centered file" id="file"><i class="fa fa-upload fa-fw"></i> {% trans "Upload Photo" %}</a>
-                            <input id="id_avatar" name="avatar" type="file">
-
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
+                            <input id="id_avatar" class="form-control" type="file">
                             <div class="form-group {% if pform.avatar.errors %}has-error{% endif %}">
-                                <span class="help-block">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-
-                            <p>{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</p>
-                        </div>
-
-                        <div id="pfl-details" class="col-xs-24 col-sm-24 col-md-16">
-                            <h3>{% trans "Personal Details" %}</h3>
-
-                            <div class="form-group {% if uform.first_name.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ uform.first_name }}
-                                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if uform.first_name.errors %}{% for error in uform.first_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-                            <div class="form-group {% if uform.last_name.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ uform.last_name }}
-                                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if uform.last_name.errors %}{% for error in uform.last_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-                            <div class="form-group {% if pform.nickname.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ pform.nickname }}
-                                    <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if pform.nickname.errors %}{% for error in pform.nickname.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-                            <div class="form-group {% if uform.email.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ uform.email }}
-                                    <div class="input-group-addon"><i class="fa fa-at fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if uform.email.errors %}{% for error in uform.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-                            <div class="form-group {% if uform.password.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ uform.password }}
-                                    <div class="input-group-addon"><i class="fa fa-lock fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if uform.password.errors %}{% for error in uform.password.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-                            <div class="form-group {% if uform.retry.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ uform.retry }}
-                                    <div class="input-group-addon"><i class="fa fa-unlock fa-fw"></i></div>
-                                </div>
-
-                                <span class="help-block">{% if uform.retry.errors %}{% for error in uform.retry.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-
-                            <div style="display:inline-block; width:100%">
-                                <div class="form-group half {% if pform.gender.errors %}has-error{% endif %}">
-                                    <label class="control-label">{{ pform.gender.label }}{% if pform.gender.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                    <div class="input-group">
-                                        {{ pform.gender }}
-                                        <div class="input-group-addon"><i class="fa fa-venus-mars fa-fw"></i></div>
-                                    </div>
-
-                                    <span class="help-block">{% if pform.gender.errors %}{% for error in pform.gender.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                                </div>
-
-                                <div class="form-group half pull-right {% if pform.birth_day.errors %}has-error{% endif %}">
-                                    <label class="control-label">{{ pform.birth_day.label }}{% if pform.birth_day.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                                    <div class="input-group">
-                                        {{ pform.birth_day }}
-                                        <div class="input-group-addon"><i class="fa fa-calendar fa-fw"></i></div>
-                                    </div>
-
-                                    <span class="help-block">{% if pform.birth_day.errors %}{% for error in pform.birth_day.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                                </div>
-                            </div>
-
-                            <hr>
-
-                            <h3>{% trans "Complete" %}</h3>
-
-                            <div class="checkbox checkbox-primary">
-                                {{ pform.receive_newsletters }}
-                                {{ pform.receive_newsletters.label_tag }}
-                            </div>
-
-                            <div class="form-group {% if pform.captcha.errors %}has-error{% endif %}">
-                                {{ pform.captcha }}
-
-                                <span class="help-block">{% if pform.captcha.errors %}{% for error in pform.captcha.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-
-                            <div class="alert alert-warning">
-                            {% blocktrans %}
-                                By signing up, you agree to our <a class="popover-content ppnua" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#privacyPolicyPopupModal" tabindex="-1">Privacy Policy</a> and <a class="popover-content ppnua" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#userAgreementPopupModal" tabindex="-1">User Agreement</a>.
-                            {% endblocktrans %}
-                            </div>
-
-                            <div class="row">
-                                <div class="col-xs-24 col-sm-24 col-md-24 feature">
-                                    <a href="#" name="submit">
-                                        <span><i class="flaticon-rounded25"></i></span>
-                                        <p>{% trans "Sign up" %}</p>
-                                    </a>
-                                </div>
+                                <div class="invalid-feedback">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
                             </div>
                         </div>
                     </div>
-                </form>
+                </section>
+                <!--  END  PROFILE APPEARENCE -->
+
+                <hr>
+
+                <!-- START PROFILE DETAILS -->
+                <section id="profile-details">
+                    <h3>{% trans "Personal Details" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-md-6 {% if uform.first_name.errors %}has-error{% endif %}">
+                            {{ uform.first_name }}
+                            <label for="id_first_name" class="form-label">{{ uform.first_name.label }}{% if uform.first_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div class="invalid-feedback">{% if uform.first_name.errors %}{% for error in uform.first_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                        </div>
+                        <div class="form-floating col-md-6 {% if uform.last_name.errors %}has-error{% endif %}">
+                            {{ uform.last_name }}
+                            <label for="id_last_name" class="form-label">{{ uform.last_name.label }}{% if uform.last_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div class="invalid-feedback">{% if uform.last_name.errors %}{% for error in uform.last_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if pform.nickname.errors %}has-error{% endif %}">
+                            {{ pform.nickname }}
+                            <label for="id_nickname" class="form-label">{{ pform.nickname.label }}{% if pform.nickname.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.nickname.errors %}{% for error in pform.nickname.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if uform.email.errors %}has-error{% endif %}">
+                            {{ uform.email }}
+                            <label for="id_email" class="form-label">{{ uform.email.label }}{% if uform.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if uform.email.errors %}{% for error in uform.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if uform.password.errors %}has-error{% endif %}">
+                            {{ uform.password }}
+                            <label for="id_password" class="form-label">{{ uform.password.label }}{% if uform.password.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if uform.password.errors %}{% for error in uform.password.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if uform.retry.errors %}has-error{% endif %}">
+                            {{ uform.retry }}
+                            <label for="id_retry" class="form-label">{{ uform.retry.label }}{% if uform.retry.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if uform.retry.errors %}{% for error in uform.retry.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if pform.gender.errors %}has-error{% endif %}">
+                             {{ pform.gender }}
+                            <label for="id_gender" class="form-label">{{ pform.gender.label }}{% if pform.gender.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.gender.errors %}{% for error in pform.gender.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if pform.birth_day.errors %}has-error{% endif %}">
+                            {{ pform.birth_day }}
+                            <label for="id_birth_day" class="form-label">{{ pform.birth_day.label }}{% if pform.birth_day.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.birth_day.errors %}{% for error in pform.birth_day.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  PROFILE DETAILS -->
+
+                <hr>
+
+                <!-- START PROFILE COMPLETE -->
+                <section id="profile-complete">
+                    <h3>{% trans "Complete" %}</h3>
+
+                    <div class="form-check text-start my-3">
+                        {{ pform.receive_newsletters }}
+                        {{ pform.receive_newsletters.label_tag }}
+                    </div>
+
+                    <div class="form-group {% if pform.captcha.errors %}has-error{% endif %}">
+                        {{ pform.captcha }}
+                        <span class="help-block">{% if pform.captcha.errors %}{% for error in pform.captcha.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                    </div>
+
+                    <div class="alert alert-warning">
+                    {% blocktrans %}
+                        By signing up, you agree to our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a> and <a class="alert-link" data-bs-toggle="modal" data-bs-target="#userAgreementPopupModal">User Agreement</a>.
+                    {% endblocktrans %}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="profile-create" class="profile-create">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Sign up" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  PROFILE COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <h4>{% trans "Tips" %}</h4>
+
+            <div class="alert alert-info" role="alert">
+            {% blocktrans %}
+                This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a>.
+            {% endblocktrans %}
             </div>
 
-            <div id="tips" class="hidden-xs col-sm-8 col-md-6 right-sidebar">
-                <h4>{% trans "Tips" %}</h4>
-
-                <div class="alert alert-info">
-                {% blocktrans %}
-                    This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="popover-content ppnua" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#privacyPolicyPopupModal" tabindex="-1">Privacy Policy</a>
-                {% endblocktrans %}
-                </div>
-
-                <div class="alert alert-success">
-                    {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
-                </div>
+            <div class="alert alert-success" role="alert">
+                {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
             </div>
         </div>
     </div>
@@ -201,16 +179,15 @@
 
 <!-- Pop-up Overlays -->
 
-<div id="signup-social-popup-overlay" class="well" style="display:none;">
+<div id="signup-social-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
     <div class="popup-overlay-heading">
         <h4>{% trans "Sign-up with social App" %}</h4>
     </div>
 
     <div class="social-buttons" align="center">
-        <button class="btn btn-facebook" onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';"><i class="fa fa-facebook fa-fw fa-3x"></i></button>
-        {#<button class="btn btn-twitter" onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';"><i class="fa fa-twitter fa-fw fa-3x"></i></button>#}
-        <button class="btn btn-linkedin" onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';"><i class="fa fa-linkedin fa-fw fa-3x"></i></button>
-        <button class="btn btn-google-plus" onclick="javascript:document.location.href='{% url 'social:begin' backend='google-oauth2' %}';"><i class="fa fa-google-plus fa-fw fa-3x"></i></button>
+        <button class="btn btn-facebook" onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';"><i class="bi bi-facebook" style="font-size: 2rem;"></i></button>
+        <button class="btn btn-twitter" onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';"><i class="bi bi-twitter" style="font-size: 2rem;"></i></button>
+        <button class="btn btn-linkedin" onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';"><i class="bi bi-linkedin" style="font-size: 2rem;"></i></button>
     </div>
 
     <div class="popup-overlay-info">
@@ -224,7 +201,7 @@
 
     <!-- Add an optional button to close the popup -->
     <div class="popup-overlay-footer">
-        <button class="btn btn-default signup-social-popup-overlay_close">{% trans "Close" %}</button>
+        <button class="btn btn-primary signup-social-popup-overlay_close">{% trans "Close" %}</button>
     </div>
 </div>
 
@@ -234,7 +211,7 @@
     /*************************************************************************/
     /*** Form Submitting                                                   ***/
     /*************************************************************************/
-    $("a[name='submit']").click(function () {
+    $("a[name='profile-create']").click(function () {
         // --------------------------------------------------------------------
         // --- Check, if Avatar Input is NOT empty
         if ($("#id_avatar").get(0).files.length === 0) {
@@ -292,29 +269,32 @@
         /*********************************************************************/
         /*** jQuery pop-up Overlay                                         ***/
         /*********************************************************************/
+        /***
+         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
+        ***/
         var options = {
-            type:                       "overlay",      //      "tooltip"
-            autoopen:                   true,           // def. false
-            scrolllock:                 true,           // def. false
-            background:                 true,
-            backgroundactive:           false,
-            color:                      "#000",
-            opacity:                    0.5,
-            horizontal:                 "center",
-            vertical:                   "center",
-            offsettop:                  0,
-            offsetleft:                 0,
-            escape:                     true,
-            blur:                       true,
-            setzindex:                  true,
-            autozindex:                 false,
-            keepfocus:                  true,
-            focusdelay:                 50,
-            outline:                    false,
-            detach:                     false,
+            type:               "overlay",      // "tooltip"
+            autoopen:           true,           // def. false
+            scrolllock:         true,           // def. false
+            background:         true,
+            backgroundactive:   false,
+            color:              "#000",
+            opacity:            0.5,
+            horizontal:         "center",
+            vertical:           "center",
+            offsettop:          0,
+            offsetleft:         0,
+            escape:             true,
+            blur:               true,
+            setzindex:          true,
+            autozindex:         false,
+            keepfocus:          true,
+            focusdelay:         50,
+            outline:            false,
+            detach:             false,
             //openelement:                ".{popup_id}_open",
             //closeelement:               ".{popup_id}_close",
-            transition:                 "all 0.3s"
+            transition:         "all 0.5s"
         };
 
         $("#signup-social-popup-overlay").popup(options);

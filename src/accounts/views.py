@@ -8,6 +8,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 """
 
 import datetime
+import inspect
 
 from django.conf import settings
 from django.contrib.auth import (
@@ -18,7 +19,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.gis.geoip2 import GeoIP2 as GeoIP
 from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
@@ -38,12 +38,14 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
+from termcolor import colored, cprint
+
 from ddcore.models import (
+    Phone,
     SocialLink,
     UserLogin)
 from ddcore.Utilities import (
     make_json_cond,
-    get_client_ip,
     # render_to_pdf,
 )
 
@@ -51,6 +53,7 @@ from ddcore.Utilities import (
 from app.forms import (
     AddressForm,
     PhoneForm,
+    PhoneFormSet,
     SocialLinkFormSet)
 from events.models import (
     EventStatus,
@@ -77,13 +80,11 @@ from .utils import (
     get_participations_intersection)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ HELPERS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === HELPERS
+# ===
+# =============================================================================
 def _retrieve_account_list_with_privacy(request):
     """Docstring."""
     accounts = User.objects.filter(
@@ -101,18 +102,283 @@ def is_profile_complete(user):
     return user.profile.is_completed
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ DESKTOP
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === ACCOUNT REGISTRATION
+# ===
+# =============================================================================
+def account_signup(request):
+    """Sign up."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
 
-# -----------------------------------------------------------------------------
-# --- ACCOUNT LIST
-# -----------------------------------------------------------------------------
-@cache_page(60 * 5)
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    uform = UserForm(
+        request.POST or None,
+        request.FILES or None)
+    pform = UserProfileForm(
+        request.POST or None,
+        request.FILES or None)
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(
+                reverse("my-profile-view"))
+
+    if request.method == "POST":
+        if (
+                uform.is_valid() and
+                pform.is_valid()):
+            # -----------------------------------------------------------------
+            # --- Create User.
+            user = uform.save(commit=False)
+            user.is_active = False
+            user.save()
+            user.set_password(uform.cleaned_data["password"])
+            user.save()
+
+            # -----------------------------------------------------------------
+            # --- Create User Profile.
+            profile = pform.save(commit=False)
+            profile.user = user
+            profile.save()
+
+            # -----------------------------------------------------------------
+            # --- Create User Privacy.
+            UserPrivacyGeneral.objects.create(user=user)
+            UserPrivacyMembers.objects.create(user=user)
+            UserPrivacyAdmins.objects.create(user=user)
+
+            uidb36 = int_to_base36(user.id)
+            token = token_generator.make_token(user)
+
+            domain_name = request.get_host()
+            url = reverse(
+                "signup-confirm", kwargs={
+                    "uidb36":   uidb36,
+                    "token":    token,
+                })
+            confirmation_link = f"http://{domain_name}{url}"
+
+            # -----------------------------------------------------------------
+            # --- Send Email Notification(s).
+            profile.email_notify_signup_confirmation(
+                request=request,
+                url=confirmation_link)
+
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+
+        # ---------------------------------------------------------------------
+        # --- Failed to sign up.
+        # --- Save the Log.
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/account-signup.html", {
+            "uform":    uform,
+            "pform":    pform,
+        })
+
+
+def account_signup_confirm(request, uidb36=None, token=None):
+    """Sign up confirm."""
+    assert uidb36 is not None and token is not None
+
+    try:
+        uid_int = base36_to_int(uidb36)
+        user = User.objects.get(id=uid_int)
+    except (ValueError, User.DoesNotExist):
+        user = None
+
+    if (
+            user is not None and
+            token_generator.check_token(user, token)):
+        # ---------------------------------------------------------------------
+        # --- Instant log-in after confirmation.
+        user.is_active = True
+        user.save()
+
+        user.backend = "django.contrib.auth.backends.ModelBackend"
+        login(request, user)
+
+        domain_name = request.get_host()
+        url = reverse(
+            "signin", kwargs={})
+        signin_link = f"http://{domain_name}{url}"
+
+        # ---------------------------------------------------------------------
+        # --- Send Email Notification(s).
+        user.profile.email_notify_signup_confirmed(
+            request=request,
+            url=signin_link)
+
+        # ---------------------------------------------------------------------
+        # --- Save the Log.
+
+        return HttpResponseRedirect(
+            reverse("my-profile-edit"))
+
+    # -------------------------------------------------------------------------
+    # --- Save the Log.
+
+    return render(
+        request,
+        "accounts/account-signup-confirmation-error.html", {})
+
+
+@csrf_exempt
+def account_signin(request):
+    """Sign in."""
+    # g = GeoIP()
+    # ip_addr = get_client_ip(request)
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    form = LoginForm(request.POST or None)
+    redirect_to = request.GET.get("next", "")
+
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            if redirect_to:
+                return HttpResponseRedirect(redirect_to)
+
+            return HttpResponseRedirect(
+                reverse("my-profile-view"))
+
+    if request.method == "POST":
+        if form.is_valid():
+            # if not redirect_to:
+            #     redirect_to = settings.LOGIN_REDIRECT_URL
+
+            data = form.cleaned_data
+            user = authenticate(
+                username=data["username"],
+                password=data["password"])
+
+            if user:
+                login(request, user)
+
+                if data["remember_me"]:
+                    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+                else:
+                    request.session.set_expiry(0)
+                # return HttpResponseRedirect(redirect_to)
+
+                # -------------------------------------------------------------
+                # --- Track IP.
+                UserLogin.objects.insert(request=request)
+
+                # -------------------------------------------------------------
+                # --- Save the Log.
+
+                if redirect_to:
+                    return HttpResponseRedirect(redirect_to)
+
+                return HttpResponseRedirect(
+                    reverse("my-profile-view"))
+
+            form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
+
+        # ---------------------------------------------------------------------
+        # --- Failed to log in
+        # --- Save the Log
+
+    return render(
+        request, "accounts/account-signin.html", {
+            "form":     form,
+            "next":     redirect_to,
+        })
+
+
+@login_required
+def account_signout(request, next_page):
+    """Sign out."""
+    response = logout(
+        request,
+        next_page=next_page)
+
+    return response
+
+
+# =============================================================================
+# ===
+# === PASSWORD
+# ===
+# =============================================================================
+def password_renew(request, uidb36=None, token=None):
+    """Renew Password."""
+    assert uidb36 is not None and token is not None
+
+    try:
+        uid_int = base36_to_int(uidb36)
+        user = User.objects.get(id=uid_int)
+    except (ValueError, User.DoesNotExist):
+        user = None
+
+    if user is not None and token_generator.check_token(user, token):
+        # ---------------------------------------------------------------------
+        # --- Instant log-in after confirmation.
+        user.backend = "django.contrib.auth.backends.ModelBackend"
+        login(request, user)
+
+        return HttpResponseRedirect(
+            reverse("password-reset"))
+
+    info = _("An Error has occurred.")
+
+    return render(
+        request, "common/error.html", {
+            "information":  info,
+        })
+
+
+@login_required
+def password_reset(request):
+    """Reset Password."""
+    form = ResetPasswordForm(
+        request.POST or None)
+
+    if request.method == "POST":
+        if form.is_valid():
+            request.user.set_password(form.cleaned_data["password"])
+            request.user.save()
+
+            domain_name = request.get_host()
+            url = reverse("signin", kwargs={})
+            signin_link = f"http://{domain_name}{url}"
+
+            # -----------------------------------------------------------------
+            # --- Send Email Notification(s).
+            request.user.profile.email_notify_password_reset(
+                request=request,
+                url=signin_link)
+
+            return HttpResponseRedirect(
+                reverse("my-profile-view"))
+
+    return render(
+        request, "accounts/account-password-reset.html", {
+            "form":     form,
+        })
+
+
+# =============================================================================
+# ===
+# === ACCOUNT LIST
+# ===
+# =============================================================================
+@cache_page(60 * 1)
 def account_list(request):
     """List of the Members."""
     accounts = _retrieve_account_list_with_privacy(request)
@@ -147,7 +413,7 @@ def account_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def account_near_you_list(request):
     """List of the Members."""
     # geo = GeoIP()
@@ -215,7 +481,7 @@ def account_near_you_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def account_might_know_list(request):
     """List of the Members."""
     accounts = _retrieve_account_list_with_privacy(request)
@@ -276,7 +542,7 @@ def account_might_know_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def account_new_list(request):
     """List of the Members."""
     accounts = _retrieve_account_list_with_privacy(request)
@@ -318,7 +584,7 @@ def account_new_list(request):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def account_online_list(request):
     """List of the Members."""
     accounts = _retrieve_account_list_with_privacy(request)
@@ -360,214 +626,19 @@ def account_online_list(request):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- ACCOUNT REGISTRATION
-# -----------------------------------------------------------------------------
-def account_signup(request):
-    """Sign up."""
-    # g = GeoIP()
-    # ip_addr = get_client_ip(request)
-    # country_code = geo.country_code(ip_addr)
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    uform = UserForm(
-        request.POST or None, request.FILES or None)
-    pform = UserProfileForm(
-        request.POST or None, request.FILES or None)
-
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            return HttpResponseRedirect(
-                reverse("my-profile-view"))
-
-    if request.method == "POST":
-        # if (
-        #         uform.is_valid() and pform.is_valid() and
-        #         aform.is_valid() and nform.is_valid()):
-        if uform.is_valid() and pform.is_valid():
-            # -----------------------------------------------------------------
-            # --- Create User.
-            user = uform.save(commit=False)
-            user.is_active = False
-            user.save()
-            user.set_password(uform.cleaned_data["password"])
-            user.save()
-
-            # -----------------------------------------------------------------
-            # --- Create User Profile.
-            profile = pform.save(commit=False)
-            profile.user = user
-            # profile.address = aform.save(commit=True)
-            # profile.phone_number = nform.save(commit=True)
-            profile.save()
-
-            # -----------------------------------------------------------------
-            # --- Create User Privacy.
-            UserPrivacyGeneral.objects.create(user=user)
-            UserPrivacyMembers.objects.create(user=user)
-            UserPrivacyAdmins.objects.create(user=user)
-
-            uidb36 = int_to_base36(user.id)
-            token = token_generator.make_token(user)
-
-            domain_name = request.get_host()
-            url = reverse(
-                "signup-confirm", kwargs={
-                    "uidb36":   uidb36,
-                    "token":    token,
-                })
-            confirmation_link = f"http://{domain_name}{url}"
-
-            # -----------------------------------------------------------------
-            # --- Send Email Notification(s).
-            profile.email_notify_signup_confirmation(
-                request=request,
-                url=confirmation_link)
-
-            # -----------------------------------------------------------------
-            # --- Save the Log.
-
-        # ---------------------------------------------------------------------
-        # --- Failed to sign up.
-        # --- Save the Log.
-
-    return render(
-        # request, "accounts/account_signup_all.html", {
-        request, "accounts/account-signup.html", {
-            "uform":    uform,
-            "pform":    pform,
-            # "aform":    aform,
-            # "nform":    nform,
-        })
-
-
-def account_signup_confirm(request, uidb36=None, token=None):
-    """Sign up confirm."""
-    assert uidb36 is not None and token is not None
-
-    try:
-        uid_int = base36_to_int(uidb36)
-        user = User.objects.get(id=uid_int)
-    except (ValueError, User.DoesNotExist):
-        user = None
-
-    if user is not None and token_generator.check_token(user, token):
-        # ---------------------------------------------------------------------
-        # --- Instant log-in after confirmation.
-        user.is_active = True
-        user.save()
-
-        user.backend = "django.contrib.auth.backends.ModelBackend"
-        login(request, user)
-
-        domain_name = request.get_host()
-        url = reverse(
-            "login", kwargs={})
-        login_link = f"http://{domain_name}{url}"
-
-        # ---------------------------------------------------------------------
-        # --- Send Email Notification(s).
-        user.profile.email_notify_signup_confirmed(
-            request=request,
-            url=login_link)
-
-        # ---------------------------------------------------------------------
-        # --- Save the Log.
-
-        return HttpResponseRedirect(
-            reverse("my-profile-edit"))
-
-    # -------------------------------------------------------------------------
-    # --- Save the Log.
-
-    return render(
-        request,
-        "accounts/account-signup-confirmation-error.html", {})
-
-
-@csrf_exempt
-def account_login(request):
-    """Log in."""
-    # g = GeoIP()
-    # ip_addr = get_client_ip(request)
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    form = LoginForm(request.POST or None)
-    redirect_to = request.GET.get("next", "")
-
-    if request.method == "GET":
-        if request.user.is_authenticated:
-            if redirect_to:
-                return HttpResponseRedirect(redirect_to)
-
-            return HttpResponseRedirect(
-                reverse("my-profile-view"))
-
-    if request.method == "POST":
-        if form.is_valid():
-            # if not redirect_to:
-            #     redirect_to = settings.LOGIN_REDIRECT_URL
-
-            data = form.cleaned_data
-            user = authenticate(
-                username=data["username"],
-                password=data["password"])
-
-            if user:
-                login(request, user)
-
-                if data["remember_me"]:
-                    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
-                else:
-                    request.session.set_expiry(0)
-                # return HttpResponseRedirect(redirect_to)
-
-                # -------------------------------------------------------------
-                # --- Track IP.
-                UserLogin.objects.insert(request=request)
-
-                # -------------------------------------------------------------
-                # --- Save the Log.
-
-                if redirect_to:
-                    return HttpResponseRedirect(redirect_to)
-
-                return HttpResponseRedirect(
-                    reverse("my-profile-view"))
-
-            form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
-
-        # ---------------------------------------------------------------------
-        # --- Failed to log in
-        # --- Save the Log
-
-    return render(
-        request, "accounts/account-login.html", {
-            "form":     form,
-            "next":     redirect_to,
-        })
-
-
-@login_required
-def account_logout(request, next_page):
-    """Log out."""
-    response = logout(
-        request,
-        next_page=next_page)
-
-    return response
-
-
-# -----------------------------------------------------------------------------
-# --- MY PROFILE
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === MY PROFILE
+# ===
+# =============================================================================
 @login_required
 def my_profile_view(request):
     """My Profile."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Get or create User's Profile.
     # -------------------------------------------------------------------------
@@ -597,28 +668,31 @@ def my_profile_view(request):
         content_type=ContentType.objects.get_for_model(profile),
         object_id=profile.id)
 
-    # ---------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, created by User.
+    # -------------------------------------------------------------------------
     created_organizations = request.user.created_organizations.all()
 
-    # ---------------------------------------------------------------------
-    # --- Retrieve the List of Organizations, where the User is
-    #     a Staff Member.
-    staff_member_organizations =\
-        request.user.profile.staff_member_organizations.all()
+    # -------------------------------------------------------------------------
+    # --- Retrieve the List of Organizations, where the User is a Staff Member.
+    # -------------------------------------------------------------------------
+    # staff_member_organizations = request.user.profile.staff_member_organizations.all()
 
-    # ---------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, where the User is
     #     a Group Member.
-    group_member_organizations = request.user.profile.group_member_organizations.all()
+    # -------------------------------------------------------------------------
+    # group_member_organizations = request.user.profile.group_member_organizations.all()
 
-    # ---------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # --- Related Organizations.
-    related_organizations = staff_member_organizations | group_member_organizations
-    related_organizations = related_organizations.exclude(id__in=created_organizations)
+    # -------------------------------------------------------------------------
+    # related_organizations = staff_member_organizations | group_member_organizations
+    # related_organizations = related_organizations.exclude(id__in=created_organizations)
 
     # -------------------------------------------------------------------------
     # --- Prepare Response.
+    # -------------------------------------------------------------------------
     show_no_email_popup_modal = False
 
     if (
@@ -628,14 +702,15 @@ def my_profile_view(request):
 
     response = HttpResponse(render(
         request, "accounts/my-profile-info.html", {
-            "created_organizations":                created_organizations,
-            "related_organizations":                related_organizations,
-            "show_no_email_popup_modal":            show_no_email_popup_modal,
-            "social_links":                         social_links,
+            "created_organizations":        created_organizations,
+            # "related_organizations":        related_organizations,
+            "show_no_email_popup_modal":    show_no_email_popup_modal,
+            "social_links":                 social_links,
         }))
 
     # -------------------------------------------------------------------------
     # --- Get/set Cookie(s).
+    # -------------------------------------------------------------------------
     response.set_cookie("show_no_email_popup_modal", "")
 
     if "show_no_email_popup_modal" in request.COOKIES:
@@ -698,29 +773,55 @@ def my_profile_events(request):
 @login_required
 def my_profile_edit(request):
     """Edit Profile."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST USER     : %s" % request.user, "yellow")
+    cprint("[---  DUMP   ---] REQUEST PROFILE  : %s" % request.user.profile, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     pform = UserProfileEditForm(
-        request.POST or None, request.FILES or None,
-        user=request.user, instance=request.user.profile)
+        request.POST or None,
+        request.FILES or None,
+        user=request.user,
+        instance=request.user.profile)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         instance=request.user.profile.address)
     nform = PhoneForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         instance=request.user.profile.phone_number)
 
-    formset_social = SocialLinkFormSet(
+    formset_phone = PhoneFormSet(
         request.POST or None, request.FILES or None,
+        queryset=Phone.objects.filter(
+            content_type=ContentType.objects.get_for_model(request.user.profile),
+            object_id=request.user.profile.id))
+    formset_social = SocialLinkFormSet(
+        request.POST or None,
+        request.FILES or None,
         prefix="socials",
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(request.user.profile),
             object_id=request.user.profile.id))
 
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
     if request.method == "POST":
         if (
-                pform.is_valid() and aform.is_valid() and nform.is_valid() and
+                pform.is_valid() and
+                aform.is_valid() and
+                nform.is_valid() and
+                formset_phone.is_valid() and
                 formset_social.is_valid()):
             request.user.profile.address = aform.save()
             request.user.profile.phone_number = nform.save()
@@ -733,9 +834,16 @@ def my_profile_edit(request):
             pform.save()
 
             # -----------------------------------------------------------------
+            # --- Save Phone Numbers.
+            phones = formset_phone.save(commit=True)
+            for phone in phones:
+                phone.content_type = ContentType.objects.get_for_model(request.user.profile)
+                phone.object_id = request.user.profile.id
+                phone.save()
+
+            # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
-
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(request.user.profile)
                 social_link.object_id = request.user.profile.id
@@ -759,11 +867,15 @@ def my_profile_edit(request):
         request.user.profile.is_newly_created = False
         request.user.profile.save()
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/my-profile-edit.html", {
             "pform":            pform,
             "aform":            aform,
             "nform":            nform,
+            "formset_phone":    formset_phone,
             "formset_social":   formset_social,
             "is_newly_created": is_newly_created,
         })
@@ -845,10 +957,12 @@ def my_profile_privacy(request):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- FOREIGN PROFILE
-# -----------------------------------------------------------------------------
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === FOREIGN PROFILE
+# ===
+# =============================================================================
+@cache_page(60 * 1)
 def profile_view(request, user_id):
     """Foreign Profile Info."""
     # -------------------------------------------------------------------------
@@ -986,7 +1100,7 @@ def profile_view(request, user_id):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def profile_participations(request, user_id):
     """Foreign Profile Participations."""
     # -------------------------------------------------------------------------
@@ -1105,7 +1219,7 @@ def profile_participations(request, user_id):
         })
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def profile_events(request, user_id):
     """Foreign Profile Events."""
     # -------------------------------------------------------------------------
@@ -1164,93 +1278,6 @@ def profile_events(request, user_id):
 
     return render(
         request, "accounts/foreign-profile-events.html", {
-            "account":                      account,
-            "admin_events":             admin_events,
-        })
-
-
-# -----------------------------------------------------------------------------
-# --- EXPORT to PDF (Freiwilligenausweis)
-# -----------------------------------------------------------------------------
-def my_profile_events_export(request):
-    """Export the List of the completed Events to PDF."""
-    completed_participations = Participation.objects.filter(
-        user=request.user,
-        event__status=EventStatus.COMPLETE,
-        status__in=[
-            ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-            ParticipationStatus.ACKNOWLEDGED,
-        ]
-    )
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Data.
-    template = "accounts/export/my-profile-completed-events-export.html"
-    payload = {
-        "completed_participations":     completed_participations,
-    }
-
-    return render_to_pdf(
-        template,
-        payload)
-
-
-# -----------------------------------------------------------------------------
-# --- PASSWORD
-# -----------------------------------------------------------------------------
-def password_renew(request, uidb36=None, token=None):
-    """Renew Password."""
-    assert uidb36 is not None and token is not None
-
-    try:
-        uid_int = base36_to_int(uidb36)
-        user = User.objects.get(id=uid_int)
-    except (ValueError, User.DoesNotExist):
-        user = None
-
-    if user is not None and token_generator.check_token(user, token):
-        # ---------------------------------------------------------------------
-        # --- Instant log-in after confirmation.
-        user.backend = "django.contrib.auth.backends.ModelBackend"
-        login(request, user)
-
-        return HttpResponseRedirect(
-            reverse("password-reset"))
-
-    info = _("An Error has occurred.")
-
-    return render(
-        request, "common/error.html", {
-            "information":  info,
-        })
-
-
-@login_required
-def password_reset(request):
-    """Reset Password."""
-    form = ResetPasswordForm(
-        request.POST or None)
-
-    if request.method == "POST":
-        if form.is_valid():
-            request.user.set_password(form.cleaned_data["password"])
-            request.user.save()
-
-            domain_name = request.get_host()
-            url = reverse("login", kwargs={})
-            login_link = f"http://{domain_name}{url}"
-
-            # -----------------------------------------------------------------
-            # --- Send Email Notification(s).
-            request.user.profile.email_notify_password_reset(
-                request=request,
-                url=login_link)
-
-            return HttpResponseRedirect(
-                reverse("my-profile-view"))
-
-    return render(
-        request, "accounts/account-password-reset.html", {
-            "form":     form,
+            "account":      account,
+            "admin_events": admin_events,
         })

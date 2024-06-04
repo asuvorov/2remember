@@ -2,56 +2,62 @@
 
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
 {% block title %}{% trans "My Profile" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'account-list' %}">{% trans "Members" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block extra_style %}
+{% endblock %}
 
-<div class="nav-sub-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-6 col-sm-6 col-md-6 sub-btn">
-                <a class="btn" href="{% url 'my-profile-view' %}">
-                    <i class="fa fa-fw fa-info-circle"></i>
-                    <span class="hidden-xs">{% trans "Information" %}</span>
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a></li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block header %}
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'my-profile-view' %}" class="nav-link active" aria-current="page">
+                    {% trans "Information" %}
                 </a>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-6 sub-btn">
-                <a class="btn" href="{% url 'my-profile-invitations' %}">
-                    <i class="fa fa-fw fa-inbox"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-invitations' %}" class="nav-link">
                 {% if request.user.invitee.get_new.all.count > 0 %}
                     <span id="received-invitations-count" class="badge" style="background-color:#f0ad4e;">{{ request.user.invitee.get_new.all.count }}</span>&nbsp;
                 {% endif %}
-                    <span class="hidden-xs">{% trans "Invitations" %}</span>
+                    {% trans "Invitations" %}
                 </a>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-6 sub-btn">
-                <a class="btn" href="{% url 'my-profile-participations' %}">
-                    <i class="fa fa-fw fa-child"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-participations' %}" class="nav-link">
                 {% if request.user.profile.get_upcoming_participations.all.count > 0 %}
                     <span class="badge" style="background-color:#f0ad4e;">{{ request.user.profile.get_upcoming_participations.all.count }}</span>&nbsp;
                 {% endif %}
-                    <span class="hidden-xs">{% trans "Participations" %}</span>
+                    {% trans "Participations" %}
                 </a>
-            </div>
-
-            <div class="col-xs-6 col-sm-6 col-md-6 sub-btn">
-                <a class="btn" href="{% url 'my-profile-events' %}">
-                    <i class="fa fa-fw fa-wrench"></i>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-events' %}" class="nav-link">
                 {% if request.user.profile.get_admin_events_action_required.all.count > 0 %}
                     <span class="badge" style="background-color:#d9534f;">{{ request.user.profile.get_admin_events_action_required.all.count }}</span>&nbsp;
                 {% endif %}
@@ -61,13 +67,13 @@
                 {% if request.user.profile.get_admin_events_draft.all.count > 0 %}
                     <span class="badge" style="background-color:#5bc0de;">{{ request.user.profile.get_admin_events_draft.all.count }}</span>&nbsp;
                 {% endif %}
-                    <span class="hidden-xs">{% trans "Events I responsible for" %}</span>
+                    {% trans "Events I responsible for" %}
                 </a>
-            </div>
-        </div>
-    </div>
+            </li>
+        </ul>
+    </header>
 </div>
 {% endblock %}
 
-{% block extra_content %}
+{% block content %}
 {% endblock %}

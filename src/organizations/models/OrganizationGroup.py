@@ -61,7 +61,7 @@ class OrganizationGroup(
     # -------------------------------------------------------------------------
     # --- Basics
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="organization_group_author",
@@ -75,7 +75,7 @@ class OrganizationGroup(
         verbose_name=_("Organization"),
         help_text=_("Organization"))
     members = models.ManyToManyField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         blank=True,
         related_name="organization_group_members",
@@ -133,7 +133,6 @@ class OrganizationGroup(
 # -----------------------------------------------------------------------------
 # --- Organization Group Model Mixin.
 # -----------------------------------------------------------------------------
-@autoconnect
 class OrganizationGroupMixin:
     """Organization Group Mixin Class."""
 
@@ -150,15 +149,3 @@ class OrganizationGroupMixin:
         )
 
         return organizations
-
-    def pre_save(self, **kwargs):
-        """Docstring."""
-
-    def post_save(self, created, **kwargs):
-        """Docstring."""
-
-    def pre_delete(self, **kwargs):
-        """Docstring."""
-
-    def post_delete(self, **kwargs):
-        """Docstring."""

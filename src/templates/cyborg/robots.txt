@@ -32,8 +32,8 @@ Disallow: /static/
 Disallow: /*?*
 # Disallow: /accounts/signup/
 Disallow: /accounts/signup/confirm/
-Disallow: /accounts/login/
-Disallow: /accounts/logout/
+Disallow: /accounts/signin/
+Disallow: /accounts/signout/
 Disallow: /accounts/my-profile/
 Disallow: /accounts/my-profile/edit/
 Disallow: /accounts/my-profile/delete/

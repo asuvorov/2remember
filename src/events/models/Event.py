@@ -8,9 +8,9 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 """
 
 import datetime
+import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 from django.core.files import File
@@ -23,7 +23,7 @@ from django.utils.translation import gettext_lazy as _
 # from ckeditor_uploader.fields import RichTextUploadingField
 # from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
-# from timezone_field import TimeZoneField
+from timezone_field import TimeZoneField
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
@@ -147,30 +147,53 @@ day_of_month_choices.append(("32", _("Last Day of Month")))
 # -----------------------------------------------------------------------------
 # --- Event Model.
 # -----------------------------------------------------------------------------
-def event_directory_path(instance, filename):
-    """Event Directory Path."""
-    # --- File will be uploaded to
-    #     MEDIA_ROOT/event/<id>/avatars/<filename>
+def event_preview_directory_path(instance, filename):
+    """Event Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/events/<id>/previews/<filename>
+    """
     fname = get_unique_filename(filename.split("/")[-1])
 
-    return f"event/{instance.id}/avatars/{fname}"
+    return f"events/{instance.id}/previews/{fname}"
 
 
-class Event(TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
+def event_cover_directory_path(instance, filename):
+    """Event Directory Path.
+
+    File will be uploaded to
+
+            MEDIA_ROOT/events/<id>/covers/<filename>
+    """
+    fname = get_unique_filename(filename.split("/")[-1])
+
+    return f"events/{instance.id}/covers/{fname}"
+
+
+class Event(
+        TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin,
+        ViewMixin):
     """Event Model."""
 
     # -------------------------------------------------------------------------
     # --- Basics.
     # -------------------------------------------------------------------------
+    uid = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        primary_key=False,
+        editable=False)
+
     author = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="posted_events",
         verbose_name=_("Author"),
         help_text=_("Event Author"))
-    preview = models.ImageField(upload_to=event_directory_path)
-    cover = models.ImageField(upload_to=event_directory_path)
+    preview = models.ImageField(upload_to=event_preview_directory_path)
+    cover = models.ImageField(upload_to=event_cover_directory_path)
 
     # -------------------------------------------------------------------------
     # --- Tags & Category.
@@ -190,16 +213,16 @@ class Event(TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, Compla
         verbose_name=_("Category"),
         help_text=_("Event Category"))
 
-    # status = models.CharField(
-    #     max_length=2,
-    #     choices=event_status_choices, default=EventStatus.UPCOMING,
-    #     verbose_name=_("Status"),
-    #     help_text=_("Event Status"))
-    # application = models.CharField(
-    #     max_length=2,
-    #     choices=application_choices, default=EventMode.FREE_FOR_ALL,
-    #     verbose_name=_("Application"),
-    #     help_text=_("Event Application"))
+    status = models.CharField(
+        max_length=2,
+        choices=event_status_choices, default=EventStatus.UPCOMING,
+        verbose_name=_("Status"),
+        help_text=_("Event Status"))
+    application = models.CharField(
+        max_length=2,
+        choices=application_choices, default=EventMode.FREE_FOR_ALL,
+        verbose_name=_("Application"),
+        help_text=_("Event Application"))
 
     # -------------------------------------------------------------------------
     # --- Location.
@@ -225,52 +248,28 @@ class Event(TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, Compla
     #     help_text=_("Event Duration"))
 
     # -------------------------------------------------------------------------
-    # --- Recurrence
-    # -------------------------------------------------------------------------
-    # recurrence = models.CharField(
-    #     max_length=10,
-    #     choices=recurrence_choices, default=Recurrence.ONCE,
-    #     verbose_name=_("Recurrence"),
-    #     help_text=_("Event Recurrence"))
-    # month = SelectMultipleField(
-    #     max_length=64,
-    #     choices=month_choices, default=MONTH.NONE,
-    #     verbose_name=_("Month"),
-    #     help_text=_("Month"))
-    # day_of_week = SelectMultipleField(
-    #     max_length=64,
-    #     choices=day_of_week_choices, default=DAY_OF_WEEK.NONE,
-    #     verbose_name=_("Day of Week"),
-    #     help_text=_("Day of Week"))
-    # day_of_month = SelectMultipleField(
-    #     max_length=64,
-    #     choices=day_of_month_choices, default="0",
-    #     verbose_name=_("Day of Month"),
-    #     help_text=_("Day of Month"))
-
-    # -------------------------------------------------------------------------
     # --- Date/Time.
     # -------------------------------------------------------------------------
-    # start_date = models.DateField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Date"),
-    #     help_text=_("Event Start Date"))
-    # start_time = models.TimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Time"),
-    #     help_text=_("Event Start Time"))
-    # start_tz = TimeZoneField(
-    #     default=settings.TIME_ZONE,
-    #     verbose_name=_("Timezone"),
-    #     help_text=_("Event Timezone"))
+    start_date = models.DateField(
+        db_index=True,
+        null=True, blank=True,
+        verbose_name=_("Start Date"),
+        help_text=_("Event Start Date"))
+    start_time = models.TimeField(
+        db_index=True,
+        null=True, blank=True,
+        verbose_name=_("Start Time"),
+        help_text=_("Event Start Time"))
+    start_tz = TimeZoneField(
+        default=settings.TIME_ZONE,
+        verbose_name=_("Timezone"),
+        help_text=_("Event Timezone"))
 
-    # start_date_time_tz = models.DateTimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Date/Time with TZ"),
-    #     help_text=_("Event Start Date/Time with TZ"))
+    start_date_time_tz = models.DateTimeField(
+        db_index=True,
+        null=True, blank=True,
+        verbose_name=_("Start Date/Time with TZ"),
+        help_text=_("Event Start Date/Time with TZ"))
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
@@ -754,7 +753,7 @@ class Event(TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, Compla
             template_text={
                 "name":     "events/emails/event_cloned_adm.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -796,7 +795,7 @@ class Event(TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, Compla
             template_text={
                 "name":     "events/emails/event_closed_adm.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -922,6 +921,10 @@ class EventMixin:
     @property
     def get_admin_events_action_required(self):
         """Return List of the Events which require Action."""
+        from .Participation import (
+            Participation,
+            ParticipationStatus)
+
         admin_events = self.get_admin_events().order_by("start_date")
 
         admin_events_action_required = admin_events.filter(

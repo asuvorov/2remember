@@ -8,7 +8,8 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 """
 
 from django import forms
-from django.contrib.auth.models import User
+from django.apps import apps
+from django.conf import settings
 from django.forms.forms import NON_FIELD_ERRORS
 from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
@@ -24,9 +25,15 @@ from .models import (
     UserProfile)
 
 
-# -----------------------------------------------------------------------------
-# --- LOG IN FORM
-# -----------------------------------------------------------------------------
+app_label, model_name = settings.AUTH_USER_MODEL.split(".")
+user_model = apps.get_model(app_label, model_name)
+
+
+# =============================================================================
+# ===
+# === LOG IN FORM
+# ===
+# =============================================================================
 class LoginForm(forms.Form):
     """Login Form."""
 
@@ -51,7 +58,11 @@ class LoginForm(forms.Form):
     remember_me = forms.BooleanField(
         label=_("Keep me logged-in on this Computer"),
         required=False,
-        initial=True)
+        initial=True,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class":        "form-check-input",
+            }))
 
     def add_non_field_error(self, message):
         """Docstring."""
@@ -59,9 +70,11 @@ class LoginForm(forms.Form):
         error_list.append(message)
 
 
-# -----------------------------------------------------------------------------
-# --- USER FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER FORM
+# ===
+# =============================================================================
 class UserForm(forms.ModelForm):
     """User Form."""
 
@@ -99,7 +112,7 @@ class UserForm(forms.ModelForm):
             }))
 
     class Meta:
-        model = User
+        model = user_model
         fields = [
             "first_name", "last_name", "email", "password",
         ]
@@ -126,7 +139,7 @@ class UserForm(forms.ModelForm):
     def clean_email(self):
         """Docstring."""
         user = get_object_or_None(
-            User,
+            user_model,
             email=self.cleaned_data.get("email", ""))
 
         if user:
@@ -154,9 +167,11 @@ class UserForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PROFILE FORM
+# ===
+# =============================================================================
 class UserProfileForm(forms.ModelForm):
     """User Profile Form."""
 
@@ -179,8 +194,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            "avatar", "nickname", "bio", "gender", "birth_day",
-            "receive_newsletters",
+            "avatar", "nickname", "bio", "gender", "birth_day", "receive_newsletters",
         ]
         widgets = {
             "nickname": forms.TextInput(
@@ -197,12 +211,17 @@ class UserProfileForm(forms.ModelForm):
                 }),
             "gender": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
+                    "aria-label":   _("Select Gender..."),
                 }),
             "birth_day": forms.DateInput(
                 attrs={
                     "class":        "form-control",
                 }),
+            "receive_newsletters": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                })
             }
 
     def clean(self):
@@ -221,9 +240,11 @@ class UserProfileForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- USER PROFILE EDIT FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PROFILE EDIT FORM
+# ===
+# =============================================================================
 class UserProfileEditForm(forms.ModelForm):
     """User Profile edit Form."""
 
@@ -296,13 +317,17 @@ class UserProfileEditForm(forms.ModelForm):
                 }),
             "gender": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "birth_day": forms.DateInput(
                 attrs={
                     "class":        "form-control",
                     # "type":         "date",
                 }),
+            "receive_newsletters": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                })
             }
 
     def clean(self):
@@ -319,9 +344,11 @@ class UserProfileEditForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- RESET PASSWORD FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === RESET PASSWORD FORM
+# ===
+# =============================================================================
 class ResetPasswordForm(forms.Form):
     """Reset Password Form."""
 
@@ -354,9 +381,11 @@ class ResetPasswordForm(forms.Form):
         return self.cleaned_data["retry"]
 
 
-# -----------------------------------------------------------------------------
-# --- USER PRIVACY GENERAL FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PRIVACY GENERAL FORM
+# ===
+# =============================================================================
 class UserPrivacyGeneralForm(forms.ModelForm):
     """User Privacy (general) Form."""
 
@@ -400,9 +429,11 @@ class UserPrivacyGeneralForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- USER PRIVACY MEMBERS FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PRIVACY MEMBERS FORM
+# ===
+# =============================================================================
 class UserPrivacyMembersForm(forms.ModelForm):
     """User Privacy (Members) Form."""
 
@@ -424,31 +455,31 @@ class UserPrivacyMembersForm(forms.ModelForm):
         widgets = {
             "profile_details": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "contact_details": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_upcoming": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_completed": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_affiliated": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "participations_canceled": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "participations_rejected": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             }
 
@@ -468,9 +499,11 @@ class UserPrivacyMembersForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- USER PRIVACY ADMINS FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === USER PRIVACY ADMINS FORM
+# ===
+# =============================================================================
 class UserPrivacyAdminsForm(forms.ModelForm):
     """User Privacy (Admins) Form."""
 
@@ -492,31 +525,31 @@ class UserPrivacyAdminsForm(forms.ModelForm):
         widgets = {
             "profile_details": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "contact_details": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_upcoming": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_completed": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "events_affiliated": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "participations_canceled": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "participations_rejected": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             }
 

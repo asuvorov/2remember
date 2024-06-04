@@ -132,13 +132,17 @@ class CategoryManager(models.Manager):
 # -----------------------------------------------------------------------------
 # --- Event Category Model.
 # -----------------------------------------------------------------------------
-def event_category_directory_path(instance, filename):
-    """Event Category Directory Path."""
-    # --- File will be uploaded to
-    #     MEDIA_ROOT/events/categories/<id>/avatars/<filename>
-    fname=get_unique_filename(filename.split("/")[-1])
+def event_category_preview_directory_path(instance, filename):
+    """Event Category Directory Path.
 
-    return f"events/categories/{instance.id}/avatars/{fname}"
+    File will be uploaded to:
+
+            MEDIA_ROOT/events/categories/<id>/previews/<filename>
+    """
+    fname = get_unique_filename(filename.split("/")[-1])
+
+    return f"events/categories/{instance.id}/previews/{fname}"
+
 
 @autoconnect
 class Category(TitleSlugDescriptionBaseModel):
@@ -146,10 +150,11 @@ class Category(TitleSlugDescriptionBaseModel):
 
     # -------------------------------------------------------------------------
     # --- Basics
-    avatar = models.ImageField(
-        upload_to=event_category_directory_path, blank=True)
-    avatar_thumbnail = ImageSpecField(
-        source="avatar",
+    preview = models.ImageField(
+        upload_to=event_category_preview_directory_path,
+        blank=True)
+    preview_thumbnail = ImageSpecField(
+        source="preview",
         processors=[
             ResizeToFill(1600, 400),
         ],

@@ -34,7 +34,7 @@ class CreateEditPostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = [
-            "avatar", "title", "description", "content", "tags", "hashtag",
+            "preview", "cover", "title", "description", "content", "tags", "hashtag",
         ]
         widgets = {
             "title": forms.TextInput(

@@ -14,7 +14,9 @@ from adminsortable2.admin import (
     SortableInlineAdminMixin)
 from rangefilter.filters import DateRangeFilter
 
-from ddcore.models import UserLogin
+from ddcore.models import (
+    User,
+    UserLogin)
 
 from .models import (
     Team,
@@ -23,6 +25,84 @@ from .models import (
     UserPrivacyMembers,
     UserPrivacyAdmins,
     UserProfile)
+
+
+# =============================================================================
+# ===
+# === USER ADMIN
+# ===
+# =============================================================================
+class UserAdmin(admin.ModelAdmin):
+    """User Admin.
+
+    "password", "last_login", "is_superuser", "username", "first_name", "last_name", "email",
+    "is_staff", "is_active", "date_joined", "id", "groups", "user_permissions"
+    """
+
+    fieldsets = (
+        ("", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                "id",
+                ("first_name", "last_name"),
+                ("username", "email", "password"),
+            ),
+        }),
+        ("Flags", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("is_active", "is_staff", "is_superuser"),
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("date_joined", "last_login"),
+            ),
+        }),
+    )
+
+    list_display = [
+        "id", "first_name", "last_name", "username", "email",
+        "is_active", "is_staff", "is_superuser",
+        "date_joined", "last_login",
+    ]
+    list_display_links = []
+    list_filter = [
+        ("date_joined", DateRangeFilter),
+        ("last_login", DateRangeFilter),
+    ]
+    search_fields = []
+    readonly_fields = ["id"]
+
+    papertrail_type_filters = {
+        "Account Events": (
+            "new-user-signed-up",
+            "new-user-sign-up-confirmed",
+            "user-logged-in",
+        ),
+        "Account Exceptions": (
+            "exception-create-user-privacy",
+        ),
+        "Profile Events": (
+            "user-profile-save-failed",
+            "user-profile-privacy-save-failed",
+        ),
+        "Complaint Events": (
+            "complaint-created",
+            "complaint-processed",
+            "complaint-deleted",
+        ),
+    }
+
+
+admin.site.register(User, UserAdmin)
 
 
 # =============================================================================
@@ -67,7 +147,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         "id",
         "user", "image_tag",
         "is_newly_created",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -118,7 +198,7 @@ class UserPrivacyGeneralAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -141,7 +221,7 @@ class UserPrivacyMembersAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -164,7 +244,7 @@ class UserPrivacyAdminsAdmin(admin.ModelAdmin):
     list_display = [
         "id",
         "user",
-        "created", "modified",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -191,19 +271,20 @@ class UserLoginAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "user", "ip", "provider", "country", "city",
+        "user", "ip", "provider", "geo_data",
+        # "created_by", "created", "modified_by", "modified",
         "created", "modified",
     ]
     list_display_links = [
         "user",
     ]
     list_filter = [
-        "provider", "country", "city",
+        "provider", "geo_data",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
-        "user", "ip", "provider", "country", "city",
+        "user", "ip", "provider", "geo_data",
     ]
 
     papertrail_type_filters = {

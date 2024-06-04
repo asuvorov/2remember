@@ -25,15 +25,16 @@ from ddcore.models import (
     ComplaintMixin,
     Phone,
     RatingMixin,
-    ViewMixin,
-    UserProfile as UserProfileBase)
+    UserProfile as UserProfileBase,
+    ViewMixin)
 
-# from events.models import (
-#     EventMixin,
-#     ParticipationMixin)
-# from organizations.models import (
-#     OrganizationStaffMixin,
-#     OrganizationGroupMixin)
+# pylint: disable=import-error
+from events.models import (
+    EventMixin,
+    ParticipationMixin)
+from organizations.models import (
+    OrganizationStaffMixin,
+    OrganizationGroupMixin)
 
 
 # =============================================================================
@@ -56,9 +57,10 @@ from ddcore.models import (
 # --- User Profile Model.
 # -----------------------------------------------------------------------------
 @autoconnect
-class UserProfile(UserProfileBase):
-        # CommentMixin, ComplaintMixin, EventMixin, ParticipationMixin, OrganizationGroupMixin,
-        # OrganizationStaffMixin, RatingMixin, ViewMixin, TimeStampedModel):
+class UserProfile(
+        UserProfileBase, CommentMixin, ComplaintMixin, EventMixin, ParticipationMixin,
+        OrganizationGroupMixin, OrganizationStaffMixin,
+        RatingMixin, ViewMixin):
     """User Profile Model."""
 
     # -------------------------------------------------------------------------
@@ -249,6 +251,8 @@ class UserProfile(UserProfileBase):
     # --- Signals.
     def pre_save(self, **kwargs):
         """Docstring."""
+        self.created_by = self.user
+        self.modified_by = self.user
 
     def post_save(self, created, **kwargs):
         """Docstring."""

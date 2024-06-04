@@ -7,7 +7,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 
 """
 
-from django.contrib.auth.models import User
+from django.conf import settings
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -115,7 +115,7 @@ class TeamMember(BaseModel):
     # -------------------------------------------------------------------------
     # --- Basics.
     user = models.OneToOneField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="team_member",

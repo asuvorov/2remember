@@ -14,8 +14,7 @@ from django.db.models import Q
 
 from .models import (
     Event,
-    EventStatus,
-    Recurrence)
+    EventStatus)
 
 
 class EventSitemap(Sitemap):
@@ -28,8 +27,7 @@ class EventSitemap(Sitemap):
     def items(self):
         """Docstring."""
         return Event.objects.filter(
-            Q(start_date__gte=datetime.date.today()) |
-            Q(recurrence=Recurrence.DATELESS),
+            start_date__gte=datetime.date.today(),
             status=EventStatus.UPCOMING)
 
     def lastmod(self, obj):

@@ -8,6 +8,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 """
 
 import datetime
+import inspect
 import logging
 import mimetypes
 
@@ -34,6 +35,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
 
 from annoying.functions import get_object_or_None
+from termcolor import colored, cprint
 from url_tools.helper import UrlHelper
 
 from ddcore.Utilities import (
@@ -70,7 +72,6 @@ from .models import (
     EventStatus,
     Participation,
     ParticipationStatus,
-    Recurrence,
     Role)
 
 
@@ -98,9 +99,7 @@ def event_list(request):
     # events = get_event_list(request).filter(
     #     status=EventStatus.UPCOMING,
     #     start_date__gte=datetime.date.today(),
-    # ).exclude(
-    #     recurrence=Recurrence.DATELESS,
-    # )
+    #
     events = get_event_list(request)
 
     if category_slug:
@@ -181,10 +180,7 @@ def event_near_you_list(request):
     # -------------------------------------------------------------------------
     events = get_event_list(request).filter(
         status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today(),
-    ).exclude(
-        recurrence=Recurrence.DATELESS,
-    )
+        start_date__gte=datetime.date.today())
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -197,7 +193,9 @@ def event_near_you_list(request):
     # --- Events near.
     #     According to the Location, specified in the User Profile.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated and request.user.profile.address:
+    if (
+            request.user.is_authenticated and
+            request.user.profile.address):
         # ---------------------------------------------------------------------
         # --- Filter by Country and City
         if (
@@ -286,10 +284,7 @@ def event_new_list(request):
     events = get_event_list(request).filter(
         status=EventStatus.UPCOMING,
         start_date__gte=datetime.date.today(),
-        created__gte=time_threshold,
-    ).exclude(
-        recurrence=Recurrence.DATELESS,
-    )
+        created__gte=time_threshold)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -348,9 +343,7 @@ def event_new_list(request):
 @cache_page(60)
 def event_dateless_list(request):
     """List of the dateless Events."""
-    events = get_event_list(request).filter(
-        status=EventStatus.UPCOMING,
-        recurrence=Recurrence.DATELESS)
+    events = get_event_list(request).filter(status=EventStatus.UPCOMING)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -411,10 +404,7 @@ def event_featured_list(request):
     """List of the featured Events."""
     events = get_event_list(request).filter(
         status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today(),
-    ).exclude(
-        recurrence=Recurrence.DATELESS,
-    )
+        start_date__gte=datetime.date.today())
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -498,6 +488,15 @@ def event_category_list(request):
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 def event_create(request):
     """Create the Event."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
@@ -529,7 +528,7 @@ def event_create(request):
     aform = AddressForm(
         request.POST or None, request.FILES or None,
         required=not request.POST.get("addressless", False),
-        country_code=request.geo_data["country_code"])
+        country_code="US")  # FIXME: request.geo_data["country_code"])
 
     formset_roles = RoleFormSet(
         request.POST or None, request.FILES or None,

@@ -7,6 +7,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 
 """
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import fields
 from django.contrib.contenttypes.models import ContentType
@@ -89,14 +90,14 @@ class Invite(BaseModel):
     # -------------------------------------------------------------------------
     # --- Basics
     inviter = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="inviter",
         verbose_name=_("Inviter"),
         help_text=_("Inviter"))
     invitee = models.ForeignKey(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="invitee",

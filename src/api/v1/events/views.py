@@ -33,7 +33,6 @@ from events.models import (
     EventStatus,
     Participation,
     ParticipationStatus,
-    Recurrence,
     Role)
 
 from .utils import (
@@ -387,7 +386,6 @@ class EventCloneViewSet(APIView):
         cloned_event.save()
 
         cloned_event.status = EventStatus.UPCOMING
-        cloned_event.recurrence = Recurrence.DATELESS
         cloned_event.start_date = None
         cloned_event.start_time = None
         cloned_event.is_newly_created = True

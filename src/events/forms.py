@@ -23,14 +23,13 @@ from ddcore.models.Attachment import TemporaryFile
 
 from .models import (
     Event,
-    Recurrence,
     Role,
     month_choices,
     day_of_month_choices)
 
 
 # -----------------------------------------------------------------------------
-# --- EVENT POST/EDIT FORM
+# --- EVENT CREATE/EDIT FORM
 # -----------------------------------------------------------------------------
 class CreateEditEventForm(forms.ModelForm):
     """Create/edit Event Form."""
@@ -48,37 +47,36 @@ class CreateEditEventForm(forms.ModelForm):
 
         # ---------------------------------------------------------------------
         # --- Get QuerySet of the Organizations, where User is a Staff Member.
-        organizations = self.user.profile.staff_member_organizations.order_by("name")
-        self.fields["organization"].required = False
+        # --- FIXME
+        # organizations = self.user.profile.staff_member_organizations.order_by("name")
+        # self.fields["organization"].required = False
 
-        if organizations:
-            self.fields["organization"].queryset = organizations
-            # self.fields["organization"].initial = organizations[0]
+        # if organizations:
+        #     self.fields["organization"].queryset = organizations
+        #     # self.fields["organization"].initial = organizations[0]
 
-            if self.organization_ids:
-                try:
-                    self.fields["organization"].initial = organizations.filter(
-                        id__in=self.organization_ids)[0]
-                except Exception as exc:
-                    print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-        else:
-            self.fields["organization"].widget = \
-                self.fields["organization"].hidden_widget()
+        #     if self.organization_ids:
+        #         try:
+        #             self.fields["organization"].initial = organizations.filter(
+        #                 id__in=self.organization_ids)[0]
+        #         except Exception as exc:
+        #             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        # else:
+        #     self.fields["organization"].widget = \
+        #         self.fields["organization"].hidden_widget()
 
         # ---------------------------------------------------------------------
         # --- Contact Person.
-        self.contact_choices = [
-            ("me", _("Me (%s)") % self.user.email),
-            ("he", _("Affiliate different Person")),
-        ]
-        self.fields["contact"].choices = self.contact_choices
-        self.fields["contact"].initial = "me"
+        # --- FIXME
+        # self.contact_choices = [
+        #     ("me", _("Me (%s)") % self.user.email),
+        #     ("he", _("Affiliate different Person")),
+        # ]
+        # self.fields["contact"].choices = self.contact_choices
+        # self.fields["contact"].initial = "me"
 
-        if self.instance and self.instance.is_alt_person:
-            self.fields["contact"].initial = "he"
-
-        # ---------------------------------------------------------------------
-        # --- Recurrence.
+        # if self.instance and self.instance.is_alt_person:
+        #     self.fields["contact"].initial = "he"
 
         # ---------------------------------------------------------------------
         # --- Date/Time.
@@ -94,7 +92,7 @@ class CreateEditEventForm(forms.ModelForm):
         else:
             self.fields["start_tz"].initial = settings.TIME_ZONE
 
-    contact = forms.ChoiceField(widget=forms.RadioSelect())
+    # contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
         input_formats=[
             "%Y-%m-%d",     # "2006-10-25"
@@ -134,13 +132,11 @@ class CreateEditEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "preview", "title", "description", "category", "tags", "hashtag",
+            "preview", "cover", "title", "description", "category", "tags", "hashtag",
             # "duration",
             "addressless",
-            # "is_alt_person",
-            # "alt_person_fullname", "alt_person_email", "alt_person_phone",
-            # "recurrence",
-            # "start_date", "start_time", "start_tz",
+            # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
+            "start_date", "start_time", "start_tz",
             "organization",
             # "application", "allow_reenter",
             # "accept_automatically", "acceptance_text",
@@ -160,9 +156,15 @@ class CreateEditEventForm(forms.ModelForm):
                 }),
             "category": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
-            "tags": TagWidget(),
+            # "tags": TagWidget(),
+            "tags": forms.TextInput(
+                attrs={
+                    "class":        "form-control",
+                    "placeholder":  _("Hashtag"),
+                    "maxlength":    80,
+                }),
             "hashtag": forms.TextInput(
                 attrs={
                     "class":        "form-control",
@@ -173,9 +175,13 @@ class CreateEditEventForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control slider",
                 }),
-            "recurrence": forms.Select(
+            "addressless": forms.CheckboxInput(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-check-input",
+                }),
+            "is_alt_person": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
                 }),
             "alt_person_fullname": forms.TextInput(
                 attrs={
@@ -196,11 +202,11 @@ class CreateEditEventForm(forms.ModelForm):
                 }),
             "start_tz": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "organization": forms.Select(
                 attrs={
-                    "class":        "form-control selectpicker",
+                    "class":        "form-control form-select",
                 }),
             "application": forms.RadioSelect(),
             "acceptance_text": forms.Textarea(
@@ -230,55 +236,41 @@ class CreateEditEventForm(forms.ModelForm):
 
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields
-        if self.cleaned_data["contact"] == "me":
-            self.cleaned_data["is_alt_person"] = False
-        else:
-            self.cleaned_data["is_alt_person"] = True
+        # --- FIXME
+        # if self.cleaned_data["contact"] == "me":
+        #     self.cleaned_data["is_alt_person"] = False
+        # else:
+        #     self.cleaned_data["is_alt_person"] = True
 
-            if not self.cleaned_data["alt_person_fullname"]:
-                self._errors["alt_person_fullname"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if not self.cleaned_data["alt_person_fullname"]:
+        #         self._errors["alt_person_fullname"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_fullname"]
+        #         del self.cleaned_data["alt_person_fullname"]
 
-            if not self.cleaned_data["alt_person_email"]:
-                self._errors["alt_person_email"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if not self.cleaned_data["alt_person_email"]:
+        #         self._errors["alt_person_email"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_email"]
+        #         del self.cleaned_data["alt_person_email"]
 
-            if (
-                    "alt_person_phone" in self.cleaned_data and
-                    not self.cleaned_data["alt_person_phone"]):
-                self._errors["alt_person_phone"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if (
+        #             "alt_person_phone" in self.cleaned_data and
+        #             not self.cleaned_data["alt_person_phone"]):
+        #         self._errors["alt_person_phone"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_phone"]
-
-        # ---------------------------------------------------------------------
-        # --- Validate `recurrence` Field
-        if self.cleaned_data["recurrence"] == Recurrence.DATELESS:
-            pass
-        elif self.cleaned_data["recurrence"] == Recurrence.ONCE:
-            if not self.cleaned_data["start_date"]:
-                self._errors["start_date"] = self.error_class([_("This Field is required.")])
-
-                del self.cleaned_data["start_date"]
-
-            if self.cleaned_data["start_time"] is None:
-                # Refer to `https://bugs.python.org/issue13936`
-                self._errors["start_time"] = self.error_class([_("This Field is required.")])
-
-                del self.cleaned_data["start_time"]
+        #         del self.cleaned_data["alt_person_phone"]
 
         # ---------------------------------------------------------------------
         # --- Validate `accept_automatically` Field
-        if (
-                self.cleaned_data["accept_automatically"] and
-                not self.cleaned_data["acceptance_text"]):
-            self._errors["acceptance_text"] = self.error_class([_("This Field is required.")])
+        # --- FIXME
+        # if (
+        #         self.cleaned_data["accept_automatically"] and
+        #         not self.cleaned_data["acceptance_text"]):
+        #     self._errors["acceptance_text"] = self.error_class([_("This Field is required.")])
 
-            del self.cleaned_data["acceptance_text"]
+        #     del self.cleaned_data["acceptance_text"]
 
         return self.cleaned_data
 
@@ -479,7 +471,7 @@ class FilterEventForm(forms.Form):
     year = forms.ChoiceField(
         widget=forms.Select(
             attrs={
-                "class":        "form-control selectpicker",
+                "class":        "form-control form-select",
                 "placeholder":  _("Year"),
             }),
         required=False,
@@ -487,7 +479,7 @@ class FilterEventForm(forms.Form):
     month = forms.ChoiceField(
         widget=forms.Select(
             attrs={
-                "class":        "form-control selectpicker",
+                "class":        "form-control form-select",
                 "placeholder":  _("Month"),
             }),
         required=False,
@@ -495,7 +487,7 @@ class FilterEventForm(forms.Form):
     day = forms.ChoiceField(
         widget=forms.Select(
             attrs={
-                "class":        "form-control selectpicker",
+                "class":        "form-control form-select",
                 "placeholder":  _("Day"),
             }),
         required=False,

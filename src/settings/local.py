@@ -54,7 +54,7 @@ AWS_HEADERS = {
 
 S3_URL = f"http://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 # STATIC_URL = S3_URL + "/static/"
-MEDIA_URL = S3_URL + "/media/"
+# MEDIA_URL = S3_URL + "/media/"
 
 
 ###############################################################################

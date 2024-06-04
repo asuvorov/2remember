@@ -7,6 +7,7 @@ Use of this Work is governed by the Terms and Conditions of a License Agreement 
 
 """
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -40,12 +41,12 @@ WhoCanSeeMembers = enum(
     ORG_MEMBERS="4",
     EVERYONE="8")
 who_can_see_members_choices = [
-    (WhoCanSeeMembers.NO_ONE,       _("No-one")),
-    (WhoCanSeeMembers.REGISTERED,   _("Registered Users")),
-    (WhoCanSeeMembers.EVENT_MEMBERS,  _("Participants of the Events, I participate in too")),
-    (WhoCanSeeMembers.ORG_MEMBERS,  _("Staff/Group Members of the Organization(s), "
-                                      "I affiliated with")),
-    (WhoCanSeeMembers.EVERYONE,     _("Everyone")),
+    (WhoCanSeeMembers.NO_ONE,           _("No-one")),
+    (WhoCanSeeMembers.REGISTERED,       _("Registered Users")),
+    (WhoCanSeeMembers.EVENT_MEMBERS,    _("Participants of the Events, I participate in too")),
+    (WhoCanSeeMembers.ORG_MEMBERS,      _("Staff/Group Members of the Organization(s), "
+                                          "I affiliated with")),
+    (WhoCanSeeMembers.EVERYONE,         _("Everyone")),
 ]
 
 WhoCanSeeAdmins = enum(
@@ -80,7 +81,7 @@ class UserPrivacyGeneral(BaseModel):
     # -------------------------------------------------------------------------
     # --- Basics.
     user = models.OneToOneField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="privacy_general",
@@ -163,7 +164,7 @@ class UserPrivacyMembers(BaseModel):
     # -------------------------------------------------------------------------
     # --- Basics.
     user = models.OneToOneField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="privacy_members",
@@ -299,7 +300,7 @@ class UserPrivacyAdmins(BaseModel):
     # -------------------------------------------------------------------------
     # --- Basics.
     user = models.OneToOneField(
-        User,
+        settings.AUTH_USER_MODEL,
         db_index=True,
         on_delete=models.CASCADE,
         related_name="privacy_admins",
