@@ -10,6 +10,40 @@
         :[event_admin]
 {% endcomment %}
 
+
+<div class="card mb-3 shadow bg-body rounded">
+    <div class="row g-0">
+        <div class="col-md-3">
+            <a href="{% url 'event-details' event.slug %}">
+            {% if event.preview %}
+                {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid rounded-start' %}
+            {% else %}
+            {% endif %}
+            <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
+            </a>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+
+            <div class="card-footer bg-transparent border-success">
+                Footer
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
 <div class="event-thumb-container" category="{{ event.category|default:'' }}">
     <div class="event-thumb-hor" style="{% if event.organization.is_hidden %}background-color:#FBEFEF;{% endif %}">
         <div class="row">

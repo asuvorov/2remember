@@ -4,27 +4,28 @@
 
 {% block title %}{% trans "Privacy Policy" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="/">{% trans "Home" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'privacy-policy' %}">{% trans "Privacy Policy" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block extra_style %}
+{% endblock %}
 
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
 <div class="container">
-    <div id="privacy-policy">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                {% include 'home/fragments/privacy-policy-fragment.html' %}
-            </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Privacy Policy" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="privacy-policy" class="bg-body-tertiary p-3">
+    <div class="row">
+        <div class="col-12">
+            {% include 'home/fragments/privacy-policy-fragment.html' %}
         </div>
     </div>
 </div>

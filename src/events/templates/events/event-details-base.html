@@ -1,15 +1,27 @@
 {% extends "base.html" %}
 
-{% load seo %}
+{# load seo #}
 {% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
 
 {% block title %}{% trans "Event" %} "{{ event.name }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
+{% comment %}
     {% get_metadata %}
 
     <link rel="image_src" href="{{ event.avatar.url }}" />
     <meta name="description" content="{{ event.description|striptags|truncatechars:300 }}" />
+{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
@@ -18,51 +30,47 @@
 {% block extra_script %}
 {% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'event-list' %}">{% trans "Events" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'event-details' event.slug %}">{% trans "Details" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'event-list' %}">{% trans "Events" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ event.title }}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
 
+{% block header %}
+<div class="container">
 {% if is_admin and not event.is_draft %}
-    <div class="nav-sub-header">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                    <a class="btn" href="{% url 'event-details' event.slug %}">
-                        <i class="fa fa-fw fa-info-circle"></i>
-                        <span class="hidden-xs">{% trans "Information" %}</span>
-                    </a>
-                </div>
-
-                <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                    <a class="btn" href="{% url 'event-confirm' event.slug %}">
-                        <i class="fa fa-fw fa-user-plus"></i>
-                        <span id="waiting-for-confirmation-count" class="badge" style="background-color:#f0ad4e;">{{ event.event_participations.waiting_for_confirmation.count }}</span>&nbsp;
-                        <span class="hidden-xs">{% trans "To confirm" %}</span>
-                    </a>
-                </div>
-
-                <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                    <a class="btn" href="{% url 'event-acknowledge' event.slug %}">
-                        <i class="fa fa-fw fa-thumbs-up"></i>
-                        <span id="waiting-for-acknowledgment-count" class="badge" style="background-color:#5bc0de;">{{ event.event_participations.waiting_for_acknowledgement.count }}</span>&nbsp;
-                        <span class="hidden-xs">{% trans "To acknowledge" %}</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'event-details' event.slug %}" class="nav-link active" aria-current="page">
+                    {% trans "Information" %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'event-confirm' event.slug %}" class="nav-link">
+                    {% trans "To confirm" %}
+                    <span id="waiting-for-confirmation-count" class="badge" style="background-color:#f0ad4e;">{{ event.event_participations.waiting_for_confirmation.count }}</span>&nbsp;
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'event-acknowledge' event.slug %}" class="nav-link">
+                    {% trans "To acknowledge" %}
+                    <span id="waiting-for-acknowledgment-count" class="badge" style="background-color:#5bc0de;">{{ event.event_participations.waiting_for_acknowledgement.count }}</span>&nbsp;
+                </a>
+            </li>
+        </ul>
+    </header>
 {% endif %}
+</div>
+{% endblock %}
+
+{% block content %}
 {% endblock %}
 
 {% block extra_content %}

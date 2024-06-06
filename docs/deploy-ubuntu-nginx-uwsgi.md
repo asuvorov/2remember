@@ -165,25 +165,28 @@ Serving Django/Python with uWSGI/Nginx
 --------------------------------------
 Installation and configuration of uWSGI/Nginx originally taken from [here](http://posterous.adambard.com/start-to-finish-serving-mysql-backed-django-w).
 
+https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#nginx-and-uwsgi-and-test-py
+
 1. Generate private Key and SSL Certificate:
 
     1.1 Generate the private Key and CSR locally:
 
-            [/opt/apps]# openssl req -new -newkey rsa:2048 -nodes -keyout saneside.key -out saneside.csr
+            [/opt/apps]# openssl req -new -newkey rsa:2048 -nodes -keyout 2remember.key -out 2remember.csr
 
     1.2 Generate/buy the SSL Certificate from [name.com](https://www.name.com/)
 
     1.3 Create a new File for storing the **SSL Certificate**:
 
-            [/opt/apps]# touch saneside.cer
+            [/opt/apps]# touch 2remember.cer
 
-    1.4 Copy/paste the generated SSL Certificate into the `/opt/apps/saneside.cer` File
+    1.4 Copy/paste the generated SSL Certificate into the `/opt/apps/2remember.cer` File
 
 2. Setting up **uWSGI** for the **Staging** Environment:
 
     2.1 Install **uWSGI**:
 
-            [~]# sudo pip install uwsgi
+            [~]# sudo apt-get install uwsgi
+            [~]# sudo apt-get install uwsgi-plugin-python3
 
     2.2 Run daemonized **uWSGI**:
 
@@ -240,11 +243,11 @@ Installation and configuration of uWSGI/Nginx originally taken from [here](http:
 
     3.3 Copy configuration File:
 
-            [~]# sudo cp /opt/apps/saneside/deployment/staging/nginx/sites-available/saneside /opt/nginx/sites-available/
+            [~]# sudo cp /opt/apps/2remember/deployment/staging/nginx/sites-available/2remember /opt/nginx/sites-available/
 
     3.4 Create following Link:
 
-            [~]# ln -s /opt/nginx/sites-available/saneside /opt/nginx/sites-enabled/saneside
+            [~]# ln -s /opt/nginx/sites-available/2remember /opt/nginx/sites-enabled/2remember
 
     3.5 Restart **Nginx**:
 
@@ -301,7 +304,7 @@ Django Compressor
 
 3. Create Link:
 
-            [~]# sudo ln -s /opt/apps/saneside/src/static/img/ /opt/apps/saneside/src/staticserve/CACHE/img/
+            [~]# sudo ln -s /opt/apps/2remember/src/static/img/ /opt/apps/2remember/src/staticserve/CACHE/img/
 
 ---------------------
 Setting up Supervisor

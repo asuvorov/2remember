@@ -5,7 +5,7 @@
             "first_name":   "Artem",
             "last_name":    "Suvorov",
             "username":     "admin",
-            "email":        "admin@2remember.com",
+            "email":        "admin@2remember.live",
             "password":     "pbkdf2_sha256$600000$yegBmCRvGllFovCDN3DGaz$EkWe1oz928/o1fw7qE9GD+tBkRlI0gifIXvkjEMGHsE=",
             "is_active":    true,
             "is_staff":     true,

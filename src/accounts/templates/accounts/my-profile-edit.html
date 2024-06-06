@@ -30,7 +30,7 @@
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a></li>
-            <li class="breadcrumb-item active"><a href="{% url 'my-profile-edit' %}">{% trans "Edit" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
         </ol>
     </nav>
 </a>
@@ -59,16 +59,16 @@
             <form id="my-profile-edit-form" role="form" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <!-- START PROFILE APPEARENCE -->
-                <section id="profile-appearance">
+                <!-- START PROFILE CARD -->
+                <section id="profile-card">
                     <div class="card mb-3">
                         <div class="row g-0">
                             <div class="col-md-3">
                                 <div class="thumbnail avatar">
                                 {% if request.user.profile.avatar %}
-                                    {% generateimage "common:thumbnail_bigger" source=request.user.profile.avatar -- alt=request.user.profile.auth_name %}
+                                    {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
                                 {% else %}
-                                    <img src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="200" width="200" alt="Add a personal Touch to your Profile." />
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
                                 {% endif %}
                                 </div>
                             </div>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                 </section>
-                <!--  END  PROFILE APPEARENCE -->
+                <!--  END  PROFILE CARD -->
 
                 <!-- START PROFILE DETAILS -->
                 <section id="profile-details">
@@ -185,7 +185,7 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <a class="btn btn-primary btn-centered" name="submit"><i class="fa fa-check-square-o fa-fw"></i> {% trans "Save Changes" %}</a>
+            <a class="btn btn-primary btn-centered" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
         </div>
     </div>
 </div>

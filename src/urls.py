@@ -1,5 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+(C) 2013-2024 Copycat Software Corporation. All Rights Reserved.
 
 The Copyright Owner has not given any Authority for any Publication of this Work.
 This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
@@ -61,6 +61,7 @@ urlpatterns = [
     re_path(r"^api/", include("api.urls")),
     re_path(r"^api/v1/", include("api.v1.urls")),
     re_path(r"^api/v2/", include("api.v2.urls")),
+    re_path(r"^app/", include("app.urls")),
     re_path(r"^blog/", include("blog.urls")),
     re_path(r"^events/", include("events.urls")),
     re_path(r"^home/", include("home.urls")),
@@ -71,10 +72,10 @@ urlpatterns = [
     path("robots.txt",TemplateView.as_view(template_name="cyborg/robots.txt", content_type="text/plain")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# handler400 = "app.views.handler400"
-# handler403 = "app.views.handler403"
-# handler404 = "app.views.handler404"
-# handler500 = "app.views.handler500"
+handler400 = "app.views.handler400"
+handler403 = "app.views.handler403"
+handler404 = "app.views.handler404"
+handler500 = "app.views.handler500"
 
 # if settings.DEBUG_TOOLBAR:
 #     import debug_toolbar

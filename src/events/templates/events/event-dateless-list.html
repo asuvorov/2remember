@@ -88,7 +88,7 @@
                                     {{ filter_form.name }}
                                 </div>
 
-                                <a class="btn btn-rounded pull-right" name="submit"><i class="fa fa-check-square-o fa-fw"></i> {% trans "Apply" %}</a>
+                                <a class="btn btn-rounded pull-right" name="submit"><i class="bi bi-check-square"></i> {% trans "Apply" %}</a>
                             </form>
                         </div>
                     </div>
@@ -188,90 +188,7 @@
     })
 
     /*************************************************************************/
-    /*** Zabuto Calendar                                                   ***/
-    /*************************************************************************/
-    var now = new Date();
-    var year = now.getFullYear();
-    var month = now.getMonth() + 1;
-    var settings = {
-        language:       false,
-        year:           year,
-        month:          month,
-        show_previous:  false,
-        show_next:      true,
-        cell_border:    false,
-        today:          true,
-        show_days:      true,
-        weekstartson:   1,
-        nav_icon: {
-            prev:       "<i class=\"fa fa-chevron-circle-left\"></i>",
-            next:       "<i class=\"fa fa-chevron-circle-right\"></i>"
-        },
-        data:           false,
-        ajax: {
-            url:        "{% url 'api-event-upcoming' %}",
-            modal:      false
-        },
-        legend: [
-            {
-                type:       "text",
-                label:      "Upcoming Event",
-                badge:      "00"
-            },
-            {
-                type:       "block",
-                label:      "Regular event",
-                classname:  "btn-success"
-            },
-            {
-                type:       "spacer"
-            }
-        ],
-        action: function () {
-            return myDateFunction(this.id, false);
-        },
-        action_nav: function () {
-            return myNavFunction(this.id);
-        },
-    };
-
-    function myDateFunction (id, fromModal) {
-        $("#date-popover").hide();
-
-        if (fromModal) {
-            $("#" + id + "_modal").modal("hide");
-        }
-
-        var date = $("#" + id).data("date");
-        var hasEvent = $("#" + id).data("hasEvent");
-
-        console.log(">>> DATE       : ", date);
-        console.log(">>> FROM MODAL : ", fromModal);
-        console.log(">>> HAS EVENT  : ", hasEvent);
-
-        $("#date-popover-content").html("You clicked on date " + date);
-        $("#date-popover").show();
-
-        //location.replace("{% url 'my-profile-view' %}");
-
-        return true;
-    }
-
-    function myNavFunction (id) {
-        $("#date-popover").hide();
-
-        var nav = $("#" + id).data("navigation");
-        var to  = $("#" + id).data("to");
-
-        console.log("nav " + nav + " to: " + to.month + "/" + to.year);
-    }
-
-    $(document).ready(function () {
-        $("#calendar").zabuto_calendar(settings);
-    });
-
-    /*************************************************************************/
-    /*** Event Category Toggle                                         ***/
+    /*** Event Category Toggle                                             ***/
     /*************************************************************************/
     $(".category-item").click(function (event) {
         var element = $(this);

@@ -1,5 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+(C) 2013-2024 Copycat Software Corporation. All Rights Reserved.
 
 The Copyright Owner has not given any Authority for any Publication of this Work.
 This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
@@ -42,7 +42,10 @@ from app.utils import update_seo_model_instance_metadata
 from invites.models import Invite
 from organizations.models import Organization
 
-from .Category import event_category_choices
+from .Category import (
+    event_category_choices,
+    event_category_colors,
+    event_category_icons)
 
 
 # =============================================================================
@@ -360,6 +363,62 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Properties.
     # -------------------------------------------------------------------------
+    @property
+    def stat_category_name(self):
+        """Docstring."""
+        for code, name in event_category_choices:
+            if self.category == code:
+                return name
+
+        return ""
+
+    @property
+    def stat_category_color(self):
+        """Docstring."""
+        for code, color in event_category_colors:
+            if self.category == code:
+                return color
+
+        return ""
+
+    @property
+    def stat_category_icon(self):
+        """Docstring."""
+        for code, icon in event_category_icons:
+            if self.category == code:
+                return icon
+
+        return ""
+
+    @property
+    def is_dateless(self):
+        """Docstring."""
+        return self.start_date is None
+
+    @property
+    def is_draft(self):
+        """Docstring."""
+        return self.status == EventStatus.DRAFT
+
+    @property
+    def is_upcoming(self):
+        """Docstring."""
+        return self.status == EventStatus.UPCOMING
+
+    @property
+    def is_complete(self):
+        """Docstring."""
+        return self.status == EventStatus.COMPLETE
+
+    @property
+    def is_expired(self):
+        """Docstring."""
+        return self.status == EventStatus.EXPIRED
+
+    @property
+    def is_closed(self):
+        """Docstring."""
+        return self.status == EventStatus.CLOSED
 
     # -------------------------------------------------------------------------
     # --- Methods.

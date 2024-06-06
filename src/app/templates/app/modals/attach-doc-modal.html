@@ -1,0 +1,41 @@
+{% load i18n %}
+
+<div class="modal fade" id="uploadDocumentsPopupModal" tabindex="-1" role="dialog" aria-labelledby="uploadDocumentsPopupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% trans "Upload Documents" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form id="upload-documents-modal-form" action="" method="POST">
+                    {% csrf_token %}
+
+                    <div class="btn btn-success btn-lg btn-block fileinput-button">
+                        <input id="fileupload-documents" type="file" name="file" multiple>
+                        <i class="glyphicon glyphicon-plus"></i>
+                        {% trans "Select Files..." %}
+                        <small>{% trans "or drag Files here to upload them" %}</small>
+                    </div>
+
+                    <p class="my-2">{% trans "Only Documents (pdf, doc, plain text) are supported." %}</p>
+
+                    <div id="progress" class="progress" style="display:none;">
+                        <div class="progress-bar progress-bar-success progress-striped active"></div>
+                    </div>
+
+                    <div id="docs" class="docs"></div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onClick="tally()">{% trans "Done" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+</script>

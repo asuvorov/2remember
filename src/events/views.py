@@ -1,5 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+(C) 2013-2024 Copycat Software Corporation. All Rights Reserved.
 
 The Copyright Owner has not given any Authority for any Publication of this Work.
 This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
@@ -17,7 +17,6 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.gis.geoip2 import GeoIP2 as GeoIP
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
@@ -86,6 +85,15 @@ logger = logging.getLogger("py.warnings")
 @cache_page(60)
 def event_list(request):
     """List of the all Events."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Retrieve Data from the Request.
     # -------------------------------------------------------------------------
@@ -134,6 +142,7 @@ def event_list(request):
     # --- Slice the Event List.
     # -------------------------------------------------------------------------
     events = events[:settings.MAX_EVENTS_PER_QUERY]
+    cprint("[---  INFO   ---] EVENTS          : %s" % events, "cyan")
 
     # -------------------------------------------------------------------------
     # --- Paginate QuerySet.
@@ -155,6 +164,8 @@ def event_list(request):
         # --- If Page is out of Range (e.g. 9999), deliver last Page of the
         #     Results.
         events = paginator.page(paginator.num_pages)
+
+    cprint("[---  INFO   ---] EVENTS          : %s" % events, "cyan")
 
     return render(
         request, "events/event-list.html", {
@@ -530,21 +541,28 @@ def event_create(request):
         required=not request.POST.get("addressless", False),
         country_code="US")  # FIXME: request.geo_data["country_code"])
 
-    formset_roles = RoleFormSet(
-        request.POST or None, request.FILES or None,
-        prefix="roles",
-        queryset=Role.objects.none())
-    formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
-        prefix="socials",
-        queryset=SocialLink.objects.none())
+    # formset_roles = RoleFormSet(
+    #     request.POST or None, request.FILES or None,
+    #     prefix="roles",
+    #     queryset=Role.objects.none())
+    # formset_social = SocialLinkFormSet(
+    #     request.POST or None, request.FILES or None,
+    #     prefix="socials",
+    #     queryset=SocialLink.objects.none())
+
+    cprint(f"[---  INFO   ---] {form.is_valid()=}", "cyan")
+    cprint(f"[---  INFO   ---] {aform.is_valid()=}", "cyan")
+    # cprint(f"[---  INFO   ---] {formset_roles.is_valid()=}", "cyan")
+    # cprint(f"[---  INFO   ---] {formset_social.is_valid()=}", "cyan")
 
     if request.method == "POST":
         if (
                 form.is_valid() and
-                aform.is_valid() and
-                formset_roles.is_valid() and
-                formset_social.is_valid()):
+                aform.is_valid()):
+                # form.is_valid() and
+                # aform.is_valid() and
+                # formset_roles.is_valid() and
+                # formset_social.is_valid()):
             event = form.save(commit=False)
             event.address = aform.save(commit=True)
             event.save()
@@ -553,34 +571,32 @@ def event_create(request):
 
             # -----------------------------------------------------------------
             # --- Save Roles.
-            roles = formset_roles.save(commit=True)
-
-            for role in roles:
-                role.event = event
-                role.save()
+            # roles = formset_roles.save(commit=True)
+            # for role in roles:
+            #     role.event = event
+            #     role.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
-            social_links = formset_social.save(commit=True)
+            # social_links = formset_social.save(commit=True)
+            # for social_link in social_links:
+            #     social_link.content_type = ContentType.objects.get_for_model(event)
+            #     social_link.object_id = event.id
+            #     social_link.save()
 
-            for social_link in social_links:
-                social_link.content_type = ContentType.objects.get_for_model(event)
-                social_link.object_id = event.id
-                social_link.save()
+            # if "chl-draft" in request.POST:
+            #     event.status = EventStatus.DRAFT
+            #     event.save()
 
-            if "chl-draft" in request.POST:
-                event.status = EventStatus.DRAFT
-                event.save()
-
-                # -------------------------------------------------------------
-                # --- Send Email Notification(s).
-                event.email_notify_admin_event_drafted(request)
-            else:
-                # -------------------------------------------------------------
-                # --- Send Email Notification(s).
-                event.email_notify_admin_event_created(request)
-                event.email_notify_alt_person_event_created(request)
-                event.email_notify_org_subscribers_event_created(request)
+            #     # -------------------------------------------------------------
+            #     # --- Send Email Notification(s).
+            #     event.email_notify_admin_event_drafted(request)
+            # else:
+            #     # -------------------------------------------------------------
+            #     # --- Send Email Notification(s).
+            #     event.email_notify_admin_event_created(request)
+            #     event.email_notify_alt_person_event_created(request)
+            #     event.email_notify_org_subscribers_event_created(request)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
@@ -593,8 +609,8 @@ def event_create(request):
         request, "events/event-create.html", {
             "form":             form,
             "aform":            aform,
-            "formset_roles":    formset_roles,
-            "formset_social":   formset_social,
+            # "formset_roles":    formset_roles,
+            # "formset_social":   formset_social,
         })
 
 
@@ -654,7 +670,7 @@ def event_details(request, slug):
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Event.
-        is_complained = event.is_complained_by_user(request.user)
+        is_complained = False  # FIXME event.is_complained_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
@@ -859,17 +875,26 @@ def event_acknowledge(request, slug):
 @event_org_staff_member_required
 def event_edit(request, slug):
     """Edit Event."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
+    # --- Initials.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
+    event = get_object_or_404(Event, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Completed or closed (deleted) Events cannot be modified.
     # -------------------------------------------------------------------------
-    if event.is_complete or event.is_closed:
+    if (
+            event.is_complete or
+            event.is_closed):
         raise Http404
 
     # -------------------------------------------------------------------------
@@ -884,23 +909,28 @@ def event_edit(request, slug):
         required=not request.POST.get("addressless", False),
         instance=event.address)
 
-    formset_roles = RoleFormSet(
-        request.POST or None, request.FILES or None,
-        prefix="roles",
-        queryset=Role.objects.filter(event=event))
-    formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
-        prefix="socials",
-        queryset=SocialLink.objects.filter(
-            content_type=ContentType.objects.get_for_model(event),
-            object_id=event.id))
+    # formset_roles = RoleFormSet(
+    #     request.POST or None, request.FILES or None,
+    #     prefix="roles",
+    #     queryset=Role.objects.filter(event=event))
+    # formset_social = SocialLinkFormSet(
+    #     request.POST or None, request.FILES or None,
+    #     prefix="socials",
+    #     queryset=SocialLink.objects.filter(
+    #         content_type=ContentType.objects.get_for_model(event),
+    #         object_id=event.id))
+
+    cprint(f"[---  INFO   ---] {form.is_valid()=}", "cyan")
+    cprint(f"[---  INFO   ---] {aform.is_valid()=}", "cyan")
+    # cprint(f"[---  INFO   ---] {formset_roles.is_valid()=}", "cyan")
+    # cprint(f"[---  INFO   ---] {formset_social.is_valid()=}", "cyan")
 
     if request.method == "POST":
         if (
                 form.is_valid() and
-                aform.is_valid() and
-                formset_roles.is_valid() and
-                formset_social.is_valid()):
+                aform.is_valid()):
+                # formset_roles.is_valid() and
+                # formset_social.is_valid()):
             form.save()
             form.save_m2m()
 
@@ -909,25 +939,28 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save Roles.
-            roles = formset_roles.save(commit=True)
-
-            for role in roles:
-                role.event = event
-                role.save()
+            # roles = formset_roles.save(commit=True)
+            # for role in roles:
+            #     role.event = event
+            #     role.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
-            social_links = formset_social.save(commit=True)
-
-            for social_link in social_links:
-                social_link.content_type = ContentType.objects.get_for_model(event)
-                social_link.object_id = event.id
-                social_link.save()
+            # social_links = formset_social.save(commit=True)
+            # for social_link in social_links:
+            #     social_link.content_type = ContentType.objects.get_for_model(event)
+            #     social_link.object_id = event.id
+            #     social_link.save()
 
             # -----------------------------------------------------------------
             # --- Move temporary Files to real Event Images/Documents.
+            cprint("[---  INFO   ---] FILES          : %s" % form.cleaned_data["tmp_files"], "cyan")
+
             for tmp_file in form.cleaned_data["tmp_files"]:
                 mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
+
+                cprint("[---  INFO   ---] TMP  FILE      : %s" % tmp_file, "cyan")
+                cprint("[---  INFO   ---] MIME TYPE      : %s" % mime_type, "cyan")
 
                 if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
                     AttachedImage.objects.create(
@@ -946,6 +979,7 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save URLs and Video URLs and pull their Titles.
+            cprint("[---  INFO   ---] LINKS          : %s" % request.POST["tmp_links"], "cyan")
             for link in request.POST["tmp_links"].split():
                 url = validate_url(link)
 
@@ -963,42 +997,49 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).
-            event.email_notify_admin_event_edited(request)
-            event.email_notify_alt_person_event_edited(request)
+            # event.email_notify_admin_event_edited(request)
+            # event.email_notify_alt_person_event_edited(request)
 
             # -----------------------------------------------------------------
             # --- Is Date/Time changed?
-            if (
-                    "start_date" in form.changed_data or
-                    "start_time" in form.changed_data):
-                Participation.email_notify_participants_datetime_event_edited(
-                    request=request,
-                    event=event)
+            # if (
+            #         "start_date" in form.changed_data or
+            #         "start_time" in form.changed_data):
+            #     Participation.email_notify_participants_datetime_event_edited(
+            #         request=request,
+            #         event=event)
 
             # -----------------------------------------------------------------
             # --- Is Application changed?
-            if (
-                    "application" in form.changed_data and
-                    event.is_free_for_all):
-                Participation.email_notify_participants_application_event_edited(
-                    request=request,
-                    event=event)
+            # if (
+            #         "application" in form.changed_data and
+            #         event.is_free_for_all):
+            #     Participation.email_notify_participants_application_event_edited(
+            #         request=request,
+            #         event=event)
 
             # -----------------------------------------------------------------
             # --- Is Location changed?
-            if (
-                    "address_1" in form.changed_data or
-                    "address_2" in form.changed_data or
-                    "city" in form.changed_data or
-                    "zip_code" in form.changed_data or
-                    "province" in form.changed_data or
-                    "country" in form.changed_data):
-                Participation.email_notify_participants_location_event_edited(
-                    request=request,
-                    event=event)
+            # if (
+            #         "address_1" in form.changed_data or
+            #         "address_2" in form.changed_data or
+            #         "city" in form.changed_data or
+            #         "zip_code" in form.changed_data or
+            #         "province" in form.changed_data or
+            #         "country" in form.changed_data):
+            #     Participation.email_notify_participants_location_event_edited(
+            #         request=request,
+            #         event=event)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
+
+            # -----------------------------------------------------------------
+            # --- Silent Refresh.
+            return HttpResponseRedirect(
+                reverse("event-details", kwargs={
+                    "slug":     event.slug,
+                }))
 
         # ---------------------------------------------------------------------
         # --- Failed to edit the Event
@@ -1008,8 +1049,8 @@ def event_edit(request, slug):
         request, "events/event-edit.html", {
             "form":             form,
             "aform":            aform,
-            "formset_roles":    formset_roles,
-            "formset_social":   formset_social,
+            # "formset_roles":    formset_roles,
+            # "formset_social":   formset_social,
             "event":        event,
         })
 

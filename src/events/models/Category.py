@@ -1,5 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
+(C) 2013-2024 Copycat Software Corporation. All Rights Reserved.
 
 The Copyright Owner has not given any Authority for any Publication of this Work.
 This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
@@ -83,15 +83,15 @@ EventCategoryIcons = enum(
     RECREATION="64",
     SENIOURS="128")
 event_category_icons = [
-    (EventCategoryIcons.ANIMALS,        "fa fa-paw fa-fw"),
-    (EventCategoryIcons.ARTS,           "fa fa-wrench fa-fw"),
-    (EventCategoryIcons.YOUTH,          "fa fa-child fa-fw"),
-    (EventCategoryIcons.COMMUNITY,      "fa fa-users fa-fw"),
-    (EventCategoryIcons.EDUCATION,      "fa fa-book fa-fw"),
-    (EventCategoryIcons.ENVIRONMENT,    "fa fa-tree fa-fw"),
-    (EventCategoryIcons.HEALTH,         "fa fa-heartbeat fa-fw"),
-    (EventCategoryIcons.RECREATION,     "fa fa-bicycle fa-fw"),
-    (EventCategoryIcons.SENIOURS,       "fa fa-home fa-fw"),
+    (EventCategoryIcons.ANIMALS,        "bi bi-piggy-bank"),
+    (EventCategoryIcons.ARTS,           "bi bi-wrench"),
+    (EventCategoryIcons.YOUTH,          "bi bi-person-arms-up"),
+    (EventCategoryIcons.COMMUNITY,      "bi bi-people"),
+    (EventCategoryIcons.EDUCATION,      "bi bi-book"),
+    (EventCategoryIcons.ENVIRONMENT,    "bi bi-tree"),
+    (EventCategoryIcons.HEALTH,         "bi bi-heart-pulse"),
+    (EventCategoryIcons.RECREATION,     "bi bi-bicycle"),
+    (EventCategoryIcons.SENIOURS,       "bi bi-house-heart"),
 ]
 
 
