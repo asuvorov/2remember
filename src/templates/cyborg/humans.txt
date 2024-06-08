@@ -18,7 +18,7 @@
                     jquery-shorten-js, jquery-sticky, jquery-ui, jt.timepicker,
                     less.js, modernizr, moment, noty, readmore-js
                     seiyria-bootstrap-slider, smooth-scroll.js, tablesorter,
-                    underscore, zabuto_calendar
+                    underscore
     Web Design:     Artem Suvorov
 
 /* AUTHOR */

@@ -1,10 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
-
-The Copyright Owner has not given any Authority for any Publication of this Work.
-This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
-Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
-
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -164,16 +159,16 @@ class EventAdmin(admin.ModelAdmin):
             "classes":  (""),
             "fields":   (
                 "author",
-                ("avatar", "image_tag"),
+                ("preview", "cover"),
                 "event_url",
                 "title",
                 "description",
                 "category",
                 ("status", "application"),
-                "duration",
+                # "duration",
                 "organization",
-                "achievements",
-                "closed_reason",
+                # "achievements",
+                # "closed_reason",
             ),
         }),
         ("Tags", {
@@ -200,30 +195,30 @@ class EventAdmin(admin.ModelAdmin):
                 ("start_date", "start_time", "start_tz", "start_date_time_tz"),
             ),
         }),
-        ("Contact Person", {
-            "classes":  (
-                "grp-collapse grp-open",
-            ),
-            "fields":   (
-                "is_alt_person",
-                ("alt_person_fullname", "alt_person_email", "alt_person_phone"),
-            ),
-        }),
+        # ("Contact Person", {
+        #     "classes":  (
+        #         "grp-collapse grp-open",
+        #     ),
+        #     "fields":   (
+        #         "is_alt_person",
+        #         ("alt_person_fullname", "alt_person_email", "alt_person_phone"),
+        #     ),
+        # }),
         ("Flags", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
                 "is_newly_created",
-                "allow_reenter",
-                ("accept_automatically", "acceptance_text",),
+                # "allow_reenter",
+                # ("accept_automatically", "acceptance_text",),
             ),
         }),
     )
 
     list_display = [
         "id",
-        "title", "image_tag",
+        "title", # "image_tag",
         # "status",
         "event_url",
         # "start_date", "start_time", "start_tz",

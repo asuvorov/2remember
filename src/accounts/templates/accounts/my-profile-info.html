@@ -10,22 +10,20 @@
 {% endcomment %}
 
 {% block content %}
-
-
 <div id="my-profile-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START PROFILE CARD -->
             <section id="profile-card">
-                <div class="card mb-3">
+                <div class="card mb-3 shadow">
                     <div class="row g-0">
                         <div class="col-md-3">
                         {% if request.user.profile.avatar %}
-                            {% generateimage "common:thumbnail_bigger" source=request.user.profile.avatar -- alt=request.user.profile.auth_name %}
+                            {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
                         {% else %}
-                            <img src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="200" width="200" alt="" />
+                            <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
                         {% endif %}
-                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:200px;">
+                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:100%;">
                                 <div class="progress-bar overflow-visible bg-{% if request.user.profile.completeness_total > 75 %}success{% elif request.user.profile.completeness_total > 50 %}info{% elif request.user.profile.completeness_total > 25 %}warning{% else %}danger{% endif %} progress-bar-striped active" role="progressbar" style="width:{{ request.user.profile.completeness_total }}%">{{ request.user.profile.completeness_total }}% {% trans "Complete" %}</div>
                             </div>
                         </div>

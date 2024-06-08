@@ -412,7 +412,7 @@
 
         <div class="col-lg-3 right-sidebar">
             <div class="actions">
-                <a class="btn btn-primary btn-centered" name="submit"><i class="fa fa-check-square-o fa-fw"></i> {% trans "Save Changes" %}</a>
+                <a class="btn btn-primary btn-centered" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
             </div>
         </div>
     </div><!-- /.row -->
@@ -424,9 +424,9 @@
 
 <!-- Modals -->
 
-{% include "common/modals/attach-image-modal.html" %}
-{% include "common/modals/attach-doc-modal.html" %}
-{% include "common/modals/attach-url-modal.html" %}
+{% include "app/modals/attach-image-modal.html" %}
+{% include "app/modals/attach-doc-modal.html" %}
+{% include "app/modals/attach-url-modal.html" %}
 
 <!-- Script -->
 
@@ -487,19 +487,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Show proper Tab                                               ***/
-        /*********************************************************************/
-        var active_tab = window.location.hash.substr(1);
-
-        if (active_tab) {
-            $("a[href='#" + active_tab + "']").tab("show");
-
-            $("html, body").animate({
-                scrollTop:  $("a[href='#" + active_tab + "']").offset().top - $("nav").height() - 55
-            }, 500);
-        }
 
         /*********************************************************************/
         /*** Organization has Address?                                     ***/

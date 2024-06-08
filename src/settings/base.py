@@ -1,10 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
-
-The Copyright Owner has not given any Authority for any Publication of this Work.
-This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
-Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
-
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
 import os
@@ -101,12 +96,15 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE":   "django.db.backends.sqlite3",
-        "NAME":     "sqlite.db",
-        "USER":     "",
-        "PASSWORD": "",
-        "HOST":     "",
-        "PORT":     "",
+        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME":     config("DB_NAME", default="sqlite.db"),
+        "USER":     config("DB_USER", default=""),
+        "PASSWORD": config("DB_PASSWORD", default=""),
+        "HOST":     config("DB_HOST", default=""),
+        "PORT":     config("DB_PORT", default=""),
+        "OPTIONS": {
+            # "autocommit": True,
+        }
     }
 }
 
@@ -205,7 +203,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ###############################################################################
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
-    # "whitenoise.middleware.WhiteNoiseMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -384,7 +382,7 @@ BOWER_INSTALLED_APPS = (
     # "awesome-bootstrap-checkbox",
     # "bootpag",
     "bootstrap#5.3.3",
-    # "bootstrap-maxlength",
+    "bootstrap-maxlength",
     # "bootstrap-rating",
     # "bootstrap-tabcollapse",
     # "bootstrap-tagsinput",
@@ -408,8 +406,7 @@ BOWER_INSTALLED_APPS = (
     # "seiyria-bootstrap-slider",
     # "smooth-scroll.js",
     # "tablesorter",
-    # "underscore",
-    # "zabuto_calendar",
+    "underscore#1.13.6",
 )
 
 

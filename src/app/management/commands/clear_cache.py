@@ -1,10 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
-
-The Copyright Owner has not given any Authority for any Publication of this Work.
-This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
-Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
-
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -15,7 +10,7 @@ from django.core.management.base import (
 
 
 class Command(BaseCommand):
-    """A simple management command which clears theSite-wide Cache."""
+    """A simple Management Command, which clears the Site-wide Cache."""
 
     help = "Fully clear your Site-wide Cache."
 
@@ -27,5 +22,5 @@ class Command(BaseCommand):
 
             self.stdout.write("!!! Your Cache has been cleared!\n")
 
-        except AttributeError:
-            raise CommandError("## You have no Cache configured!\n")
+        except AttributeError as exc:
+            raise CommandError("### You have no Cache configured!\n") from exc

@@ -124,7 +124,7 @@ setup(
         # "sendgrid-django==4.2.0",
         "social-auth-app-django==5.4.1",
         "termcolor==2.4.0",
-        # "whitenoise==6.3.0",
+        "whitenoise==6.6.0",
     ],
     license="",
 )

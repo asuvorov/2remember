@@ -1,10 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
-
-The Copyright Owner has not given any Authority for any Publication of this Work.
-This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
-Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
-
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
 import json
@@ -42,7 +37,9 @@ def resource_access_handler(request, resource):
     """
     # -------------------------------------------------------------------------
     # --- Superusers and Staff can see whatever they want
-    if request.user.is_superuser or request.user.is_staff:
+    if (
+            request.user.is_superuser or
+            request.user.is_staff):
         return True
 
     return False
@@ -51,22 +48,22 @@ def resource_access_handler(request, resource):
 # -----------------------------------------------------------------------------
 # --- HANDLERS
 # -----------------------------------------------------------------------------
-def handler400(request):
+def handler400(request, exception=None):
     """400 Handler."""
     return render(request, "error-pages/400.html", status=404)
 
 
-def handler403(request):
+def handler403(request, exception=None):
     """403 Handler."""
     return render(request, "error-pages/403.html", status=404)
 
 
-def handler404(request):
+def handler404(request, exception=None):
     """404 Handler."""
     return render(request, "error-pages/404.html", status=404)
 
 
-def handler500(request):
+def handler500(request, exception=None):
     """500 Handler."""
     try:
         clear_cache.Command().handle()

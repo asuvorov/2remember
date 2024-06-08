@@ -1,17 +1,207 @@
 {% extends "events/event-details-base.html" %}
 
-{% block extra_content %}
-<div class="container">
-    <div id="event-info">
-        <div id="info">
-            {% include "events/tabs/info-tab.html" %}
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+{% block content %}
+<div id="my-profile-info" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START EVENT CARD -->
+            <section id="event-card">
+                <div class="card mb-3 shadow">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                            <div class="thumbnail avatar">
+                            {% if event.preview %}
+                                {% generateimage "common:medium_fill" source=event.preview -- alt=event.preview.title class='img-fluid rounded-start' %}
+                            {% else %}
+                                <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
+                            {% endif %}
+                            </div>
+
+                            {% if event.get_rating_avg > 0 %}
+                                {% include "common/fragments/rating-card-hor.html" with instance=event %}
+                            {% endif %}
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ event.title }} ({{ event.duration }}h)</h4>
+
+                                <hr>
+
+                                <p class="card-text">{{ event.description|escape|linebreaks }}</p>
+
+                                <hr>
+
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if event.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ event.address.full_address|default:"N/A" }}
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+
+                                    {% if event.address.notes %}
+                                        <blockquote>
+                                            <p>{{ event.address.notes }}</p>
+                                        </blockquote>
+                                    {% endif %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <i class="bi bi-calendar-date"></i>
+                                {% if event.is_dateless %}
+                                    <span class="badge text-bg-warning">{% trans "Dateless" %}</span>
+                                {% else %}
+                                    {{ event.start_date|date:"M j, Y" }}
+                                {% endif %}
+                                </p>
+
+                                <p class="card-text">
+                                    <i class="bi bi-plus-square"></i><strong>{% trans "Category" %}: </strong>{{ event.stat_category_name }}<br/>
+                                {% if event.tags.all %}
+                                    <i class="bi bi-tags"></i>
+                                    {% for tag in event.tags.all %}
+                                        <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                                        {% if not forloop.last %}, {% endif %}
+                                    {% endfor %}
+                                    <br/>
+                                {% endif %}
+                                {% if event.hashtag %}
+                                    <i class="bi bi-hash"></i>{{ event.hashtag }}
+                                {% endif %}
+                                </p>
+
+                            {% if event.organization and not event.organization.is_deleted %}
+                                <p class="card-text">
+                                    <i class="bi bi-building"></i><strong>{% trans "Organized by" %}</strong>
+                                    <a href="{% url 'organization-details' event.organization.slug %}">{{ event.organization.title }}</a>
+                                </p>
+                            {% endif %}
+
+                                <p class="card-text">
+                                {% if event.author.profile.avatar %}
+                                    {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
+                                {% endif %}
+                                    {% trans "Posted by" %}
+                                    <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
+                                    {{ event.created|timesince }} {% trans "ago" %}
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent border-success">
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="bi bi-feather"></i> {{ event.get_comments_count }}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-eye"></i> {{ event.get_views_count }}
+
+                                        <br/>
+
+                                        {% trans "Last updated" %} {{ event.modified|timesince }} {% trans "ago" %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  END  EVENT CARD -->
+
+            <!-- START EVENT ROLES -->
+            {% comment %}
+            <section id="event-roles">
+                <h3>{% trans "Roles" %}</h3>
+            </section>
+            {% endcomment %}
+            <!--  END  EVENT ROLES -->
+
+            <!-- START EVENT ATTACHMENTS -->
+            <section id="event-attachments">
+                <h3>
+                    {% trans "Attachments" %}
+                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
+                </h3>
+
+            {% if event.is_complete %}
+                {% include "events/fragments/event-attachments-complete.html" with event=event %}
+            {% else %}
+                {% include "events/fragments/event-attachments-upcoming.html" with event=event %}
+            {% endif %}
+            </section>
+            <!--  END  EVENT ATTACHMENTS -->
+
+            <!-- START EVENT COMMENTS -->
+            <section id="event-comments">
+                <h3>
+                    {% trans "Comments" %}
+                    <a data-bs-toggle="collapse" data-bs-target="#collapse-comments" aria-expanded="false" aria-controls="collapse-comments"><i class="bi bi-chevron-bar-contract"></i></a>
+
+                {% if request.user.is_authenticated %}
+                    <a class="add-comment btn btn-rounded pull-right" href="#"><i class="bi bi-plus"></i> {% trans "Add" %}</a>
+                {% endif %}
+                </h3>
+
+                <div id="collapse-comments" class="collapse">
+                {% for comment in event.get_comment_list %}
+                    {% include "common/fragments/comment-hor.html" with comment=comment is_admin=is_admin %}
+                {% endfor %}
+                </div>
+            </section>
+            <!--  END  EVENT COMMENTS -->
         </div>
 
-    {% if not event.is_draft %}
-        <div id="participants">
-            {% include "events/tabs/participants-tab.html" %}
+        <div id="tips" class="col-md-3 right-sidebar">
+            {% include "events/fragments/event-media-status-breakdown.html" %}
+
+            <h4>{% trans "Link to this Page" %}</h4>
+            <input type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+
+            <!-- Social Links -->
+        {% if social_links %}
+            <h4>{% trans "Social Links" %}</h4>
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="social-buttons">
+                    {% for social_link in social_links %}
+                        <button onclick="javascript:document.location.href='{{ social_link.url }}';" class="{{ social_link.stat_social_app_button }}">
+                            <i class="{{ social_link.stat_social_app_icon }}"></i>
+                        </button>
+                    {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+            <!-- Share Links -->
+            <h4>{% trans "Share" %}</h4>
+
+            <div class="panel panel-primary">
+                <div class="panel-body">
+                    <div class="social-buttons">
+                        <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="fa fa-facebook fa-fw"></i></button>
+                        <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="fa fa-twitter fa-fw"></i></button>
+                        <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="fa fa-linkedin fa-fw"></i></button>
+                        <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="fa fa-google-plus fa-fw"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Person -->
+            <h4>{% trans "Contact Person" %}</h4>
         </div>
-    {% endif %}
     </div>
 </div>
 
@@ -32,8 +222,8 @@
         {% include "events/modals/event-rate-modal.html" %}
     {% endif %}
 
-    {% include "common/modals/comment-add-modal.html" %}
-    {% include "common/modals/complaint-add-modal.html" %}
+    {# include "common/modals/comment-add-modal.html" #}
+    {# include "common/modals/complaint-add-modal.html" #}
 {% endif %}
 
 <!-- Scripts -->

@@ -1,0 +1,40 @@
+server {
+    client_max_body_size    100M;
+    listen                  80;
+    server_name             *.2remember.live 2remember.live;
+    rewrite                 ^/(.*) https://www.2remember.live/$1 permanent;
+}
+
+server {
+    client_max_body_size 100M;
+    listen 443 ssl;
+    server_name             *.2remember.live 2remember.live;
+
+    access_log              /var/log/nginx/access.log combined;
+    error_log               /var/log/nginx/error.log error;
+
+    ssl_certificate         /opt/apps/2remember.cer;
+    ssl_certificate_key     /opt/apps/2remember.key;
+
+    location /media {
+        alias     /opt/apps/2remember/src/media;
+
+        expires 1M;
+        add_header Cache-Control "public";
+    }
+    location /static {
+        autoindex on;
+        alias     /opt/apps/2remember/src/staticserve;
+
+        expires 1y;
+        add_header Cache-Control "public";
+    }
+    location / {
+        uwsgi_connect_timeout  600;
+        uwsgi_send_timeout     600;
+        uwsgi_read_timeout     600;
+        uwsgi_pass             unix:///tmp/uwsgi.sock;
+        include                uwsgi_params;
+        proxy_set_header       X-Forwarded-Protocol $scheme;
+    }
+}

@@ -10,96 +10,91 @@
         :[event_admin]
 {% endcomment %}
 
-<div class="event-thumb-container" category="{{ event.category|default:'' }}">
-    <div class="event-thumb-vert" style="{% if event.organization.is_hidden %}background-color:#FBEFEF;{% endif %}">
-        <div class="event-name">
-            <a href="{% url 'event-details' event.slug %}">
-                <h4>
-                    <div class="category-item">
-                        <i class="{{ event.stat_category_icon }}" title="{{ event.stat_category_name }}" category="{{ event.category }}" style="background-color:{{ event.stat_category_color }};"></i>
-                    </div>
 
-                    {{ event.name|truncatechars:50 }}
+<div class="card mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
+    <a href="{% url 'event-details' event.slug %}">
+    {% if event.preview %}
+        {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid rounded-start' %}
+    {% else %}
+    {% endif %}
+    <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+            Private
+            <span class="visually-hidden">unread messages</span>
+        </span>
+    </a>
 
-                {% if event.get_rating_avg > 0 %}
-                    <div class="" style="color:orange;">
-                        <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
-                    </div>
-                {% endif %}
-                </h4>
-            </a>
-        </div>
+    <div class="card-body">
+        <a href="{% url 'event-details' event.slug %}">
+            <h5 class="card-title">
+                <div class="category-item">
+                    <i class="{{ event.stat_category_icon }}" title="{{ event.stat_category_name }}" category="{{ event.category }}" style="background-color:{{ event.stat_category_color }};"></i>
+                </div>
 
-        <div class="event-author">
+                {{ event.title|truncatechars:50 }}
+
+            {% if event.get_rating_avg > 0 %}
+                <div class="" style="color:orange;">
+                    <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
+                </div>
+            {% endif %}
+            </h5>
+        </a>
+
+        <p class="card-text">{{ event.description|striptags|truncatechars:200 }}</p>
+        <p class="card-text">
         {% if event.organization and not event.organization.is_deleted and show_org %}
-            <p>
             {% if event.organization.avatar %}
                 {% generateimage "header:thumbnail" source=event.organization.avatar -- alt=event.organization.name %}
             {% endif %}
                 <strong>{% trans "by" %}</strong>
                 <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.name }}</a> {{ event.created|timesince }} {% trans "ago" %}
-            </p>
+        {% endif %}
+        </p>
+        <p class="card-text">
+            <i class="bi bi-pin-map"></i>
+        {% if event.addressless %}
+            <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
         {% else %}
-            <p>
-            {% if event.author.profile.avatar %}
-                {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
-            {% endif %}
-                <strong>{% trans "by" %}</strong>
-                <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
-            </p>
+            {{ event.address.short_address }}
         {% endif %}
-        </div>
 
-        <div class="event-description">
-            <p>{{ event.description|striptags|truncatechars:200 }}</p>
-        </div>
+            <br/>
 
-        <div class="thumbnail" style="position:relative;">
-            <a href="{% url 'event-details' event.slug %}">
-            {% if event.avatar %}
-                {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.name %}
-            {% else %}
-            {% endif %}
+            <i class="bi bi-calendar-date"></i>
+        {% if event.is_dateless %}
+            <span class="badge text-bg-warning">{% trans "Dateless" %}</span>
+        {% else %}
+            {{ event.start_date|date:"M j, Y" }}
+        {% endif %}
+        </p>
 
-            {% if event.is_confirmation_required %}
-                <label class="label label-warning label-confirmation-required">{% trans "Confirmation required" %}</label>
-            {% endif %}
-            </a>
-        </div>
+    {% if event.author.profile.avatar %}
+        {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+    {% endif %}
+        <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a>
+    </div>
 
-        <div class="event-details">
-            <p>
-                <i class="fa fa-map-marker fa-fw"></i>
-            {% if event.addressless %}
-                <span class="label label-warning">{% trans "Location is not provided" %}</span>
-            {% else %}
-                {{ event.address.short_address }}
-            {% endif %}
-            </p>
-
-            <p>
-            {% if event.is_dateless %}
-                <i class="fa fa-calendar fa-fw"></i>
-                <span class="label label-warning">{% trans "Dateless" %}</span>
-            {% else %}
-                <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}
+    <div class="card-footer bg-transparent border-success">
+        <p class="card-text">
+            <small class="text-muted">
+                <i class="bi bi-feather"></i> {{ event.get_comments_count }}
                 <span class="vert-delimiter">|</span>
-                <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
-            {% endif %}
-            </p>
-        </div>
+                <i class="bi bi-eye"></i> {{ event.get_views_count }}
 
-        <div class="event-roles">
-        {% if event.event_roles.all %}
-            <p>
-                <i class="fa fa-group fa-fw"></i>
-            {% for role in event.event_roles.all %}
-                <span class="label label-default">{{ role.name }} ({{ role.quantity }})</span>
-            {% endfor %}
-            </p>
-        {% endif %}
-        </div>
+                <br/>
 
+                {% trans "Last updated" %} {{ event.modified|timesince }} {% trans "ago" %}
+            </small>
+        </p>
+    </div>
+</div>
+
+
+
+{% comment %}
+<div class="event-thumb-container" category="{{ event.category|default:'' }}">
+    <div class="event-thumb-vert" style="{% if event.organization.is_hidden %}background-color:#FBEFEF;{% endif %}">
         <div class="event-tags">
         {% if event.tags.all and event.hashtag %}
             <p>
@@ -126,17 +121,6 @@
                 <i class="fa fa-hashtag fa-fw"></i>{{ event.hashtag }}
             </p>
         {% endif %}
-        </div>
-
-        <div class="event-counts">
-            <p>
-                <i class="fa fa-comment fa-fw"></i> {{ event.get_comments_count }}
-                <span class="vert-delimiter">|</span>
-                <i class="fa fa-eye fa-fw"></i> {{ event.get_views_count }}
-            </p>
-        </div>
-
-        <div class="clear-fix">
         </div>
 
         <div class="event-status">
@@ -178,3 +162,4 @@
         </div>
     </div>
 </div>
+{% endcomment %}
