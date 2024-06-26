@@ -13,12 +13,11 @@
         :<formset_social> - Social Links Formset
 {% endcomment %}
 
-{% block title %}{% trans "Event" %} "{{ event.name }}" - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Event" %} "{{ event.title }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
+    {# get_metadata #}
 {% comment %}
-    {% get_metadata %}
-
     <link rel="image_src" href="{{ event.avatar.url }}" />
     <meta name="description" content="{{ event.description|striptags|truncatechars:300 }}" />
 {% endcomment %}
@@ -43,14 +42,13 @@
 {% endblock %}
 
 {% block header %}
+{% comment %}
 <div class="container">
 {% if is_admin and not event.is_draft %}
-    <header class="d-flex justify-content-center py-3">
+    <header class="d-flex justify-content-center pb-3">
         <ul class="nav nav-pills">
             <li class="nav-item">
-                <a href="{% url 'event-details' event.slug %}" class="nav-link active" aria-current="page">
-                    {% trans "Information" %}
-                </a>
+                <a href="{% url 'event-details' event.slug %}" class="nav-link active" aria-current="page">{% trans "Information" %}</a>
             </li>
             <li class="nav-item">
                 <a href="{% url 'event-confirm' event.slug %}" class="nav-link">
@@ -68,10 +66,134 @@
     </header>
 {% endif %}
 </div>
+{% endcomment %}
 {% endblock %}
 
 {% block content %}
 {% endblock %}
 
 {% block extra_content %}
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", event_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Event."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Comment                                                       ***/
+    /*************************************************************************/
+    $(".add-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $("#comment-add-modal-form").find("input[name='event_id']").val(event_id);
+        $("#commentAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Delete Comment                                                    ***/
+    /*************************************************************************/
+{% comment %}
+    $(".delete-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var comment_id = $(this).attr("comment");
+
+        $.ajax({
+            url:    "{% url 'api-comment-details' 0 %}".replace("0", comment_id),
+            type:   "DELETE"
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).parent().parent().hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to delete the Comment."
+                }).show();
+            };
+        });
+
+        return true;
+    })
+{% endcomment %}
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $("#complaint-add-modal-form").find("input[name='event_id']").val(event_id);
+        $("#complaintAddPopupModal").modal("show");
+    })
+</script>
 {% endblock %}

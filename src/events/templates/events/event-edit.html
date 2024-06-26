@@ -39,6 +39,7 @@
 
 {% block content %}
 <div id="event-edit" class="bg-body-tertiary p-3">
+{% comment %}
     <div class="row">
         <div class="col-12">
             <div class="alert alert-info alert-dismissible" role="alert">
@@ -47,6 +48,7 @@
             </div>
         </div>
     </div>
+{% endcomment %}
 
     <div class="row g-2">
         <div class="col-md-9">
@@ -62,7 +64,7 @@
                                 {% if event.preview %}
                                     {% generateimage "common:medium_fill" source=event.preview -- alt=event.preview.title class='img-fluid rounded-start' %}
                                 {% else %}
-                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
                                 {% endif %}
                                 </div>
                             </div>
@@ -89,13 +91,11 @@
                 </section>
                 <!--  END  EVENT APPEARENCE -->
 
-                <hr>
-
                 <!-- START EVENT DESCRIPTION -->
                 <section id="event-description">
                     <h3>{% trans "Description" %}</h3>
 
-                    <div class="row g-3">
+                    <div class="row g-2">
                         <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
                             {{ form.title }}
                             <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
@@ -140,7 +140,7 @@
                             <label class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <div class="input-group">
                                 {{ form.organization }}
-                                <div class="input-group-addon"><i class="fa fa-university fa-fw"></i></div>
+                                <div class="input-group-addon"><i class="bi bi-university"></i></div>
                             </div>
 
                             <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
@@ -172,24 +172,28 @@
 
                 <!-- START EVENT TIME AND PLACE -->
                 <section id="event-time-and-place">
-                    <h3>{% trans "Starts at" %}</h3>
+                    <h3>{% trans "Date" %}</h3>
 
-                    <div class="row g-3">
+                    <div class="row g-2">
+                    {% comment %}
                         <div class="form-floating col-md-4 {% if form.start_tz.errors %}has-error{% endif %}">
                             {{ form.start_tz }}
                             <label for="id_start_tz" class="form-label">{{ form.start_tz.label }}{% if form.start_tz.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_tz.errors %}{% for error in form.start_tz.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% endcomment %}
                         <div class="form-floating col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
                             {{ form.start_date }}
                             <label for="id_start_date" class="form-label">{{ form.start_date.label }}{% if form.start_date.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_date.errors %}{% for error in form.start_date.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% comment %}
                         <div class="form-floating col-md-4 {% if form.start_time.errors %}has-error{% endif %}">
                             {{ form.start_time }}
                             <label for="id_start_time" class="form-label">{{ form.start_time.label }}{% if form.start_time.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_time.errors %}{% for error in form.start_time.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
@@ -258,7 +262,7 @@
                         <div class="gallery">
                         {% for img in event.get_image_list.all %}
                             <div class="gallery-container">
-                                <i class="fa fa-times-circle-o" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                 <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
                             </div>
                         {% empty %}
@@ -270,7 +274,7 @@
                         <div class="gallery">
                         {% for doc in event.get_document_list.all %}
                             <div class="documents-container">
-                                <i class="fa fa-times-circle-o" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                 <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
                                 {% if not forloop.last %}<br />{% endif %}
                             </div>
@@ -283,7 +287,7 @@
                         <div class="gallery">
                         {% for url in event.get_url_list.all %}
                             <div class="links-container">
-                                <i class="fa fa-times-circle-o" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                 <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
                                 {% if not forloop.last %}<br />{% endif %}
                             </div>
@@ -296,7 +300,7 @@
                         <div class="gallery">
                         {% for video_url in event.get_video_url_list.all %}
                             <div class="video-links-container">
-                                <i class="fa fa-times-circle-o" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                 <a href="{{ video_url.url }}">{{ video_url.url }}</a>
                                 {% if not forloop.last %}<br />{% endif %}
                             </div>
@@ -327,7 +331,9 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <a class="btn btn-primary btn-centered" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
+            <!-- Media -->
+            <a class="btn btn-primary w-100 mb-2" name="submit"><i class="bi bi-check-square"></i>&nbsp;{% trans "Save Changes" %}</a>
+            <a class="btn btn-danger  w-100 mb-2" name="submit"><i class="bi bi-radioactive"></i>&nbsp;{% trans "Delete Organization" %}</a>
         </div>
     </div>
 </div>
@@ -442,19 +448,6 @@
         $("#currentSliderValue").text(
             mySlider.bootstrapSlider("getValue")
         );
-
-        /*********************************************************************/
-        /*** Event has Address?                                            ***/
-        /*********************************************************************/
-        $("address").show();
-
-        if ($("#id_addressless").prop("checked")) {
-            $("address").hide();
-        }
-
-        $("#id_addressless").click(function () {
-            $("address").toggle("slow");
-        });
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/

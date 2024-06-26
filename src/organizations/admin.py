@@ -10,15 +10,23 @@ from adminsortable2.admin import (
     SortableInlineAdminMixin)
 from rangefilter.filters import DateRangeFilter
 
-from ddcore.models.SocialLink import SocialLink
+from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
+    Phone,
+    SocialLink)
 
 # pylint: disable=import-error
+from app.admin import ImagesAdminMixin
 from events.models import Event
 
 from .models import (
     Organization,
-    OrganizationGroup,
-    OrganizationStaff)
+    # OrganizationGroup,
+    # OrganizationStaff
+    )
 
 
 # =============================================================================
@@ -52,8 +60,34 @@ class EventInline(admin.TabularInline):
     model = Event
 
 
-class OrganizationStaffInline(SortableInlineAdminMixin, admin.TabularInline):
-    """Organization Staff Inline."""
+# class OrganizationStaffInline(SortableInlineAdminMixin, admin.TabularInline):
+#     """Organization Staff Inline."""
+
+#     classes = [
+#         "grp-collapse grp-closed",
+#     ]
+#     inline_classes = [
+#         "grp-collapse grp-closed",
+#     ]
+
+#     model = OrganizationStaff
+
+
+# class OrganizationGroupInline(admin.TabularInline):
+#     """Organization Group Inline."""
+
+#     classes = [
+#         "grp-collapse grp-closed",
+#     ]
+#     inline_classes = [
+#         "grp-collapse grp-closed",
+#     ]
+
+#     model = OrganizationGroup
+
+
+class PhoneNumberInline(ct_admin.GenericTabularInline):
+    """Phone Number Inline."""
 
     classes = [
         "grp-collapse grp-closed",
@@ -62,20 +96,7 @@ class OrganizationStaffInline(SortableInlineAdminMixin, admin.TabularInline):
         "grp-collapse grp-closed",
     ]
 
-    model = OrganizationStaff
-
-
-class OrganizationGroupInline(admin.TabularInline):
-    """Organization Group Inline."""
-
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
-
-    model = OrganizationGroup
+    model = Phone
 
 
 class SocialLinkInline(ct_admin.GenericTabularInline):
@@ -91,10 +112,62 @@ class SocialLinkInline(ct_admin.GenericTabularInline):
     model = SocialLink
 
 
+class AttachedImageInline(ct_admin.GenericTabularInline):
+    """Social Link Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+
+    model = AttachedImage
+
+
+class AttachedDocumentInline(ct_admin.GenericTabularInline):
+    """Social Link Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+
+    model = AttachedDocument
+
+
+class AttachedVideoUrlInline(ct_admin.GenericTabularInline):
+    """Social Link Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+
+    model = AttachedVideoUrl
+
+
+class AttachedUrlInline(ct_admin.GenericTabularInline):
+    """Social Link Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+
+    model = AttachedUrl
+
+
 # -----------------------------------------------------------------------------
 # --- Organization Admin.
 # -----------------------------------------------------------------------------
-class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
+class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     """Organization Admin."""
 
     fieldsets = (
@@ -102,10 +175,10 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
             "classes":  (""),
             "fields":   (
                 "author",
-                ("preview", "image_tag",),
+                ("preview", "preview_image_tag", "cover", "cover_image_tag"),
                 "title",
                 "description",
-                "subscribers",
+                # "subscribers",
             ),
         }),
         ("Tags", {
@@ -116,12 +189,12 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
                 ("tags", "hashtag",),
             ),
         }),
-        ("Address & Phone Number", {
+        ("Address", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("addressless", "address", "phone_number",),
+                ("addressless", "address",),
             ),
         }),
         ("URLs", {
@@ -132,28 +205,28 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
                 ("website", "video", "email",),
             ),
         }),
-        ("Contact Person", {
-            "classes":  (
-                "grp-collapse grp-open",
-            ),
-            "fields":   (
-                "is_alt_person",
-                ("alt_person_fullname", "alt_person_email", "alt_person_phone",),
-            ),
-        }),
+        # ("Contact Person", {
+        #     "classes":  (
+        #         "grp-collapse grp-open",
+        #     ),
+        #     "fields":   (
+        #         "is_alt_person",
+        #         ("alt_person_fullname", "alt_person_email", "alt_person_phone",),
+        #     ),
+        # }),
         ("Flags", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("is_newly_created", "is_hidden", "is_deleted",),
+                ("is_newly_created", "is_hidden", "is_deleted"),
             ),
         }),
     )
 
     list_display = [
         "id",
-        "title", "image_tag", "author", "is_hidden", "is_deleted",
+        "title", "preview_image_tag", "cover_image_tag", "author", # "is_hidden", "is_deleted",
         "created", "modified",
     ]
     list_display_links = [
@@ -168,13 +241,18 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin):
         "title", "author",
     ]
     readonly_fields = [
-        "image_tag",
+        "preview_image_tag", "cover_image_tag",
     ]
     inlines = [
         EventInline,
-        OrganizationStaffInline,
-        OrganizationGroupInline,
+        # OrganizationStaffInline,
+        # OrganizationGroupInline,
+        PhoneNumberInline,
         SocialLinkInline,
+        AttachedImageInline,
+        AttachedDocumentInline,
+        AttachedVideoUrlInline,
+        AttachedUrlInline,
     ]
 
     papertrail_type_filters = {
@@ -212,24 +290,24 @@ admin.site.register(Organization, OrganizationAdmin)
 # -----------------------------------------------------------------------------
 # --- Organization Staff Admin.
 # -----------------------------------------------------------------------------
-class OrganizationStaffAdmin(admin.ModelAdmin):
-    """Organization Staff Admin."""
+# class OrganizationStaffAdmin(admin.ModelAdmin):
+#     """Organization Staff Admin."""
 
-    list_display = [
-        "member", "organization", "author", "order",
-        "created", "modified",
-    ]
-    list_filter = [
-        "member", "organization", "author",
-        ("created", DateRangeFilter),
-        ("modified", DateRangeFilter),
-    ]
-    search_fields = [
-        "member",
-    ]
+#     list_display = [
+#         "member", "organization", "author", "order",
+#         "created", "modified",
+#     ]
+#     list_filter = [
+#         "member", "organization", "author",
+#         ("created", DateRangeFilter),
+#         ("modified", DateRangeFilter),
+#     ]
+#     search_fields = [
+#         "member",
+#     ]
 
 
-admin.site.register(OrganizationStaff, OrganizationStaffAdmin)
+# admin.site.register(OrganizationStaff, OrganizationStaffAdmin)
 
 
 # =============================================================================
@@ -245,30 +323,30 @@ admin.site.register(OrganizationStaff, OrganizationStaffAdmin)
 # -----------------------------------------------------------------------------
 # --- Organization Group Admin.
 # -----------------------------------------------------------------------------
-class OrganizationGroupAdmin(admin.ModelAdmin):
-    """Organization Group Admin."""
+# class OrganizationGroupAdmin(admin.ModelAdmin):
+#     """Organization Group Admin."""
 
-    list_display = [
-        "title", "organization", "author",
-        "created", "modified",
-    ]
-    list_filter = [
-        "title", "organization", "author",
-        ("created", DateRangeFilter),
-        ("modified", DateRangeFilter),
-    ]
-    search_fields = [
-        "title",
-    ]
+#     list_display = [
+#         "title", "organization", "author",
+#         "created", "modified",
+#     ]
+#     list_filter = [
+#         "title", "organization", "author",
+#         ("created", DateRangeFilter),
+#         ("modified", DateRangeFilter),
+#     ]
+#     search_fields = [
+#         "title",
+#     ]
 
-    papertrail_type_filters = {
-        "Invite Events": (
-            "invite-created",
-            "invite-accepted",
-            "invite-rejected",
-            "invite-revoked",
-        ),
-    }
+#     papertrail_type_filters = {
+#         "Invite Events": (
+#             "invite-created",
+#             "invite-accepted",
+#             "invite-rejected",
+#             "invite-revoked",
+#         ),
+#     }
 
 
-admin.site.register(OrganizationGroup, OrganizationGroupAdmin)
+# admin.site.register(OrganizationGroup, OrganizationGroupAdmin)

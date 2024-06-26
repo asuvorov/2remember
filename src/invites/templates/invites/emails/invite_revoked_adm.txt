@@ -10,4 +10,4 @@ Link to the Member's Profile Page: {{ profile_link }}
 
 Link to the {{ invite.content_type.name.capitalize }} Details Page: {{ subject_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

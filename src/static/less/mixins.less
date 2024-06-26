@@ -106,37 +106,13 @@
         padding-bottom:         50px;
 
         h1, h2, h3, h4 {
-            font-weight:        bold;
+            font-weight:        500;
             text-transform:     uppercase;
-            margin-top:         0px;
-            padding-bottom:     5px;
+            margin:             0 0 5px 0;
+            padding:            5px 0;
         }
         h4 {
-            border-bottom:      1px solid @gray-lightest;
-        }
-        a.btn,
-        button.btn {
-            .pb-big-button(
-                @text-align:    left,
-                @width:         100%,
-                @ptop:          8px
-            );
-        }
-        a.btn.btn-rounded {
-            .pb-big-rounded-button(
-                @text-align:    left,
-                @width:         auto,
-                @ptop:          8px
-            );
-        }
-        a.btn.btn-empty {
-            .pb-big-button(
-                @color:         @btn-primary-bg,
-                @bgcolor:       @btn-primary-color,
-                @bdcolor:       @btn-primary-color,
-                @width:         auto,
-                @ptop:          8px
-            );
+            text-transform:     none;
         }
         blockquote {
             padding:            5px 10px;
@@ -154,36 +130,13 @@
         padding-bottom:         50px;
 
         h1, h2, h3, h4 {
-            font-weight:        bold;
+            font-weight:        500;
             text-transform:     uppercase;
-            margin-top:         0px;
-            padding-bottom:     5px;
+            margin:             0 0 5px 0;
+            padding:            5px 0;
         }
         h4 {
-            border-bottom:      1px solid @gray-lightest;
-        }
-        a.btn {
-            .pb-big-button(
-                @text-align:    left,
-                @width:         100%,
-                @ptop:          8px
-            );
-        }
-        a.btn.btn-rounded {
-            .pb-big-rounded-button(
-                @text-align:    left,
-                @width:         auto,
-                @ptop:          8px
-            );
-        }
-        a.btn.btn-empty {
-            .pb-big-button(
-                @color:         @btn-primary-bg,
-                @bgcolor:       @btn-primary-color,
-                @bdcolor:       @btn-primary-color,
-                @width:         auto,
-                @ptop:          8px
-            );
+            text-transform:     none;
         }
         blockquote {
             padding:            5px 10px;
@@ -203,28 +156,12 @@
         h3 {
             color:              @brand-primary;
             display:            inline-block;
-            font-weight:        bold;
+            font-weight:        500;
             width:              100%;
             margin:             0 0 10px 0;
         }
         p {
             color:              @gray-light;
-        }
-        a.btn {
-            .pb-big-button(
-                @text-align:    left,
-                @width:         100%,
-                @ptop:          8px,
-                @mbottom:       10px
-            );
-        }
-        a.btn.btn-rounded {
-            .pb-big-rounded-button(
-                @text-align:    left,
-                @width:         auto,
-                @ptop:          8px,
-                @mbottom:       10px
-            );
         }
     }
     .page-details() {
@@ -232,28 +169,14 @@
         padding-top:            10px;
         padding-bottom:         50px;
 
-        h1, h2, h3 {
-            font-weight:        bold;
-            text-transform:     uppercase;
-            margin-top:         0px;
-            padding-bottom:     5px;
-            border-bottom:      1px solid @gray-lightest;
-        }
-        h4 {
-            font-weight:        bold;
+        h1, h2, h3, h4 {
+            font-weight:        500;
             text-transform:     uppercase;
             margin:             0 0 5px 0;
-            padding:            10px 0;
-            border-bottom:      1px solid @gray-lightest;
-
-            // ----------------------------------------------------------------
-            // --- Panels / Tabs collapsible
-            &.panel-title {
-                text-transform:     none !important;
-                margin:             0px  !important;
-                padding:            0px  !important;
-                border-bottom:      none !important;
-            }
+            padding:            5px 0;
+        }
+        h4 {
+            text-transform:     none;
         }
         blockquote {
             padding:            5px 10px;
@@ -263,29 +186,6 @@
                 font-size:      @font-size-base;
                 margin-bottom:  0px;
             }
-        }
-        input {
-            margin-bottom:      10px;
-
-            .pb-input-text(
-                @bdcolor:       @gray-lightest
-            );
-        }
-        a.btn {
-            .pb-big-button(
-                @text-align:    left,
-                @width:         100%,
-                @ptop:          8px,
-                @mbottom:       10px
-            );
-        }
-        a.btn.btn-rounded,
-        button.btn.btn-rounded {
-            .pb-big-rounded-button(
-                @text-align:    left,
-                @width:         auto,
-                @ptop:          8px
-            );
         }
 
         .instance-attachments,
@@ -370,152 +270,6 @@ section {
 /*****************************************************************************/
 /*****************************************************************************/
 /***                                                                       ***/
-/*** FORM FIELDS                                                           ***/
-/***                                                                       ***/
-/*****************************************************************************/
-/*****************************************************************************/
-.pb-input-text(
-        @color:         @gray,
-        @width:         100%,
-        @height:        30px,
-        @bgcolor:       @white,
-        @bdcolor:       @gray-light) {
-    color:                  @color;
-    width:                  @width;
-    height:                 @height;
-    background-color:       @bgcolor;
-    border:                 1px solid @bdcolor;
-    border-radius:          4px;
-    padding:                4px;
-
-    .placeholder-style(italic);
-}
-
-.pb-input-group-addon(
-        @color:         @gray,
-        @bgcolor:       @white,
-        @bdcolor:       @gray-light) {
-    color:                  @color;
-    background-color:       @bgcolor;
-    border:                 1px solid @bdcolor;
-    padding:                4px;
-}
-
-.pb-input-submit(
-        @color:         @white,
-        @font-size:     @font-size-tiny,
-        @font-weight:   bold,
-        @width:         100%,
-        @height:        30px,
-        @bgcolor:       @brand-primary,
-        @bdcolor:       @gray-light,
-        @ptop:          2px,
-        @pright:        2px,
-        @pbottom:       2px,
-        @pleft:         2px) {
-    color:                  @btn-primary-color      !important;
-    background-color:       @btn-primary-bg         !important;
-    border-color:           @btn-primary-border     !important;
-    font-size:              @font-size;
-    font-weight:            @font-weight;
-    width:                  @width;
-    height:                 @height;
-    padding:                @ptop @pright @pbottom @pleft;
-    text-transform:         uppercase;
-    overflow-x:             hidden;
-}
-
-.pb-input-radio(
-        @width:         auto,
-        @height:        auto,
-        @margin:        5px) {
-    width:                  @width;
-    height:                 @height;
-    margin:                 @margin;
-}
-
-.pb-input-checkbox(
-        @width:         auto,
-        @height:        auto,
-        @margin:        5px) {
-    width:                  @width;
-    height:                 @height;
-    margin:                 @margin;
-}
-
-.pb-label-checkbox(
-        @display:       block,
-        @font-weight:   normal,
-        @width:         100%,
-        @pleft:         0) {
-    display:                @display;
-    font-weight:            @font-weight;
-    width:                  @width;
-    padding-bottom:         5px;
-    padding-left:           @pleft;
-}
-
-.pb-textarea(
-        @color:         @gray,
-        @width:         100%,
-        @height:        150px,
-        @bgcolor:       @white,
-        @bdcolor:       @gray-light,
-        @resize:        vertical) {
-    color:                  @color;
-    width:                  @width;
-    height:                 @height;
-    min-height:             @height;
-    background-color:       @bgcolor;
-    border:                 1px solid @bdcolor;
-    border-radius:          4px;
-    padding:                2px;
-    resize:                 @resize;
-
-    .placeholder-style(italic);
-}
-
-.pb-select(
-        @color:         @gray,
-        @width:         100%,
-        @height:        30px,
-        @bgcolor:       @white,
-        @bdcolor:       @gray-light) {
-    color:                  @color;
-    width:                  @width;
-    height:                 @height;
-    background-color:       @bgcolor;
-    border:                 1px solid @bdcolor;
-    border-radius:          4px;
-    padding:                3px 6px;
-    margin-bottom:          0;
-}
-
-.pb-form-group-horiz() {
-    label {
-        display:            inline-block;
-        width:              19%;
-        padding-top:        5px;
-    }
-    input,
-    textarea {
-        display:            inline-block;
-        width:              80%;
-        float:              right;
-    }
-}
-
-/*****************************************************************************/
-/*****************************************************************************/
-/***                                                                       ***/
-/*** FORMS                                                                 ***/
-/***                                                                       ***/
-/*****************************************************************************/
-/*****************************************************************************/
-
-/*****************************************************************************/
-/*****************************************************************************/
-/***                                                                       ***/
 /*** TWITTER FEED                                                          ***/
 /***                                                                       ***/
 /*****************************************************************************/
@@ -544,194 +298,4 @@ section {
             font-style:     italic;
         }
     }
-}
-
-/*****************************************************************************/
-/*****************************************************************************/
-/***                                                                       ***/
-/*** PAGINATION                                                            ***/
-/***                                                                       ***/
-/*****************************************************************************/
-/*****************************************************************************/
-.pb-pagination() {
-    font-size:              @font-size-h4;
-    width:                  100%;
-    display:                inline-block;
-
-    a.disabled {
-        color:              @gray-light;
-        cursor:             default;
-    }
-
-    .previous {
-        float:              left;
-    }
-    .current {
-        text-align:         center;
-    }
-    .next {
-        float:              right;
-    }
-}
-
-/*****************************************************************************/
-/*****************************************************************************/
-/***                                                                       ***/
-/*** BUTTONS                                                               ***/
-/***                                                                       ***/
-/*****************************************************************************/
-/*****************************************************************************/
-.pb-big-button(
-        @color:         @btn-primary-color,
-        @font-size:     @font-size-small,
-        @font-weight:   bold,
-        @text-align:    left,
-        @bgcolor:       @btn-primary-bg,
-        @bdcolor:       @btn-primary-border,
-        @width:         auto,
-        @height:        36px,
-        @ptop:          6px,
-        @pright:        12px,
-        @pbottom:       6px,
-        @pleft:         12px,
-        @mtop:          0,
-        @mright:        0,
-        @mbottom:       0,
-        @mleft:         0) {
-    color:                  @color;
-    font-size:              @font-size;
-    font-weight:            @font-weight;
-    text-align:             @text-align;
-    text-transform:         uppercase;
-
-    width:                  @width;
-    height:                 @height;
-    padding:                @ptop @pright @pbottom @pleft;
-    margin:                 @mtop @mright @mbottom @mleft;
-
-    background-color:       @bgcolor;
-    border:                 1px @bdcolor solid;
-
-    &:hover {
-        background-color:   darken(@bgcolor, 10%);
-    }
-
-    .caret {
-        position:           absolute;
-        left:               90%;
-        top:                45%;
-    }
-}
-
-.btn-centered {
-    text-align:             center !important;
-}
-
-.btn-default {
-    color:                  @btn-default-color      !important;
-    background-color:       @btn-default-bg         !important;
-    border-color:           @btn-default-border     !important;
-}
-.btn-primary {
-    color:                  @btn-primary-color      !important;
-    background-color:       @btn-primary-bg         !important;
-    border-color:           @btn-primary-border     !important;
-}
-.btn-success {
-    color:                  @btn-success-color      !important;
-    background-color:       @btn-success-bg         !important;
-    border-color:           @btn-success-border     !important;
-}
-.btn-info {
-    color:                  @btn-info-color         !important;
-    background-color:       @btn-info-bg            !important;
-    border-color:           @btn-info-border        !important;
-}
-.btn-warning {
-    color:                  @btn-warning-color      !important;
-    background-color:       @btn-warning-bg         !important;
-    border-color:           @btn-warning-border     !important;
-}
-.btn-danger {
-    color:                  @btn-danger-color       !important;
-    background-color:       @btn-danger-bg          !important;
-    border-color:           @btn-danger-border      !important;
-}
-
-.pb-big-rounded-button(
-        @color:         @btn-primary-color,
-        @font-size:     @font-size-small,
-        @font-weight:   bold,
-        @text-align:    center,
-        @bgcolor:       @btn-primary-bg,
-        @bdcolor:       @btn-primary-border,
-        @width:         auto,
-        @height:        36px,
-        @ptop:          6px,
-        @pright:        12px,
-        @pbottom:       6px,
-        @pleft:         12px,
-        @mtop:          0,
-        @mright:        0,
-        @mbottom:       0,
-        @mleft:         0) {
-    color:                  @color;
-    font-size:              @font-size;
-    font-weight:            @font-weight;
-    text-align:             @text-align;
-    text-transform:         uppercase;
-
-    width:                  @width;
-    height:                 @height;
-    padding-top:            (@height - @font-size) / 4 - 1;
-    padding-bottom:         (@height - @font-size) / 4 + 1;
-    padding-left:           (@height - @font-size) / 4;
-    padding-right:          (@height - @font-size) / 4;
-    margin:                 @mtop @mright @mbottom @mleft;
-
-    background-color:       @bgcolor;
-    border:                 1px @bdcolor solid;
-    border-radius:          @height / 2;
-
-    i {
-        color:              @bgcolor;
-        margin-right:       5px;
-
-        .circle(
-            @radius:            @font-size,
-            @background-color:  @color,
-            @border-color:      @color,
-            @border:            0.0
-        );
-    }
-
-    &:hover {
-        background-color:       darken(@bgcolor, 10%);
-    }
-}
-
-/*****************************************************************************/
-/*****************************************************************************/
-/***                                                                       ***/
-/*** TEXTS                                                                 ***/
-/***                                                                       ***/
-/*****************************************************************************/
-/*****************************************************************************/
-.txt-default {
-    color:                  @gray-dark      !important;
-}
-.txt-primary {
-    color:                  @brand-primary  !important;
-}
-.txt-success {
-    color:                  @brand-success  !important;
-}
-.txt-info {
-    color:                  @brand-info     !important;
-}
-.txt-warning {
-    color:                  @brand-warning  !important;
-}
-.txt-danger {
-    color:                  @brand-danger   !important;
 }

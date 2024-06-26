@@ -33,7 +33,7 @@
             <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -45,7 +45,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 
             {% blocktrans %}
-                Thank you for signing up to SaneSide.<br/>
+                Thank you for signing up to 2Remember.<br/>
                 Before you start creating the Events, we will need some more Information about you.<br/>
                 Please, complete your personal Information in the Form.
             {% endblocktrans %}
@@ -68,7 +68,7 @@
                                 {% if request.user.profile.avatar %}
                                     {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
                                 {% else %}
-                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
                                 {% endif %}
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                     <h3>{% trans "Appearance" %}</h3>
 
                                     <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
-                                    <input id="id_avatar" class="form-control" type="file">
+                                    <input id="id_avatar" name="avatar" class="form-control" type="file">
                                     <div class="form-group {% if pform.avatar.errors %}has-error{% endif %}">
                                         <div class="invalid-feedback">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
                                     </div>
@@ -185,7 +185,7 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <a class="btn btn-primary btn-centered" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
+            <a class="btn btn-primary" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
         </div>
     </div>
 </div>
@@ -268,14 +268,14 @@
 {% if is_newly_created %}
 <div id="edit-profile-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
     <div class="popup-overlay-heading">
-        <h4>{% trans "Welcome to SaneSide" %}</h4>
+        <h4>{% trans "Welcome to 2Remember" %}</h4>
     </div>
 
     <div class="popup-overlay-info">
         <div class="alert alert-success">
         {% blocktrans %}
             <p>
-                Thank you for signing up to SaneSide.
+                Thank you for signing up to 2Remember.
             </p>
 
             <p>

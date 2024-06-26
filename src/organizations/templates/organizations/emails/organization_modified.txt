@@ -8,4 +8,4 @@ Your Organization "{{ organization.name }}" was modified!
 
 Link to the Organization Details Page: {{ organization_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

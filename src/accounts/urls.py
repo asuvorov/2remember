@@ -34,7 +34,7 @@ urlpatterns = [
     re_path(r"^signup/$",
         views.account_signup,
         name="signup"),
-    re_path(r"^signup/confirm/(?P<uidb36>[0-9A-Za-z]{1,13})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    re_path(r"^signup/confirm/(?P<uidb36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,40})/$",
         views.account_signup_confirm,
         name="signup-confirm"),
     re_path(r"^signin/$",
@@ -97,8 +97,10 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Password.
     # -------------------------------------------------------------------------
-    re_path(r"^password/renew/(?P<uidb36>[0-9A-Za-z]{1,13})-"
-        "(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$",
+    re_path(r"^password/forgot/$",
+        views.password_forgot,
+        name="password-forgot"),
+    re_path(r"^password/renew/(?P<uidb36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})-(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,40})/$",
         views.password_renew,
         name="password-renew"),
     re_path(r"^password/reset/$",

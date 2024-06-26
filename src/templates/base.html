@@ -4,7 +4,7 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>{% block title %}SaneSide Platform - Volunteering and Community Service made easy{% endblock %}</title>
+        <title>{% block title %}2Remember Platform - Share Your Memories Hassle Free.{% endblock %}</title>
 
     {% block meta %}
         {% include "fragments/head-meta.html" %}
@@ -34,6 +34,9 @@
             {% include "fragments/navbar.html" %}
         {% endblock %}
 
+        {% block important_message %}
+        {% endblock %}
+
         {% block breadcrumbs %}
         {% endblock %}
 
@@ -43,6 +46,10 @@
         {% block carousel %}
         {% endblock %}
         </header>
+
+<!-- Background image -->
+<!-- <div class="bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg'); height:50vh; width:100%; overflow:hidden;"></div> -->
+<!-- Background image -->
 
         <main class="container">
         {% block content %}

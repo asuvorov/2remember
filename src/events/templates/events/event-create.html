@@ -33,7 +33,7 @@
             <li class="breadcrumb-item active" aria-current="page">{% trans "Create" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -50,12 +50,12 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*" required>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="col-md-6">
                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*" required>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                 <section id="event-description">
                     <h3>{% trans "Description" %}</h3>
 
-                    <div class="row g-3">
+                    <div class="row g-2">
                         <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
                             {{ form.title }}
                             <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
@@ -113,7 +113,7 @@
                             <label class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <div class="input-group">
                                 {{ form.organization }}
-                                <div class="input-group-addon"><i class="fa fa-university fa-fw"></i></div>
+                                <div class="input-group-addon"><i class="bi bi-university"></i></div>
                             </div>
 
                             <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
@@ -126,15 +126,6 @@
 
                 <hr>
 
-                <!-- START EVENT ROLES -->
-                {% comment %}
-                <section id="event-roles">
-                    <h3>{% trans "Roles" %}</h3>
-                    {% include "events/fragments/event-formset-roles.html" %}
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT ROLES -->
-
                 <!-- START EVENT LOCATION -->
                 <section id="event-location">
                     <h3>{% trans "Location" %}</h3>
@@ -144,26 +135,39 @@
 
                 <hr>
 
+                <!-- START EVENT ROLES -->
+                {% comment %}
+                <section id="event-roles">
+                    <h3>{% trans "Roles" %}</h3>
+                    {% include "events/fragments/event-formset-roles.html" %}
+                </section>
+                {% endcomment %}
+                <!--  END  EVENT ROLES -->
+
                 <!-- START EVENT TIME AND PLACE -->
                 <section id="event-time-and-place">
-                    <h3>{% trans "Starts at" %}</h3>
+                    <h3>{% trans "Date" %}</h3>
 
-                    <div class="row g-3">
+                    <div class="row g-2">
+                    {% comment %}
                         <div class="form-floating col-md-4 {% if form.start_tz.errors %}has-error{% endif %}">
                             {{ form.start_tz }}
                             <label for="id_start_tz" class="form-label">{{ form.start_tz.label }}{% if form.start_tz.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_tz.errors %}{% for error in form.start_tz.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% endcomment %}
                         <div class="form-floating col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
                             {{ form.start_date }}
                             <label for="id_start_date" class="form-label">{{ form.start_date.label }}{% if form.start_date.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_date.errors %}{% for error in form.start_date.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% comment %}
                         <div class="form-floating col-md-4 {% if form.start_time.errors %}has-error{% endif %}">
                             {{ form.start_time }}
                             <label for="id_start_time" class="form-label">{{ form.start_time.label }}{% if form.start_time.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.start_time.errors %}{% for error in form.start_time.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
@@ -247,7 +251,7 @@
 
             <div class="alert alert-info">
             {% blocktrans %}
-                You can create your Event here. If you have any Questions, don't hesitate to <a href="mailto:support@saneside.com">contact Support</a>.
+                You can create your Event here. If you have any Questions, don't hesitate to <a href="mailto:support@2remember.com">contact Support</a>.
             {% endblocktrans %}
             </div>
 
@@ -265,11 +269,11 @@
     $("a[name='event-create']").click(function () {
         // --------------------------------------------------------------------
         // --- Check, if Preview and Cover Input are NOT empty.
-        if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
-            alert("Please, select the Preview and Cover Images.");
+        // if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
+        //     alert("Please, select the Preview and Cover Images.");
 
-            return false;
-        }
+        //     return false;
+        // }
 
         /*** DATE FORMAT *****************************************************/
         var $input = $("input[name='start_date']");
@@ -400,19 +404,6 @@
         // $("#currentSliderValue").text(
         //     mySlider.bootstrapSlider("getValue")
         // );
-
-        /*********************************************************************/
-        /*** Event has Address?                                            ***/
-        /*********************************************************************/
-        $("address").show();
-
-        if ($("#id_addressless").prop("checked")) {
-            $("address").hide();
-        }
-
-        $("#id_addressless").click(function () {
-            $("address").toggle("slow");
-        });
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/

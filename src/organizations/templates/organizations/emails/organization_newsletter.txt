@@ -17,4 +17,4 @@ Content:
 You have received this Email, because you're subscribed to the Organization's Newsletters and Activity Notifications.
 Link to the Organization Details Page: {{ organization_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

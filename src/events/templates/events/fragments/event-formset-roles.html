@@ -24,7 +24,7 @@
             </div>
             <div class="col-3">
                 <div class="hidden">{{ fs.DELETE }}</div>
-                <a type="button" class="btn btn-rounded pull-right" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                <a type="button" class="btn pull-right" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
             </div>
         </div>
     {% endfor %}
@@ -45,14 +45,14 @@
             </div>
             <div class="col-3">
                 <div class="hidden">{{ formset_social.empty_form.DELETE }}</div>
-                <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                <a type="button" class="btn pull-right" style="width:auto;" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
             </div>
         </div>
     {% endescapescript %}
     </script>
 
     <!-- This Button will add a new Form, when clicked -->
-    <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-add><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+    <a type="button" class="btn pull-right" style="width:auto;" data-formset-add><i class="bi bi-plus"></i> {% trans "Add" %}</a>
 
     <script>
         jQuery(function ($) {
@@ -94,7 +94,7 @@
                                                 </div>
                                                 <div class="col-xs-6 col-sm-4 col-md-4">
                                                     <div class="hidden">{{ fs.DELETE }}</div>
-                                                    <a type="button" class="btn btn-rounded pull-right" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                                                    <a type="button" class="btn pull-right" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
                                                 </div>
                                             </div>
                                         {% endfor %}
@@ -113,14 +113,14 @@
                                                 </div>
                                                 <div class="col-xs-6 col-sm-4 col-md-4">
                                                     <div class="hidden">{{ formset_roles.empty_form.DELETE }}</div>
-                                                    <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                                                    <a type="button" class="btn pull-right" style="width:auto;" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
                                                 </div>
                                             </div>
                                         {% endescapescript %}
                                         </script>
 
                                         <!-- This Button will add a new Form, when clicked -->
-                                        <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-add><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+                                        <a type="button" class="btn pull-right" style="width:auto;" data-formset-add><i class="bi bi-plus"></i> {% trans "Add" %}</a>
 
                                         <script>
                                             jQuery(function ($) {

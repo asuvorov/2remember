@@ -16,6 +16,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 # from ckeditor_uploader.fields import RichTextUploadingField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 # from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from timezone_field import TimeZoneField
@@ -72,6 +74,14 @@ EventMode = enum(
 application_choices = [
     (EventMode.FREE_FOR_ALL,            _("Anyone can participate.")),
     (EventMode.CONFIRMATION_REQUIRED,   _("Participate only after a confirmed Application")),
+]
+
+Visibility = enum(
+    PUBLIC="0",
+    PRIVATE="1")
+visibility_choices = [
+    (Visibility.PUBLIC,     _("Public")),
+    (Visibility.PRIVATE,    _("Private")),
 ]
 
 Recurrence = enum(
@@ -170,8 +180,8 @@ def event_cover_directory_path(instance, filename):
 
 
 class Event(
-        TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin,
-        ViewMixin):
+        TitleSlugDescriptionBaseModel,
+        AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
     """Event Model."""
 
     # -------------------------------------------------------------------------
@@ -190,8 +200,22 @@ class Event(
         related_name="posted_events",
         verbose_name=_("Author"),
         help_text=_("Event Author"))
-    preview = models.ImageField(upload_to=event_preview_directory_path)
-    cover = models.ImageField(upload_to=event_cover_directory_path)
+
+    preview = models.ImageField(
+        upload_to=event_preview_directory_path,
+        blank=True)
+    preview_thumbnail = ImageSpecField(
+        source="preview",
+        processors=[
+            ResizeToFill(600, 400)
+        ],
+        format="JPEG",
+        options={
+            "quality":  80,
+        })
+    cover = models.ImageField(
+        upload_to=event_cover_directory_path,
+        blank=True)
 
     # -------------------------------------------------------------------------
     # --- Tags & Category.
@@ -211,16 +235,21 @@ class Event(
         verbose_name=_("Category"),
         help_text=_("Event Category"))
 
-    status = models.CharField(
+    visibility = models.CharField(
         max_length=2,
-        choices=event_status_choices, default=EventStatus.UPCOMING,
-        verbose_name=_("Status"),
-        help_text=_("Event Status"))
-    application = models.CharField(
-        max_length=2,
-        choices=application_choices, default=EventMode.FREE_FOR_ALL,
-        verbose_name=_("Application"),
-        help_text=_("Event Application"))
+        choices=visibility_choices, default=Visibility.PUBLIC,
+        verbose_name=_("Visibility"),
+        help_text=_("Event Visibility"))
+    # status = models.CharField(
+    #     max_length=2,
+    #     choices=event_status_choices, default=EventStatus.UPCOMING,
+    #     verbose_name=_("Status"),
+    #     help_text=_("Event Status"))
+    # application = models.CharField(
+    #     max_length=2,
+    #     choices=application_choices, default=EventMode.FREE_FOR_ALL,
+    #     verbose_name=_("Application"),
+    #     help_text=_("Event Application"))
 
     # -------------------------------------------------------------------------
     # --- Location.
@@ -251,23 +280,28 @@ class Event(
     start_date = models.DateField(
         db_index=True,
         null=True, blank=True,
-        verbose_name=_("Start Date"),
-        help_text=_("Event Start Date"))
-    start_time = models.TimeField(
-        db_index=True,
-        null=True, blank=True,
-        verbose_name=_("Start Time"),
-        help_text=_("Event Start Time"))
-    start_tz = TimeZoneField(
-        default=settings.TIME_ZONE,
-        verbose_name=_("Timezone"),
-        help_text=_("Event Timezone"))
+        verbose_name=_("Date"),
+        help_text=_("Event Date"))
+    # start_time = models.TimeField(
+    #     db_index=True,
+    #     null=True, blank=True,
+    #     verbose_name=_("Start Time"),
+    #     help_text=_("Event Start Time"))
+    # start_tz = TimeZoneField(
+    #     default=settings.TIME_ZONE,
+    #     verbose_name=_("Timezone"),
+    #     help_text=_("Event Timezone"))
+    # start_date_time_tz = models.DateTimeField(
+    #     db_index=True,
+    #     null=True, blank=True,
+    #     verbose_name=_("Start Date/Time with TZ"),
+    #     help_text=_("Event Start Date/Time with TZ"))
 
-    start_date_time_tz = models.DateTimeField(
-        db_index=True,
-        null=True, blank=True,
-        verbose_name=_("Start Date/Time with TZ"),
-        help_text=_("Event Start Date/Time with TZ"))
+    # -------------------------------------------------------------------------
+    # --- Followers.
+
+    # -------------------------------------------------------------------------
+    # --- Subscribers.
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
@@ -317,6 +351,11 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Flags.
     # -------------------------------------------------------------------------
+    allow_comments = models.BooleanField(
+        default=True,
+        verbose_name=_("I would like to allow Comments"),
+        help_text=_("I would like to allow Comments"))
+
     is_newly_created = models.BooleanField(default=True)
 
     # allow_reenter = models.BooleanField(
@@ -415,6 +454,16 @@ class Event(
         """Docstring."""
         return self.status == EventStatus.CLOSED
 
+    @property
+    def is_private(self):
+        """Docstring."""
+        return self.visibility == Visibility.PRIVATE
+
+    @property
+    def is_public(self):
+        """Docstring."""
+        return self.visibility == Visibility.PUBLIC
+
     # -------------------------------------------------------------------------
     # --- Methods.
     # -------------------------------------------------------------------------
@@ -441,28 +490,6 @@ class Event(
             })
 
         return url
-
-    def image_tag(self):
-        """Render Avatar Thumbnail."""
-        if self.avatar:
-            return f"<img src='{self.avatar.url}' width='100' height='60' />"
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Avatar"
-    image_tag.allow_tags = True
-
-    def event_url(self):
-        """Docstring."""
-        try:
-            return f"<a href=\"{self.public_url()}\" target=\"_blank\">{self.public_url()}</a>"
-        except:
-            pass
-
-        return ""
-
-    event_url.short_description = "Event URL"
-    event_url.allow_tags = True
 
     def email_notify_admin_event_drafted(self, request=None):
         """Send Notification to the Event Admin."""
@@ -577,7 +604,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_created_alt.txt",
                 "context":  {
-                    "user":             self.alt_person_fullname,
+                    "user":         self.alt_person_fullname,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -616,8 +643,8 @@ class Event(
                     "user":         subscriber.first_name,
                     "org_name":     self.organization,
                     "org_url":      self.organization.public_url(request),
-                    "event_name":     self,
-                    "event_url":      self.public_url(request),
+                    "event_name":   self,
+                    "event_url":    self.public_url(request),
                 }
 
             # -----------------------------------------------------------------
@@ -633,8 +660,8 @@ class Event(
                         "user":                 subscriber,
                         "organization":         self.organization,
                         "organization_link":    self.organization.public_url(request),
-                        "event":            self,
-                        "event_link":       self.public_url(request),
+                        "event":                self,
+                        "event_link":           self.public_url(request),
                     },
                 },
                 template_html={
@@ -881,11 +908,11 @@ class Event(
     # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
-        if self.start_date and self.start_time:
-            self.start_date_time_tz = self.start_tz.localize(
-                datetime.datetime.combine(
-                    self.start_date,
-                    self.start_time))
+        # if self.start_date and self.start_time:
+        #     self.start_date_time_tz = self.start_tz.localize(
+        #         datetime.datetime.combine(
+        #             self.start_date,
+        #             self.start_time))
 
     def post_save(self, created, **kwargs):
         """Docstring."""
@@ -897,42 +924,53 @@ class Event(
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Update/insert SEO Model Instance Metadata
-        update_seo_model_instance_metadata(
-            title=self.title,
-            description=self.description,
-            keywords=", ".join(self.tags.names()),
-            heading=self.title,
-            path=self.get_absolute_url(),
-            object_id=self.id,
-            content_type_id=ContentType.objects.get_for_model(self).id)
+        # --- FIXME: Update/insert SEO Model Instance Metadata
+        # update_seo_model_instance_metadata(
+        #     title=self.title,
+        #     description=self.description,
+        #     keywords=", ".join(self.tags.names()),
+        #     heading=self.title,
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Avatar Images is:
+        # --- The Path for uploading Preview Images is:
         #
-        #            MEDIA_ROOT/events/<id>/avatars/<filename>
+        #            MEDIA_ROOT/events/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Event Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Event looks like:
         #
-        #            MEDIA_ROOT/events/None/avatars/<filename>
+        #            MEDIA_ROOT/events/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Event Avatar Object;
-        #     3. Save the Event Instance. Now the Avatar Image in the
+        #     1. Open the Preview File in the Path;
+        #     2. Assign the Preview File Content to the Event Preview Object;
+        #     3. Save the Event Instance. Now the Preview Image in the
         #        correct Path;
-        #     4. Delete previous Avatar File;
+        #     4. Delete previous Preview File;
         #
-        if created:
-            avatar = File(storage.open(self.avatar.file.name, "rb"))
+        try:
+            if created:
+                preview = File(storage.open(self.preview.file.name, "rb"))
 
-            self.avatar = avatar
-            self.save()
+                self.preview = preview
+                self.save()
 
-            if "events/None/avatars/" in avatar.file.name:
-                storage.delete(avatar.file.name)
+                storage.delete(preview.file.name)
+
+                # -------------------------------------------------------------
+                cover = File(storage.open(self.cover.file.name, "rb"))
+
+                self.cover = cover
+                self.save()
+
+                storage.delete(cover.file.name)
+
+        except Exception as exc:
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

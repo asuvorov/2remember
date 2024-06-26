@@ -1,9 +1,9 @@
 /* PROJECT */
 
-    Site Name:      SaneSide
-    Site URL:       https://www.saneside.com/
+    Site Name:      2Remember
+    Site URL:       https://2remember.live/
     Created:        2014
-    Updated:        2018
+    Updated:        2024
     Standards:      HTML5, CSS3
     Components:     Twitter Bootstrap, jQuery
     Software:       AWS, Ubuntu, nGinx, uWSGI, Python, Django, HTML, CSS,
@@ -11,14 +11,12 @@
     Plugins:        awesome-bootstrap-checkbox, bootpag, bootstrap,
                     bootstrap-maxlength, bootstrap-rating, bootstrap-select,
                     bootstrap-tabcollapse, bootstrap-tagsinput, bx-slider.js,
-                    ckeditor, equalheight, fontawesome, font-awesome-animation,
-                    isMobile, isotope, jquery, jquery.inputmask,
-                    jquery.pulsate, jquery-colorbox, jquery-file-upload,
-                    jquery-popup-overlay, jquery-scrolltotop,
-                    jquery-shorten-js, jquery-sticky, jquery-ui, jt.timepicker,
-                    less.js, modernizr, moment, noty, readmore-js
-                    seiyria-bootstrap-slider, smooth-scroll.js, tablesorter,
-                    underscore
+                    ckeditor, equalheight, jquery, jquery.inputmask,
+                    jquery-colorbox, jquery-file-upload,
+                    jquery-popup-overlay, jquery-shorten-js, jquery-sticky,
+                    jquery-ui, jt.timepicker, less.js, modernizr, moment, noty,
+                    readmore-js seiyria-bootstrap-slider, smooth-scroll.js,
+                    tablesorter, underscore
     Web Design:     Artem Suvorov
 
 /* AUTHOR */

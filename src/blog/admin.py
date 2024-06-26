@@ -6,6 +6,9 @@ from django.contrib import admin
 
 from rangefilter.filters import DateRangeFilter
 
+# pylint: disable=import-error
+from app.admin import ImagesAdminMixin
+
 from .models import Post
 
 
@@ -14,7 +17,7 @@ from .models import Post
 # === POST ADMIN
 # ===
 # =============================================================================
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Post Admin."""
 
     fieldsets = (
@@ -22,7 +25,7 @@ class PostAdmin(admin.ModelAdmin):
             "classes":  (""),
             "fields":   (
                 "author",
-                ("avatar", "image_tag",),
+                ("preview", "preview_image_tag", "cover", "cover_image_tag"),
                 "title",
                 "description",
                 "content",
@@ -41,7 +44,7 @@ class PostAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", "image_tag", "description", "status", "author",
+        "title", "preview_image_tag", "cover_image_tag", "description", "status", "author",
         "created", "modified",
     ]
     list_display_links = [
@@ -56,7 +59,7 @@ class PostAdmin(admin.ModelAdmin):
         "title", "description", "author",
     ]
     readonly_fields = [
-        "image_tag",
+        "preview_image_tag", "cover_image_tag",
     ]
 
     papertrail_type_filters = {

@@ -11,11 +11,15 @@ from ddcore.models.Comment import Comment
 from ddcore.models.Complaint import Complaint
 from ddcore.models.SocialLink import SocialLink
 
+# pylint: disable=import-error
+from app.admin import ImagesAdminMixin
+
 from .models import (
     Category,
     Event,
-    Participation,
-    Role)
+    # Participation,
+    # Role
+    )
 
 
 # =============================================================================
@@ -31,14 +35,14 @@ from .models import (
 # -----------------------------------------------------------------------------
 # --- Event Category Admin.
 # -----------------------------------------------------------------------------
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Category Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
-                ("preview", "image_tag"),
+                ("preview", "preview_image_tag"),
                 "title",
                 "description",
                 "category",
@@ -49,7 +53,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", "preview", "image_tag",
+        "title", "preview", "preview_image_tag",
         "category", "color", "icon", "image",
         "created", "modified",
     ]
@@ -61,7 +65,7 @@ class CategoryAdmin(admin.ModelAdmin):
         "title",
     ]
     readonly_fields = [
-        "image_tag",
+        "preview_image_tag",
     ]
     inlines = []
 
@@ -78,35 +82,35 @@ admin.site.register(Category, CategoryAdmin)
 # -----------------------------------------------------------------------------
 # --- Inlines.
 # -----------------------------------------------------------------------------
-class ParticipationInline(admin.TabularInline):
-    """Participation Inline."""
+# class ParticipationInline(admin.TabularInline):
+#     """Participation Inline."""
 
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
-    exclude = [
-        "application_text", "cancellation_text",
-        "selfreflection_activity_text", "selfreflection_learning_text",
-        "selfreflection_rejection_text", "acknowledgement_text",
-    ]
+#     classes = [
+#         "grp-collapse grp-closed",
+#     ]
+#     inline_classes = [
+#         "grp-collapse grp-closed",
+#     ]
+#     exclude = [
+#         "application_text", "cancellation_text",
+#         "selfreflection_activity_text", "selfreflection_learning_text",
+#         "selfreflection_rejection_text", "acknowledgement_text",
+#     ]
 
-    model = Participation
+#     model = Participation
 
 
-class RoleInline(admin.TabularInline):
-    """Role Inline."""
+# class RoleInline(admin.TabularInline):
+#     """Role Inline."""
 
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
+#     classes = [
+#         "grp-collapse grp-closed",
+#     ]
+#     inline_classes = [
+#         "grp-collapse grp-closed",
+#     ]
 
-    model = Role
+#     model = Role
 
 
 class CommentInline(ct_admin.GenericTabularInline):
@@ -151,15 +155,27 @@ class SocialLinkInline(ct_admin.GenericTabularInline):
 # -----------------------------------------------------------------------------
 # --- Event Admin.
 # -----------------------------------------------------------------------------
-class EventAdmin(admin.ModelAdmin):
+class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Admin."""
+
+    def event_url(self, obj):
+        """Docstring."""
+        try:
+            return f"<a href=\"{obj.public_url()}\" target=\"_blank\">{obj.public_url()}</a>"
+        except:
+            pass
+
+        return ""
+
+    event_url.short_description = "Event URL"
+    event_url.allow_tags = True
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "author",
-                ("preview", "cover"),
+                ("preview", "preview_image_tag", "cover", "cover_image_tag"),
                 "event_url",
                 "title",
                 "description",
@@ -218,7 +234,7 @@ class EventAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "title", # "image_tag",
+        "title", "preview_image_tag", "cover_image_tag",
         # "status",
         "event_url",
         # "start_date", "start_time", "start_tz",
@@ -242,14 +258,14 @@ class EventAdmin(admin.ModelAdmin):
         "title", "organization",
     ]
     readonly_fields = [
-        "image_tag", "event_url",
+        "preview_image_tag", "cover_image_tag", "event_url",
     ]
     inlines = [
-        RoleInline,
+        # RoleInline,
         SocialLinkInline,
         CommentInline,
         ComplaintInline,
-        ParticipationInline,
+        # ParticipationInline,
     ]
 
     papertrail_type_filters = {
@@ -300,62 +316,62 @@ admin.site.register(Event, EventAdmin)
 # -----------------------------------------------------------------------------
 # --- Participation Admin.
 # -----------------------------------------------------------------------------
-class ParticipationAdmin(admin.ModelAdmin):
-    """Participation Admin."""
+# class ParticipationAdmin(admin.ModelAdmin):
+#     """Participation Admin."""
 
-    fieldsets = (
-        ("", {
-            "classes":  (""),
-            "fields":   (
-                ("user", "image_tag",),
-                "event",
-                "role",
-                "status",
-            ),
-        }),
-        ("Significant Texts", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                "application_text",
-                "cancellation_text",
-                "selfreflection_activity_text",
-                "selfreflection_learning_text",
-                "selfreflection_rejection_text",
-                "acknowledgement_text",
-            ),
-        }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                "date_accepted",
-                "date_cancelled",
-                "date_selfreflection",
-                "date_selfreflection_rejection",
-                "date_acknowledged",
-            ),
-        }),
-    )
+#     fieldsets = (
+#         ("", {
+#             "classes":  (""),
+#             "fields":   (
+#                 ("user", "image_tag",),
+#                 "event",
+#                 "role",
+#                 "status",
+#             ),
+#         }),
+#         ("Significant Texts", {
+#             "classes":  (
+#                 "grp-collapse grp-closed",
+#             ),
+#             "fields":   (
+#                 "application_text",
+#                 "cancellation_text",
+#                 "selfreflection_activity_text",
+#                 "selfreflection_learning_text",
+#                 "selfreflection_rejection_text",
+#                 "acknowledgement_text",
+#             ),
+#         }),
+#         ("Significant Dates", {
+#             "classes":  (
+#                 "grp-collapse grp-closed",
+#             ),
+#             "fields":   (
+#                 "date_accepted",
+#                 "date_cancelled",
+#                 "date_selfreflection",
+#                 "date_selfreflection_rejection",
+#                 "date_acknowledged",
+#             ),
+#         }),
+#     )
 
-    list_display = [
-        "id",
-        "user", "image_tag", "event", "role", "status",
-    ]
-    list_display_links = [
-        "user",
-    ]
-    list_filter = [
-        "status",
-    ]
-    search_fields = [
-        "user", "event",
-    ]
-    readonly_fields = [
-        "image_tag",
-    ]
+#     list_display = [
+#         "id",
+#         "user", "image_tag", "event", "role", "status",
+#     ]
+#     list_display_links = [
+#         "user",
+#     ]
+#     list_filter = [
+#         "status",
+#     ]
+#     search_fields = [
+#         "user", "event",
+#     ]
+#     readonly_fields = [
+#         "image_tag",
+#     ]
 
 
-admin.site.register(Participation, ParticipationAdmin)
+# admin.site.register(Participation, ParticipationAdmin)

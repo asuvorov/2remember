@@ -71,6 +71,13 @@ def index(request):
 
 
 @cache_page(60 * 60 * 24)
+def open_to_hire(request):
+    """Docstring."""
+    return render(
+        request, "home/resume.html", {})
+
+
+@cache_page(60 * 60 * 24)
 def privacy_policy(request):
     """Docstring."""
     return render(

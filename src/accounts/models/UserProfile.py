@@ -15,10 +15,8 @@ import pendulum
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
     Address,
-    BaseModel,
     CommentMixin,
     ComplaintMixin,
-    Phone,
     RatingMixin,
     UserProfile as UserProfileBase,
     ViewMixin)
@@ -26,10 +24,11 @@ from ddcore.models import (
 # pylint: disable=import-error
 from events.models import (
     EventMixin,
-    ParticipationMixin)
-from organizations.models import (
-    OrganizationStaffMixin,
-    OrganizationGroupMixin)
+    # ParticipationMixin
+    )
+# from organizations.models import (
+#     OrganizationStaffMixin,
+#     OrganizationGroupMixin)
 
 
 # =============================================================================
@@ -53,8 +52,9 @@ from organizations.models import (
 # -----------------------------------------------------------------------------
 @autoconnect
 class UserProfile(
-        UserProfileBase, CommentMixin, ComplaintMixin, EventMixin, ParticipationMixin,
-        OrganizationGroupMixin, OrganizationStaffMixin,
+        UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
+        # ParticipationMixin,
+        # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
     """User Profile Model."""
 
@@ -63,6 +63,10 @@ class UserProfile(
 
     # -------------------------------------------------------------------------
     # --- Address & Phone Number.
+    addressless = models.BooleanField(
+        default=False,
+        verbose_name=_("I will provide the Location later, if any."),
+        help_text=_("I will provide the Location later, if any."))
     address = models.ForeignKey(
         Address,
         db_index=True,
@@ -70,27 +74,19 @@ class UserProfile(
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("User Address"))
-    phone_number = models.ForeignKey(
-        Phone,
-        db_index=True,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-        verbose_name=_("Phone Numbers"),
-        help_text=_("User Phone Numbers"))
 
     # -------------------------------------------------------------------------
     # --- Flags.
+    allow_comments = models.BooleanField(
+        default=True,
+        verbose_name=_("I would like to allow Comments"),
+        help_text=_("I would like to allow Comments"))
     receive_newsletters = models.BooleanField(
         default=False,
         verbose_name=_("I would like to receive Email Updates"),
         help_text=_("I would like to receive Email Updates"))
 
     is_newly_created = models.BooleanField(default=True)
-
-    # -------------------------------------------------------------------------
-    # --- Different.
-    # fb_profile = models.CharField(
-    #     max_length=255, null=True, blank=True)
 
     # USERNAME_FIELD = "email"
 
@@ -162,16 +158,14 @@ class UserProfile(
             int(bool(self.user.username)) +
             int(bool(self.user.first_name)) +
             int(bool(self.user.last_name)) +
-            int(bool(self.user.email))
-        )
+            int(bool(self.user.email)))
 
         completeness_profile = (
             int(bool(self.avatar)) +
             int(bool(self.nickname)) +
             int(bool(self.bio)) +
             int(bool(self.gender)) +
-            int(bool(self.birth_day))
-        )
+            int(bool(self.birth_day)))
 
         completeness_address = 0
         if self.address:
@@ -180,22 +174,20 @@ class UserProfile(
                 int(bool(self.address.city)) +
                 int(bool(self.address.zip_code)) +
                 int(bool(self.address.province)) +
-                int(bool(self.address.country))
-            )
+                int(bool(self.address.country)))
 
-        completeness_phone = 0
-        if self.phone_number:
-            completeness_phone = (
-                int(bool(self.phone_number.phone_number)) +
-                int(bool(self.phone_number.mobile_phone_number))
-            )
+        # completeness_phone = 0
+        # if self.phone_number:
+        #     completeness_phone = (
+        #         int(bool(self.phone_number.phone_number)) +
+        #         int(bool(self.phone_number.mobile_phone_number)))
 
         completeness_total = int(((
             completeness_user +
             completeness_profile +
-            completeness_address +
-            completeness_phone
-        ) / 16.0) * 100)
+            completeness_address  # +
+            # completeness_phone
+        ) / 14.0) * 100)
 
         return completeness_total
 
@@ -261,7 +253,7 @@ class UserProfile(
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Update/insert SEO Model Instance Metadata.
+        # --- FIXME: Update/insert SEO Model Instance Metadata.
         # update_seo_model_instance_metadata(
         #     title=self.user.get_full_name(),
         #     description=self.bio,

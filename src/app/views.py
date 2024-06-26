@@ -118,17 +118,11 @@ def remove_upload(request):
 
     if upload_type and upload_id:
         if upload_type == "document":
-            instance = get_object_or_None(
-                AttachedDocument,
-                id=upload_id)
+            instance = get_object_or_None(AttachedDocument, id=upload_id)
         elif upload_type == "image":
-            instance = get_object_or_None(
-                AttachedImage,
-                id=upload_id)
+            instance = get_object_or_None(AttachedImage, id=upload_id)
         elif upload_type == "temp":
-            instance = get_object_or_None(
-                TemporaryFile,
-                id=upload_id)
+            instance = get_object_or_None(TemporaryFile, id=upload_id)
 
         if instance:
             try:
@@ -158,13 +152,9 @@ def remove_link(request):
 
     if upload_type and upload_id:
         if upload_type == "regular":
-            instance = get_object_or_None(
-                AttachedUrl,
-                id=upload_id)
+            instance = get_object_or_None(AttachedUrl, id=upload_id)
         elif upload_type == "video":
-            instance = get_object_or_None(
-                AttachedVideoUrl,
-                id=upload_id)
+            instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
 
         if instance:
             instance.delete()

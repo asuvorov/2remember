@@ -24,7 +24,7 @@ from organizations.sitemap import OrganizationSitemap
 
 admin.autodiscover()
 
-# schema_view = get_swagger_view(title="SaneSide API")
+# schema_view = get_swagger_view(title="2Remember API")
 
 
 sitemaps = {

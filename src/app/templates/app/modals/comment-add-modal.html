@@ -12,7 +12,7 @@
                 <form id="comment-add-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
                     <input type="hidden" name="post_id" value="">
 
@@ -37,14 +37,14 @@
     /*************************************************************************/
     function comment_add() {
         var comment_text = $("#comment-add-modal-form").find("textarea[name='comment_text']").val();
-        var challenge_id = $("#comment-add-modal-form").find("input[name='challenge_id']").val();
+        var event_id = $("#comment-add-modal-form").find("input[name='event_id']").val();
         var organization_id = $("#comment-add-modal-form").find("input[name='organization_id']").val();
         var post_id = $("#comment-add-modal-form").find("input[name='post_id']").val();
 
         console.log(">>> Comment", comment_text);
 
         $.post("{% url 'api-comment-list' %}", {
-            "challenge_id":         challenge_id,
+            "event_id":             event_id,
             "organization_id":      organization_id,
             "post_id":              post_id,
             "comment_text":         comment_text,

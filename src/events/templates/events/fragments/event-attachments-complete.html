@@ -27,7 +27,7 @@
             <div class="gallery">
             {% for doc in event.get_document_list.all %}
                 <div class="documents-container">
-                    <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank"><i class="fa fa-file-o fa-fw"></i> {{ doc.name }}</a>
+                    <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank"><i class="bi bi-file-o"></i> {{ doc.name }}</a>
                     {% if not forloop.last %}<br />{% endif %}
                 </div>
             {% empty %}
@@ -39,7 +39,7 @@
             <div class="gallery">
             {% for url in event.get_url_list.all %}
                 <div class="links-container">
-                    <a href="{{ url.url }}" target="_blank"><i class="fa fa-link fa-fw"></i> {% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
+                    <a href="{{ url.url }}" target="_blank"><i class="bi bi-link"></i> {% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
                     {% if not forloop.last %}<br />{% endif %}
                 </div>
             {% empty %}
@@ -51,7 +51,7 @@
             <div class="gallery">
             {% for video_url in event.get_video_url_list.all %}
                 <div class="video-links-container">
-                    <a href="{{ video_url.url }}"><i class="fa fa-file-video-o fa-fw"></i> {{ video_url.url }}</a>
+                    <a href="{{ video_url.url }}"><i class="bi bi-file-video-o"></i> {{ video_url.url }}</a>
                     {% if not forloop.last %}<br />{% endif %}
                 </div>
             {% empty %}

@@ -4,7 +4,7 @@
 
 Dear, {{ admin.first_name }}!
 
-Your Event "{{ event.name }}" was complete!
+Your Event "{{ event.title }}" was complete!
 
 Experience Report Requests were sent to all signed up to Event Members.
 
@@ -14,4 +14,4 @@ Link to the Event Details Page: {{ event_link }}
 
 Also, you can find Link to this Event on your Profile Page.
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

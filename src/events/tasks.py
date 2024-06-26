@@ -56,7 +56,7 @@
 #                     "<p>If this Event has taken place as planned, please, mark it as completed.</p>"
 #                     "<p>Remember to remove all Participants from the Event, who did not show up to help, so the Event will not appear on their Profiles.</p>") % {
 #                         "url":      event.public_url(),
-#                         "name":     event.name,
+#                         "name":     event.title,
 #                     }
 
 #                 # -------------------------------------------------------------
@@ -124,7 +124,7 @@
 #                         "<p>Don\'t forget that you are signed up for the Event \"<a href=\"%(url)s\">%(name)s</a>\" on %(start_date)s at %(start_time)s.</p>"
 #                         "<p>Please, don\'t forget to show up!</p>") % {
 #                             "url":          event.public_url(),
-#                             "name":         event.name,
+#                             "name":         event.title,
 #                             "start_date":   event.get_start_date,
 #                             "start_time":   event.get_start_time,
 #                         }

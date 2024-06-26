@@ -3,14 +3,23 @@
 //     Password reset
 // ----------------------------------------------------------------------------
 #account-signin,
+#password-forgot,
 #password-reset {
     // --- Mixin
     #instance.page-create-edit();
 
-    background-color:       @white;
-    padding:                10px;
-    margin-top:             10px;
-    margin-bottom:          20px;
+    //background-color:       @white;
+    //padding:                10px;
+    //margin-top:             10px;
+    //margin-bottom:          20px;
+    width:                  100%;
+    max-width:              480px;
+    margin:                 auto;
+
+    .card {
+        background-color:   #eef;
+        padding:            15px;
+    }
 }
 
 // ----------------------------------------------------------------------------

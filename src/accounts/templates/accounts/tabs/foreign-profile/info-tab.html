@@ -31,12 +31,12 @@ Foreign Profile - Info
                 {% elif account.profile.short_name %}
                     {{ account.profile.short_name }}
                 {% else %}
-                    <i class="fa fa-user-secret fa-fw"></i>
+                    <i class="bi bi-user-secret"></i>
                 {% endif %}
             {% endif %}
             </h4>
 
-            <div class="hidden-sm hidden-md hidden-lg right-sidebar">
+            <div id="tips" class="col-md-3 right-sidebar">
                 {% include "accounts/fragments/foreign-profile-media-status-breakdown.html" %}
             </div>
 
@@ -81,7 +81,7 @@ Foreign Profile - Info
                 {% elif account.profile.short_name %}
                     {{ account.profile.short_name }}
                 {% else %}
-                    <i class="fa fa-user-secret fa-fw"></i>
+                    <i class="bi bi-user-secret"></i>
                 {% endif %}
             {% endif %}
             </h1>
@@ -91,7 +91,7 @@ Foreign Profile - Info
 
             {% if need_to_know_contact_details %}
                 <address>
-                    <p><i class="fa fa-map-marker fa-fw"></i>{{ account.profile.address.short_address|default:"N/A" }}</p>
+                    <p><i class="bi bi-map-marker"></i>{{ account.profile.address.short_address|default:"N/A" }}</p>
                 {% if account.profile.address.notes %}
                     <blockquote>
                         <p>{{ account.profile.address.notes }}</p>
@@ -99,12 +99,12 @@ Foreign Profile - Info
                 {% endif %}
 
                     <p>
-                        <i class="fa fa-phone fa-fw"></i>{{ account.profile.phone_number.phone_number|default:"N/A" }}{% if account.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ account.profile.phone_number.phone_number_ext }}){% endif %}
+                        <i class="bi bi-phone"></i>{{ account.profile.phone_number.phone_number|default:"N/A" }}{% if account.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ account.profile.phone_number.phone_number_ext }}){% endif %}
                         <span class="vert-delimiter">|</span>
-                        <i class="fa fa-mobile-phone fa-fw"></i>{{ account.profile.phone_number.mobile_phone_number|default:"N/A" }}{% if account.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ account.profile.phone_number.mobile_phone_number_ext }}){% endif %}
+                        <i class="bi bi-mobile-phone"></i>{{ account.profile.phone_number.mobile_phone_number|default:"N/A" }}{% if account.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ account.profile.phone_number.mobile_phone_number_ext }}){% endif %}
                     </p>
                     <p>
-                        <i class="fa fa-envelope fa-fw"></i>{{ account.profile.user.email }}
+                        <i class="bi bi-envelope"></i>{{ account.profile.user.email }}
                     </p>
                 </address>
             {% else %}
@@ -115,7 +115,7 @@ Foreign Profile - Info
 
             {% if need_to_know_profile_details %}
                 <address>
-                    <p><i class="fa fa-calendar fa-fw"></i>{{ account.profile.birth_day }}</p>
+                    <p><i class="bi bi-calendar"></i>{{ account.profile.birth_day }}</p>
                 </address>
             {% endif %}
             </div>
@@ -138,7 +138,7 @@ Foreign Profile - Info
         </div>
     </div>
 
-    <div class="col-xs-24 col-sm-8 col-md-6 right-sidebar">
+    <div id="tips" class="col-md-3 right-sidebar">
         <div class="hidden-xs">
             {% include "accounts/fragments/foreign-profile-media-status-breakdown.html" %}
         </div>

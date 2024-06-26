@@ -82,40 +82,6 @@ body {
     }
 
     // ------------------------------------------------------------------------
-    // --- Navigation Sub-Header
-    // ------------------------------------------------------------------------
-    .nav-sub-header {
-        color:              @gray-dark;
-        text-align:         center;
-        text-transform:     uppercase;
-        background-color:   @white;
-        padding-bottom:     10px;
-
-        .sub-btn {
-            padding-right:      8px;
-            padding-left:       8px;
-
-            &:last-child {
-                padding-right:  15px;
-                padding-left:   1px;
-            }
-            &:first-child {
-                padding-right:  1px;
-                padding-left:   15px;
-            }
-        }
-        a {
-            color:          @gray-dark;
-            width:          100%;
-            border:         1px solid @gray-dark;
-
-            i {
-                margin-right:   5px;
-            }
-        }
-    }
-
-    // ------------------------------------------------------------------------
     // --- Control Buttons Section
     // ------------------------------------------------------------------------
     .controllers {
@@ -177,7 +143,7 @@ body {
     // ------------------------------------------------------------------------
     .feature {
         text-align:         center;
-        padding-top:        50px;
+        padding-top:        1rem;
 
         i {
             &[class^="flaticon-"]:before,
@@ -260,23 +226,6 @@ body {
 // ----------------------------------------------------------------------------
 @media (max-width: 479px) {
     /* <= 479px */
-    body {
-        .nav-sub-header {
-            a {
-                i {
-                    margin-right:   0;
-                }
-            }
-
-            .btn {
-                padding:    6px;
-            }
-        }
-    }
-
-    .container {
-        //padding:            0px;
-    }
 }
 @media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
     /* <= 480px <= 767px */

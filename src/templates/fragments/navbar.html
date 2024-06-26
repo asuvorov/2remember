@@ -2,35 +2,21 @@
 {% load static %}
 {% load imagekit %}
 
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-body-tertiary">
     <div class="container-fluid">
-        <a class="navbar-brand" href="#">2Remember</a>
+        <a class="navbar-brand" href="{% url 'index' %}">2Remember</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarCollapse">
-            <!-- Start Top Search -->
-            <form action="/search/" method="GET">
-                <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
-
-                    <input type="hidden" name="models" value="blog.post" id="id_models_0">
-                    <input type="hidden" name="models" value="events.event" id="id_models_1">
-                    <input type="hidden" name="models" value="home.faq" id="id_models_5">
-                    <input type="hidden" name="models" value="organizations.organization" id="id_models_6">
-                    <input type="hidden" name="models" value="accounts.userprofile" id="id_models_7">
-
-                    <input name="q" type="text" class="form-control" placeholder="Search">
-
-                    <span class="input-group-addon close-search"><i class="fa fa-times fa-fw"></i></span>
-                </div>
-            </form>
-            <!-- End Top Search -->
-
-            <!-- Start Header Navigation -->
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
+            <!-- START HEADER NAVIGATION -->
+            <ul class="nav navbar-nav me-auto col-12 col-lg-auto me-lg-auto mb-2 mb-md-0 justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'10' == '/accounts/' %} active{% endif %}" href="{% url 'account-list' %}">{% trans "Members" %}</a>
+                </li>
+            {% comment %}
                 <li class="nav-item dropdown {% if request.path|slice:'10' == '/accounts/' %} active {% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Members" %}</a>
                     <ul class="dropdown-menu">
@@ -43,6 +29,11 @@
                         <li><a class="dropdown-item" href="{% url 'account-online-list' %}">{% trans "Online" %}</a></li>
                     </ul>
                 </li>
+            {% endcomment %}
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'12' == '/events/' %} active{% endif %}" href="{% url 'event-list' %}">{% trans "Events" %}</a>
+                </li>
+            {% comment %}
                 <li class="nav-item dropdown {% if request.path|slice:'12' == '/events/' %} active {% endif %}">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Events" %}</a>
                     <ul class="dropdown-menu">
@@ -52,36 +43,19 @@
                         <li><a class="dropdown-item" href="{% url 'event-featured-list' %}">{% trans "Featured" %}</a></li>
                     {% if request.user.is_authenticated and request.user.profile.is_completed %}
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'event-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Create" %}</a></li>
+                        <li><a class="dropdown-item" href="{% url 'event-create' %}"><i class="bi bi-plus"></i> {% trans "Create" %}</a></li>
                     {% endif %}
                     </ul>
                 </li>
-                <li class="nav-item {% if request.path|slice:'15' == '/organizations/' %} active {% endif %}">
-                    <a class="nav-link active" href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
+            {% endcomment %}
+                <li class="nav-item {% if request.path|slice:'15' == '/places/' %} active {% endif %}">
+                    <a class="nav-link disabled" href="#" aria-disabled="true">{% trans "Places" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'15' == '/organizations/' %} active{% endif %}" href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
                 </li>
 
-                <li class="nav-item dropdown">
-                {% if user.is_authenticated %}
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if request.user.profile.avatar %}
-                        {% generateimage "header:thumbnail" source=request.user.profile.avatar -- alt=request.user.profile.auth_name %}
-                    {% else %}
-                        <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
-                    {% endif %}
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'my-profile-view' %}">{{ request.user.profile.auth_name }}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'signout' %}">{% trans "Sign out" %}</a></li>
-                    </ul>
-                {% else %}
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-user fa-fw"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'signup' %}">{% trans "Sign up" %}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'signin' %}">{% trans "Log in" %}</a></li>
-                    </ul>
-                {% endif %}
-                </li>
-
+            {% comment %}
                 <form id="locale" class="d-flex" action="{% url 'set_language' %}" method="POST">
                     {% csrf_token %}
 
@@ -96,20 +70,64 @@
                     </select>
                     <input type="submit" class="btn-primary" value="change" style="display:none;" />
                 </form>
+            {% endcomment %}
 
-                <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" style="float:left; margin-right:5px;">
-                    <input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----
-                    ">
-                    <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                    <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                </form>
+                <li>
+                    <form action="https://www.paypal.com/donate" method="post" target="_top">
+                        <input type="hidden" name="business" value="LGZD2EA4KZYAG" />
+                        <input type="hidden" name="no_recurring" value="0" />
+                        <input type="hidden" name="item_name" value="Thank you for your Support. Your Donation makes a Difference!" />
+                        <input type="hidden" name="currency_code" value="USD" />
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                    </form>
+                </li>
             </ul>
-            <!-- End Header Navigation -->
+            <!--  END  HEADER NAVIGATION -->
 
-            <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
+            <!-- START TOP SEARCH -->
+            <form action="/search/" method="GET" class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+
+                    <input type="hidden" name="models" value="blog.post" id="id_models_0">
+                    <input type="hidden" name="models" value="events.event" id="id_models_1">
+                    <input type="hidden" name="models" value="home.faq" id="id_models_5">
+                    <input type="hidden" name="models" value="organizations.organization" id="id_models_6">
+                    <input type="hidden" name="models" value="accounts.userprofile" id="id_models_7">
+
+                    <input name="q" type="text" class="form-control" placeholder="Search">
+
+                    <span class="input-group-text close-search"><i class="bi bi-x-lg"></i></span>
+                </div>
             </form>
+            <!--  END TOP SEARCH -->
+
+            <!-- START AUTHENTICATION -->
+            <div class="btn-group text-end">
+            {% if user.is_authenticated %}
+                <a class="nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                {% if request.user.profile.avatar %}
+                    {% generateimage "header:thumbnail" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='rounded-circle' %}
+                {% else %}
+                    <img class="rounded-circle" src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                {% endif %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'my-profile-view' %}">{{ request.user.profile.auth_name }}</a></li>
+                    <li><a class="dropdown-item" href="{% url 'signout' %}">{% trans "Sign out" %}</a></li>
+                </ul>
+            {% else %}
+                <a class="nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                    <img class="rounded-circle" src="{{ STATIC_URL }}img/default.png" height="30" width="30" alt="" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'signup' %}">{% trans "Sign up" %}</a></li>
+                    <li><a class="dropdown-item" href="{% url 'signin' %}">{% trans "Log in" %}</a></li>
+                </ul>
+            {% endif %}
+            </div>
+            <!--  END  AUTHENTICATION -->
         </div>
     </div>
 </nav>

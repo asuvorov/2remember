@@ -6,44 +6,34 @@
         :<account>
 {% endcomment %}
 
-<div class="col-xs-12 col-sm-6 col-md-4 card-thumb">
-    <div class="thumbnail">
+<div class="col">
+    <div class="card mb-3 shadow bg-body rounded">
     {% with account.user.profile as profile %}
-        <a href="{% url 'profile-view' profile.id %}">
-            <div class="member-card hovercard">
-                <div class="card-background">
-            {% if profile.avatar %}
-                {% generateimage "common:thumbnail_bigger" source=profile.avatar -- alt=profile.auth_name %}
-            {% else %}
-                <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="Team Member - SaneSide Platform." />
-            {% endif %}
-                </div>
-
-                <div class="user-avatar">
-                {% if profile.avatar %}
-                    {% generateimage "common:thumbnail_bigger" source=profile.avatar -- alt=profile.auth_name %}
-                {% else %}
-                    <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="Team Member - SaneSide Platform." />
-                {% endif %}
-                </div>
-
-                <div class="card-info">
-                    <div class="card-title">
-                    {% if profile.short_name %}
-                        {{ profile.short_name }}
-                    {% elif profile.nickname %}
-                        {{ profile.nickname }}
-                    {% else %}
-                        <i class="fa fa-user-secret fa-fw"></i>
-                    {% endif %}
-                    </div>
-
-                    <div class="card-position">
-                        <p>{{ account.position }}</p>
-                    </div>
-                </div>
-            </div>
+        <a href="{% url 'profile-view' account.user_id %}">
+        {% if profile.avatar %}
+            {% generateimage "common:thumbnail_bigger" source=profile.avatar -- alt=profile.auth_name class='img-fluid rounded-top' %}
+        {% else %}
+            <img src="{{ STATIC_URL }}img/no-avatar.png" class="img-fluid rounded-top" height="400" width="400" alt="Team Member - 2Remember Platform." />
+        {% endif %}
         </a>
+
+        <div class="card-header bg-transparent">
+            <h5>
+            {% if profile.short_name %}
+                {{ profile.short_name }}
+            {% elif profile.nickname %}
+                {{ profile.nickname }}
+            {% else %}
+                <i class="bi bi-user-secret"></i>
+            {% endif %}
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <p class="card-text">{{ account.position }}</p>
+        </div>
+
+        <!-- <div class="card-footer bg-transparent"></div> -->
     {% endwith %}
     </div>
 </div>

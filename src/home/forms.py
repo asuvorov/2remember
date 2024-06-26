@@ -23,13 +23,15 @@ class ContactUsForm(forms.Form):
     name = forms.CharField(
         widget=forms.TextInput(
             attrs={
+                "class":        "form-control",
                 "placeholder":  _("Name"),
                 "value":        "",
                 "maxlength":    30,
             }))
     email = forms.EmailField(
-        widget=forms.TextInput(
+        widget=forms.EmailInput(
             attrs={
+                "class":        "form-control",
                 "placeholder":  _("Email"),
                 "value":        "",
                 "maxlength":    100,
@@ -37,6 +39,7 @@ class ContactUsForm(forms.Form):
     subject = forms.CharField(
         widget=forms.TextInput(
             attrs={
+                "class":        "form-control",
                 "placeholder":  _("Subject"),
                 "value":        "",
                 "maxlength":    80,
@@ -44,6 +47,7 @@ class ContactUsForm(forms.Form):
     message = forms.CharField(
         widget=forms.Textarea(
             attrs={
+                "class":        "form-control",
                 "placeholder":  _("Enter a Message here..."),
                 "value":        "",
                 "maxlength":    1000,

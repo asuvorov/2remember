@@ -23,13 +23,6 @@ from .forms import CreateEditPostForm
 from .models import Post
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ DESKTOP
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @cache_page(60 * 5)
 def post_list(request):
     """List of the all Blog Posts."""
@@ -57,9 +50,7 @@ def post_list(request):
 
     if tag_id:
         try:
-            posts = posts.filter(
-                tags__id=tag_id,
-            ).distinct()
+            posts = posts.filter(tags__id=tag_id).distinct()
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
@@ -145,17 +136,14 @@ def post_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Retrieve Blog Post
     # -------------------------------------------------------------------------
-    post = get_object_or_404(
-        Post,
-        slug=slug)
-
+    post = get_object_or_404(Post, slug=slug)
     if post.is_closed:
         raise Http404
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter
     # -------------------------------------------------------------------------
-    post.increase_views_count(request)
+    # post.increase_views_count(request)
 
     return render(
         request, "blog/post-details.html", {
@@ -169,10 +157,7 @@ def post_edit(request, slug):
     # -------------------------------------------------------------------------
     # --- Retrieve Blog Post
     # -------------------------------------------------------------------------
-    post = get_object_or_404(
-        Post,
-        slug=slug)
-
+    post = get_object_or_404(Post, slug=slug)
     if post.is_closed:
         raise Http404
 

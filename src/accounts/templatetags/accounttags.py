@@ -9,15 +9,17 @@ from django.db.models import Sum, Q
 from events.models import (
     Event,
     EventStatus,
-    Participation,
-    ParticipationStatus)
+    # Participation,
+    # ParticipationStatus
+    )
 from organizations.models import (
     Organization,
-    OrganizationStaff)
+    # OrganizationStaff
+    )
 
-from .. models import (
-    WhoCanSeeMembers,
-    WhoCanSeeAdmins)
+# from .. models import (
+#     WhoCanSeeMembers,
+#     WhoCanSeeAdmins)
 
 
 register = template.Library()
@@ -40,14 +42,15 @@ def check_privacy(request, account, flag_members, flag_admins):
     # -------------------------------------------------------------------------
     # --- Platform Admins.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated and request.user.is_staff:
+    if (
+            request.user.is_authenticated and
+            request.user.is_staff):
         return True
 
     # -------------------------------------------------------------------------
     # --- Check the Privacy Members.
     # -------------------------------------------------------------------------
-    if (
-            flag_members == WhoCanSeeMembers.NO_ONE):
+    if flag_members == WhoCanSeeMembers.NO_ONE:
         # --- No-one.
 
         # --- Proceed to the Event Admins (Organizers) Privacy.
@@ -190,21 +193,23 @@ def need_to_know_profile_details_tag(request, account):
 
     (e.g. Avatar, Name, Bio, Gender, Birthday).
     """
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.profile_details,
-        flag_admins=account.privacy_admins.profile_details)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.profile_details,
+    #     flag_admins=account.privacy_admins.profile_details)
 
 
 @register.simple_tag
 def need_to_know_contact_details_tag(request, account):
     """Who can see the Contact Details (e.g. Address, Phone #, Email)."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.contact_details,
-        flag_admins=account.privacy_admins.contact_details)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.contact_details,
+    #     flag_admins=account.privacy_admins.contact_details)
 
 
 @register.simple_tag
@@ -267,15 +272,15 @@ def need_to_know_rejected_participations_tag(request, account):
 @register.simple_tag
 def sum_of_hours_spent_tag(account):
     """Docstring."""
-    sum_of_hours_spent = Event.objects.filter(
-        pk__in=Participation.objects.filter(
-            user=account,
-            status=ParticipationStatus.ACKNOWLEDGED
-        ).values_list("event_id", flat=True)
-    ).aggregate(Sum("duration"))
+    # sum_of_hours_spent = Event.objects.filter(
+    #     pk__in=Participation.objects.filter(
+    #         user=account,
+    #         status=ParticipationStatus.ACKNOWLEDGED
+    #     ).values_list("event_id", flat=True)
+    # ).aggregate(Sum("duration"))
 
-    if sum_of_hours_spent["duration__sum"]:
-        return sum_of_hours_spent["duration__sum"]
+    # if sum_of_hours_spent["duration__sum"]:
+    #     return sum_of_hours_spent["duration__sum"]
 
     return 0
 

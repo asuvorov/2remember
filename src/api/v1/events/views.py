@@ -26,9 +26,10 @@ from events.models import (
     Event,
     EventMode,
     EventStatus,
-    Participation,
-    ParticipationStatus,
-    Role)
+    # Participation,
+    # ParticipationStatus,
+    # Role
+    )
 
 from .utils import (
     event_access_check_required,
@@ -101,7 +102,7 @@ class EventUpcomingViewSet(APIView):
             data.append({
                 "date":         event.start_date.isoformat(),
                 "badge":        True,
-                "title":        event.name,
+                "title":        event.title,
                 "body":         event.description,
                 "footer":       event.address.full_address if event.address else "",
                 "classname":    "",

@@ -13,7 +13,7 @@
                 <div class="thumbnail">
                     <a href="{% url 'event-details' event.slug %}">
                     {% if event.avatar %}
-                        {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.name %}
+                        {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.title %}
                     {% else %}
                     {% endif %}
                     </a>
@@ -23,11 +23,11 @@
             <div class="col-xs-24 col-sm-18 col-md-18 col-lg-18">
                 <strong>
                     <p>
-                        Event <a href="{% url 'event-details' event.slug %}">{{ event.name|truncatechars:50 }}</a>
+                        Event <a href="{% url 'event-details' event.slug %}">{{ event.title|truncatechars:50 }}</a>
 
                     {% if event.get_rating_avg > 0 %}
                         <div style="color:orange;">
-                            <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
+                            <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
                         </div>
                     {% endif %}
                     </p>
@@ -48,7 +48,7 @@
                 </blockquote>
 
                 <div class="learn-more">
-                    <a class="btn btn-warning btn-centered pull-right" href="{% url 'event-details' event.slug %}" style="width:auto;">{% trans "LEARN MORE" %} <i class="fa fa-chevron-right fa-fw"></i></a>
+                    <a class="btn btn-warning pull-right" href="{% url 'event-details' event.slug %}" style="width:auto;">{% trans "LEARN MORE" %} <i class="bi bi-chevron-right"></i></a>
                 </div>
             </div>
         </div>

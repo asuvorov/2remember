@@ -8,10 +8,12 @@
 
 {% comment %}
     Input Parameters:
-        :<form>
-        :<aform>
-        :<formset_phone>
-        :<formset_social>
+        :<request> - Request
+
+        :<form>           - Organization Form
+        :<aform>          - Address Form
+        :<formset_phone>  - Phone Numbers Formset
+        :<formset_social> - Social Links Formset
 {% endcomment %}
 
 {% block title %}{% trans "Create Organization" %} - {{ block.super }}{% endblock %}
@@ -31,7 +33,7 @@
             <li class="breadcrumb-item active" aria-current="page">{% trans "Create" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -41,39 +43,40 @@
             <form id="create-organization-form" role="form" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
-                <div id="org-appearance">
+                <!-- START ORGANIZATION APPEARENCE -->
+                <section id="organization-appearance">
                     <h3>{% trans "Appearance" %}</h3>
 
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                            <input id="id_preview" class="form-control" type="file">
-                            <div class="form-group {% if form.preview.errors %}has-error{% endif %}">
-                                <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
+                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="col-md-6">
                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                            <input id="id_cover" class="form-control" type="file">
-                            <div class="form-group {% if form.cover.errors %}has-error{% endif %}">
-                                <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
+                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
-                </div>
+                </section>
+                <!--  END  ORGANIZATION APPEARENCE -->
 
-                <div id="org-description">
+                <hr>
+
+                <!-- START ORGANIZATION DESCRIPTION -->
+                <section id="organization-description">
                     <h3>{% trans "Description" %}</h3>
 
-                    <div class="row g-3">
+                    <div class="row g-2">
                         <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
                             {{ form.title }}
-                            {{ form.title.label_tag }}
+                            <label class="control-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
                             {{ form.description }}
-                            {{ form.description.label_tag }}
+                            <label class="control-label">{{ form.description.label }}{% if form.description.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
@@ -90,22 +93,21 @@
 
                         <div class="form-floating col-md-4 {% if form.website.errors %}has-error{% endif %}">
                             {{ form.website }}
-                            {{ form.website.label_tag }}
+                            <label class="control-label">{{ form.website.label }}{% if form.website.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.website.errors %}{% for error in form.website.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-4 {% if form.video.errors %}has-error{% endif %}">
                             {{ form.video }}
-                            {{ form.video.label_tag }}
+                            <label class="control-label">{{ form.video.label }}{% if form.video.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.video.errors %}{% for error in form.video.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-4 {% if form.email.errors %}has-error{% endif %}">
                             {{ form.email }}
-                            {{ form.email.label_tag }}
+                            <label class="control-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <hr>
-
+                    {% comment %}
                         <div class="checkbox checkbox-primary">
                             {{ form.is_hidden }}
                             {{ form.is_hidden.label_tag }}
@@ -113,75 +115,66 @@
                             <p class="help">{{ form.is_hidden.help_text|safe }}</p>
                         {% endif %}
                         </div>
+                    {% endcomment %}
                     </div>
-                </div>
+                </section>
+                <!--  END  ORGANIZATION DESCRIPTION -->
 
-                <div id="org-location">
+                <hr>
+
+                <!-- START ORGANIZATION LOCATION -->
+                <section id="organization-location">
                     <h3>{% trans "Location" %}</h3>
-
-                    <div class="checkbox checkbox-primary">
-                        {{ form.addressless }}
-                        {{ form.addressless.label_tag }}
-                    </div>
-
                     {% include "app/fragments/address.html" %}
-                </div>
+                </section>
+                <!--  END  ORGANIZATION LOCATION -->
 
-                <div id="org-phones">
+                <hr>
+
+                <!-- START ORGANIZATION PHONE NUMBERS -->
+                <section id="organization-phones">
                     <h3>{% trans "Phone Numbers" %}</h3>
                     {% include "app/fragments/formset-phone.html" %}
-                </div>
+                </section>
+                <!--  END  ORGANIZATION PHONE NUMBERS -->
 
-                <div id="org-contact-person">
+                <hr>
+
+                <!-- START ORGANIZATION CONTACT PERSON -->
+            {% comment %}
+                <section id="organization-contact-person">
                     <h3>{% trans "Contact Person" %}</h3>
+                    {% include "app/fragments/contact-person.html" %}
+                </section>
+                <!--  END  ORGANIZATION CONTACT PERSON -->
 
-                    <div class="form-group">
-                    {% for choice in form.contact %}
-                        <div class="radio radio-primary">
-                            {{ choice.tag }}
-                            <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                        </div>
-                    {% endfor %}
-                    </div>
+                <hr>
+            {% endcomment %}
 
-                    <div id="alt_person_creds" class="row g-3">
-                        <div class="form-floating col-md-4 {% if form.alt_person_fullname.errors %}has-error{% endif %}">
-                            {{ form.alt_person_fullname }}
-                            {{ form.alt_person_fullname.label_tag }}
-                            <span class="help-block">{% if form.alt_person_fullname.errors %}{% for error in form.alt_person_fullname.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                        <div class="form-floating col-md-4 {% if form.alt_person_email.errors %}has-error{% endif %}">
-                            {{ form.alt_person_email }}
-                            {{ form.alt_person_email.label_tag }}
-                            <span class="help-block">{% if form.alt_person_email.errors %}{% for error in form.alt_person_email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                        <div class="form-floating col-md-4 {% if form.alt_person_phone.errors %}has-error{% endif %}">
-                            {{ form.alt_person_phone }}
-                            {{ form.alt_person_phone.label_tag }}
-                            <span class="help-block">{{ form.alt_person_phone.help_text }} {% if form.alt_person_phone.errors %}{% for error in form.alt_person_phone.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="org-social-links">
+                <!-- START ORGANIZATION SOCIAL LINKS -->
+                <section id="organization-social-links">
                     <h3>{% trans "Social Links" %}</h3>
                     {% include "app/fragments/formset-social.html" %}
-                </div>
+                </section>
+                <!--  END  ORGANIZATION SOCIAL LINKS -->
 
-                <div id="org-complete">
+                <hr>
+
+                <!-- START ORGANIZATION COMPLETE -->
+                <section id="organization-complete">
                     <h3>{% trans "Complete" %}</h3>
-
                     <p>{% trans "You have successfully completed all Steps." %}</p>
 
                     <div class="row">
                         <div class="col-12 feature">
-                            <a href="#" name="org-create" class="org-create">
+                            <a href="#" name="organization-create" class="organization-create">
                                 <span><i class="flaticon-rounded25"></i></span>
                                 <p>{% trans "Create this Organization" %}</p>
                             </a>
                         </div>
                     </div>
-                </div>
+                </section>
+                <!--  END  ORGANIZATION COMPLETE -->
             </form>
         </div>
 
@@ -190,7 +183,7 @@
 
             <div class="alert alert-info">
             {% blocktrans %}
-                You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@saneside.com">contact Support</a>.
+                You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
             {% endblocktrans %}
             </div>
 
@@ -207,14 +200,14 @@
     /*************************************************************************/
     /*** Form Submitting                                                   ***/
     /*************************************************************************/
-    $("a[name='org-create']").click(function () {
+    $("a[name='organization-create']").click(function () {
         // --------------------------------------------------------------------
         // --- Check, if Preview and Cover Input are NOT empty.
-        if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
-            alert("Please, select the Preview and Cover Images.");
+        // if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
+        //     alert("Please, select the Preview and Cover Images.");
 
-            return false;
-        }
+        //     return false;
+        // }
 
         $("#spinner").fadeIn("slow");
         $("form#create-organization-form").submit();
@@ -269,19 +262,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Entity has Address?                                           ***/
-        /*********************************************************************/
-        $("address").show();
-
-        if ($("#id_addressless").prop("checked")) {
-            $("address").hide();
-        }
-
-        $("#id_addressless").click(function () {
-            $("address").toggle("slow");
-        });
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/

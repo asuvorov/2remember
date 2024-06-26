@@ -21,7 +21,7 @@
                         {% if request.user.profile.avatar %}
                             {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
                         {% else %}
-                            <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar-{{ request.user.profile.stat_gender_name|default:'male' }}.png" height="400" width="400" alt="" />
+                            <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
                         {% endif %}
                             <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:100%;">
                                 <div class="progress-bar overflow-visible bg-{% if request.user.profile.completeness_total > 75 %}success{% elif request.user.profile.completeness_total > 50 %}info{% elif request.user.profile.completeness_total > 25 %}warning{% else %}danger{% endif %} progress-bar-striped active" role="progressbar" style="width:{{ request.user.profile.completeness_total }}%">{{ request.user.profile.completeness_total }}% {% trans "Complete" %}</div>
@@ -31,38 +31,30 @@
                         <div class="col-md-9">
                             <div class="card-body">
                                 <h4 class="card-title">{{ request.user.profile.full_name }}</h4>
+                                <p class="card-text"><small class="text-muted">{{ request.user.profile.bio|striptags|default:"N/A" }}</small></p><hr>
 
-                                <hr>
+                                <h5>{% trans "Contact Information" %}</h5>
+                                <!-- <span class="badge text-bg-warning">{% trans "This Information can only be seen by the Organizers of the Events you participate in." %}</span> -->
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if request.user.profile.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ request.user.profile.address.full_address|default:"N/A" }}
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
 
-                                <h5>{% trans "Bio" %}</h5>
-                                <blockquote>
-                                    <p>{{ request.user.profile.bio|default:"N/A" }}</p>
-                                </blockquote>
-
-                                <hr>
-
-                                <h5>{% trans "Contact Details" %}</h5>
-                                <span class="badge text-bg-warning">{% trans "This Information can only be seen by the Organizers of the Events you participate in." %}</span>
-
-                                <address>
-                                    <p><i class="bi bi-pin-map"></i>{{ request.user.profile.address.full_address|default:"N/A" }}</p>
-                                {% if request.user.profile.address.notes %}
-                                    <blockquote>
-                                        <p>{{ request.user.profile.address.notes }}</p>
-                                    </blockquote>
+                                    {% if request.user.profile.address.notes %}
+                                        <p class="card-text"><small class="text-muted">{{ request.user.profile.addressnotes }}</small></p>
+                                    {% endif %}
                                 {% endif %}
 
-                                    <p>
-                                        <i class="bi bi-telephone"></i>{{ request.user.profile.phone_number.phone_number|default:"N/A" }}{% if request.user.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ request.user.profile.phone_number.phone_number_ext }}){% endif %}
-                                        <span class="vert-delimiter">|</span>
-                                        <i class="bi bi-phone"></i>{{ request.user.profile.phone_number.mobile_phone_number|default:"N/A" }}{% if request.user.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ request.user.profile.phone_number.mobile_phone_number_ext }}){% endif %}
-                                    </p>
-                                    <p><i class="bi bi-envelope"></i>{{ request.user.profile.user.email }}</p>
-                                    <p><i class="bi bi-calendar"></i>{{ request.user.profile.birth_day }}</p>
-                                </address>
+                                    <!-- PHONE NUMBERS -->
+                                    <br/>
 
-                                <hr>
-
+                                    <i class="bi bi-envelope"></i>&nbsp;{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
+                                    <i class="bi bi-calendar"></i>&nbsp;{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+{% comment %}
                                 <p>
                                     <span class="label label-success">{% trans "My Organizations" %}</span><br/>
                                 {% for organization in created_organizations %}
@@ -71,7 +63,7 @@
                                     {% trans "There are no Organizations yet." %}<br/>
 
                                     {% if request.user.profile.is_completed %}
-                                        <a href="{% url 'organization-create' %}"><i class="fa fa-plus fa-fw"></i> {% blocktrans %}Create</a> new Organization.{% endblocktrans %}
+                                        <a href="{% url 'organization-create' %}"><i class="bi bi-plus"></i> {% blocktrans %}Create</a> new Organization.{% endblocktrans %}
                                     {% endif %}
                                 {% endfor %}
                                 </p>
@@ -85,9 +77,21 @@
                                     {% trans "There are no related Organizations yet." %}
                                 {% endfor %}
                                 </p>
+{% endcomment %}
+                            </div>
 
-                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                                <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                            <div class="card-footer bg-transparent border-success">
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        <i class="bi bi-feather"></i>&nbsp;{{ request.user.profile.get_comments_count }}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-eye"></i>&nbsp;{{ request.user.profile.get_views_count }}
+
+                                        <br/>
+
+                                        {% trans "Last updated" %} {{ request.user.profile.modified|timesince }} {% trans "ago" %}
+                                    </small>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -165,19 +169,10 @@
                 <h4>{% trans "Spotlight" %}</h4>
             </div>
 
+            <!-- Sponsored Links -->
             <div id="sponsored-links">
                 <h4>{% trans "Sponsored Links" %}</h4>
-
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Unit1 -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9496875666537518"
-                     data-ad-slot="6843889782"
-                     data-ad-format="auto"></ins>
-                <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
+                {% include "app/fragments/sponsored-links-side.html" %}
             </div>
         </div>
     </div>

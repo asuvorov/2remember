@@ -16,7 +16,7 @@ Foreign Profile - Completed Events.
             <thead>
                 <tr class="active">
                     <th colspan="2">
-                        {% trans "Event" %} <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a><br/>
+                        {% trans "Event" %} <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a><br/>
                     </th>
                 </tr>
             </thead>
@@ -69,11 +69,11 @@ Foreign Profile - Completed Events.
                 <td>
                     <a href="{% url 'event-details' participation.event.slug %}">
                     {% if participation.event.avatar %}
-                        {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.name %}
+                        {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.title %}
                     {% endif %}
                     </a>
                 </td>
-                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a></td>
+                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a></td>
                 <td>
                     <span class="desc">{{ participation.selfreflection_activity_text }}</span>
                 </td>

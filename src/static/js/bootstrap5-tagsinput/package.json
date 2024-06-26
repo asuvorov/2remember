@@ -1,0 +1,13 @@
+{
+  "name": "bootstrap5-tagsinput",
+  "title": "Bootstrap 5 Tagsinput",
+  "description": "jQuery tags input plugin based on Twitter Bootstrap 5",
+  "version": "5.0",
+  "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/Aigent/bootstrap5-tagsinput.git"
+    },
+   "license": "MIT",
+  "homepage": "https://github.com/Aigent/bootstrap5-tagsinput"
+}

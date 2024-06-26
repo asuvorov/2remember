@@ -21,30 +21,34 @@ def get_event_list(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        events = Event.objects.filter(
-            Q(organization=None) |
-            Q(organization__is_hidden=False) |
-            Q(
-                Q(organization__pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(organization__pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                organization__is_hidden=True,
-            ),
-        )
-    else:
-        events = Event.objects.filter(
-            Q(organization=None) |
-            Q(organization__is_hidden=False),
-        )
+    # if request.user.is_authenticated:
+    #     events = Event.objects.filter(
+    #         Q(organization=None) |
+    #         Q(organization__is_hidden=False) |
+    #         Q(
+    #             Q(organization__pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(organization__pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             organization__is_hidden=True,
+    #         ),
+    #     )
+    # else:
+    #     events = Event.objects.filter(
+    #         Q(organization=None) |
+    #         Q(organization__is_hidden=False),
+    #     )
+    events = Event.objects.filter(
+        Q(organization=None) |
+        Q(organization__is_hidden=False),
+    )
 
     # event_filter = EventFilter(
     #     request.GET,

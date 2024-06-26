@@ -11,7 +11,7 @@
             <div class="col-xs-24 col-sm-24 col-md-24">
                 <div class="breadcrumbs pull-right">
                     <a href="/">{% trans "Home" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
+                    <i class="bi bi-chevron-circle-right"></i>
                     <a href="{% url 'faq' %}">{% trans "FAQ" %}</a>
                 </div>
             </div>
@@ -22,10 +22,10 @@
 <div class="container">
     <div id="faq">
         <div class="row">
-            <div class="col-xs-24 col-sm-16 col-md-18">
+            <div class="col-md-9">
             {% if request.user.is_staff %}
                 <div class="controllers">
-                    <a class="btn btn-rounded pull-right" href="{% url 'faq-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+                    <a class="btn pull-right" href="{% url 'faq-create' %}"><i class="bi bi-plus"></i> {% trans "Add" %}</a>
                 </div>
             {% endif %}
 
@@ -37,23 +37,12 @@
                 <div id="page-selection"></div>
             </div>
 
-            <div class="col-xs-24 col-sm-8 col-md-6 right-sidebar">
-            {% if ENVIRONMENT == "staging" or ENVIRONMENT == "production" %}
+            <div id="tips" class="col-md-3 right-sidebar">
+                <!-- Sponsored Links -->
                 <div id="sponsored-links">
                     <h4>{% trans "Sponsored Links" %}</h4>
-
-                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- FAQ List -->
-                    <ins class="adsbygoogle"
-                         style="display:block"
-                         data-ad-client="ca-pub-9496875666537518"
-                         data-ad-slot="2058775686"
-                         data-ad-format="auto"></ins>
-                    <script>
-                    (adsbygoogle = window.adsbygoogle || []).push({});
-                    </script>
+                    {% include "app/fragments/sponsored-links-side.html" %}
                 </div>
-            {% endif %}
             </div>
         </div>
     </div>

@@ -53,7 +53,7 @@
                     $("#docs").append(", ");
                 }
 
-                $("<li class='file-container' />").html("<a href='" + obj.value + "'>" + (obj.value.split("/").pop()) + "</a> <a href='#' class='btn btn-sm btn-danger' onClick='removeFile(" + key + ", this)'><i class='fa fa-times'></i></a>").appendTo("#docs");
+                $("<li class='file-container' />").html("<a href='" + obj.value + "'>" + (obj.value.split("/").pop()) + "</a> <a href='#' class='btn btn-sm btn-danger' onClick='removeFile(" + key + ", this)'><i class='bi bi-times'></i></a>").appendTo("#docs");
                 $("#docs-label").show();
 
                 saved_documents++;
@@ -74,7 +74,7 @@
                 $.each(data.result.files, function (index, file) {
                     // Render Thumbnails
                     if (is_image(file.name)) {
-                        $("<div class='gallery-container' />").html("<i class='fa fa-times-circle-o' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.name + "' width='100'>").appendTo("#files");
+                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.name + "' width='100'>").appendTo("#files");
                         $("#files-label").show()
                     }
 
@@ -122,7 +122,7 @@
                 $.each(data.result.files, function (index, file) {
                     // Render Thumbnails
                     if (!is_image(file.name)) {
-                        $("<div class='documents-container' />").html("<i class='fa fa-times-circle-o' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.name.split("/").pop()) + "<br/>").appendTo("#docs");
+                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.name.split("/").pop()) + "<br/>").appendTo("#docs");
                         $("#docs-label").show()
                     }
 

@@ -37,40 +37,108 @@
 <div id="event-list" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
-                    <div style="display:inline;">
-                        <div class="category-item">
-                            <a href="#" title="All" category="">
-                                <i class="bi bi-joystick" style="background-color:#999;"></i>
-                            </a>
-                        </div>
-                    {% for event_category_1, event_category_name in event_category_choices %}
-                        {% for event_category_2, event_category_color in event_category_colors %}
-                            {% for event_category_3, event_category_icon in event_category_icons %}
-                                {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
-                                    <div class="category-item">
-                                        <a href="#" title="{{ event_category_name }}" category="{{ event_category_1 }}">
-                                            <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
+            <!-- START CONTROLLERS -->
+            <div class="controllers">
+                <a class="btn btn-secondary" data-toggle="collapse" href="#collapse-event-filter" aria-expanded="false" aria-controls="collapse-event-filter"><i class="bi bi-filter"></i> {% trans "Filter" %}</a>
+                <div style="display:inline;">
+                    <div class="category-item">
+                        <a href="#" title="All" category="">
+                            <i class="bi bi-joystick" style="background-color:#999;"></i>
+                        </a>
+                    </div>
+                {% for event_category_1, event_category_name in event_category_choices %}
+                    {% for event_category_2, event_category_color in event_category_colors %}
+                        {% for event_category_3, event_category_icon in event_category_icons %}
+                            {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
+                                <div class="category-item">
+                                    <a href="#" title="{{ event_category_name }}" category="{{ event_category_1 }}">
+                                        <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
                         {% endfor %}
                     {% endfor %}
+                {% endfor %}
+                </div>
+
+            {% if request.user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'event-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+            {% endif %}
+            </div>
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <div id="collapse-event-filter" class="collapse">
+                <div class="row">
+                    <div class="col-xs-24 col-sm-16 col-md-12 col-lg-12">
+                        <form id="filter-event-form" role="form" action="" method="GET">
+                            <div class="form-group {% if filter_form.name.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ filter_form.name.label }}</label>
+
+                                {{ filter_form.name }}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">{% trans "Start Date" %}:</label>
+
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-right:5px">
+                                        {{ filter_form.year }}
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:5px; padding-right:5px">
+                                        {{ filter_form.month }}
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:5px;">
+                                        {{ filter_form.day }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a class="btn pull-right" name="submit"><i class="bi bi-check-square"></i> {% trans "Apply" %}</a>
+                        </form>
                     </div>
+                </div>
+            </div>
+            <!--  END  FILTER FORM -->
 
-
-            <div class="row">
+            <div class="row g-2">
             {% for event in events %}
                 <div class="col-3">
                     {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
                 </div>
             {% endfor %}
+
+                <div id="page-selection"></div>
+            </div>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <div id="tag-cloud">
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% get_taglist as taglist for "events.event" %}
+                {% get_tagcloud as tagcloud for "events.event" %}
+
+                <div class="tag-cloud">
+                {% for tag in tagcloud %}
+                    <a href="?tag={{ tag.id }}">
+                        <font size="{{ tag.weight|floatformat:0 }}">
+                            {{ tag.name }} ({{ tag.num_times }})
+                        </font>
+                    </a>
+                {% endfor %}
+                </div>
             </div>
 
+            <!-- Sponsored Links -->
+            <div id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
-
+{% comment %}
         {% regroup events|dictsort:"start_date" by start_date|date:"Y" as events_by_year %}
         {% for events_year in events_by_year %}
             {#<h2>{{ events_year.grouper }}</h2>#}
@@ -102,194 +170,7 @@
                 {% endfor %}
             {% endfor %}
         {% endfor %}
-
-            <div id="page-selection"></div>
-
-
-
-
-
-
-
-
-
-
-
-
-        </div>
-
-        <div id="tips" class="col-md-3 right-sidebar">
-            <div id="chl-tag-cloud">
-                <h4>{% trans "Tag Cloud" %}</h4>
-                {% get_taglist as taglist for "events.event" %}
-                {% get_tagcloud as tagcloud for "events.event" %}
-
-                <div class="tag-cloud">
-                {% for tag in tagcloud %}
-                    <a href="?tag={{ tag.id }}">
-                        <font size="{{ tag.weight|floatformat:0 }}">
-                            {{ tag.name }} ({{ tag.num_times }})
-                        </font>
-                    </a>
-                {% endfor %}
-                </div>
-            </div>
-
-        {% if ENVIRONMENT == "staging" or ENVIRONMENT == "production" %}
-            <div id="sponsored-links">
-                <h4>{% trans "Sponsored Links" %}</h4>
-
-                <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                <!-- Events Page -->
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-9496875666537518"
-                     data-ad-slot="4604029786"
-                     data-ad-format="auto"></ins>
-                <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-                </script>
-            </div>
-        {% endif %}
-        </div>
-    </div>
-</div>
-
-
-
-
-
-<div id="event-list" class="container">
-    <div class="row">
-        <div class="col-xs-24 col-sm-16 col-md-18">
-            <div class="controllers">
-                <div id="event-filter">
-                    <a class="btn btn-rounded" data-toggle="collapse" href="#collapse-event-filter" aria-expanded="false" aria-controls="collapse-event-filter"><i class="fa fa-filter fa-fw"></i> {% trans "Filter" %}</a>
-
-                    <div class="hidden-xs hidden-sm" style="display:inline;">
-                        <div class="category-item">
-                            <a href="#" title="All" category="">
-                                <i class="fa fa-times fa-fw" style="background-color:#999;"></i>
-                            </a>
-                        </div>
-                    {% for event_category_1, event_category_name in event_category_choices %}
-                        {% for event_category_2, event_category_color in event_category_colors %}
-                            {% for event_category_3, event_category_icon in event_category_icons %}
-                                {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
-                                    <div class="category-item">
-                                        <a href="#" title="{{ event_category_name }}" category="{{ event_category_1 }}">
-                                            <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
-                                        </a>
-                                    </div>
-                                {% endif %}
-                            {% endfor %}
-                        {% endfor %}
-                    {% endfor %}
-                    </div>
-
-                {% if request.user.is_authenticated %}
-                    <a class="btn btn-rounded pull-right {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Event" %}</a>
-                {% endif %}
-                </div>
-
-                <div class="hidden-md hidden-lg">
-                    <hr>
-
-                    <div class="category-item">
-                        <a href="#" title="All" category="">
-                            <i class="fa fa-times fa-fw" style="background-color:#999;"></i>
-                        </a>
-                    </div>
-                {% for event_category_1, event_category_name in event_category_choices %}
-                    {% for event_category_2, event_category_color in event_category_colors %}
-                        {% for event_category_3, event_category_icon in event_category_icons %}
-                            {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
-                                <div class="category-item">
-                                    <a href="#" title="{{ event_category_name }}" category="{{ event_category_1 }}">
-                                        <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
-                                    </a>
-                                </div>
-                            {% endif %}
-                        {% endfor %}
-                    {% endfor %}
-                {% endfor %}
-                </div>
-
-                <div id="collapse-event-filter" class="collapse">
-                    <hr>
-
-                    <div class="row">
-                        <div class="col-xs-24 col-sm-16 col-md-12 col-lg-12">
-                            <form id="filter-event-form" role="form" action="" method="GET">
-                                <div class="form-group {% if filter_form.name.errors %}has-error{% endif %}">
-                                    <label class="control-label">{{ filter_form.name.label }}</label>
-
-                                    {{ filter_form.name }}
-                                </div>
-
-                                <div class="form-group">
-                                    <label class="control-label">{% trans "Start Date" %}:</label>
-
-                                    <div class="row">
-                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-right:5px">
-                                            {{ filter_form.year }}
-                                        </div>
-                                        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:5px; padding-right:5px">
-                                            {{ filter_form.month }}
-                                        </div>
-                                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:5px;">
-                                            {{ filter_form.day }}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <a class="btn btn-rounded pull-right" name="submit"><i class="bi bi-check-square"></i> {% trans "Apply" %}</a>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        {% regroup events|dictsort:"start_date" by start_date|date:"Y" as events_by_year %}
-        {% for events_year in events_by_year %}
-            {#<h2>{{ events_year.grouper }}</h2>#}
-            {% regroup events_year.list by start_date|date:"F" as events_by_month %}
-            {% for events_month in events_by_month %}
-                {#<h3>{{ events_month.grouper }}</h3>#}
-                {% regroup events_month.list by start_date|date:"d" as events_by_day %}
-                {% for events_day in events_by_day %}
-                    {#<h4>{{ events_day.grouper }}</h4>#}
-
-                    <div class="event-list">
-                        <time>
-                            <span class="day"  >{{ events_day.grouper }}</span>
-                            <span class="month">{{ events_month.grouper|slice:":3" }}</span>
-                        </time>
-
-                        <div class="info">
-                            <span class="title">{{ events_month.grouper }} {{ events_day.grouper }}, {{ events_year.grouper }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                    {% for event in events_day.list %}
-                        <div class="col-xs-24 col-sm-12 col-md-8 col-lg-8">
-                            {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% endfor %}
-
-            <div id="page-selection"></div>
-        </div>
-
-        <div class="col-xs-24 col-sm-8 col-md-6 right-sidebar">
-
-        </div>
-    </div>
-</div>
+{% endcomment %}
 
 <!-- Script -->
 
@@ -299,7 +180,6 @@
     /*************************************************************************/
     $("a[name='submit']").click(function () {
         $("#spinner").fadeIn("slow");
-
         $("form#filter-event-form").submit();
 
         return true;

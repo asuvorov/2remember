@@ -19,7 +19,7 @@
             <li class="breadcrumb-item active" aria-current="page">{% trans "Contact us" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -33,18 +33,18 @@
         </div>
 
         <div class="col-12">
-            <div class="row g-3">
+            <div class="row g-2">
                 <div class="col-md-4">
                     <h4>{% trans "Twitter Feed" %}</h4>
 
-                    {% get_tweets for "sanesidedotcom" as tweets exclude "replies, retweets" limit 10 %}
-                    {# get_tweets for "sanesidedotcom" as tweets limit 10 #}
+                    {% get_tweets for "2remember" as tweets exclude "replies, retweets" limit 10 %}
+                    {# get_tweets for "2remember" as tweets limit 10 #}
 
                     <ul class="bxslider">
                     {% for tweet in tweets  %}
                         <li>
                             <div class="twitt {% if forloop.first %}active {% endif %}item">
-                                <p class="user-name"><i class="fa fa-twitter"></i> {{ tweet.user.name }}</p>
+                                <p class="user-name"><i class="bi bi-twitter"></i> {{ tweet.user.name }}</p>
                                 <p class="content">{{ tweet.html|safe }}</p>
                                 <p class="posted-at">{{ tweet.datetime|date:"D d M Y" }}</p>
                             </div>
@@ -57,71 +57,44 @@
                 <div class="col-md-4 contact-info">
                     <h4>{% trans "Contact Info" %}</h4>
 
-                    <div class="item">
-                        <i class="fa fa-map-marker"></i>
-                        <p>{% trans "Address" %}</p>
-                        <small>Los Angeles, CA 90028, USA</small>
-                    </div>
-
-                    <div class="item">
-                        <i class="fa fa-envelope"></i>
-                        <p>{% trans "Email" %}</p>
-                        <small><a href="mailto:support@saneside.com">support@saneside.com</a></small>
-                    </div>
-
-                    <div class="item">
-                        <i class="fa fa-phone"></i>
-                        <p>{% trans "Phone" %}</p>
-                        <small><a href="tel:(562) 606-6760">+1 (562) 606-6760</a></small>
-                    </div>
-
-                    <div class="item">
-                        <i class="fa fa-globe"></i>
-                        <p>{% trans "Online Support" %}</p>
-                        <small>Skype: artem.suvorov</small>
-                    </div>
+                    <p><i class="bi bi-pin-map"></i>&nbsp;Los Angeles, CA 90028, USA</p>
+                    <p><i class="bi bi-envelope"></i>&nbsp;<a href="mailto:support@2remember.com">support@2remember.com</a></p>
+                    <p><i class="bi bi-telephone"></i>&nbsp;<a href="tel:(562) 606-6760">+1 (562) 606-6760</a></p>
                 </div>
 
                 <div class="col-md-4 contact-form">
                     <h4>{% trans "Send us a Message" %}</h4>
 
-                    <form id="contact-us-form" action="" method="POST">
+                    <form id="contact-us-form" action="" method="POST" role="form">
                         {% csrf_token %}
 
-                        <div class="form-group {% if form.name.errors %}has-error{% endif %}">
-                            <div class="input-group">
+                        <div class="row g-2">
+                            <div class="form-floating {% if form.name.errors %}has-error{% endif %}">
                                 {{ form.name }}
-                                <div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>
+                                <label for="id_name" class="form-label">{{ form.name.label }}{% if form.name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                <span class="help-block">{% if form.name.errors %}{% for error in form.name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
-                            <span class="help-block">{% if form.name.errors %}{% for error in form.name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                        <div class="form-group {% if form.email.errors %}has-error{% endif %}">
-                            <div class="input-group">
+                            <div class="form-floating {% if form.email.errors %}has-error{% endif %}">
                                 {{ form.email }}
-                                <div class="input-group-addon"><i class="fa fa-at fa-fw"></i></div>
+                                <label for="id_email" class="form-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
-                            <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                        <div class="form-group {% if form.subject.errors %}has-error{% endif %}">
-                            <div class="input-group">
+                            <div class="form-floating {% if form.subject.errors %}has-error{% endif %}">
                                 {{ form.subject }}
-                                <div class="input-group-addon"><i class="fa fa-comments fa-fw"></i></div>
+                                <label for="id_subject" class="form-label">{{ form.subject.label }}{% if form.subject.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                <span class="help-block">{% if form.subject.errors %}{% for error in form.subject.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 
-                            <span class="help-block">{% if form.subject.errors %}{% for error in form.subject.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                            <div class="form-floating {% if form.message.errors %}has-error{% endif %}">
+                                {{ form.message }}
+                                <label for="id_message" class="form-label">{{ form.message.label }}{% if form.message.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                                <span class="help-block">{% if form.message.errors %}{% for error in form.message.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                            </div>
                         </div>
 
-                        <div class="form-group {% if form.message.errors %}has-error{% endif %}">
-                            {{ form.message }}
-
-                            <span class="help-block">{% if form.message.errors %}{% for error in form.message.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                        <button type="button" class="btn btn-primary btn-centered" onclick="send_message();"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Submit" %}</button>
+                        <button class="btn btn-lg btn-primary w-100 py-2 mt-2" type="button" onclick="send_message();"><i class="bi bi-envelope-paper"></i> {% trans "Submit" %}</button>
                     </form>
                 </div>
             </div>

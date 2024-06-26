@@ -17,7 +17,7 @@
     <div id="my-profile-event-list-export">
         <p>
         {% blocktrans with full_name=request.user.full_name %}
-            The List of the Events on SaneSide, {{ full_name }} participated in:
+            The List of the Events on 2Remember, {{ full_name }} participated in:
         {% endblocktrans %}
         </p>
 
@@ -34,10 +34,10 @@
             <tr>
                 <td>
                 {% if participation.event.avatar %}
-                    {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.name %}
+                    {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.title %}
                 {% endif %}
                 </td>
-                <td>{{ participation.event.name }}</td>
+                <td>{{ participation.event.title }}</td>
                 <td>{{ participation.selfreflection_activity_text }}</td>
                 <td>{{ participation.selfreflection_learning_text }}</td>
                 <td>

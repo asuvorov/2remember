@@ -25,10 +25,10 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'signup' %}">{% trans "Sign up" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign up" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -51,7 +51,7 @@
 
     <div class="row g-2">
         <div class="col-md-9">
-            <form id="signup-form" class="needs-validation was-validated" enctype="multipart/form-data" action="" method="POST" role="form" novalidate>
+            <form id="signup-form" enctype="multipart/form-data" action="" method="POST" role="form" novalidate>
                 {% csrf_token %}
 
                 <!-- START PROFILE APPEARENCE -->
@@ -61,10 +61,8 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
-                            <input id="id_avatar" class="form-control" type="file">
-                            <div class="form-group {% if pform.avatar.errors %}has-error{% endif %}">
-                                <div class="invalid-feedback">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
-                            </div>
+                            <input id="id_avatar" name="avatar" class="form-control" type="file">
+                            <span class="help-block">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
                 </section>
@@ -80,12 +78,12 @@
                         <div class="form-floating col-md-6 {% if uform.first_name.errors %}has-error{% endif %}">
                             {{ uform.first_name }}
                             <label for="id_first_name" class="form-label">{{ uform.first_name.label }}{% if uform.first_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div class="invalid-feedback">{% if uform.first_name.errors %}{% for error in uform.first_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                            <span class="help-block">{% if uform.first_name.errors %}{% for error in uform.first_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if uform.last_name.errors %}has-error{% endif %}">
                             {{ uform.last_name }}
                             <label for="id_last_name" class="form-label">{{ uform.last_name.label }}{% if uform.last_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div class="invalid-feedback">{% if uform.last_name.errors %}{% for error in uform.last_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                            <span class="help-block">{% if uform.last_name.errors %}{% for error in uform.last_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
                         <div class="form-floating col-md-6 {% if pform.nickname.errors %}has-error{% endif %}">
@@ -142,7 +140,16 @@
 
                     <div class="alert alert-warning">
                     {% blocktrans %}
+                        <i class="bi bi-exclamation-octagon flex-shrink-0 me-2"></i>
                         By signing up, you agree to our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a> and <a class="alert-link" data-bs-toggle="modal" data-bs-target="#userAgreementPopupModal">User Agreement</a>.
+                    {% endblocktrans %}
+                    </div>
+
+                    <div class="alert alert-danger" role="alert">
+                    {% blocktrans %}
+                        <h5 class="alert-heading"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>WIP</h5>
+                        <p>When <strong>SendGrid</strong>&nbsp;is set up, the User will receive an Email to confirm the Email Address under the Account.</p>
+                        <p class="mb-0">Until then, the System will automatically accept the Sign-up Requests.</p>
                     {% endblocktrans %}
                     </div>
 
@@ -184,11 +191,19 @@
         <h4>{% trans "Sign-up with social App" %}</h4>
     </div>
 
-    <div class="social-buttons" align="center">
-        <button class="btn btn-facebook" onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';"><i class="bi bi-facebook" style="font-size: 2rem;"></i></button>
-        <button class="btn btn-twitter" onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';"><i class="bi bi-twitter" style="font-size: 2rem;"></i></button>
-        <button class="btn btn-linkedin" onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';"><i class="bi bi-linkedin" style="font-size: 2rem;"></i></button>
+    <div class="alert alert-warning mb-md-3" role="alert">
+    {% blocktrans %}
+        <h5 class="alert-heading"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>WIP</h5>
+        <p class="mb-0">Currently, the Social Auth is not set up.<br/>Please, stay tuned.</p>
+    {% endblocktrans %}
     </div>
+
+    <ul class="list-unstyled d-flex justify-content-center">
+        <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';" class="btn btn-facebook"><i class="bi bi-facebook"></i></button></li>
+        <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';" class="btn btn-twitter"><i class="bi bi-twitter"></i></button></li>
+        <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';" class="btn btn-linkedin"><i class="bi bi-linkedin"></i></button></li>
+        <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='github' %}';" class="btn btn-github"><i class="bi bi-github"></i></button></li>
+    </ul>
 
     <div class="popup-overlay-info">
         <div class="alert alert-info">
@@ -199,7 +214,7 @@
         </div>
     </div>
 
-    <!-- Add an optional button to close the popup -->
+    <!-- Add an optional Button to close the Popup -->
     <div class="popup-overlay-footer">
         <button class="btn btn-primary signup-social-popup-overlay_close">{% trans "Close" %}</button>
     </div>
@@ -214,12 +229,11 @@
     $("a[name='profile-create']").click(function () {
         // --------------------------------------------------------------------
         // --- Check, if Avatar Input is NOT empty
-        if ($("#id_avatar").get(0).files.length === 0) {
-            alert("Please, select the Avatar Image.");
+        // if ($("#id_avatar").get(0).files.length === 0) {
+        //     alert("Please, select the Avatar Image.");
 
-            return false;
-        }
-
+        //     return false;
+        // }
         $("#spinner").fadeIn("slow");
 
         /*** DATE FORMAT *****************************************************/
