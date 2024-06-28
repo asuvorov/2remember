@@ -1,14 +1,13 @@
-# the upstream component nginx needs to connect to
+# Upstream Component, Nginx needs to connect to.
 upstream django {
     # server                  unix:///tmp/uwsgi.sock; # For a File Socket.
     server                  127.0.0.1:8000;         # For a Web Port Socket.
 }
-
 server {
     client_max_body_size    100M;
     listen                  80;
     server_name             *.2remember.live 2remember.live;
-    rewrite                 ^/(.*) https://www.2remember.live/$1 permanent;
+    rewrite                 ^/(.*) https://2remember.live/$1 permanent;
 }
 
 server {
@@ -39,7 +38,7 @@ server {
         uwsgi_connect_timeout  600;
         uwsgi_send_timeout     600;
         uwsgi_read_timeout     600;
-        uwsgi_pass             django;
+        uwsgi_pass             unix:///tmp/uwsgi.sock; # 127.0.0.1:8000;
         include                /opt/apps/uwsgi_params;
         proxy_set_header       X-Forwarded-Protocol $scheme;
     }

@@ -213,7 +213,7 @@ https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#ngin
     2.2.3 Run/terminate daemonized **uWSGI**:
    
             [~]# sudo start uwsgi
-            [~]# sudo stop uwsgi
+            [~]# sudo stop  uwsgi
 
 3. Setting up **Nginx** for the **Staging** Environment:
    

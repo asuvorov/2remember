@@ -14,23 +14,6 @@ from .base import *
 # -----------------------------------------------------------------------------
 DEBUG = True
 
-DATABASES = {
-    "default": {
-        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME":     config("DB_NAME", default="sqlite.db"),
-        "USER":     config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST":     config("DB_HOST", default=""),
-        "PORT":     config("DB_PORT", default=""),
-        "OPTIONS": {
-            # "autocommit": True,
-        }
-    }
-}
-
-# SECRET_KEY = config("SECRET_KEY", default="")
-SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
-
 
 ###############################################################################
 ### AWS SETTINGS                                                            ###

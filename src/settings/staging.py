@@ -14,9 +14,6 @@ from .base import *
 # -----------------------------------------------------------------------------
 DEBUG = True
 
-# SECRET_KEY = config("SECRET_KEY", default="")
-SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
-
 
 ###############################################################################
 ### AWS SETTINGS                                                            ###
