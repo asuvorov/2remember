@@ -20,7 +20,9 @@
 
     {% block extra_meta %}{% endblock %}
     {% block extra_style %}{% endblock %}
-    {% block extra_script %}{% endblock %}
+    {% block extra_script %}
+        {% include "fragments/head-extra-script.html" %}
+    {% endblock %}
     {% block extra_head %}{% endblock %}
     </head>
 
