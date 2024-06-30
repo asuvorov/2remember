@@ -215,51 +215,56 @@ def need_to_know_contact_details_tag(request, account):
 @register.simple_tag
 def need_to_know_upcoming_events_tag(request, account):
     """Who can see the List of upcoming Events."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.events_upcoming,
-        flag_admins=account.privacy_admins.events_upcoming)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.events_upcoming,
+    #     flag_admins=account.privacy_admins.events_upcoming)
 
 
 @register.simple_tag
 def need_to_know_completed_events_tag(request, account):
     """Who can see the List completed Events."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.events_completed,
-        flag_admins=account.privacy_admins.events_completed)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.events_completed,
+    #     flag_admins=account.privacy_admins.events_completed)
 
 
 @register.simple_tag
 def need_to_know_affiliated_events_tag(request, account):
     """Who can see the List of affiliated Events."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.events_affiliated,
-        flag_admins=account.privacy_admins.events_affiliated)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.events_affiliated,
+    #     flag_admins=account.privacy_admins.events_affiliated)
 
 
 @register.simple_tag
 def need_to_know_canceled_participations_tag(request, account):
     """Who can see the List of canceled (withdrawn) Participations."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.participations_canceled,
-        flag_admins=account.privacy_admins.participations_canceled)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.participations_canceled,
+    #     flag_admins=account.privacy_admins.participations_canceled)
 
 
 @register.simple_tag
 def need_to_know_rejected_participations_tag(request, account):
     """Who can see the List of rejected Participations."""
-    return check_privacy(
-        request=request,
-        account=account,
-        flag_members=account.privacy_members.participations_rejected,
-        flag_admins=account.privacy_admins.participations_rejected)
+    return True
+    # return check_privacy(
+    #     request=request,
+    #     account=account,
+    #     flag_members=account.privacy_members.participations_rejected,
+    #     flag_admins=account.privacy_admins.participations_rejected)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

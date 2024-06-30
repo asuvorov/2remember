@@ -7,6 +7,9 @@
 {% comment %}
     Input Parameters:
         :<request> - Request
+
+        :[phone_numbers] - Phone Numbers
+        :[social_links]  - Social Links.
 {% endcomment %}
 
 {% block content %}
@@ -15,23 +18,34 @@
         <div class="col-md-9">
             <!-- START PROFILE CARD -->
             <section id="profile-card">
-                <div class="card mb-3 shadow">
+                <div class="card mb-3 shadow bg-body rounded">
                     <div class="row g-0">
                         <div class="col-md-3">
                         {% if request.user.profile.avatar %}
-                            {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
+                            {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid' %}
                         {% else %}
-                            <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                            <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
                         {% endif %}
-                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:100%;">
+                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:100%; border-radius:0;">
                                 <div class="progress-bar overflow-visible bg-{% if request.user.profile.completeness_total > 75 %}success{% elif request.user.profile.completeness_total > 50 %}info{% elif request.user.profile.completeness_total > 25 %}warning{% else %}danger{% endif %} progress-bar-striped active" role="progressbar" style="width:{{ request.user.profile.completeness_total }}%">{{ request.user.profile.completeness_total }}% {% trans "Complete" %}</div>
                             </div>
                         </div>
 
                         <div class="col-md-9">
+                            <div class="card-header bg-transparent">
+                                <h5 class="card-title mb-0">
+                                    {{ request.user.profile.full_name }}
+
+                                {% if request.user.profile.get_rating_avg > 0 %}
+                                    {% include "app/fragments/rating-bs.html" with instance=request.user.profile %}
+                                {% endif %}
+                                </h5>
+                            </div>
+
                             <div class="card-body">
-                                <h4 class="card-title">{{ request.user.profile.full_name }}</h4>
-                                <p class="card-text"><small class="text-muted">{{ request.user.profile.bio|striptags|default:"N/A" }}</small></p><hr>
+                                <blockquote class="readmore"><small class="text-muted">{{ request.user.profile.bio|striptags|default:"N/A" }}</small></blockquote>
+
+                                <hr>
 
                                 <h5>{% trans "Contact Information" %}</h5>
                                 <!-- <span class="badge text-bg-warning">{% trans "This Information can only be seen by the Organizers of the Events you participate in." %}</span> -->
@@ -41,7 +55,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ request.user.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
 
                                     {% if request.user.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ request.user.profile.addressnotes }}</small></p>
@@ -49,10 +63,19 @@
                                 {% endif %}
 
                                     <!-- PHONE NUMBERS -->
+                                {% if phone_numbers %}
+                                    {% for phone_number in phone_numbers %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                    {% if not forloop.last %}
+                                        <span class="vert-delimiter">|</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
                                     <br/>
 
-                                    <i class="bi bi-envelope"></i>&nbsp;{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
-                                    <i class="bi bi-calendar"></i>&nbsp;{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
+                                    <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                 </p>
 {% comment %}
                                 <p>
@@ -79,13 +102,17 @@
                                 </p>
 {% endcomment %}
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="card-footer bg-transparent border-success">
-                                <p class="card-text">
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                                     <small class="text-muted">
-                                        <i class="bi bi-feather"></i>&nbsp;{{ request.user.profile.get_comments_count }}
+                                        <i class="bi bi-feather"></i>{{ request.user.profile.get_comments_count }}
                                         <span class="vert-delimiter">|</span>
-                                        <i class="bi bi-eye"></i>&nbsp;{{ request.user.profile.get_views_count }}
+                                        <i class="bi bi-eye"></i>{{ request.user.profile.get_views_count }}
 
                                         <br/>
 
@@ -98,6 +125,13 @@
                 </div>
             </section>
             <!--  END  PROFILE CARD -->
+
+            <!-- START PROFILE EVENTS -->
+            <section id="profile-events">
+                <h3>{% trans "Events" %}</h3>
+                {% include "accounts/fragments/my-profile-events.html" %}
+            </section>
+            <!--  END  PROFILE EVENTS -->
 
             <!-- START PROFILE COMPLETE -->
             <section id="profile-complete">
@@ -134,46 +168,27 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            {% if request.user.profile.get_rating_avg > 0 %}
-            <div class="row">
-                <div class="d-grid gap-2 col-12 mx-auto">
-                    {% include "common/fragments/rating-card-hor.html" with instance=request.user.profile %}
-                </div>
-            </div>
-            {% endif %}
-
-            <div class="row">
-                <div class="d-grid gap-2 col-12 mx-auto">
-                    {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
-                </div>
-            </div>
+            <section>
+                {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
+            </section>
 
             <!-- Social Links -->
         {% if social_links %}
-            <h4>{% trans "Social Links" %}</h4>
-
-            <div class="panel panel-primary">
-                <div class="panel-body">
-                    <div class="social-buttons">
-                    {% for social_link in social_links %}
-                        <button onclick="javascript:document.location.href='{{ social_link.url }}';" class="{{ social_link.stat_social_app_button }}">
-                            <i class="{{ social_link.stat_social_app_icon }}"></i>
-                        </button>
-                    {% endfor %}
-                    </div>
-                </div>
-            </div>
+            <section>
+                <h4>{% trans "Social Links" %}</h4>
+                {% include "app/fragments/social-links.html" %}
+            </section>
         {% endif %}
 
-            <div id="spotlight">
+            <section>
                 <h4>{% trans "Spotlight" %}</h4>
-            </div>
+            </section>
 
             <!-- Sponsored Links -->
-            <div id="sponsored-links">
+            <section id="sponsored-links">
                 <h4>{% trans "Sponsored Links" %}</h4>
                 {% include "app/fragments/sponsored-links-side.html" %}
-            </div>
+            </section>
         </div>
     </div>
 </div>
@@ -263,10 +278,8 @@
             <p>
                 This is a Requirement:<br/>
                 (1) to show up in Search Results;<br/>
-                (2) to create Events and Organizations;<br/>
-                (3) to participate in Events;<br/>
-                (4) to invite and to be invited to Events<br/>
-                and Organizations.
+                (2) to create Events, Places and Organizations;<br/>
+                (3) to invite and to be invited to Events and Organizations.
             </p>
         {% endblocktrans %}
         </div>

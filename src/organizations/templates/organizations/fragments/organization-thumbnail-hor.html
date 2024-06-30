@@ -3,15 +3,17 @@
 
 {% comment %}
     Input Parameters:
+        :<request> - Request
+
         :<organization>
 {% endcomment %}
 
-<div class="card mb-3 shadow bg-body rounded">
+<div class="organization-thumbnail-hor card mb-3 shadow bg-body rounded">
     <div class="row g-0">
         <div class="col-md-3">
             <a href="{% url 'organization-details' organization.slug %}">
             {% if organization.preview %}
-                {% generateimage "common:medium_fill_wide" source=organization.preview -- alt=organization.title class='img-fluid rounded-start' %}
+                {% generateimage "common:medium_fill_wide" source=organization.preview -- alt=organization.title class='img-fluid' %}
             {% else %}
             {% endif %}
             </a>
@@ -33,26 +35,28 @@
             <div class="card-body">
                 <p class="card-text"><small class="text-muted">{{ organization.description|striptags|truncatechars:200 }}</small></p>
                 <p class="card-text">
-                    <i class="bi bi-pin-map"></i>&nbsp;{% if organization.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ organization.address.short_address }}{% endif %}<br/>
+                    <i class="bi bi-pin-map"></i>{% if organization.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ organization.address.short_address }}{% endif %}<br/>
 
                 {% if organization.tags.all and organization.hashtag %}
-                    <i class="bi bi-tags"></i>&nbsp;{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                     <span class="vert-delimiter">|</span>
-                    <i class="bi bi-hash"></i>&nbsp;{{ organization.hashtag }}
+                    <i class="bi bi-hash"></i>{{ organization.hashtag }}
                 {% elif organization.tags.all %}
-                    <i class="bi bi-tags"></i>&nbsp;{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                 {% elif organization.hashtag %}
-                    <i class="bi bi-hash"></i>&nbsp;{{ organization.hashtag }}>
+                    <i class="bi bi-hash"></i>{{ organization.hashtag }}>
                 {% endif %}
                 </p>
 
-            {% if organization.author.profile.avatar %}
-                {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
-            {% else %}
-                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
-            {% endif %}
-                <a href="{% url 'profile-view' organization.author_id %}"> {{ organization.author.first_name }}</a>
-                {% trans "created" %} {{ organization.created|timesince }} {% trans "ago" %}
+                <p class="card-text">
+                {% if organization.author.profile.avatar %}
+                    {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                {% else %}
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                {% endif %}
+                    <a href="{% url 'profile-view' organization.author_id %}"> {{ organization.author.first_name }}</a>
+                    {% trans "created" %} {{ organization.created|timesince }} {% trans "ago" %}
+                </p>
             </div>
         </div>
     </div>
@@ -62,9 +66,9 @@
             <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <small class="text-muted">
-                        <i class="bi bi-feather"></i> {{ organization.get_comments_count }}
+                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
                         <span class="vert-delimiter">|</span>
-                        <i class="bi bi-eye"></i> {{ organization.get_views_count }}
+                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}
 
                         <br/>
 

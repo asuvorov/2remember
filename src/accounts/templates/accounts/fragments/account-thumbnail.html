@@ -4,6 +4,8 @@
 
 {% comment %}
     Input Parameters:
+        :<request> - Request
+
         :<account>
 {% endcomment %}
 
@@ -12,13 +14,13 @@
 
 {% sum_of_hours_spent_tag account as sum_of_hours_spent %}
 
-<div class="card mb-3 shadow bg-body rounded">
+<div class="account-thumbnail card mb-3 shadow bg-body rounded" >
 {% with account.profile as profile %}
     <a href="{% url 'profile-view' account.id %}">
     {% if profile.avatar %}
-        {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid rounded-top' %}
+        {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid' %}
     {% else %}
-        <img class="img-fluid rounded-top" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+        <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
     {% endif %}
     </a>
 
@@ -45,10 +47,10 @@
         </p>
     </div>
 
-    <div class="card-footer bg-transparent border-success">
+    <div class="card-footer bg-transparent">
         <p class="card-text">
             <small class="text-muted">
-                <i class="bi bi-eye"></i> {{ profile.get_views_count }}<br/>
+                <i class="bi bi-eye"></i>{{ profile.get_views_count }}<br/>
                 {% trans "Last updated" %} {{ profile.modified|timesince }} {% trans "ago" %}
             </small>
         </p>

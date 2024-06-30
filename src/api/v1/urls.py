@@ -14,7 +14,7 @@ urlpatterns = [
     re_path(r"^auth/get-token/$", views.get_auth_token, name="get-auth-token"),
     re_path(r"^autocomplete/members/$", views.autocomplete_member_list, name="autocomplete-member-list"),
     re_path(r"^accounts/", include("api.v1.accounts.urls")),
-    # re_path(r"^app/", include("api.v1.app.urls")),
+    re_path(r"^app/", include("api.v1.app.urls")),
     re_path(r"^blog/", include("api.v1.blog.urls")),
     re_path(r"^events/", include("api.v1.events.urls")),
     re_path(r"^home/", include("api.v1.home.urls")),

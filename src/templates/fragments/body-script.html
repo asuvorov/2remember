@@ -21,15 +21,18 @@
             var reader = new FileReader();
 
             reader.onload = function (e) {
-                $("#avatar").attr("src", e.target.result);
-                $("#avatar").parent().show();
+                $("div#prerunner img").attr("src", e.target.result);
+                $("div#prerunner ing").parent().show();
             }
-
             reader.readAsDataURL(input.files[0]);
         }
     }
     $("#id_avatar").change(function () {
+        $("#spinner").fadeIn("slow");
+
         readURL(this);
+
+        $("#spinner").fadeOut("slow");
     });
 
     // ------------------------------------------------------------------------
@@ -324,7 +327,7 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Read more
-    $("#post-list blockquote, #topic-post-list .post-body, #event-info blockquote, #my-profile-info blockquote, #foreign-profile-info blockquote, #organization-info blockquote").readmore({
+    $("blockquote.readmore").readmore({
         speed:              100,
         collapsedHeight:    100,
         heightMargin:       16,
@@ -340,42 +343,42 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Shorten
-    $(".desc").shorten({
-        chars:      100,
-        more:       "<br/>more",
-        less:       "<br/>less",
-        ellipses:   "..."
-    });
+    // $(".desc").shorten({
+    //     chars:      100,
+    //     more:       "<br/>more",
+    //     less:       "<br/>less",
+    //     ellipses:   "..."
+    // });
 
     // ------------------------------------------------------------------------
     // --- Initialize Smooth Scroll
-    var scroll = new SmoothScroll("a[href='#welcome']", {
-        // Selectors
-        ignore:         "[data-scroll-ignore]",
-        header:         null,
+    // var scroll = new SmoothScroll("a[href='#welcome']", {
+    //     // Selectors
+    //     ignore:         "[data-scroll-ignore]",
+    //     header:         null,
 
-        // Speed & Easing
-        speed:          500,
-        offset:         0,
-        easing:         "easeInOutCubic",
+    //     // Speed & Easing
+    //     speed:          500,
+    //     offset:         0,
+    //     easing:         "easeInOutCubic",
 
-        // Callback API
-        before:         function () {
-            console.log(">>> INSIDE : `before`");
-        },
-        after:          function () {
-            console.log(">>> INSIDE : `after`");
-        }
-    });
+    //     // Callback API
+    //     before:         function () {
+    //         console.log(">>> INSIDE : `before`");
+    //     },
+    //     after:          function () {
+    //         console.log(">>> INSIDE : `after`");
+    //     }
+    // });
 
     // ------------------------------------------------------------------------
     // --- Initialize Time Picker
-    $("input[name='start_time']").timepicker({
-        timeFormat:             "h:i A",
-        step:                   30,
-        forceRoundTime:         true,
-        closeOnWindowScroll:    true,
-    });
+    // $("input[name='start_time']").timepicker({
+    //     timeFormat:             "h:i A",
+    //     step:                   30,
+    //     forceRoundTime:         true,
+    //     closeOnWindowScroll:    true,
+    // });
 
     $(document).ready(function () {
         $("a.gallery-videos").each(function () {

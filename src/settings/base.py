@@ -354,7 +354,7 @@ BOWER_INSTALLED_APPS = (
     # "modernizr",
     "moment#2.30.1",
     "noty#3.1.4",
-    # "readmore-js",
+    "readmore-js",
     # "seiyria-bootstrap-slider",
     # "smooth-scroll.js",
     # "tablesorter",
@@ -969,7 +969,7 @@ EMAIL_SUPPORT = "support@2remember.live"
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
-# SENDGRID_API_KEY = "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"
+# SENDGRID_API_KEY = ""
 
 
 ###############################################################################
@@ -982,14 +982,14 @@ EMAIL_SUPPORT = "support@2remember.live"
 ###############################################################################
 PB_SOCIAL_LINKS = {
     # --- On behalf of "artem.suvorov@gamil.com" / S1
-    "PB_FACEBOOK":  "https://www.facebook.com/2remember",
+    "PB_FACEBOOK":  "#",
     # --- On behalf of "support@2remember.live"    / S1
-    "PB_TWITTER":   "https://twitter.com/2remember",
+    "PB_TWITTER":   "https://x.com/2rememberlive",
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
     # --- On behalf of "support@2remember.live"    / S1
-    "PB_INSTAGRAM": "https://www.instagram.com/2remember",
+    "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }
 

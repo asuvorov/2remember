@@ -34,12 +34,12 @@
 {% endblock %}
 
 {% block content %}
-<div id="organization-list" class="bg-body-tertiary p-3">
+<div id="post-list" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
         {% if request.user.is_staff %}
             <div class="controllers">
-                <a class="btn pull-right" href="{% url 'post-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Post" %}</a>
+                <a class="btn btn-primary" href="{% url 'post-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Post" %}</a>
             </div>
         {% endif %}
 
@@ -57,7 +57,7 @@
 
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Tag Cloud -->
-            <div id="tag-cloud">
+            <section id="tag-cloud">
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "blog.post" %}
                 {% get_tagcloud as tagcloud for "blog.post" %}
@@ -71,10 +71,10 @@
                     </a>
                 {% endfor %}
                 </div>
-            </div>
+            </section>
 
             <!-- Archive -->
-            <div id="post-calendar">
+            <section id="post-calendar">
                 <h4>{% trans "Archive" %}</h4>
 
                 <div class="alert alert-warning mb-md-3" role="alert">
@@ -82,13 +82,13 @@
                     <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
                 {% endblocktrans %}
                 </div>
-            </div>
+            </section>
 
             <!-- Sponsored Links -->
-            <div id="sponsored-links">
+            <section id="sponsored-links">
                 <h4>{% trans "Sponsored Links" %}</h4>
                 {% include "app/fragments/sponsored-links-side.html" %}
-            </div>
+            </section>
         </div>
     </div>
 </div>

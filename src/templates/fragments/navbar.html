@@ -54,6 +54,9 @@
                 <li class="nav-item">
                     <a class="nav-link{% if request.path|slice:'15' == '/organizations/' %} active{% endif %}" href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'15' == '/blog/' %} active{% endif %}" href="{% url 'post-list' %}">{% trans "Blog" %}</a>
+                </li>
 
             {% comment %}
                 <form id="locale" class="d-flex" action="{% url 'set_language' %}" method="POST">
@@ -114,16 +117,16 @@
                 {% endif %}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{% url 'my-profile-view' %}">{{ request.user.profile.auth_name }}</a></li>
-                    <li><a class="dropdown-item" href="{% url 'signout' %}">{% trans "Sign out" %}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-view' %}"><i class="bi bi-person-circle"></i> {{ request.user.profile.auth_name }}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signout' %}"><i class="bi bi-door-open"></i> {% trans "Sign out" %}</a></li>
                 </ul>
             {% else %}
                 <a class="nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
                     <img class="rounded-circle" src="{{ STATIC_URL }}img/default.png" height="30" width="30" alt="" />
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="{% url 'signup' %}">{% trans "Sign up" %}</a></li>
-                    <li><a class="dropdown-item" href="{% url 'signin' %}">{% trans "Log in" %}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signup' %}"><i class="bi bi-person-plus"></i> {% trans "Sign up" %}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signin' %}"><i class="bi bi-unlock"></i> {% trans "Log in" %}</a></li>
                 </ul>
             {% endif %}
             </div>

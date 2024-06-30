@@ -55,21 +55,21 @@ Event Details - Info
                     <tr>
                         <td><strong>{% trans "Venue Local Time" %}</strong></td>
                         <td>
-                            <i class="bi bi-calendar"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}<br/>
+                            <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}<br/>
                             <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "Your Local Time" %}</strong></td>
                         <td>
-                            <i class="bi bi-calendar"></i> {{ event.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
+                            <i class="bi bi-calendar-date"></i> {{ event.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
                             <i class="bi bi-clock-o"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "UTC Time" %}</strong></td>
                         <td>
-                            <i class="bi bi-calendar"></i>{{ event.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
+                            <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
                             <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
@@ -84,19 +84,19 @@ Event Details - Info
                     <tr>
                         <td>
                             <p>
-                                <i class="bi bi-calendar"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"F j, Y" }}<br/>
+                                <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"F j, Y" }}<br/>
                                 <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="bi bi-calendar"></i> {{ event.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
+                                <i class="bi bi-calendar-date"></i> {{ event.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
                                 <i class="bi bi-clock-o"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="bi bi-calendar"></i>{{ event.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
+                                <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
                                 <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
@@ -104,7 +104,7 @@ Event Details - Info
                 </table>
             {% elif event.is_dateless %}
                 <p>
-                    <i class="bi bi-calendar"></i>
+                    <i class="bi bi-calendar-date"></i>
                     <span class="label label-warning">{% trans "Dateless" %}</span>
                 </p>
             {% endif %}

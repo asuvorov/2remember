@@ -16,31 +16,44 @@
         <div class="col-md-9">
             <!-- START ORGANIZATION CARD -->
             <section id="organization-card">
-                <div class="card mb-3 shadow">
+                <div class="card mb-3 shadow bg-body rounded">
                     <div class="row g-0">
                         <div class="col-md-3">
-                            <div class="thumbnail avatar">
-                            {% if organization.preview %}
-                                {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.title class='img-fluid rounded-start' %}
-                            {% else %}
-                            {% endif %}
+                        {% if organization.preview %}
+                            {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.title class='img-fluid' %}
+                        {% else %}
+                        {% endif %}
+
+                        {% if organization.get_rating_avg > 0 %}
+                            {% include "common/fragments/rating-card-hor.html" with instance=organization %}
+                        {% endif %}
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="card-header bg-transparent">
+                                <h5 class="card-title mb-0">
+                                    {{ organization.title }}
+
+                                {% if organization.get_rating_avg > 0 %}
+                                    <div class="" style="color:orange;">
+                                        <input id="id_organization_rating" name="organization_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ organization.get_rating_avg }}" />
+                                    </div>
+                                {% endif %}
+                                </h5>
                             </div>
 
-                            {% if organization.get_rating_avg > 0 %}
-                                {% include "common/fragments/rating-card-hor.html" with instance=organization %}
-                            {% endif %}
-                        </div>
-                        <div class="col-md-9">
                             <div class="card-body">
-                                <h4 class="card-title">{{ organization.title }}</h4>
-                                <p class="card-text"><small class="text-muted">{{ organization.description|striptags|escape|default:"N/A"  }}</small></p><hr>
+                                <blockquote class="readmore"><small class="text-muted">{{ organization.description|striptags|escape|default:"N/A"  }}</small></blockquote>
+
+                                <hr>
+
                                 <p class="card-text">
                                     <i class="bi bi-pin-map"></i>
                                 {% if organization.addressless %}
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ organization.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
 
                                     {% if organization.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ organization.addressnotes|striptags|escape }}</small></p>
@@ -52,7 +65,7 @@
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
                                     {% for phone_number in phone_numbers %}
-                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>&nbsp;{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
                                     {% if not forloop.last %}
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
@@ -61,43 +74,45 @@
 
                                     <br/>
 
-                                    <i class="bi bi-envelope"></i>&nbsp;{% if organization.email %}<a href="mailto:{{ organization.email }}">{{ organization.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <i class="bi bi-envelope"></i>{% if organization.email %}<a href="mailto:{{ organization.email }}">{{ organization.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                     <span class="vert-delimiter">|</span>
-                                    <i class="bi bi-link"></i>&nbsp;{% if organization.website %}<a href="{{ organization.website }}">{% trans "Website" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <i class="bi bi-link"></i>{% if organization.website %}<a href="{{ organization.website }}">{% trans "Website" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                     <span class="vert-delimiter">|</span>
-                                    <i class="bi bi-film"></i>&nbsp;{% if organization.video %}<a href="{{ organization.video }}">{% trans "Video" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <i class="bi bi-film"></i>{% if organization.video %}<a href="{{ organization.video }}">{% trans "Video" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
 
                                     <br/>
 
                                 {% if organization.tags.all and organization.hashtag %}
-                                    <i class="bi bi-tags"></i>&nbsp;{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}
                                 {% elif organization.tags.all %}
-                                    <i class="bi bi-tags"></i>&nbsp;{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                 {% elif organization.hashtag %}
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}>
                                 {% endif %}
                                 </p>
 
-                                <p class="card-text">
-                                {% if organization.author.profile.avatar %}
-                                    {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
-                                {% else %}
-                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
-                                {% endif %}
-                                    {% trans "Posted by" %}
-                                    <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
-                                    {{ organization.created|timesince }} {% trans "ago" %}
-                                </p>
+                            {% if organization.author.profile.avatar %}
+                                {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                            {% else %}
+                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                            {% endif %}
+                                {% trans "Posted by" %}
+                                <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
+                                {{ organization.created|timesince }} {% trans "ago" %}
                             </div>
+                        </div>
+                    </div>
 
-                            <div class="card-footer bg-transparent border-success">
-                                <p class="card-text">
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                                     <small class="text-muted">
-                                        <i class="bi bi-feather"></i>&nbsp;{{ organization.get_comments_count }}
+                                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
                                         <span class="vert-delimiter">|</span>
-                                        <i class="bi bi-eye"></i>&nbsp;{{ organization.get_views_count }}<br/>
+                                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}<br/>
                                         {% trans "Last updated" %} {{ organization.modified|timesince }} {% trans "ago" %}
                                     </small>
                                 </p>
@@ -115,7 +130,7 @@
                     <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
                 {% if request.user.is_authenticated %}
                     {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'organization-edit' organization.slug %}#organization-attachments"><i class="bi bi-plus"></i></a>
+                        <a class="add-attachment btn btn-primary" href="{% url 'organization-edit' organization.slug %}#organization-attachments"><i class="bi bi-plus-lg"></i></a>
                     {% endif %}
                 {% endif %}
                 </h3>
@@ -141,41 +156,59 @@
 
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Media -->
-            {% include "organizations/fragments/organization-media-status-breakdown.html" %}
+        {% if request.user.is_authenticated %}
+            <section>
+                {% include "organizations/fragments/organization-media-status-breakdown.html" %}
+            </section>
+        {% endif %}
 
             <!-- Link to Page -->
-            <h4>{% trans "Link to this Page" %}</h4>
-            <input type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+            <section>
+                <h4>{% trans "Link to this Page" %}</h4>
+                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+            </section>
 
             <!-- Social Links -->
         {# if social_links #}
-            <h4>{% trans "Social Links" %}</h4>
-            {% include "app/fragments/social-links.html" %}
+            <section>
+                <h4>{% trans "Social Links" %}</h4>
+                {% include "app/fragments/social-links.html" %}
+            </section>
         {# endif #}
 
             <!-- Share Links -->
-            <h4>{% trans "Share" %}</h4>
-            {% include "app/fragments/share-on-social.html" %}
+            <section>
+                <h4>{% trans "Share" %}</h4>
+                {% include "app/fragments/share-on-social.html" %}
+            </section>
 
             <!-- Twitter Feed -->
         {# if twitter_acc #}
-            <h4>{% trans "Twitter Feed" %}</h4>
-            {% include "app/fragments/instance-twitter-feed.html" %}
+            <section>
+                <h4>{% trans "Twitter Feed" %}</h4>
+                {% include "app/fragments/instance-twitter-feed.html" %}
+            </section>
         {# endif #}
 
             <!-- Contact Person -->
         {% comment %}
-            <h4>{% trans "Contact Person" %}</h4>
-            {% include "app/fragments/instance-contact-person.html" with instance=organization%}
+            <section>
+                <h4>{% trans "Contact Person" %}</h4>
+                {% include "app/fragments/instance-contact-person.html" with instance=organization%}
+            </section>
         {% endcomment %}
 
             <!-- Subscribers -->
-            <h4>{% trans "Subscribers" %}</h4>
-            {% include "app/fragments/instance-subscribers.html" with instance=organization %}
+            <section>
+                <h4>{% trans "Subscribers" %}</h4>
+                {% include "app/fragments/instance-subscribers.html" with instance=organization %}
+            </section>
 
             <!-- Widgets -->
-            <h4>{% trans "Widgets" %}</h4>
-            {% include "app/fragments/instance-widgets.html" with instance=organization %}
+            <section>
+                <h4>{% trans "Widgets" %}</h4>
+                {% include "app/fragments/instance-widgets.html" with instance=organization %}
+            </section>
         </div>
     </div>
 </div>

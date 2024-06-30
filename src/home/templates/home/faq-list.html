@@ -2,48 +2,59 @@
 
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
 {% block title %}{% trans "FAQ" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="/">{% trans "Home" %}</a>
-                    <i class="bi bi-chevron-circle-right"></i>
-                    <a href="{% url 'faq' %}">{% trans "FAQ" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block extra_style %}
+{% endblock %}
 
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
 <div class="container">
-    <div id="faq">
-        <div class="row">
-            <div class="col-md-9">
-            {% if request.user.is_staff %}
-                <div class="controllers">
-                    <a class="btn pull-right" href="{% url 'faq-create' %}"><i class="bi bi-plus"></i> {% trans "Add" %}</a>
-                </div>
-            {% endif %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "FAQ" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
 
-            {% for section in sections %}
-                {% include "home/fragments/faq-section.html" with section=section %}
-            {% empty %}
-            {% endfor %}
-
-                <div id="page-selection"></div>
+{% block content %}
+<div id="faq-list" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+        {% if request.user.is_staff %}
+            <div class="controllers">
+                <a class="btn btn-primary" href="{% url 'faq-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Add" %}</a>
             </div>
+        {% endif %}
 
-            <div id="tips" class="col-md-3 right-sidebar">
-                <!-- Sponsored Links -->
-                <div id="sponsored-links">
-                    <h4>{% trans "Sponsored Links" %}</h4>
-                    {% include "app/fragments/sponsored-links-side.html" %}
-                </div>
-            </div>
+        {% for section in sections %}
+            <section>
+            {% include "home/fragments/faq-section.html" with section=section %}
+            </section>
+        {% empty %}
+        {% endfor %}
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
         </div>
     </div>
 </div>
@@ -101,11 +112,5 @@
 
         return true;
     })
-</script>
-
-<script>
-    $(document).ready(function () {
-        $(".panel-collapse").collapse();
-    });
 </script>
 {% endblock %}

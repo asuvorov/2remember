@@ -8,37 +8,33 @@
 <div class="faq-section-thumb">
     <h4>{{ section.title }}</h4>
 
-    <div class="panel-group" id="accordion" aria-multiselectable="true">
+    <div id="accordion-{{ section.id }}" class="accordion">
     {% for faq in section.related_faqs.all %}
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab">
-                <p class="panel-title">
-                    <strong>
-                        <a class="accordion-toggle" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse-{{ faq.id }}" aria-expanded="false" aria-controls="#collapse-{{ faq.id }}">
-                        {% autoescape off %}
-                            {{ faq.question }}
-                        {% endautoescape %}
-                        </a>
-                    </strong>
-                </p>
-            </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ faq.id }}" aria-expanded="false" aria-controls="collapse-{{ faq.id }}">
+                {% autoescape off %}
+                    {{ faq.question }}
+                {% endautoescape %}
+                </button>
+            </h2>
 
-            <div id="collapse-{{ faq.id }}" role="tabpanel" class="panel-collapse collapse in">
-                <div class="panel-body">
+            <div id="collapse-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#accordion-{{ section.id }}">
+                <div class="accordion-body">
                 {% autoescape off %}
                     {{ faq.answer }}
                 {% endautoescape %}
+
+                {% if request.user.is_staff %}
+                    <div class="panel-footer">
+                        <p>
+                            <a class="faq-remove" href="" faq-id="{{ faq.id }}"><i class="bi bi-times txt-danger pull-right"></i></a>
+                            <a href="{% url 'faq-edit' faq.id %}"><i class="bi bi-edit txt-warning pull-right"></i></a>
+                        </p>
+                    </div>
+                {% endif %}
                 </div>
             </div>
-
-        {% if request.user.is_staff %}
-            <div class="panel-footer">
-                <p>
-                    <a class="faq-remove" href="" faq-id="{{ faq.id }}"><i class="bi bi-times txt-danger pull-right"></i></a>
-                    <a href="{% url 'faq-edit' faq.id %}"><i class="bi bi-edit txt-warning pull-right"></i></a>
-                </p>
-            </div>
-        {% endif %}
         </div>
     {% empty %}
     {% endfor %}

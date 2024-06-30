@@ -17,7 +17,7 @@
 
 {% if event.author == request.user %}
     <a class="btn btn-warning w-100" href="{% url 'event-edit' event.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Event" %}</a>
-{% elif request.user.is_authenticated %}
+{% else %}
     {% if not is_subscribed %}
         <a class="btn btn-primary w-100 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
     {% endif %}

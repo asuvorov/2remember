@@ -113,7 +113,7 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <div id="tag-cloud">
+            <section id="tag-cloud">
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "events.event" %}
                 {% get_tagcloud as tagcloud for "events.event" %}
@@ -127,13 +127,13 @@
                     </a>
                 {% endfor %}
                 </div>
-            </div>
+            </section>
 
             <!-- Sponsored Links -->
-            <div id="sponsored-links">
+            <section id="sponsored-links">
                 <h4>{% trans "Sponsored Links" %}</h4>
                 {% include "app/fragments/sponsored-links-side.html" %}
-            </div>
+            </section>
         </div>
     </div>
 </div>

@@ -6,46 +6,42 @@
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 4"></button>
     </div>
 
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="{{ STATIC_URL }}img/DSC02177.jpg" class="d-block w-100" alt="2Remember Platform - Share Your Memories Hassle Free." />
+            <img src="{{ STATIC_URL }}img/40Zs9z.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
+        </div>
 
-            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg> -->
-
+        <div class="carousel-item">
+            <img src="{{ STATIC_URL }}img/DSC02177.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption text-start">
-                    <h1>Example headline.</h1>
-                    <p class="lead">Some representative placeholder content for the first slide of the carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Sign up today</a></p>
+                    <h1>Share With Ease</h1>
+                    <p class="lead">Join and share your Memories Hassle-Free</p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'signup' %}">Sign up Today</a></p>
                 </div>
             </div>
         </div>
 
         <div class="carousel-item">
-            <img src="{{ STATIC_URL }}img/DSC02160.jpg" class="d-block w-100" alt="2Remember Platform - Share Your Memories Hassle Free." />
-
-            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg> -->
-
+            <img src="{{ STATIC_URL }}img/DSC02160.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption">
-                    <h1>Another example headline.</h1>
-                    <p class="lead">Some representative placeholder content for the second slide of the carousel.</p>
-                    <p><a class="btn btn-lg btn-primary" href="#">Learn more</a></p>
+                    <h1>Open To Hire</h1>
+                    <p class="lead">Meet the Engineer behind this Platform, and help him to help you to sky-rocket your Business</p>
+                    <p><a class="btn btn-lg btn-primary" href="#index-developer-hero">Learn more</a></p>
                 </div>
             </div>
         </div>
 
         <div class="carousel-item">
-            <img src="{{ STATIC_URL }}img/DSC02173.jpg" class="d-block w-100" alt="2Remember Platform - Share Your Memories Hassle Free." />
-
-            <!-- <svg class="bd-placeholder-img" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false"><rect width="100%" height="100%" fill="var(--bs-secondary-color)"/></svg> -->
-
+            <img src="{{ STATIC_URL }}img/DSC02173.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption text-end">
-                    <h1>One more for good measure.</h1>
-                    <p class="lead">Some representative placeholder content for the third slide of this carousel.</p>
+                    <h1>Like what you see?</h1>
+                    <p class="lead">Find out more about the magical Place, called Zzyzx Road</p>
                     <p><a class="btn btn-lg btn-primary" href="{% url 'event-details' 'zzyzx-road' %}">Browse Gallery</a></p>
                 </div>
             </div>

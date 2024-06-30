@@ -722,8 +722,9 @@ def event_details(request, slug):
         #     - Draft;
         #     - Complete;
         #     - Past due.
-        if event.is_draft or event.is_happened or event.is_closed:
-            raise Http404
+        pass
+        # if event.is_draft or event.is_happened or event.is_closed:
+        #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Prepare the Event Roles Breakdown.

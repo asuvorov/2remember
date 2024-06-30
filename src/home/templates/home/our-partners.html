@@ -2,38 +2,54 @@
 
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<teams> - Teams List
+{% endcomment %}
+
 {% block title %}{% trans "Our Partners" %} - {{ block.super }}{% endblock %}
 
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Our Partners" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
 {% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="/">{% trans "Home" %}</a>
-                    <i class="bi bi-chevron-circle-right"></i>
-                    <a href="{% url 'our-partners' %}">{% trans "Our Partners" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="alert alert-warning mb-md-3" role="alert">
+{% blocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Page is under Construction.</p>
+{% endblocktrans %}
 </div>
 
-<div class="container">
-    <div id="our-partners">
-        <div class="row">
-        {% for partner in partners %}
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="section">
-                    <a href="{{ partner.website }}" target="_blank">
-                        <div class="thumbnail">
-                            <img src="{{ partner.avatar.url }}" width="600" alt="{{ partner.name }}" />
-                        </div>
-                    </a>
+<div id="our-partners" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+    {% for partner in partners %}
+        <div class="col-md-4">
+            <a href="{{ partner.website }}" target="_blank">
+                <div class="thumbnail">
+                    <img src="{{ partner.avatar.url }}" class="img-fluid" width="600" alt="{{ partner.name }}" />
                 </div>
-            </div>
-        {% endfor %}
+            </a>
         </div>
+    {% empty %}
+        <div class="col-12">
+            <span class="badge text-bg-warning">{% trans "There are no Partners at the Moment" %}</span>
+        </div>
+    {% endfor %}
     </div>
 </div>
 {% endblock %}

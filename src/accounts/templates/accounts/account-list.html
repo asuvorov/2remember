@@ -34,7 +34,7 @@
 <div id="organization-list" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
-            <h4>{{ page_title }}</h4>
+            <h3>{{ page_title }}</h3>
 
             <div class="controllers">
             </div>
@@ -56,15 +56,15 @@
 
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Spotlight -->
-            <div id="spotlight">
+            <section id="spotlight">
                 <h4>{% trans "Spotlight" %}</h4>
-            </div>
+            </section>
 
             <!-- Sponsored Links -->
-            <div id="sponsored-links">
+            <section id="sponsored-links">
                 <h4>{% trans "Sponsored Links" %}</h4>
                 {% include "app/fragments/sponsored-links-side.html" %}
-            </div>
+            </section>
         </div>
     </div>
 </div>

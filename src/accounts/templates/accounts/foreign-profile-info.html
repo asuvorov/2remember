@@ -1,18 +1,223 @@
 {% extends "accounts/foreign-profile-base.html" %}
 
 {% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
 
-{% block extra_content %}
-<div class="container">
-    <div id="foreign-profile-info">
-        {% include "accounts/tabs/foreign-profile/info-tab.html" %}
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :[phone_numbers] - Phone Numbers
+        :[social_links]  - Social Links.
+{% endcomment %}
+
+{% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
+{% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
+
+{% block content %}
+<div id="foreign-profile-info" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START PROFILE CARD -->
+            <section id="profile-card">
+                <div class="card mb-3 shadow bg-body rounded">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+    {% comment %}
+                        {% if account.profile.avatar and need_to_know_profile_details %}
+                            {% generateimage "common:medium_fill" source=account.profile.avatar -- alt=account.profile.auth_name class='img-fluid' %}
+                        {% else %}
+                            <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                        {% endif %}
+    {% endcomment %}
+                        {% if account.profile.avatar %}
+                            {% generateimage "common:medium_fill" source=account.profile.avatar -- alt=account.profile.auth_name class='img-fluid' %}
+                        {% else %}
+                            <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                        {% endif %}
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="card-header bg-transparent">
+                                <h5 class="card-title mb-0">
+    {% comment %}
+                                {% if need_to_know_profile_details %}
+                                    {{ account.profile.user.get_full_name }}
+                                {% else %}
+                                    {% if account.profile.nickname %}
+                                        {{ account.profile.nickname }}
+                                    {% elif account.profile.short_name %}
+                                        {{ account.profile.short_name }}
+                                    {% else %}
+                                        <i class="bi bi-user-secret"></i>
+                                    {% endif %}
+                                {% endif %}
+    {% endcomment %}
+                                {{ account.profile.user.get_full_name }}
+
+                                {% if account.profile.get_rating_avg > 0 %}
+                                    {% include "app/fragments/rating-bs.html" with instance=account.profile %}
+                                {% endif %}
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+    {% comment %}
+                            {% if need_to_know_profile_details %}
+                                <blockquote>
+                                    <blockquote class="readmore"><small class="text-muted">{{ account.profile.bio|striptags|default:"N/A" }}</small></blockquote>
+                                </blockquote>
+                            {% else %}
+                                <span class="badge text-bg-warning">{% trans "Information is hidden from Public" %}</span>
+                            {% endif %}
+    {% endcomment %}
+                                <blockquote>
+                                    <blockquote class="readmore"><small class="text-muted">{{ account.profile.bio|striptags|default:"N/A" }}</small></blockquote>
+                                </blockquote>
+
+                                <hr>
+
+                                <h5>{% trans "Contact Information" %}</h5>
+    {% comment %}
+                            {% if need_to_know_contact_details %}
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if account.profile.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ account.profile.address.full_address|default:"N/A" }}
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+
+                                    {% if account.profile.address.notes %}
+                                        <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
+                                    {% endif %}
+                                {% endif %}
+
+                                    <!-- PHONE NUMBERS -->
+                                {% if phone_numbers %}
+                                    {% for phone_number in phone_numbers %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                    {% if not forloop.last %}
+                                        <span class="vert-delimiter">|</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+                            {% else %}
+                                <span class="badge text-bg-warning">{% trans "Information is hidden from Public" %}</span>
+                            {% endif %}
+    {% endcomment %}
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if account.profile.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ account.profile.address.full_address|default:"N/A" }}
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+
+                                    {% if account.profile.address.notes %}
+                                        <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
+                                    {% endif %}
+                                {% endif %}
+
+                                    <!-- PHONE NUMBERS -->
+                                {% if phone_numbers %}
+                                    {% for phone_number in phone_numbers %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                    {% if not forloop.last %}
+                                        <span class="vert-delimiter">|</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+
+    {% comment %}
+                            {% if need_to_know_profile_details %}
+                                <p class="card-text">
+                                    <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+                            {% endif %}
+    {% endcomment %}
+                                <p class="card-text">
+                                    <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                                    <small class="text-muted">
+                                        <i class="bi bi-feather"></i>{{ account.profile.get_comments_count }}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-eye"></i>{{ account.profile.get_views_count }}
+
+                                        <br/>
+
+                                        {% trans "Last updated" %} {{ account.profile.modified|timesince }} {% trans "ago" %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  END  PROFILE CARD -->
+
+            <!-- START PROFILE EVENTS -->
+            <section id="profile-events">
+                <h3>{% trans "Events" %}</h3>
+                {% include "accounts/fragments/foreign-profile-events.html" %}
+            </section>
+            <!--  END  PROFILE EVENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <section>
+                {% include "accounts/fragments/foreign-profile-media-status-breakdown.html" %}
+            </section>
+
+            <!-- Social Links -->
+        {% if social_links %}
+            <section>
+                <h4>{% trans "Social Links" %}</h4>
+                {% include "app/fragments/social-links.html" %}
+            </section>
+        {% endif %}
+
+            <section>
+                <h4>{% trans "Spotlight" %}</h4>
+                <div class="alert alert-warning mb-md-3" role="alert">
+                {% blocktrans %}
+                    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
+                {% endblocktrans %}
+                </div>
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
     </div>
 </div>
 
 <!-- Modals -->
 
 {% if request.user.is_authenticated %}
-    {% include "common/modals/complaint-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
 
     {% include "invites/modals/invite-to-event-popup-modal.html" %}
     {% include "invites/modals/invite-to-organization-popup-modal.html" %}

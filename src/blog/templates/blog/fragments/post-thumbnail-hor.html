@@ -3,78 +3,75 @@
 
 {% comment %}
     Input Parameters:
+        :<request> - Request
+
         :<post>
 {% endcomment %}
 
-<div class="card mb-3 shadow bg-body rounded">
-    <div class="row g-0">
-        <div class="col-md-3">
-            <a href="{% url 'post-details' post.slug %}">
-            {% if post.preview %}
-                {% generateimage "common:medium_fill_wide" source=post.preview -- alt=post.title class='img-fluid rounded-start' %}
-            {% else %}
-            {% endif %}
-            </a>
-        </div>
-
-        <div class="col-md-9">
-            <div class="card-header bg-transparent">
-                <h5 class="card-title mb-0">
-                {% if post.is_draft %}
-                    <span><i class="bi bi-vector-pen"></i><sup>{% trans "Draft" %}</sup></span>
-                {% endif %}
-                    <a href="{% url 'post-details' post.slug %}">{{ post.title|truncatechars:50 }}</a>
-                </h5>
-            </div>
-
-            <div class="card-body">
-                <div class="post-content">
-                {% autoescape off %}
-                    {{ post.description }}
-                {% endautoescape %}
-                </div>
-                <p class="card-text">
-                {% if post.tags.all and post.hashtag %}
-                    <i class="bi bi-tags"></i>&nbsp;{% for tag in post.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
-                    <span class="vert-delimiter">|</span>
-                    <i class="bi bi-hash"></i>{{ post.hashtag }}
-                {% elif post.tags.all %}
-                    <i class="bi bi-tags"></i>&nbsp;{% for tag in post.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
-                {% elif post.hashtag %}
-                    <i class="bi bi-hash"></i>{{ post.hashtag }}>
-                {% endif %}
-                </p>
-
-            {% if post.author.profile.avatar %}
-                {% generateimage "header:thumbnail" source=post.author.profile.avatar -- alt=post.author.profile.auth_name %}
-            {% else %}
-                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
-            {% endif %}
-                <a href="{% url 'profile-view' post.author_id %}"> {{ post.author.first_name }}</a>
-                {% trans "created" %} {{ post.created|timesince }} {% trans "ago" %}
-            </div>
-        </div>
+<div class="post-thumbnail-hor card mb-3 shadow bg-body rounded">
+    <div id="preview">
+        <a href="{% url 'post-details' post.slug %}">
+        {% if post.preview %}
+            {% generateimage "common:medium_fill_wide" source=post.preview -- alt=post.title class='img-fluid' %}
+        {% else %}
+        {% endif %}
+        </a>
     </div>
 
-    <div class="row g-0">
-        <div class="col-12">
-            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                    <small class="text-muted">
-                        <i class="bi bi-feather"></i> {{ post.get_comments_count }}
-                        <span class="vert-delimiter">|</span>
-                        <i class="bi bi-eye"></i> {{ post.get_views_count }}
+    <div class="card-header bg-transparent">
+        <h5 class="card-title mb-0">
+        {% if post.is_draft %}
+            <span><i class="bi bi-vector-pen"></i><sup>{% trans "Draft" %}</sup></span>
+        {% endif %}
+            {{ post.title|truncatechars:50 }}
+        </h5>
+    </div>
 
-                        <br/>
+    <div class="card-body">
+        <div class="post-content">
+        {% autoescape off %}
+            {{ post.description }}
+        {% endautoescape %}
+        </div>
 
-                        {% trans "Last updated" %} {{ post.modified|timesince }} {% trans "ago" %}
-                    </small>
-                </p>
+        <p class="card-text">
+        {% if post.tags.all and post.hashtag %}
+            <i class="bi bi-tags"></i>&nbsp;{% for tag in post.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+            <span class="vert-delimiter">|</span>
+            <i class="bi bi-hash"></i>{{ post.hashtag }}
+        {% elif post.tags.all %}
+            <i class="bi bi-tags"></i>&nbsp;{% for tag in post.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        {% elif post.hashtag %}
+            <i class="bi bi-hash"></i>{{ post.hashtag }}>
+        {% endif %}
+        </p>
 
-                <div class="learn-more text-end">
-                    <a class="btn btn-warning" href="{% url 'post-details' post.slug %}">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
-                </div>
-            </div>
+        <p class="card-text">
+        {% if post.author.profile.avatar %}
+            {% generateimage "header:thumbnail" source=post.author.profile.avatar -- alt=post.author.profile.auth_name %}
+        {% else %}
+            <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+        {% endif %}
+            <a href="{% url 'profile-view' post.author_id %}"> {{ post.author.first_name }}</a>
+            {% trans "created" %} {{ post.created|timesince }} {% trans "ago" %}
+        </p>
+    </div>
+
+    <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <small class="text-muted">
+                <i class="bi bi-feather"></i> {{ post.get_comments_count }}
+                <span class="vert-delimiter">|</span>
+                <i class="bi bi-eye"></i> {{ post.get_views_count }}
+
+                <br/>
+
+                {% trans "Last updated" %} {{ post.modified|timesince }} {% trans "ago" %}
+            </small>
+        </p>
+
+        <div class="learn-more text-end">
+            <a class="btn btn-warning" href="{% url 'post-details' post.slug %}">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
         </div>
     </div>
 </div>

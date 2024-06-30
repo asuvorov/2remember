@@ -4,21 +4,22 @@
 
 {% comment %}
     Input Parameters:
+        :<request> - Request
+
         :<event>
         :[participation]
         :[show_org]
         :[event_admin]
 {% endcomment %}
 
-
-<div class="card mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
+<div class="event-thumbnail-vert card mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
     <a href="{% url 'event-details' event.slug %}">
     {% if event.preview %}
-        {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid rounded-start' %}
+        {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid' %}
     {% else %}
     {% endif %}
     <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
-        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-warning">
+        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">
             Private
             <span class="visually-hidden">unread messages</span>
         </span>
@@ -42,45 +43,47 @@
         </a>
 
         <p class="card-text"><small class="text-muted">{{ event.description|striptags|truncatechars:200 }}</small></p>
+    {% if event.organization and not event.organization.is_deleted and show_org %}
         <p class="card-text">
-        {% if event.organization and not event.organization.is_deleted and show_org %}
-            {% if event.organization.avatar %}
-                {% generateimage "header:thumbnail" source=event.organization.avatar -- alt=event.organization.title %}
-            {% endif %}
-                <strong>{% trans "by" %}</strong>
-                <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.title }}</a> {{ event.created|timesince }} {% trans "ago" %}
+        {% if event.organization.avatar %}
+            {% generateimage "header:thumbnail" source=event.organization.avatar -- alt=event.organization.title %}
         {% endif %}
+            <strong>{% trans "by" %}</strong>
+            <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.title }}</a> {{ event.created|timesince }} {% trans "ago" %}
         </p>
+    {% endif %}
         <p class="card-text">
-            <i class="bi bi-pin-map"></i>&nbsp;{% if event.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ event.address.short_address }}{% endif %}<br/>
-            <i class="bi bi-calendar-date"></i>&nbsp;{% if event.is_dateless %}<span class="badge text-bg-warning">{% trans "Dateless" %}</span>{% else %}{{ event.start_date|date:"M j, Y" }}{% endif %}<br/>
+            <i class="bi bi-pin-map"></i>{% if event.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ event.address.short_address }}{% endif %}<br/>
+            <i class="bi bi-calendar-date"></i>{% if event.is_dateless %}<span class="badge text-bg-warning">{% trans "Dateless" %}</span>{% else %}{{ event.start_date|date:"M j, Y" }}{% endif %}<br/>
 
         {% if event.tags.all and event.hashtag %}
-            <i class="bi bi-tags"></i>&nbsp;{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+            <i class="bi bi-tags"></i>{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
             <span class="vert-delimiter">|</span>
-            <i class="bi bi-hash"></i>&nbsp;{{ event.hashtag }}
+            <i class="bi bi-hash"></i>{{ event.hashtag }}
         {% elif event.tags.all %}
-            <i class="bi bi-tags"></i>&nbsp;{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+            <i class="bi bi-tags"></i>{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
         {% elif event.hashtag %}
-            <i class="bi bi-hash"></i>&nbsp;{{ event.hashtag }}>
+            <i class="bi bi-hash"></i>{{ event.hashtag }}>
         {% endif %}
         </p>
 
-    {% if event.author.profile.avatar %}
-        {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
-    {% else %}
-        <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
-    {% endif %}
-        <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a>
-        {% trans "created" %} {{ event.created|timesince }} {% trans "ago" %}
+        <p class="card-text">
+        {% if event.author.profile.avatar %}
+            {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+        {% else %}
+            <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+        {% endif %}
+            <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a>
+            {% trans "created" %} {{ event.created|timesince }} {% trans "ago" %}
+        </p>
     </div>
 
-    <div class="card-footer bg-transparent border-success">
-        <p class="card-text">
+    <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <small class="text-muted">
-                <i class="bi bi-feather"></i> {{ event.get_comments_count }}
+                <i class="bi bi-feather"></i>{{ event.get_comments_count }}
                 <span class="vert-delimiter">|</span>
-                <i class="bi bi-eye"></i> {{ event.get_views_count }}
+                <i class="bi bi-eye"></i>{{ event.get_views_count }}
 
                 <br/>
 

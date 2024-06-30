@@ -95,7 +95,7 @@
 /*****************************************************************************/
 /*****************************************************************************/
 /***                                                                       ***/
-/*** INSTANCE (Account, Blog, Event, Organization, Team)                   ***/
+/*** INSTANCE (Account, Blog, Event, Place Organization, Team)             ***/
 /***                                                                       ***/
 /*****************************************************************************/
 /*****************************************************************************/
@@ -114,6 +114,8 @@
         h4 {
             text-transform:     none;
         }
+
+        /*
         blockquote {
             padding:            5px 10px;
             margin-bottom:      10px;
@@ -123,34 +125,11 @@
                 margin-bottom:  0px;
             }
         }
-    }
-    .page-list-no-btn() {
-        //background-color:       @white;
-        padding-top:            10px;
-        padding-bottom:         50px;
-
-        h1, h2, h3, h4 {
-            font-weight:        500;
-            text-transform:     uppercase;
-            margin:             0 0 5px 0;
-            padding:            5px 0;
-        }
-        h4 {
-            text-transform:     none;
-        }
-        blockquote {
-            padding:            5px 10px;
-            margin-bottom:      10px;
-
-            p {
-                font-size:      @font-size-base;
-                margin-bottom:  0px;
-            }
-        }
+        */
     }
     .page-create-edit() {
         //background-color:       @white;
-        padding-top:            50px;
+        padding-top:            10px;
         padding-bottom:         50px;
 
         h3 {
@@ -178,15 +157,6 @@
         h4 {
             text-transform:     none;
         }
-        blockquote {
-            padding:            5px 10px;
-            margin-bottom:      10px;
-
-            p {
-                font-size:      @font-size-base;
-                margin-bottom:  0px;
-            }
-        }
 
         .instance-attachments,
         .instance-comments {
@@ -195,10 +165,6 @@
             margin-bottom:      10px;
         }
     }
-}
-
-section {
-    padding-bottom: 10px;
 }
 
 /*****************************************************************************/
@@ -236,23 +202,6 @@ section {
 /***                                                                       ***/
 /*****************************************************************************/
 /*****************************************************************************/
-.font-style-mixin(
-        @font-color:    inherit,
-        @font-size:     inherit,
-        @font-weight:   normal) {
-    color:                  @font-color;
-    font-size:              @font-size;
-    font-weight:            @font-weight;
-    text-shadow:            1px 1px 2px @gray;
-}
-
-.placeholder-style(@style) {
-              &:-moz-placeholder  { font-style: @style; } // Firefox 4-18
-             &::-moz-placeholder  { font-style: @style; } // Firefox 19+
-         &:-ms-input-placeholder  { font-style: @style; } // Internet Explorer 10+
-    &::-webkit-input-placeholder  { font-style: @style; } // Safari and Chrome
-}
-
 .circle(
         @radius,
         @background-color,

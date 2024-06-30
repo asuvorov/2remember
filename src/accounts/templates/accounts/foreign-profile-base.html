@@ -1,31 +1,47 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% load accounttags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<account>               -
+        :<created_organizations> -
+        :<related_organizations> -
+        :<phone_numbers>         -
+        :<social_links>          -
+        :<show_complain_form>    -
+{% endcomment %}
 
 {% block title %}{% trans "Profile" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ account.profile.auth_name }}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block header %}
+{% comment %}
     {% need_to_know_upcoming_events_tag   request account as need_to_know_upcoming_events %}
     {% need_to_know_completed_events_tag  request account as need_to_know_completed_events %}
     {% need_to_know_affiliated_events_tag request account as need_to_know_affiliated_events %}
 
     {% need_to_know_canceled_participations_tag request account as need_to_know_canceled_participations %}
     {% need_to_know_rejected_participations_tag request account as need_to_know_rejected_participations %}
-
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'account-list' %}">{% trans "Members" %}</a>
-                    <i class="bi bi-chevron-circle-right"></i>
-                    <a href="">{% trans "Profile" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <div class="nav-sub-header">
     <div class="container">
@@ -59,7 +75,8 @@
         </div>
     </div>
 </div>
+{% endcomment %}
 {% endblock %}
 
-{% block extra_content %}
+{% block content %}
 {% endblock %}

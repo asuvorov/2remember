@@ -130,15 +130,23 @@
 
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Media -->
-            {% include "blog/fragments/post-media-status-breakdown.html" %}
+        {% if request.user.is_authenticated %}
+            <section>
+                {% include "blog/fragments/post-media-status-breakdown.html" %}
+            </section>
+        {% endif %}
 
             <!-- Link to Page -->
-            <h4>{% trans "Link to this Page" %}</h4>
-            <input type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+            <section>
+                <h4>{% trans "Link to this Page" %}</h4>
+                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+            </section>
 
             <!-- Share Links -->
-            <h4>{% trans "Share" %}</h4>
-            {% include "app/fragments/share-on-social.html" %}
+            <section>
+                <h4>{% trans "Share" %}</h4>
+                {% include "app/fragments/share-on-social.html" %}
+            </section>
         </div>
     </div>
 </div>

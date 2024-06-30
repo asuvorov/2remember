@@ -133,10 +133,10 @@
                         <br class="hidden-sm hidden-md hidden-lg" />
 
                     {% if event.is_dateless %}
-                        <i class="bi bi-calendar"></i>
+                        <i class="bi bi-calendar-date"></i>
                         <span class="label label-warning">{% trans "Dateless" %}</span>
                     {% else %}
-                        <i class="bi bi-calendar"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}
+                        <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}
                         <span class="vert-delimiter">|</span>
                         <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                     {% endif %}

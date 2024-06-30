@@ -97,8 +97,8 @@ def _retrieve_account_list_with_privacy(request):
 
 def is_profile_complete(user):
     """Docstring."""
-    return user.profile.is_completed
-
+    # FIXME: return user.profile.is_completed
+    return True
 
 # =============================================================================
 # ===
@@ -1019,7 +1019,8 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    is_complained = False
+    created_organizations = []
+    related_organizations = []
     show_complain_form = False
 
     # -------------------------------------------------------------------------
@@ -1032,6 +1033,13 @@ def profile_view(request, user_id):
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the Phone Numbers.
+    # -------------------------------------------------------------------------
+    phone_numbers = Phone.objects.filter(
+        content_type=ContentType.objects.get_for_model(account.profile),
+        object_id=account.profile.id)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Account Social Links.
@@ -1052,14 +1060,13 @@ def profile_view(request, user_id):
     if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Account.
-        is_complained = account.profile.is_complained_by_user(request.user)
-
-        if not is_complained:
+        if not account.profile.is_complained_by_user(request.user):
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
             #     Event(s), as the Account.
-            if len(get_participations_intersection(request.user, account)) > 0:
-                show_complain_form = True
+            # if len(get_participations_intersection(request.user, account)) > 0:
+            #     show_complain_form = True
+            show_complain_form = True
 
     # -------------------------------------------------------------------------
     # --- Get QuerySet of Organizations with the Organization Privacy Settings:
@@ -1070,84 +1077,85 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, where the User is
     #     a Staff Member.
-    staff_member_organizations = account.profile.staff_member_organizations.all()
+    # staff_member_organizations = account.profile.staff_member_organizations.all()
 
     # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, where the User is
     #     a Group Member.
-    group_member_organizations = account.profile.group_member_organizations.all()
+    # group_member_organizations = account.profile.group_member_organizations.all()
 
-    if request.user.is_authenticated:
-        # ---------------------------------------------------------------------
-        # --- Retrieve the List of Organizations, created by User.
-        created_organizations = account.created_organizations.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        )
+    # if request.user.is_authenticated:
+    #     # ---------------------------------------------------------------------
+    #     # --- Retrieve the List of Organizations, created by User.
+    #     created_organizations = account.created_organizations.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     )
 
-        # ---------------------------------------------------------------------
-        # --- Related Organizations.
-        related_organizations = staff_member_organizations | group_member_organizations
-        related_organizations = related_organizations.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        )
-    else:
-        # ---------------------------------------------------------------------
-        # --- Retrieve the List of Organizations, created by User.
-        created_organizations = account.created_organizations.filter(
-            is_hidden=False,
-            is_deleted=False)
+    #     # ---------------------------------------------------------------------
+    #     # --- Related Organizations.
+    #     related_organizations = staff_member_organizations | group_member_organizations
+    #     related_organizations = related_organizations.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     )
+    # else:
+    #     # ---------------------------------------------------------------------
+    #     # --- Retrieve the List of Organizations, created by User.
+    #     created_organizations = account.created_organizations.filter(
+    #         is_hidden=False,
+    #         is_deleted=False)
 
-        # ---------------------------------------------------------------------
-        # --- Related Organizations.
-        related_organizations = staff_member_organizations | group_member_organizations
-        related_organizations = related_organizations.filter(
-            is_hidden=False,
-            is_deleted=False)
+    #     # ---------------------------------------------------------------------
+    #     # --- Related Organizations.
+    #     related_organizations = staff_member_organizations | group_member_organizations
+    #     related_organizations = related_organizations.filter(
+    #         is_hidden=False,
+    #         is_deleted=False)
 
-    related_organizations = related_organizations.exclude(id__in=created_organizations)
+    # related_organizations = related_organizations.exclude(id__in=created_organizations)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    account.profile.increase_views_count(request)
+    # account.profile.increase_views_count(request)
 
     return render(
         request, "accounts/foreign-profile-info.html", {
-            "account":                      account,
-            "created_organizations":        created_organizations,
-            "related_organizations":        related_organizations,
-            "social_links":                 social_links,
-            "show_complain_form":           show_complain_form,
+            "account":                  account,
+            "created_organizations":    created_organizations,
+            "related_organizations":    related_organizations,
+            "phone_numbers":            phone_numbers,
+            "social_links":             social_links,
+            "show_complain_form":       show_complain_form,
         })
 
 

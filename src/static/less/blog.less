@@ -35,79 +35,56 @@
 // ----------------------------------------------------------------------------
 // --- Post Thumbnail
 // ----------------------------------------------------------------------------
-.thumbnail {
-    border:                 none;
-    border-radius:          0px;
-    padding:                0;
-}
-.post-thumb-hor {
-    display:                inline-block;
-    width:                  100%;
-    box-shadow:             1px 1px 3px rgba(0, 0, 0, 0.1);
-    margin:                 0 0 10px 0 !important;
+.post-thumbnail-hor {
+    background-color:       #eef !important;
+    border-top:             3px solid @brand-primary;
+    margin:                 0px !important;
 
-    .post-header {
-        h4 {
-            font-weight:        bold;
-            text-transform:     uppercase;
-            border:             none !important;
-            padding:            10px !important;
-            margin:             0    !important
+    p.card-text {
+        font-size:          0.85rem;
+        line-height:        1.25;
+        margin-top:         0;
+        margin-bottom:      0.5rem;
+    }
+
+    div#preview img {
+        object-fit:         cover;
+        object-position:    center;
+        width:              100vw;
+        height:             50vh;
+        overflow:           hidden;
+    }
+    .card-header {
+        border-bottom:      3px solid @brand-primary;
+        padding:            .5rem;
+
+        h5 {
+            font-weight:    bold;
+            text-transform: uppercase;
+            padding:        5px;
+            margin:         0px;
         }
     }
-    .post-author {
-        font-size:          @font-size-small;
-        border-top:         3px solid @brand-primary;
-        padding:            5px 10px 0 10px;
-        margin:             0;
-
-        p {
-            margin-bottom:  5px;
-        }
-    }
-    .post-counts {
-        font-size:          @font-size-small;
-        text-align:         right;
-        padding:            0 10px;
-        margin:             5px 0;
+    .card-body {
+        padding:            .5rem;
 
         i {
-            margin-right:   5px;
-        }
-        p {
-            margin:         0;
+            margin-right:   10px;
         }
     }
-    .post-tags {
-        font-size:          @font-size-small;
-        padding:            0 10px;
-        margin:             5px 0;
+    .card-footer {
+        padding:            .5rem;
 
         i {
-            margin-right:   5px;
+            margin-right:   10px;
         }
-        p {
-            margin:         0;
-        }
-    }
-    .post-container {
-        border-top:         3px solid @brand-primary;
-        padding:            10px 0 0 0;
-
-        .post-avatar {}
-        .post-content {
-            padding:        10px;
-        }
-    }
-    .learn-more {
-        a {
+        .learn-more a {
             width:          auto !important;
             float:          right;
-            margin:         0 10px 10px 10px !important;
         }
     }
 }
-.post-thumb-search {
+.post-thumbnail-search {
     background-color:       @white;
     box-shadow:             1px 1px 3px rgba(0, 0, 0, 0.1);
     padding:                10px;

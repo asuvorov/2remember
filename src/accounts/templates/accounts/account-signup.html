@@ -167,17 +167,19 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <h4>{% trans "Tips" %}</h4>
+            <section>
+                <h4>{% trans "Tips" %}</h4>
 
-            <div class="alert alert-info" role="alert">
-            {% blocktrans %}
-                This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a>.
-            {% endblocktrans %}
-            </div>
+                <div class="alert alert-info" role="alert">
+                {% blocktrans %}
+                    This Information is only visible to People, who need to see it, and is private by default. To understand, who can see what if this Information, please read our <a class="alert-link" data-bs-toggle="modal" data-bs-target="#privacyPolicyPopupModal">Privacy Policy</a>.
+                {% endblocktrans %}
+                </div>
 
-            <div class="alert alert-success" role="alert">
-                {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
-            </div>
+                <div class="alert alert-success" role="alert">
+                    {% trans "After signing up and successful Confirmation of your Email, you will be redirected to the Profile Page, where you can add your Location, Contact Details and social Links." %}
+                </div>
+            </section>
         </div>
     </div>
 </div>

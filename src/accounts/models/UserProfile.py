@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 
 import pendulum
 
+from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
     Address,
@@ -40,6 +41,13 @@ from events.models import (
 # -----------------------------------------------------------------------------
 # --- User Profile Model Choices.
 # -----------------------------------------------------------------------------
+PrivacyMode = enum(
+    PARANOID="0",
+    NORMAL="1")
+privacy_choices = [
+    (PrivacyMode.PARANOID,  _("Paranoid")),
+    (PrivacyMode.NORMAL,    _("Normal")),
+]
 
 
 # -----------------------------------------------------------------------------

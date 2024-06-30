@@ -18,8 +18,7 @@ from rest_framework import (
     viewsets,
     parsers,
     renderers,
-    mixins
-    )
+    mixins)
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.generics import get_object_or_404
@@ -27,8 +26,7 @@ from rest_framework.permissions import (
     AllowAny,
     IsAdminUser,
     IsAuthenticated,
-    IsAuthenticatedOrReadOnly,
-    )
+    IsAuthenticatedOrReadOnly)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -39,35 +37,32 @@ from rest_framework.views import APIView
 from annoying.functions import get_object_or_None
 from termcolor import cprint
 
+from ddcore.models import (
+    Comment,
+    Complaint,
+    Rating)
+
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
-from api.v1.api_challenges.utils import (
-    event_access_check_required,
-    event_org_staff_member_required,
-    )
-from api.v1.api_organizations.utils import (
-    organization_access_check_required,
-    organization_staff_member_required,
-    )
+# from api.v1.api_events.utils import (
+#     event_access_check_required,
+#     event_org_staff_member_required,
+#     )
+# from api.v1.api_organizations.utils import (
+#     organization_access_check_required,
+#     organization_staff_member_required,
+#     )
 from blog.models import Post
-from challenges.choices import (
-    CHALLENGE_STATUS,
-    PARTICIPATION_STATUS,
-    )
-from challenges.models import (
-    Challenge,
-    Participation,
-    )
-from core.models import (
-    Comment,
-    Complaint,
-    Rating,
+from events.models import (
+    Event,
+    EventStatus,
+    # Participation,
+    # ParticipationStatus
     )
 from organizations.models import (
     Organization,
-    OrganizationStaff,
-    )
+    OrganizationStaff)
 
 
 # =============================================================================
@@ -151,20 +146,20 @@ class CommentListViewSet(APIView):
             # -----------------------------------------------------------------
             # --- Retrieve the Event
             # -----------------------------------------------------------------
-            challenge = get_object_or_None(
+            event = get_object_or_None(
                 Event,
                 id=event_id,
             )
 
-            if not challenge:
+            if not event:
                 return Response({
                     "message":      _("Event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            content_type = ContentType.objects.get_for_model(challenge)
-            object_id = challenge.id
+            content_type = ContentType.objects.get_for_model(event)
+            object_id = event.id
 
-            cprint("[---  INFO   ---] FOUND CHALLENGE : %s" % challenge, "cyan")
+            cprint("[---  INFO   ---] FOUND event : %s" % event, "cyan")
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Organization
@@ -373,7 +368,7 @@ class ComplaintListViewSet(APIView):
         # ---------------------------------------------------------------------
         if not account_id and not event_id and not organization_id:
             return Response({
-                "message":      _("Neither Account, nor Challenge, nor Organization, ID provided."),
+                "message":      _("Neither Account, nor event, nor Organization, ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
         if not complaint_text:
@@ -407,7 +402,7 @@ class ComplaintListViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
-            #     Challenge(s), as the Account.
+            #     event(s), as the Account.
             if len(get_participations_intersection(request.user, account)) <= 0:
                 return Response({
                     "message":      _("You don't have Permissions to perform the Action."),
@@ -417,35 +412,35 @@ class ComplaintListViewSet(APIView):
             object_id = account.profile.id
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the Challenge
+        # --- Retrieve the event
         # ---------------------------------------------------------------------
         if event_id:
-            challenge = get_object_or_None(
-                Challenge,
+            event = get_object_or_None(
+                event,
                 id=event_id,
             )
 
-            if not challenge:
+            if not event:
                 return Response({
-                    "message":      _("Challenge not found."),
+                    "message":      _("event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
             # --- Check, if the User has already complained to the Account
-            is_complained = challenge.is_complained_by_user(
+            is_complained = event.is_complained_by_user(
                 request.user)
 
             if is_complained:
                 return Response({
-                    "message":      _("You already complained on the Challenge."),
+                    "message":      _("You already complained on the event."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # -----------------------------------------------------------------
-            # --- Check, if the registered User participated in the Challenge.
+            # --- Check, if the registered User participated in the event.
             participation = get_object_or_None(
                 Participation,
                 user=request.user,
-                challenge=challenge,
+                event=event,
             )
 
             if not participation:
@@ -461,8 +456,8 @@ class ComplaintListViewSet(APIView):
                     "message":      _("You don't have Permissions to perform the Action."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            content_type = ContentType.objects.get_for_model(challenge)
-            object_id = challenge.id
+            content_type = ContentType.objects.get_for_model(event)
+            object_id = event.id
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Organization
@@ -490,24 +485,24 @@ class ComplaintListViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Retrieve User's Participations to the Organization's
-            #     Challenges.
-            completed_challenges = Challenge.objects.filter(
+            #     events.
+            completed_events = event.objects.filter(
                 organization=organization,
-                status=CHALLENGE_STATUS.COMPLETE,
+                status=EventStatus.COMPLETE,
             )
 
-            event_ids = completed_challenges.values_list(
+            event_ids = completed_events.values_list(
                 "pk", flat=True
             )
 
             try:
                 participation = Participation.objects.filter(
                     user=request.user,
-                    challenge__pk__in=event_ids,
+                    event__pk__in=event_ids,
                     status__in=[
-                        PARTICIPATION_STATUS.WAITING_FOR_SELFREFLECTION,
-                        PARTICIPATION_STATUS.ACKNOWLEDGED,
-                        PARTICIPATION_STATUS.WAITING_FOR_ACKNOWLEDGEMENT
+                        ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+                        ParticipationStatus.ACKNOWLEDGED,
+                        ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
                     ]
                 ).latest("pk")
 
@@ -589,11 +584,11 @@ class RatingListViewSet(APIView):
                 organization_id             :uint:
                 organizer_id                :uint:
 
-                challenge_rating            :int:
+                event_rating            :int:
                 organization_rating         :int:
                 organizer_rating            :int:
 
-                challenge_review_text       :str:
+                event_review_text       :str:
                 organization_review_text    :str:
                 organizer_review_text       :str:
 
@@ -607,10 +602,10 @@ class RatingListViewSet(APIView):
                     "event_id":                 1,
                     "organization_id":              1,
                     "organizer_id":                 1,
-                    "challenge_rating":             5,
+                    "event_rating":             5,
                     "organization_rating":          3,
                     "organizer_rating":             4,
-                    "challenge_review_text":        "Challenge Review Text",
+                    "event_review_text":        "event Review Text",
                     "organization_review_text":     "Organization Review Text",
                     "organizer_review_text":        "Organizer Review Text"
                 }
@@ -625,23 +620,23 @@ class RatingListViewSet(APIView):
         organization_id = request.data.get("organization_id", "")
         organizer_id = request.data.get("organizer_id", "")
 
-        challenge_rating = request.data.get("challenge_rating", "")
+        event_rating = request.data.get("event_rating", "")
         organization_rating = request.data.get("organization_rating", "")
         organizer_rating = request.data.get("organizer_rating", "")
 
-        challenge_review_text = request.data.get("challenge_review_text", "")
+        event_review_text = request.data.get("event_review_text", "")
         organization_review_text = request.data.get("organization_review_text", "")
         organizer_review_text = request.data.get("organizer_review_text", "")
 
-        cprint("[---  DUMP   ---] CHALLENGE        ID : %s" % event_id, "yellow")
+        cprint("[---  DUMP   ---] event        ID : %s" % event_id, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION     ID : %s" % organization_id, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER        ID : %s" % organizer_id, "yellow")
 
-        cprint("[---  DUMP   ---] CHALLENGE    RATING : %s" % challenge_rating, "yellow")
+        cprint("[---  DUMP   ---] event    RATING : %s" % event_rating, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION RATING : %s" % organization_rating, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER    RATING : %s" % organizer_rating, "yellow")
 
-        cprint("[---  DUMP   ---] CHALLENGE    REVIEW : %s" % challenge_review_text, "yellow")
+        cprint("[---  DUMP   ---] event    REVIEW : %s" % event_review_text, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION REVIEW : %s" % organization_review_text, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER    REVIEW : %s" % organizer_review_text, "yellow")
 
@@ -653,12 +648,12 @@ class RatingListViewSet(APIView):
                 "message":      _("Neither Event, nor Organizer ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not challenge_rating and not organizer_rating:
+        if not event_rating and not organizer_rating:
             return Response({
                 "message":      _("Neither Event, nor Organizer Rating provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not challenge_review_text and not organizer_review_text:
+        if not event_review_text and not organizer_review_text:
             return Response({
                 "message":      _("Neither Event, nor Organizer Review Text provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -675,27 +670,27 @@ class RatingListViewSet(APIView):
                 }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and rate the Challenge
+        # --- Retrieve and rate the event
         # ---------------------------------------------------------------------
         if event_id:
-            challenge = get_object_or_None(
-                Challenge,
+            event = get_object_or_None(
+                event,
                 id=event_id,
             )
 
-            if not challenge:
+            if not event:
                 return Response({
-                    "message":      _("Challenge not found."),
+                    "message":      _("event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
-            # --- Check, if the User has already rated the Challenge.
-            is_rated = challenge.is_rated_by_user(
+            # --- Check, if the User has already rated the event.
+            is_rated = event.is_rated_by_user(
                 request.user)
 
             if is_rated:
                 return Response({
-                    "message":      _("You already rated the Challenge."),
+                    "message":      _("You already rated the event."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
             # -----------------------------------------------------------------
@@ -703,7 +698,7 @@ class RatingListViewSet(APIView):
             participation = get_object_or_None(
                 Participation,
                 user=request.user,
-                challenge=challenge,
+                event=event,
             )
 
             if not participation:
@@ -718,16 +713,16 @@ class RatingListViewSet(APIView):
                     "message":      _("You don't have Permissions to perform the Action."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            content_type = ContentType.objects.get_for_model(challenge)
-            object_id = challenge.id
+            content_type = ContentType.objects.get_for_model(event)
+            object_id = event.id
 
             rating, created = Rating.objects.get_or_create(
                 author=request.user,
                 content_type=content_type,
                 object_id=object_id,
             )
-            rating.rating = int(challenge_rating)
-            rating.review_text = challenge_review_text
+            rating.rating = int(event_rating)
+            rating.review_text = event_review_text
             rating.save()
 
         # ---------------------------------------------------------------------
@@ -747,7 +742,7 @@ class RatingListViewSet(APIView):
             content_type = ContentType.objects.get_for_model(organization)
             object_id = organization.id
 
-            if challenge.organization == organization:
+            if event.organization == organization:
                 rating, created = Rating.objects.get_or_create(
                     author=request.user,
                     content_type=content_type,
@@ -774,7 +769,7 @@ class RatingListViewSet(APIView):
             content_type = ContentType.objects.get_for_model(organizer.profile)
             object_id = organizer.profile.id
 
-            if challenge.author == organizer:
+            if event.author == organizer:
                 rating, created = Rating.objects.get_or_create(
                     author=request.user,
                     content_type=content_type,

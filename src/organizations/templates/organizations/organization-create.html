@@ -179,17 +179,19 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <h4>{% trans "Tips" %}</h4>
+            <section>
+                <h4>{% trans "Tips" %}</h4>
 
-            <div class="alert alert-info">
-            {% blocktrans %}
-                You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
-            {% endblocktrans %}
-            </div>
+                <div class="alert alert-info">
+                {% blocktrans %}
+                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
+                {% endblocktrans %}
+                </div>
 
-            <div class="alert alert-success">
-                {% trans "After creating the Organization, you will be redirected to the Details Page, where you can attach related Images, Documents and Links." %}
-            </div>
+                <div class="alert alert-success">
+                    {% trans "After creating the Organization, you will be redirected to the Details Page, where you can attach related Images, Documents and Links." %}
+                </div>
+            </section>
         </div>
     </div><!-- /.row -->
 </div><!-- /#organization-create .container -->
