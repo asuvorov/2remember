@@ -61,6 +61,7 @@ DATABASES = {
 
 DOMAIN_NAME = "2remember.live"
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["https://*.2remember.live"]
 APPEND_SLASH = True
 
 TIME_ZONE = "America/Los_Angeles"
