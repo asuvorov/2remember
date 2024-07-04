@@ -154,6 +154,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ###############################################################################
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -184,6 +185,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
+    "corsheaders",
     "ddcore",
 
     "adminsortable2",
