@@ -6,7 +6,7 @@
         {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
     </div>
 {% empty %}
-    <div class="col-12">
+    <div class="col-6 col-md-4 col-lg-3">
         <span class="badge text-bg-warning">{% trans "There are no posted Events at the Moment" %}</span>
     </div>
 {% endfor %}

@@ -10,7 +10,7 @@
 
 <div class="organization-thumbnail-hor card mb-3 shadow bg-body rounded">
     <div class="row g-0">
-        <div class="col-md-3">
+        <div class="col-md-4 col-lg-3">
             <a href="{% url 'organization-details' organization.slug %}">
             {% if organization.preview %}
                 {% generateimage "common:medium_fill_wide" source=organization.preview -- alt=organization.title class='img-fluid' %}
@@ -19,7 +19,7 @@
             </a>
         </div>
 
-        <div class="col-md-9">
+        <div class="col-md-8 col-lg-9">
             <div class="card-header bg-transparent">
                 <h5 class="card-title mb-0">
                     {{ organization.title|truncatechars:50 }}

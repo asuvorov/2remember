@@ -18,7 +18,7 @@
             <section id="organization-card">
                 <div class="card mb-3 shadow bg-body rounded">
                     <div class="row g-0">
-                        <div class="col-md-3">
+                        <div class="col-md-4 col-lg-3">
                         {% if organization.preview %}
                             {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.title class='img-fluid' %}
                         {% else %}
@@ -29,7 +29,7 @@
                         {% endif %}
                         </div>
 
-                        <div class="col-md-9">
+                        <div class="col-md-8 col-lg-9">
                             <div class="card-header bg-transparent">
                                 <h5 class="card-title mb-0">
                                     {{ organization.title }}
