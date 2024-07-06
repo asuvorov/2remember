@@ -20,7 +20,7 @@ PRODUCT_NAME = "2Remember"
 
 VERSION_API = "v1"
 VERSION_MAJOR = 0
-VERSION_MINOR = 0
+VERSION_MINOR = 1
 VERSION_PATCH = 0
 
 PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
@@ -61,6 +61,7 @@ DATABASES = {
 
 DOMAIN_NAME = "2remember.live"
 ALLOWED_HOSTS = ["*"]
+CORS_ORIGIN_ALLOW_ALL = True
 CSRF_TRUSTED_ORIGINS = ["https://*.2remember.live"]
 APPEND_SLASH = True
 
@@ -154,6 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ###############################################################################
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -184,6 +186,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
+    "corsheaders",
     "ddcore",
 
     "adminsortable2",
