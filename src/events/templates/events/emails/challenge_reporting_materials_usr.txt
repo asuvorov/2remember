@@ -4,8 +4,8 @@
 
 Dear, {{ user.first_name }}!
 
-The Event "{{ event.name }}", you participated, has added and/or edited the reporting Materials.
+The Event "{{ event.title }}", you participated, has added and/or edited the reporting Materials.
 
 Link to the Event Details Page: {{ event_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

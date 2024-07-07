@@ -149,15 +149,6 @@ class TeamMember(BaseModel):
 
     # -------------------------------------------------------------------------
     # --- Methods.
-    def image_tag(self):
-        """Render Avatar Thumbnail."""
-        if self.user.profile.avatar:
-            return f"<img src='{self.user.profile.avatar.url}' width='100' height='100' />"
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Avatar"
-    image_tag.allow_tags = True
 
     # -------------------------------------------------------------------------
     # --- Signals.

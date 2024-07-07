@@ -57,16 +57,17 @@ from .decorators import (
 from .forms import (
     CreateEditEventForm,
     AddEventMaterialsForm,
-    RoleFormSet,
+    # RoleFormSet,
     FilterEventForm)
 from .helpers import get_event_list
 from .models import (
     Category,
     Event,
     EventStatus,
-    Participation,
-    ParticipationStatus,
-    Role)
+    # Participation,
+    # ParticipationStatus,
+    # Role
+    )
 
 
 logger = logging.getLogger("py.warnings")
@@ -175,12 +176,6 @@ def event_list(request):
 @cache_page(60)
 def event_near_you_list(request):
     """List of the Events, near the User."""
-    # g = GeoIP()
-    # ip = get_client_ip(request)
-    # ip = "108.162.209.69"
-    # country = g.country(ip)
-    # city = g.city(ip)
-
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
     # -------------------------------------------------------------------------
@@ -203,7 +198,7 @@ def event_near_you_list(request):
             request.user.is_authenticated and
             request.user.profile.address):
         # ---------------------------------------------------------------------
-        # --- Filter by Country and City
+        # --- Filter by Country and City.
         if (
                 request.user.profile.address.country and
                 request.user.profile.address.city):
@@ -222,7 +217,7 @@ def event_near_you_list(request):
             events = []
     elif request.geo_data:
         # ---------------------------------------------------------------------
-        # --- Filter by Country and City
+        # --- Filter by Country and City.
         if request.geo_data["country_code"]:
             events = events.filter(address__country=request.geo_data["country_code"])
 
@@ -264,8 +259,7 @@ def event_near_you_list(request):
         events = paginator.page(1)
     except EmptyPage:
         # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
+        # --- If Page is out of Range (e.g. 9999), deliver last Page of the Results.
         events = paginator.page(paginator.num_pages)
 
     return render(
@@ -514,13 +508,6 @@ def event_create(request):
     # -------------------------------------------------------------------------
     organization_ids = map(int, query_dict.get("organization", []))
 
-    # -------------------------------------------------------------------------
-    # --- Geo IP.
-    # -------------------------------------------------------------------------
-    # g = GeoIP()
-    # ip = get_client_ip(request)
-    # country_code = g.country_code(ip)
-
     tz_name = request.session.get("django_timezone")
 
     # -------------------------------------------------------------------------
@@ -530,7 +517,8 @@ def event_create(request):
         request.POST or None, request.FILES or None,
         user=request.user,
         organization_ids=organization_ids,
-        tz_name=tz_name)
+        # tz_name=tz_name
+        )
     aform = AddressForm(
         request.POST or None, request.FILES or None,
         required=not request.POST.get("addressless", False),
@@ -542,20 +530,17 @@ def event_create(request):
     #     queryset=Role.objects.none())
     # formset_social = SocialLinkFormSet(
     #     request.POST or None, request.FILES or None,
-    #     prefix="socials",
     #     queryset=SocialLink.objects.none())
 
-    cprint(f"[---  INFO   ---] {form.is_valid()=}", "cyan")
-    cprint(f"[---  INFO   ---] {aform.is_valid()=}", "cyan")
-    # cprint(f"[---  INFO   ---] {formset_roles.is_valid()=}", "cyan")
-    # cprint(f"[---  INFO   ---] {formset_social.is_valid()=}", "cyan")
-
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
+        # cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
                 form.is_valid() and
-                aform.is_valid()):
-                # form.is_valid() and
-                # aform.is_valid() and
+                aform.is_valid()): # and
                 # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
@@ -574,6 +559,7 @@ def event_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             # social_links = formset_social.save(commit=True)
+            # cprint(f"                  {social_links=}", "yellow")
             # for social_link in social_links:
             #     social_link.content_type = ContentType.objects.get_for_model(event)
             #     social_link.object_id = event.id
@@ -596,6 +582,11 @@ def event_create(request):
             # -----------------------------------------------------------------
             # --- Save the Log.
 
+            return HttpResponseRedirect(reverse(
+                "event-details", kwargs={
+                    "slug":     event.slug,
+                }))
+
         # ---------------------------------------------------------------------
         # --- Failed to create the Event
         # --- Save the Log
@@ -615,7 +606,7 @@ def event_create(request):
 # ===
 # =============================================================================
 @cache_page(60 * 1)
-@event_access_check_required
+# @event_access_check_required
 def event_details(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -642,9 +633,9 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
     # -------------------------------------------------------------------------
-    social_links = SocialLink.objects.filter(
-        content_type=ContentType.objects.get_for_model(event),
-        object_id=event.id)
+    # social_links = SocialLink.objects.filter(
+    #     content_type=ContentType.objects.get_for_model(event),
+    #     object_id=event.id)
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
@@ -656,8 +647,8 @@ def event_details(request, slug):
             request.user,
             event)
 
-        if event.is_closed and not is_admin:
-            raise Http404
+        # if event.is_closed and not is_admin:
+        #     raise Http404
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Event.
@@ -669,51 +660,51 @@ def event_details(request, slug):
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
-        participation = get_object_or_None(
-            Participation,
-            user=request.user,
-            event=event)
+        # participation = get_object_or_None(
+        #     Participation,
+        #     user=request.user,
+        #     event=event)
 
-        if participation:
-            # -----------------------------------------------------------------
-            # --- If User already signed up for the Event, show withdraw
-            #     the Participation Form.
-            if (
-                    participation.is_confirmed or
-                    participation.is_waiting_for_confirmation):
-                show_withdraw_form = True
+        # if participation:
+        #     # -----------------------------------------------------------------
+        #     # --- If User already signed up for the Event, show withdraw
+        #     #     the Participation Form.
+        #     if (
+        #             participation.is_confirmed or
+        #             participation.is_waiting_for_confirmation):
+        #         show_withdraw_form = True
 
-            # -----------------------------------------------------------------
-            # --- If User canceled the Participation, and it's allowed
-            #     to apply again to the Event, show sign-up Form.
-            if participation.is_cancelled_by_user and event.allow_reenter:
-                show_signup_form = True
+        #     # -----------------------------------------------------------------
+        #     # --- If User canceled the Participation, and it's allowed
+        #     #     to apply again to the Event, show sign-up Form.
+        #     if participation.is_cancelled_by_user and event.allow_reenter:
+        #         show_signup_form = True
 
-            if (
-                    participation.is_waiting_for_selfreflection or
-                    participation.is_selfreflection_rejected):
-                show_selfreflection_form = True
+        #     if (
+        #             participation.is_waiting_for_selfreflection or
+        #             participation.is_selfreflection_rejected):
+        #         show_selfreflection_form = True
 
-            if participation.is_waiting_for_selfreflection:
-                show_not_participated_form = True
+        #     if participation.is_waiting_for_selfreflection:
+        #         show_not_participated_form = True
 
-            if (
-                    not is_rated and (
-                        participation.is_waiting_for_acknowledgement or
-                        participation.is_acknowledged)):
-                show_rate_form = True
+        #     if (
+        #             not is_rated and (
+        #                 participation.is_waiting_for_acknowledgement or
+        #                 participation.is_acknowledged)):
+        #         show_rate_form = True
 
-            if (
-                    not is_complained and (
-                        participation.is_waiting_for_selfreflection or
-                        participation.is_waiting_for_acknowledgement or
-                        participation.is_acknowledged)):
-                show_complain_form = True
-        else:
-            # -----------------------------------------------------------------
-            # --- If the Participation isn't found, return sign-up Form.
-            if not is_admin:
-                show_signup_form = True
+        #     if (
+        #             not is_complained and (
+        #                 participation.is_waiting_for_selfreflection or
+        #                 participation.is_waiting_for_acknowledgement or
+        #                 participation.is_acknowledged)):
+        #         show_complain_form = True
+        # else:
+        #     # -----------------------------------------------------------------
+        #     # --- If the Participation isn't found, return sign-up Form.
+        #     if not is_admin:
+        #         show_signup_form = True
 
         # ---------------------------------------------------------------------
         # --- Lookup for submitted Forms.
@@ -731,48 +722,49 @@ def event_details(request, slug):
         #     - Draft;
         #     - Complete;
         #     - Past due.
-        if event.is_draft or event.is_happened or event.is_closed:
-            raise Http404
+        pass
+        # if event.is_draft or event.is_happened or event.is_closed:
+        #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Prepare the Event Roles Breakdown.
     # -------------------------------------------------------------------------
-    roles_breakdown = []
+    # roles_breakdown = []
 
-    if event.event_roles.all():
-        for role in event.event_roles.all():
-            roles_breakdown.append({
-                "name":         role.name,
-                "required":     role.quantity,
-                "applied":      role.role_participations.filter(
-                    status__in=[
-                        ParticipationStatus.WAITING_FOR_CONFIRMATION,
-                        ParticipationStatus.CONFIRMATION_DENIED,
-                        ParticipationStatus.CONFIRMED,
-                    ],
-                ).count(),
-                "rejected":     role.role_participations.filter(
-                    status=ParticipationStatus.CONFIRMATION_DENIED,
-                ).count(),
-                "confirmed":    role.role_participations.filter(
-                    status=ParticipationStatus.CONFIRMED,
-                ).count(),
-            })
+    # if event.event_roles.all():
+    #     for role in event.event_roles.all():
+    #         roles_breakdown.append({
+    #             "name":         role.name,
+    #             "required":     role.quantity,
+    #             "applied":      role.role_participations.filter(
+    #                 status__in=[
+    #                     ParticipationStatus.WAITING_FOR_CONFIRMATION,
+    #                     ParticipationStatus.CONFIRMATION_DENIED,
+    #                     ParticipationStatus.CONFIRMED,
+    #                 ],
+    #             ).count(),
+    #             "rejected":     role.role_participations.filter(
+    #                 status=ParticipationStatus.CONFIRMATION_DENIED,
+    #             ).count(),
+    #             "confirmed":    role.role_participations.filter(
+    #                 status=ParticipationStatus.CONFIRMED,
+    #             ).count(),
+    #         })
 
     # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    is_newly_created = False
+    # is_newly_created = False
 
-    if (
-            event.author == request.user and
-            event.status == EventStatus.UPCOMING and
-            event.is_newly_created):
-        is_newly_created = True
+    # if (
+    #         event.author == request.user and
+    #         event.status == EventStatus.UPCOMING and
+    #         event.is_newly_created):
+    #     is_newly_created = True
 
-        event.is_newly_created = False
-        event.save()
+    #     event.is_newly_created = False
+    #     event.save()
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
@@ -780,7 +772,7 @@ def event_details(request, slug):
 
     return render(
         request, "events/event-details-info.html", {
-            "event":                    event,
+            "event":                        event,
             "participation":                participation,
             "is_admin":                     is_admin,
             "show_withdraw_form":           show_withdraw_form,
@@ -789,9 +781,9 @@ def event_details(request, slug):
             "show_not_participated_form":   show_not_participated_form,
             "show_rate_form":               show_rate_form,
             "show_complain_form":           show_complain_form,
-            "is_newly_created":             is_newly_created,
-            "roles_breakdown":              roles_breakdown,
-            "social_links":                 social_links,
+            # "is_newly_created":             is_newly_created,
+            # "roles_breakdown":              roles_breakdown,
+            # "social_links":                 social_links,
         })
 
 
@@ -867,7 +859,7 @@ def event_acknowledge(request, slug):
 # ===
 # =============================================================================
 @login_required
-@event_org_staff_member_required
+# @event_org_staff_member_required
 def event_edit(request, slug):
     """Edit Event."""
     cprint("***" * 27, "green")
@@ -887,10 +879,10 @@ def event_edit(request, slug):
     # -------------------------------------------------------------------------
     # --- Completed or closed (deleted) Events cannot be modified.
     # -------------------------------------------------------------------------
-    if (
-            event.is_complete or
-            event.is_closed):
-        raise Http404
+    # if (
+    #         event.is_complete or
+    #         event.is_closed):
+    #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -915,12 +907,12 @@ def event_edit(request, slug):
     #         content_type=ContentType.objects.get_for_model(event),
     #         object_id=event.id))
 
-    cprint(f"[---  INFO   ---] {form.is_valid()=}", "cyan")
-    cprint(f"[---  INFO   ---] {aform.is_valid()=}", "cyan")
-    # cprint(f"[---  INFO   ---] {formset_roles.is_valid()=}", "cyan")
-    # cprint(f"[---  INFO   ---] {formset_social.is_valid()=}", "cyan")
-
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
+        # cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
                 form.is_valid() and
                 aform.is_valid()):
@@ -1029,8 +1021,6 @@ def event_edit(request, slug):
             # -----------------------------------------------------------------
             # --- Save the Log.
 
-            # -----------------------------------------------------------------
-            # --- Silent Refresh.
             return HttpResponseRedirect(
                 reverse("event-details", kwargs={
                     "slug":     event.slug,
@@ -1046,7 +1036,7 @@ def event_edit(request, slug):
             "aform":            aform,
             # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
-            "event":        event,
+            "event":            event,
         })
 
 

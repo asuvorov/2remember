@@ -3,6 +3,8 @@
 
 {% comment %}
     Input Parameters:
+        :<request> - Request
+
         :<event>
         :[participation]
         :[show_signup_form]
@@ -13,6 +15,30 @@
         :[show_complain_form]
 {% endcomment %}
 
+{% if event.author == request.user %}
+    <a class="btn btn-warning w-100" href="{% url 'event-edit' event.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Event" %}</a>
+{% else %}
+    {% if not is_subscribed %}
+        <a class="btn btn-primary w-100 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
+    {% endif %}
+
+    <!-- Add Complaint -->
+    {% if show_complain_form %}
+        <p class="note">
+            <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
+            <p>
+            {% blocktrans %}
+                You see this Message, because in the you participated in the Event(s), organized by this event.<br/>
+                Let us know, if there's something to complain about it.
+            {% endblocktrans %}
+            </p>
+        </p>
+
+        <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
+    {% endif %}
+{% endif %}
+
+{% comment %}
 {% if event.is_complete %}
     <p><span class="label label-success">{% trans "This Event is complete" %}</span></p>
 {% elif event.is_closed %}
@@ -24,7 +50,7 @@
         <p class="note">
             <span class="label label-warning">{% trans "Confirmation required" %}</span><br/>
         {% if not is_admin %}
-            {% trans "You need to write an Application to participate in this Event. The Event Organizer will use your Application Text and your History on SaneSide to decide whether you are a good fit for this Event." %}
+            {% trans "You need to write an Application to participate in this Event. The Event Organizer will use your Application Text and your History on 2Remember to decide whether you are a good fit for this Event." %}
         {% endif %}
         </p>
     {% endif%}
@@ -45,7 +71,7 @@
                 <strong>{% trans "You can add reporting Materials, manage current Attachments, and describe Achievements." %}</strong>
             </p>
 
-            <a class="btn btn-primary" href="{% url 'event-reporting-materials' event.slug %}"><i class="fa fa-folder-o fa-fw"></i> {% trans "Reporting Materials" %}</a>
+            <a class="btn btn-primary" href="{% url 'event-reporting-materials' event.slug %}"><i class="bi bi-folder-o"></i> {% trans "Reporting Materials" %}</a>
         {% elif event.is_closed %}
             <p><strong>{% trans "There is nothing to do here." %}</strong></p>
         {% else %}
@@ -73,9 +99,9 @@
                     </strong>
                 </p>
 
-                <a class="btn btn-primary" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClonePopupModal" tabindex="-1"><i class="fa fa-clone fa-fw"></i> {% trans "Clone Event" %}</a>
+                <a class="btn btn-primary" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClonePopupModal" tabindex="-1"><i class="bi bi-clone"></i> {% trans "Clone Event" %}</a>
             {% else %}
-                <a class="btn btn-primary" href="{% url 'event-edit' event.slug %}"><i class="fa fa-edit fa-fw"></i> {% trans "Edit Event" %}</a>
+                <a class="btn btn-primary" href="{% url 'event-edit' event.slug %}"><i class="bi bi-edit"></i> {% trans "Edit Event" %}</a>
 
                 {% if event.is_draft %}
                     <p class="note">
@@ -83,7 +109,7 @@
                         <strong>{% trans "Post this Event when you are ready, so other Members can see it." %}</strong>
                     </p>
 
-                    <a class="btn btn-primary" name="post" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCreatePopupModal" tabindex="-1"><i class="fa fa-check fa-fw"></i> {% trans "Post Event" %}</a>
+                    <a class="btn btn-primary" name="post" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCreatePopupModal" tabindex="-1"><i class="bi bi-check"></i> {% trans "Post Event" %}</a>
                 {% elif event.is_dateless %}
                     <p class="note">
                         <span class="label label-warning">{% trans "Dateless." %}</span><br/>
@@ -103,7 +129,7 @@
                 {% endif %}
             {% endif %}
 
-            <a class="btn btn-danger" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClosePopupModal" tabindex="-1"><i class="fa fa-times fa-fw"></i> {% trans "Close Event" %}</a>
+            <a class="btn btn-danger" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClosePopupModal" tabindex="-1"><i class="bi bi-times"></i> {% trans "Close Event" %}</a>
         {% endif %}
     {% else %}
         {% if participation %}
@@ -142,7 +168,7 @@
                     </p>
                 {% endif %}
 
-                <a class="btn btn-primary btn-centered {% if not request.user.profile.is_completed %}disabled{% endif %}" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationPostPopupModal" tabindex="-1"><i class="fa fa-arrow-up fa-fw"></i> {% trans "Participate" %}</a>
+                <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationPostPopupModal" tabindex="-1"><i class="bi bi-arrow-up"></i> {% trans "Participate" %}</a>
             {% endif %}
 
             {% if show_withdraw_form %}
@@ -153,7 +179,7 @@
                 {% endif %}
                 </p>
 
-                <a class="btn btn-danger btn-centered" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationWithdrawPopupModal" tabindex="-1"><i class="fa fa-times fa-fw"></i> {% trans "Withdraw Application" %}</a>
+                <a class="btn btn-danger" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationWithdrawPopupModal" tabindex="-1"><i class="bi bi-times"></i> {% trans "Withdraw Application" %}</a>
             {% endif %}
         {% else %}
             {% if show_selfreflection_form %}
@@ -170,13 +196,13 @@
 
             {% if show_not_participated_form %}
                 <div id="div-not-participated">
-                    <a class="btn btn-warning not-participated" href="#"><i class="fa fa-times fa-fw"></i> {% trans "I did not participate" %}</a>
+                    <a class="btn btn-warning not-participated" href="#"><i class="bi bi-times"></i> {% trans "I did not participate" %}</a>
                 </div>
             {% endif %}
 
             {% if show_rate_form %}
                 <div id="div-add-rating">
-                    <a class="btn btn-warning add-rating" href="#"><i class="fa fa-thumbs-o-up fa-fw"></i> {% trans "Rate the Event" %}</a>
+                    <a class="btn btn-warning add-rating" href="#"><i class="bi bi-thumbs-o-up"></i> {% trans "Rate the Event" %}</a>
                 </div>
             {% endif %}
 
@@ -193,7 +219,7 @@
                         </p>
                     </p>
 
-                    <a class="btn btn-danger add-complaint" href="#"><i class="fa fa-info-circle fa-fw"></i> {% trans "Complain" %}</a>
+                    <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i> {% trans "Complain" %}</a>
                 </div>
             {% endif %}
         {% endif %}
@@ -204,3 +230,4 @@
         {% trans "You must have a User Account to participate in this Event." %}
     </div>
 {% endif %}
+{% endcomment %}

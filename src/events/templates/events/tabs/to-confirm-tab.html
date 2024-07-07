@@ -26,7 +26,7 @@ Event Details - to confirm
                         {% if profile.avatar and need_to_know_profile_details %}
                             {% generateimage "header:thumbnail" source=profile.avatar -- alt=profile.auth_name %}
                         {% else %}
-                            <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
+                            <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                         {% endif %}
 
                         {% if need_to_know_profile_details %}
@@ -37,7 +37,7 @@ Event Details - to confirm
                             {% elif profile.short_name %}
                                 {{ profile.short_name }}
                             {% else %}
-                                <i class="fa fa-user-secret fa-fw"></i>
+                                <i class="bi bi-user-secret"></i>
                             {% endif %}
                         {% endif %}
                         </a>
@@ -102,7 +102,7 @@ Event Details - to confirm
                     {% if profile.avatar and need_to_know_profile_details %}
                         {% generateimage "common:thumbnail" source=profile.avatar -- alt=profile.avatar %}
                     {% else %}
-                        <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
+                        <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                     {% endif %}
                     </a>
                 </td>
@@ -116,7 +116,7 @@ Event Details - to confirm
                         {% elif profile.short_name %}
                             {{ profile.short_name }}
                         {% else %}
-                            <i class="fa fa-user-secret fa-fw"></i>
+                            <i class="bi bi-user-secret"></i>
                         {% endif %}
                     {% endif %}
                     </a>
@@ -128,7 +128,7 @@ Event Details - to confirm
                 <td>
                 {% if profile.get_rating_avg > 0 %}
                     <div class="pull-left" style="color:orange;">
-                        <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ profile.get_rating_avg }}" />
+                        <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ profile.get_rating_avg }}" />
                     </div>
                 {% else %}
                     N/A

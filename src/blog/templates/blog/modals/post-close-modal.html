@@ -1,26 +1,23 @@
 {% load i18n %}
 
-<div class="modal fade" id="postClosePopupModal" tabindex="-1" role="dialog" aria-labelledby="postClosePopupModalLabel" aria-hidden="true">
+<div class="modal fade" id="postClosePopupModal" tabindex="-1" role="dialog" aria-labelledby="postClosePopupModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="postClosePopupModalLabel">{% trans "Close Post" %}</h4>
+                <h5 class="modal-title" id="postClosePopupModalLabel">{% trans "Close Post" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
                 <form id="post-close-modal-form" action="" method="POST">
                     {% csrf_token %}
-
-                    <p class="note">
-                        {% trans "Do you really want to close this Post?" %}
-                    </p>
+                    {% trans "Do you really want to close this Post?" %}
                 </form>
             </div>
 
             <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
                 <button type="button" class="btn btn-danger" onclick="post_close();">{% trans "Close" %}</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
             </div>
         </div>
     </div>
@@ -28,7 +25,7 @@
 
 <script>
     /*************************************************************************/
-    /*** Close Post                                                   ***/
+    /*** Close Post                                                        ***/
     /*************************************************************************/
     function post_close() {
         $.post("{% url 'api-post-close' 0 %}".replace("0", {{ post.id }}), {

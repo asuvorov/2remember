@@ -40,7 +40,11 @@ class CreateEditPostForm(forms.ModelForm):
                 }),
             "description": CKEditorUploadingWidget(),
             "content": CKEditorUploadingWidget(),
-            "tags": TagWidget(),
+            "tags": TagWidget(
+                attrs={
+                    "class":        "form-control",
+                    "placeholder":  _("Tags"),
+                }),
             "hashtag": forms.TextInput(
                 attrs={
                     "class":        "form-control",

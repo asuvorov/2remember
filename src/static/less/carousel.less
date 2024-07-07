@@ -1,0 +1,26 @@
+// https://raybo.org/posts/2021-03-27-consistent-height-carousels-with-css-gradients-by-hacking-the-bootstrap-5-carousel/
+/*
+#my-carousel .carousel-item:before {
+    content:            "";
+    background-image:   linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.5));
+    display:            block;
+    position:           absolute;
+    top:                0;
+    width:              100vw;
+    height:             100vh;
+}
+*/
+#my-carousel .carousel-item img {
+    object-fit:         cover;
+    object-position:    center;
+    height:             65vh;
+    overflow:           hidden;
+}
+#my-carousel .carousel-caption {
+    color:              white;
+
+    h1, p {
+        font-weight:    500;
+        text-shadow:    1px 1px 2px #000;
+    }
+}

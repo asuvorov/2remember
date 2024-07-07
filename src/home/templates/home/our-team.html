@@ -2,48 +2,59 @@
 
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<teams> - Teams List
+{% endcomment %}
+
 {% block title %}{% trans "Our Team" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="/">{% trans "Home" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'our-team' %}">{% trans "Our Team" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block extra_style %}
+{% endblock %}
 
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
 <div class="container">
-    <div id="our-team">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="alert alert-info">
-                    {% trans "Check out the Team behind the SaneSide" %}
-                </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Our Team" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
 
+{% block content %}
+<div id="our-team" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-12">
+            <div class="alert alert-info">{% trans "Check out the Team behind the 2Remember" %}</div>
+
+            <div class="row g-2">
             {% for team in teams %}
-                <div class="team-section">
-                    <h4>{{ team.name }}</h4>
+                <div class="col-12">
+                    <h3>{{ team.name }}</h3>
 
-                    <div class="row">
+                    <div class="row g-2">
                     {% for member in team.members.all %}
-                        {% include "accounts/fragments/team-member-thumbnail.html" with account=member %}
+                        <div class="col-6 col-md-3 col-lg-2">
+                            {% include "accounts/fragments/team-member-thumbnail.html" with account=member %}
+                        </div>
                     {% empty %}
-                        <div class="col-xs-24 col-sm-24 col-md-24">
-                            <p>
-                                <span class="label label-info">{% trans "There are no Team Members at the moment" %}</span>
-                            </p>
+                        <div class="col-12">
+                            <span class="badge text-bg-warning">{% trans "There are no Team Members at the Moment" %}</span>
                         </div>
                     {% endfor %}
                     </div>
                 </div>
             {% empty %}
+                <div class="col-12">
+                    <span class="badge text-bg-warning">{% trans "There are no Teams at the Moment" %}</span>
+                </div>
             {% endfor %}
             </div>
         </div>

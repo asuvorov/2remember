@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+from django.core.files import File
+from django.core.files.storage import default_storage as storage
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -90,15 +92,6 @@ class Partner(BaseModel):
 
     # -------------------------------------------------------------------------
     # --- Methods
-    def image_tag(self):
-        """Render Avatar Thumbnail."""
-        if self.avatar:
-            return f"<img src='{self.avatar.url}' width='100' height='60' />"
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Avatar"
-    image_tag.allow_tags = True
 
     # -------------------------------------------------------------------------
     # --- Signals
@@ -111,6 +104,36 @@ class Partner(BaseModel):
 
     def post_save(self, created, **kwargs):
         """Docstring."""
+
+        # ---------------------------------------------------------------------
+        # --- The Path for uploading Avatar Images is:
+        #
+        #            MEDIA_ROOT/partners/<id>/avatars/<filename>
+        #
+        # --- As long as the uploading Path is being generated before
+        #     the Blog Instance gets assigned with the unique ID,
+        #     the uploading Path for the brand new Blog looks like:
+        #
+        #            MEDIA_ROOT/partners/None/avatars/<filename>
+        #
+        # --- To fix this:
+        #     1. Open the Avatar File in the Path;
+        #     2. Assign the Avatar File Content to the Blog Avatar Object;
+        #     3. Save the Blog Instance. Now the Avatar Image in the
+        #        correct Path;
+        #     4. Delete previous Avatar File;
+        #
+        try:
+            if created:
+                avatar = File(storage.open(self.avatar.file.name, "rb"))
+
+                self.avatar = avatar
+                self.save()
+
+                storage.delete(avatar.file.name)
+
+        except Exception as exc:
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

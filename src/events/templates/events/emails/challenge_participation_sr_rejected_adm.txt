@@ -4,10 +4,10 @@
 
 Dear, {{ admin.first_name }}!
 
-{{ user.first_name }}'s Experience Report to your Event "{{ event.name }}" was rejected!
+{{ user.first_name }}'s Experience Report to your Event "{{ event.title }}" was rejected!
 
 Link to the Event Details Page: {{ event_link }}
 
 Link to the Member's Profile Page: {{ profile_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

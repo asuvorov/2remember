@@ -6,14 +6,15 @@
 {% endcomment %}
 
 {% if request.user.is_authenticated %}
+    {% comment %}
     <!-- Invite to participate in a Event -->
     {% if request.user.posted_events.get_dateless_upcoming.all %}
         <div class="btn-group">
-            <a class="btn btn-primary dropdown-toggle {% if not request.user.profile.is_completed %}disabled{% endif %}" data-toggle="dropdown"><i class="fa fa-wrench fa-fw"></i> {% trans "Invite to Event" %} <span class="caret"></span></a>
+            <a class="btn btn-primary w-100 mb-2 dropdown-toggle {% if not request.user.profile.is_completed %}disabled{% endif %}" data-toggle="dropdown"><i class="bi bi-wrench"></i> {% trans "Invite to Event" %} <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
             {% for event in request.user.posted_events.get_dateless_upcoming.all %}
-                <li><a href="#" class="invite-to-chl" event="{{ event.id }}">{{ event.name|truncatechars:30 }}</a></li>
+                <li><a href="#" class="invite-to-chl" event="{{ event.id }}">{{ event.title|truncatechars:30 }}</a></li>
             {% endfor %}
             </ul>
         </div>
@@ -22,7 +23,7 @@
     <!-- Invite to become an Organization Staff Member -->
     {% if request.user.created_organizations.all %}
         <div class="btn-group">
-            <a class="btn btn-primary dropdown-toggle {% if not request.user.profile.is_completed %}disabled{% endif %}" data-toggle="dropdown"><i class="fa fa-building-o fa-fw"></i> {% trans "Invite to Organization" %} <span class="caret"></span></a>
+            <a class="btn btn-primary w-100 mb-2 dropdown-toggle {% if not request.user.profile.is_completed %}disabled{% endif %}" data-toggle="dropdown"><i class="bi bi-building-o"></i> {% trans "Invite to Organization" %} <span class="caret"></span></a>
 
             <ul class="dropdown-menu" role="menu">
             {% for organization in request.user.created_organizations.all %}
@@ -31,9 +32,11 @@
             </ul>
         </div>
     {% endif %}
+    {% endcomment %}
 
     <!-- Add Complaint -->
     {% if show_complain_form %}
+    {% comment %}
         <p class="note">
             <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
             <p>
@@ -54,8 +57,9 @@
             {% endblocktrans %}
             </p>
         </p>
+    {% endcomment %}
 
-        <a class="btn btn-danger btn-centered add-complaint" href="#"><i class="fa fa-info-circle fa-fw"></i> {% trans "Complain" %}</a>
+        <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i> {% trans "Complain" %}</a>
     {% endif %}
 {% else %}
     <p class="note">

@@ -483,16 +483,6 @@ class Participation(BaseModel):
 
     # -------------------------------------------------------------------------
     # --- Methods
-    def image_tag(self):
-        """Render Avatar Thumbnail."""
-        if self.user.profile.avatar:
-            return f"<img src='{self.user.profile.avatar.url}' width='100' height='60' />"
-
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Avatar"
-    image_tag.allow_tags = True
 
     def email_notify_event_participant_confirmed(self, request=None):
         """Send Notification to the Event Participant."""

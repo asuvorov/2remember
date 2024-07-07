@@ -5,66 +5,77 @@
 {% load compress %}
 {% load imagekit %}
 
-{% block title %}{% trans "Create and populate Newsletter" %} - {{ block.super }}{% endblock %}
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Newsletter Form
+{% endcomment %}
+
+{% block title %}{% trans "Populate Newsletter" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
 
 {% block extra_script %}
 {% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'organization-details' organization.slug %}">{% trans "Details" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'organization-populate-newsletter' organization.slug %}">{% trans "Newsletter" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
+{% block breadcrumbs %}
 <div class="container">
-    <div id="organization-newsletter-create">
-        <div class="row">
-            <div class="col-xs-24 col-sm-16 col-md-18">
-                <form id="create-organization-newsletter-form" role="form" action="" method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-details' slug=organization.slug %}">{{ organization.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Newsletter" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
 
-                    {{ form.media }}
+{% block content %}
+<div id="organization-newsletter-create" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="create-organization-newsletter-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
 
-                    <div class="row">
-                        <div id="org-avatar" class="col-xs-24 col-sm-24 col-md-8">
-                        </div>
+                {{ form.media }}
 
-                        <div id="org-details" class="col-xs-24 col-sm-24 col-md-16">
-                            <div class="form-group {% if form.title.errors %}has-error{% endif %}">
-                                <div class="input-group">
-                                    {{ form.title }}
-                                    <div class="input-group-addon"><i class="fa fa-i-cursor fa-fw"></i></div>
-                                </div>
+                <!-- START NEWSLETTER DESCRIPTION -->
+                <section id="newsletter-description">
+                    <h3>{% trans "Description" %}</h3>
 
-                                <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
-
-                            <div class="form-group {% if form.content.errors %}has-error{% endif %}">
-                                {{ form.content }}
-
-                                <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                            </div>
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
-                </form>
-            </div>
+                </section>
+                <!--  END  NEWSLETTER DESCRIPTION -->
 
-            <div class="col-xs-24 col-sm-8 col-md-6">
-                <div class="actions">
-                    <a class="btn btn-primary btn-centered" name="submit"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Populate this Newsletter" %}</a>
-                </div>
-            </div>
+                <hr>
+
+                <!-- START NEWSLETTER CONTENT -->
+                <section id="newsletter-content">
+                    <h3>{% trans "Content" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="orm-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                            {{ form.content }}
+                            <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  NEWSLETTER CONTENT -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+            <a class="btn btn-success w-100 mb-2" name="submit"><i class="bi bi-send"></i>&nbsp;{% trans "Populate Newsletter" %}</a>
         </div>
     </div>
 </div>
@@ -74,7 +85,6 @@
 <script>
     $("a[name='submit']").click(function () {
         $("#spinner").fadeIn("slow");
-
         $("form#create-organization-newsletter-form").submit();
 
         return true;

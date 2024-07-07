@@ -4,13 +4,13 @@
 
 from .models import (
     EventCategory, event_category_choices,
-    EventColors, event_category_colors,
-    EventIcons, event_category_icons,
-    EventImages, event_category_images,
+    EventCategoryColors, event_category_colors,
+    EventCategoryIcons, event_category_icons,
+    EventCategoryImages, event_category_images,
     EventMode,
     EventStatus,
-    ParticipationRemoveMode,
-    ParticipationStatus, participation_status_choices,
+    # ParticipationRemoveMode,
+    # ParticipationStatus, participation_status_choices,
     Month, month_choices,
     DayOfWeek, day_of_week_choices,
     day_of_month_choices)
@@ -21,11 +21,11 @@ def pb_event_choices(request):
     return {
         "EventCategory":            EventCategory,
         "event_category_choices":   event_category_choices,
-        "EventColors":              EventColors,
+        "EventCategoryColors":      EventCategoryColors,
         "event_category_colors":    event_category_colors,
-        "EventIcons":               EventIcons,
+        "EventCategoryIcons":       EventCategoryIcons,
         "event_category_icons":     event_category_icons,
-        "EventImages":              EventImages,
+        "EventCategoryImages":      EventCategoryImages,
         "event_category_images":    event_category_images,
         "EventStatus":              EventStatus,
         "EventMode":                EventMode,
@@ -35,7 +35,7 @@ def pb_event_choices(request):
 def pb_participation_choices(request):
     """Docstring."""
     return {
-        "ParticipationRemoveMode":      ParticipationRemoveMode,
-        "ParticipationStatus":          ParticipationStatus,
-        "participation_status_choices": participation_status_choices,
+        # "ParticipationRemoveMode":      ParticipationRemoveMode,
+        # "ParticipationStatus":          ParticipationStatus,
+        # "participation_status_choices": participation_status_choices,
     }

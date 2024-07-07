@@ -11,7 +11,7 @@
             <li class="breadcrumb-item"><a href="{% url 'my-profile-participations' %}">{% trans "Participations" %}</a></li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block content %}
@@ -35,7 +35,7 @@
                 <h4>
                     <span class="hidden-xs">{% trans "Participated in Events" %}</span>
                     <span class="hidden-sm hidden-md hidden-lg">{% trans "Complete" %}</span>
-                    <a class="btn btn-rounded pull-right export-to-pdf" href="{% url 'my-profile-events-export' %}"><i class="fa fa-file-pdf-o fa-fw"></i> {% trans "Export to PDF" %}</a>
+                    <a class="btn pull-right export-to-pdf" href="{% url 'my-profile-events-export' %}"><i class="bi bi-file-pdf-o"></i> {% trans "Export to PDF" %}</a>
                 </h4>
 
                 <div id="participations-complete-section">
@@ -79,7 +79,7 @@
     {% include "events/modals/event-not-participated-modal.html" %}
     {% include "events/modals/event-rate-modal.html" %}
 
-    {% include "common/modals/complaint-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
 {% endif %}
 
 <!-- Scripts -->

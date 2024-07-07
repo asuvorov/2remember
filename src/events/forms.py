@@ -33,7 +33,7 @@ class CreateEditEventForm(forms.ModelForm):
         """Docstring."""
         self.user = kwargs.pop("user", None)
         self.organization_ids = kwargs.pop("organization_ids", None)
-        self.tz_name = kwargs.pop("tz_name", None)
+        # self.tz_name = kwargs.pop("tz_name", None)
 
         super().__init__(*args, **kwargs)
 
@@ -76,16 +76,16 @@ class CreateEditEventForm(forms.ModelForm):
         # ---------------------------------------------------------------------
         # --- Date/Time.
         self.fields["start_date"].required = False
-        self.fields["start_time"].required = False
+        # self.fields["start_time"].required = False
 
         # ---------------------------------------------------------------------
         # --- Time Zone.
-        self.fields["start_tz"].required = False
+        # self.fields["start_tz"].required = False
 
-        if self.tz_name:
-            self.fields["start_tz"].initial = self.tz_name
-        else:
-            self.fields["start_tz"].initial = settings.TIME_ZONE
+        # if self.tz_name:
+        #     self.fields["start_tz"].initial = self.tz_name
+        # else:
+        #     self.fields["start_tz"].initial = settings.TIME_ZONE
 
     # contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
@@ -99,17 +99,17 @@ class CreateEditEventForm(forms.ModelForm):
             attrs={
                 "class":        "form-control",
             }))
-    start_time = forms.TimeField(
-        input_formats=[
-            "%H:%M",
-            "%I:%M%p",
-            "%I:%M %p"
-        ],
-        widget=forms.TimeInput(
-            format="%H:%M",
-            attrs={
-                "class":        "form-control",
-            }))
+    # start_time = forms.TimeField(
+    #     input_formats=[
+    #         "%H:%M",
+    #         "%I:%M%p",
+    #         "%I:%M %p"
+    #     ],
+    #     widget=forms.TimeInput(
+    #         format="%H:%M",
+    #         attrs={
+    #             "class":        "form-control",
+    #         }))
 
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
@@ -131,7 +131,7 @@ class CreateEditEventForm(forms.ModelForm):
             # "duration",
             "addressless",
             # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
-            "start_date", "start_time", "start_tz",
+            "start_date", # "start_time", "start_tz",
             "organization",
             # "application", "allow_reenter",
             # "accept_automatically", "acceptance_text",
@@ -153,12 +153,10 @@ class CreateEditEventForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control form-select",
                 }),
-            # "tags": TagWidget(),
-            "tags": forms.TextInput(
+            "tags": TagWidget(
                 attrs={
                     "class":        "form-control",
-                    "placeholder":  _("Hashtag"),
-                    "maxlength":    80,
+                    "placeholder":  _("Tags"),
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -329,91 +327,91 @@ class AddEventMaterialsForm(forms.ModelForm):
 # -----------------------------------------------------------------------------
 # --- ROLE FORM & FORMSET
 # -----------------------------------------------------------------------------
-class RoleForm(forms.ModelForm):
-    """Role Form."""
+# class RoleForm(forms.ModelForm):
+#     """Role Form."""
 
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        self.user = kwargs.pop("user", None)
+#     def __init__(self, *args, **kwargs):
+#         """Docstring."""
+#         self.user = kwargs.pop("user", None)
 
-        super().__init__(*args, **kwargs)
+#         super().__init__(*args, **kwargs)
 
-        if self.instance and self.instance.id:
-            pass
+#         if self.instance and self.instance.id:
+#             pass
 
-    class Media:
-        js = formset_media_js + (
-            # Other Form Media here.
-        )
+#     class Media:
+#         js = formset_media_js + (
+#             # Other Form Media here.
+#         )
 
-    class Meta:
-        model = Role
-        fields = [
-            "title", "description", "quantity",
-        ]
-        widgets = {
-            "title": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Title")
-                }),
-            "description": forms.Textarea(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Event Description"),
-                    "maxlength":    1000,
-                }),
-            "quantity": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Qty")
-                }),
-            }
+#     class Meta:
+#         model = Role
+#         fields = [
+#             "title", "description", "quantity",
+#         ]
+#         widgets = {
+#             "title": forms.TextInput(
+#                 attrs={
+#                     "class":        "form-control",
+#                     "placeholder":  _("Title")
+#                 }),
+#             "description": forms.Textarea(
+#                 attrs={
+#                     "class":        "form-control",
+#                     "placeholder":  _("Event Description"),
+#                     "maxlength":    1000,
+#                 }),
+#             "quantity": forms.TextInput(
+#                 attrs={
+#                     "class":        "form-control",
+#                     "placeholder":  _("Qty")
+#                 }),
+#             }
 
-    def clean(self):
-        """Docstring."""
-        try:
-            if not self.cleaned_data["DELETE"]:
-                # -------------------------------------------------------------
-                # --- Validate `title` Field
-                if not self.cleaned_data["title"]:
-                    self._errors["title"] = self.error_class([_("This Field is required.")])
+#     def clean(self):
+#         """Docstring."""
+#         try:
+#             if not self.cleaned_data["DELETE"]:
+#                 # -------------------------------------------------------------
+#                 # --- Validate `title` Field
+#                 if not self.cleaned_data["title"]:
+#                     self._errors["title"] = self.error_class([_("This Field is required.")])
 
-                    del self.cleaned_data["title"]
+#                     del self.cleaned_data["title"]
 
-                # -------------------------------------------------------------
-                # --- Validate `quantity` Field
-                if not self.cleaned_data["quantity"]:
-                    self._errors["quantity"] = self.error_class([_("This Field is required.")])
+#                 # -------------------------------------------------------------
+#                 # --- Validate `quantity` Field
+#                 if not self.cleaned_data["quantity"]:
+#                     self._errors["quantity"] = self.error_class([_("This Field is required.")])
 
-                    del self.cleaned_data["quantity"]
+#                     del self.cleaned_data["quantity"]
 
-        except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+#         except Exception as exc:
+#             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
-        return self.cleaned_data
+#         return self.cleaned_data
 
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
+#     def save(self, commit=True):
+#         """Docstring."""
+#         instance = super().save(commit=False)
 
-        if commit:
-            instance.save()
+#         if commit:
+#             instance.save()
 
-        return instance
-
-
-class RoleModelFormSet(BaseModelFormSet):
-    """Docstring."""
-
-    def clean(self):
-        """Docstring."""
-        super().clean()
+#         return instance
 
 
-RoleFormSet = modelformset_factory(
-    Role, form=RoleForm, formset=RoleModelFormSet,
-    max_num=10, extra=0, can_delete=True)
+# class RoleModelFormSet(BaseModelFormSet):
+#     """Docstring."""
+
+#     def clean(self):
+#         """Docstring."""
+#         super().clean()
+
+
+# RoleFormSet = modelformset_factory(
+#     Role, form=RoleForm, formset=RoleModelFormSet,
+#     max_num=10, extra=0, can_delete=True)
 
 
 # -----------------------------------------------------------------------------

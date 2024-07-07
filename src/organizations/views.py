@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import mimetypes
 
 from django.conf import settings
@@ -51,8 +52,9 @@ from app.forms import (
 from events.models import (
     Event,
     EventStatus,
-    Participation,
-    ParticipationStatus)
+    # Participation,
+    # ParticipationStatus
+    )
 
 from .decorators import (
     organization_access_check_required,
@@ -78,36 +80,39 @@ def organization_list(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        organizations = Organization.objects.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        ).order_by("title")
-    else:
-        organizations = Organization.objects.filter(
-            is_hidden=False,
-            is_deleted=False,
-        ).order_by("title")
+    # if request.user.is_authenticated:
+    #     organizations = Organization.objects.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     ).order_by("title")
+    # else:
+    #     organizations = Organization.objects.filter(
+    #         is_hidden=False,
+    #         is_deleted=False,
+    #     ).order_by("title")
+    organizations = Organization.objects.filter(
+        is_hidden=False,
+        is_deleted=False,
+    ).order_by("title")
 
     # -------------------------------------------------------------------------
     # --- Filter the QuerySet by Tag ID.
     # -------------------------------------------------------------------------
     tag_id = request.GET.get("tag", None)
-
     if tag_id:
         try:
             organizations = organizations.filter(
@@ -160,30 +165,34 @@ def organization_directory(request):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        organizations = Organization.objects.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        ).order_by("name")
-    else:
-        organizations = Organization.objects.filter(
-            is_hidden=False,
-            is_deleted=False,
-        ).order_by("name")
+    # if request.user.is_authenticated:
+    #     organizations = Organization.objects.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     ).order_by("name")
+    # else:
+    #     organizations = Organization.objects.filter(
+    #         is_hidden=False,
+    #         is_deleted=False,
+    #     ).order_by("name")
+    organizations = Organization.objects.filter(
+        is_hidden=False,
+        is_deleted=False,
+    ).order_by("title")
 
     return render(
         request, "organizations/organization-directory.html", {
@@ -200,9 +209,14 @@ def organization_directory(request):
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 def organization_create(request):
     """Create Organization."""
-    # geo = GeoIP()
-    # ip_addr = get_client_ip(request)
-    # country_code = geo.country_code(ip_addr)
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -241,15 +255,17 @@ def organization_create(request):
 
             # -----------------------------------------------------------------
             # --- Save Phone Numbers.
-            phones = formset_phone.save(commit=True)
-            for phone in phones:
-                phone.content_type = ContentType.objects.get_for_model(organization)
-                phone.object_id = organization.id
-                phone.save()
+            phone_numbers = formset_phone.save(commit=True)
+            cprint(f"                  {phone_numbers=}", "yellow")
+            for phone_number in phone_numbers:
+                phone_number.content_type = ContentType.objects.get_for_model(organization)
+                phone_number.object_id = organization.id
+                phone_number.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
+            cprint(f"                  {social_links=}", "yellow")
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -258,19 +274,24 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Add the Organization Author to the List of the Organization
             #     Staff Members.
-            staff_member = OrganizationStaff(
-                author=organization.author,
-                organization=organization,
-                member=organization.author)
-            staff_member.save()
+            # staff_member = OrganizationStaff(
+            #     author=organization.author,
+            #     organization=organization,
+            #     member=organization.author)
+            # staff_member.save()
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications.
-            organization.email_notify_admin_org_created(request)
-            organization.email_notify_alt_person_org_created(request)
+            # organization.email_notify_admin_org_created(request)
+            # organization.email_notify_alt_person_org_created(request)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
+
+            return HttpResponseRedirect(reverse(
+                "organization-details", kwargs={
+                    "slug":     organization.slug,
+                }))
 
         # ---------------------------------------------------------------------
         # --- Failed to create the Organization.
@@ -291,7 +312,7 @@ def organization_create(request):
 # ===
 # =============================================================================
 @cache_page(60 * 1)
-@organization_access_check_required
+# @organization_access_check_required
 def organization_details(request, slug=None):
     """Organization Details."""
     # -------------------------------------------------------------------------
@@ -312,18 +333,25 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
+    # if request.user.is_authenticated:
+    #     is_staff_member = organization.pk in request.user.organization_staff_member.all().values_list("organization_id", flat=True)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization Events.
     # -------------------------------------------------------------------------
-    upcoming_events = Event.objects.filter(
-        organization=organization,
-        status=EventStatus.UPCOMING)
-    completed_events = Event.objects.filter(
-        organization=organization,
-        status=EventStatus.COMPLETE)
+    # upcoming_events = Event.objects.filter(
+    #     organization=organization,
+    #     status=EventStatus.UPCOMING)
+    # completed_events = Event.objects.filter(
+    #     organization=organization,
+    #     status=EventStatus.COMPLETE)
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the Organization Phone Numbers.
+    # -------------------------------------------------------------------------
+    phone_numbers = Phone.objects.filter(
+        content_type=ContentType.objects.get_for_model(organization),
+        object_id=organization.id)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization Social Links.
@@ -348,28 +376,28 @@ def organization_details(request, slug=None):
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
         is_complained = organization.is_complained_by_user(request.user)
+        show_complain_form = not is_complained
 
-        if not is_complained:
-            # -----------------------------------------------------------------
-            # --- Retrieve User's Participations to the Organization's Events.
-            event_ids = completed_events.values_list("pk", flat=True)
+        # if not is_complained:
+        #     # -----------------------------------------------------------------
+        #     # --- Retrieve User's Participations to the Organization's Events.
+        #     event_ids = completed_events.values_list("pk", flat=True)
 
-            try:
-                participation = Participation.objects.filter(
-                    user=request.user,
-                    event__pk__in=event_ids,
-                    status__in=[
-                        ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                        ParticipationStatus.ACKNOWLEDGED,
-                        ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
-                    ]
-                ).latest("pk")
+        #     try:
+        #         participation = Participation.objects.filter(
+        #             user=request.user,
+        #             event__pk__in=event_ids,
+        #             status__in=[
+        #                 ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+        #                 ParticipationStatus.ACKNOWLEDGED,
+        #                 ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
+        #             ]
+        #         ).latest("pk")
+        #         if participation:
+        #             show_complain_form = True
 
-                if participation:
-                    show_complain_form = True
-
-            except Participation.DoesNotExist:
-                pass
+        #     except Participation.DoesNotExist:
+        #         pass
 
     # -------------------------------------------------------------------------
     # --- Is newly created?
@@ -387,31 +415,32 @@ def organization_details(request, slug=None):
         organization.save()
 
     # -------------------------------------------------------------------------
-    # --- Increment the Views Counter.
+    # --- FIXME: Increment the Views Counter.
     # -------------------------------------------------------------------------
-    organization.increase_views_count(request)
+    # organization.increase_views_count(request)
 
     # -------------------------------------------------------------------------
-    # --- Check, if authenticated User already subscribed to the Organization
+    # --- FIXME: Check, if authenticated User already subscribed to the Organization
     #     Newsletters and Notifications.
     # -------------------------------------------------------------------------
     is_subscribed = False
-    if (
-            request.user.is_authenticated and
-            request.user in organization.subscribers.all()):
-        is_subscribed = True
+    # if (
+    #         request.user.is_authenticated and
+    #         request.user in organization.subscribers.all()):
+    #     is_subscribed = True
 
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,
-            "upcoming_events":      upcoming_events,
-            "completed_events":     completed_events,
+            # "upcoming_events":          upcoming_events,
+            # "completed_events":         completed_events,
+            "phone_numbers":            phone_numbers,
             "social_links":             social_links,
             "twitter_acc":              twitter_acc,
             "show_complain_form":       show_complain_form,
-            "is_subscribed":            is_subscribed,
             "is_newly_created":         is_newly_created,
             "is_staff_member":          is_staff_member,
+            "is_subscribed":            is_subscribed,
         })
 
 
@@ -439,8 +468,8 @@ def organization_staff(request, slug=None):
 
     return render(
         request, "organizations/organization-details-staff.html", {
-            "organization":             organization,
-            "is_staff_member":          is_staff_member,
+            "organization":     organization,
+            "is_staff_member":  is_staff_member,
         })
 
 
@@ -479,7 +508,7 @@ def organization_groups(request, slug=None):
 # ===
 # =============================================================================
 @login_required
-@organization_staff_member_required
+# @organization_staff_member_required
 def organization_edit(request, slug=None):
     """Edit Organization."""
     organization = get_object_or_404(
@@ -522,11 +551,11 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Save Phones.
-            phones = formset_phone.save(commit=True)
-            for phone in phones:
-                phone.content_type = ContentType.objects.get_for_model(organization)
-                phone.object_id = organization.id
-                phone.save()
+            phone_numbers = formset_phone.save(commit=True)
+            for phone_number in phone_numbers:
+                phone_number.content_type = ContentType.objects.get_for_model(organization)
+                phone_number.object_id = organization.id
+                phone_number.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
@@ -579,11 +608,16 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications.
-            organization.email_notify_admin_org_modified(request)
-            organization.email_notify_alt_person_org_modified(request)
+            # organization.email_notify_admin_org_modified(request)
+            # organization.email_notify_alt_person_org_modified(request)
 
             # -----------------------------------------------------------------
             # --- Save the Log
+
+            return HttpResponseRedirect(reverse(
+                "organization-details", kwargs={
+                    "slug":     organization.slug,
+                }))
 
         # ---------------------------------------------------------------------
         # --- Failed to edit the Organization
@@ -605,12 +639,13 @@ def organization_edit(request, slug=None):
 # ===
 # =============================================================================
 @login_required
-@organization_staff_member_required
+# @organization_staff_member_required
 def organization_populate_newsletter(request, slug=None):
     """Organization, populate Newsletter."""
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -628,12 +663,12 @@ def organization_populate_newsletter(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications
-            organization.email_notify_admin_org_newsletter_created(
-                request=request,
-                newsletter=newsletter)
-            organization.email_notify_newsletter_populate(
-                request=request,
-                newsletter=newsletter)
+            # organization.email_notify_admin_org_newsletter_created(
+            #     request=request,
+            #     newsletter=newsletter)
+            # organization.email_notify_newsletter_populate(
+            #     request=request,
+            #     newsletter=newsletter)
 
             return HttpResponseRedirect(reverse(
                 "organization-details", kwargs={

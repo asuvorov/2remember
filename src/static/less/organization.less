@@ -100,23 +100,33 @@
     // --- Mixin
     #instance.page-details();
 
-    #info {
-        .org-info-section {
-            background-color:   @white;
-            padding:            10px;
-            margin-bottom:      10px;
+    #organization-card .card {
+        background-color:       #eef !important;
+        border-top:             3px solid @brand-primary;
+        margin:                 0px !important;
+
+        .card-header {
+            border-bottom:      3px solid @brand-primary;
+
+            h5 {
+                font-weight:    bold;
+                text-transform: uppercase;
+                padding:        5px;
+                margin:         0px;
+            }
+        }
+        .card-body {
+            i {
+                margin-right:   10px;
+            }
+        }
+        .card-footer {
+            i {
+                margin-right:   10px;
+            }
         }
     }
 
-    .organization-name {}
-    .organization-description {}
-    .organization-details,
-    .organization-tags,
-    .organization-hours {
-        i {
-            margin-right:   10px;
-        }
-    }
     .organization-widget {
         p {
             color:              @gray-light;
@@ -173,74 +183,49 @@
 // ----------------------------------------------------------------------------
 // --- Organization Thumbnail
 // ----------------------------------------------------------------------------
-.thumbnail {
-    border:                 none;
-    border-radius:          0;
-    padding:                0;
-    margin-bottom:          0;
-}
-.organization-thumb-hor {
-    background-color:       @white;
-    display:                inline-block;
-    width:                  100%;
-    box-shadow:             1px 1px 3px rgba(0, 0, 0, 0.1);
+.organization-thumbnail-hor {
+    background-color:       #eef !important;
     border-top:             3px solid @brand-primary;
-    margin:                 0 0 10px 0 !important;
+    margin:                 0px !important;
 
-    h5 {
-        font-weight:        bold;
-        text-transform:     uppercase;
-        border-bottom:      1px solid @gray-lightest;
-        padding:            0 10px 10px 10px;
-        margin:             0;
+    p.card-text {
+        font-size:          0.85rem;
+        line-height:        1.25;
+        margin-top:         0;
+        margin-bottom:      0.5rem;
     }
 
-    .organization-name {
+    .card-header {
         border-bottom:      3px solid @brand-primary;
+        padding:            .5rem;
 
-        h4 {
+        h5 {
             font-weight:    bold;
             text-transform: uppercase;
-            border:         none !important;
-            padding:        10px !important;
-            margin:         0;
+            padding:        5px;
+            margin:         0px;
         }
     }
-    .organization-author,
-    .organization-tags,
-    .organization-description {
-        font-size:          @font-size-small;
-        border-bottom:      none;
-        padding:            0 10px;
-        margin:             5px 0;
+    .card-body {
+        padding:            .5rem;
 
         i {
             margin-right:   10px;
         }
-        p {
-            margin:         0;
+    }
+    .card-footer {
+        padding:            .5rem;
+
+        i {
+            margin-right:   10px;
         }
-    }
-    .organization-avatar {}
-    .organization-content {}
-    .organization-current-challeges {
-        font-size:          @font-size-small;
-    }
-    .organization-counts {
-        font-size:          @font-size-small;
-        text-align:         right;
-        padding:            0 10px;
-        margin:             5px 0;
-    }
-    .learn-more {
-        a {
+        .learn-more a {
             width:          auto !important;
             float:          right;
-            margin:         0 10px 10px 10px !important;
         }
     }
 }
-.organization-thumb-search {
+.organization-thumbnail-search {
     background-color:       @white;
     box-shadow:             1px 1px 3px rgba(0, 0, 0, 0.1);
     padding:                10px;

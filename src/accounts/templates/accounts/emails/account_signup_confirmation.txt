@@ -7,4 +7,4 @@ Dear, {{ user.first_name }}!
 To finish your registration Process, please, follow this Link:
 {{ confirmation_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

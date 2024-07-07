@@ -11,68 +11,19 @@ from decouple import config
 
 
 ###############################################################################
-# ### PRODUCT VERSIONS                                                      ###
+### PRODUCT VERSIONS                                                        ###
 ###############################################################################
-PRODUCT_NAME = "Cuddly Disco Server"
-RELEASE_TYPE = {
-    "ALPHA":    "alpha",
-    "BETA":     "beta",
-    "RC":       "rc",
-}
+PRODUCT_NAME = "2Remember"
 
 # --- Versioning Strategy
-#     <major>.<minor>.<patch>[-<type><attempt>]
-#     <major>.<minor>.<patch>.<build>[-<type><attempt>]
+#     <major>.<minor>.<patch>
 
-VERSION_API = 1
-VERSION_NAME = "Cuddly Disco"
-VERSION_YEAR = 2023
-# --- Major version is a number indicating a significant change in the
-#     application. A major version might possibly be a complete rewrite of the
-#     previous major version and/or break backwards compatibility with older
-#     versions.
+VERSION_API = "v1"
 VERSION_MAJOR = 0
-# --- Minor version is a number that indicates a small set of changes from the
-#     previous minor version. A minor version usually consists of an even set
-#     of bug fixes and new features and should always be backwards compatible.
-VERSION_MINOR = 0
-# --- Patch is a number that indicates some bugs were fixed that could not wait
-#     until the next minor release. A patch version should only include bug
-#     fixes and never include new features. It should also always be backwards
-#     compatible. Security fixes are an example of a typical patch.
+VERSION_MINOR = 1
 VERSION_PATCH = 0
-# --- Build Number is incremented when new build is created.
-VERSION_BUILD = 0
-# --- This is last part is optional and only used to identify that this version
-#     is not necessarily stable. The type is a keyword and can be anything but
-#     usually sticks to "alpha", "beta", and "RC".
-#     The attempt is just a number to indicate which attempt at this type is
-#     this. So for example, "beta-01", "RC-02", "RC-05", etc. For a stable
-#     version, leave off this part, however, other projects like to use the
-#     keyword of RELEASE to indicate the stable version.
-VERSION_RELEASE = RELEASE_TYPE["ALPHA"]
-VERSION_ATTEMPT = 1
 
-PRODUCT_VERSION_FULL = (
-    "{pname}, v.{major}.{minor}.{patch}-{rtype}{atmpt}: {vname}".format(
-        pname=PRODUCT_NAME,
-        major=VERSION_MAJOR,
-        minor=VERSION_MINOR,
-        patch=VERSION_PATCH,
-        rtype=VERSION_RELEASE,
-        atmpt=VERSION_ATTEMPT,
-        vname=VERSION_NAME,
-    )
-)
-PRODUCT_VERSION_NUM = (
-    "v.{major}.{minor}.{patch}-{rtype}{atmpt}".format(
-        major=VERSION_MAJOR,
-        minor=VERSION_MINOR,
-        patch=VERSION_PATCH,
-        rtype=VERSION_RELEASE,
-        atmpt=VERSION_ATTEMPT,
-    )
-)
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
 
 
 ###############################################################################
@@ -108,8 +59,10 @@ DATABASES = {
     }
 }
 
-DOMAIN_NAME = "saneside.com"
+DOMAIN_NAME = "2remember.live"
 ALLOWED_HOSTS = ["*"]
+CORS_ORIGIN_ALLOW_ALL = True
+CSRF_TRUSTED_ORIGINS = ["https://*.2remember.live"]
 APPEND_SLASH = True
 
 TIME_ZONE = "America/Los_Angeles"
@@ -178,18 +131,17 @@ TEMPLATES = [
 
                 "url_tools.context_processors.current_url",
 
-                # "social_django.context_processors.backends",
-                # "social_django.context_processors.login_redirect",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
 
-                # "accounts.context_processors.signin_form",
+                "accounts.context_processors.signin_form",
 
-                # "events.context_processors.pb_event_choices",
-                # "events.context_processors.pb_participation_choices",
-                # "events.context_processors.pb_recurrence_choices",
+                "events.context_processors.pb_event_choices",
+                "events.context_processors.pb_participation_choices",
 
-                # "core.context_processors.pb_settings",
-                # "core.context_processors.pb_social_links",
-                # "core.context_processors.pb_social_link_choices",
+                "app.context_processors.pb_settings",
+                "app.context_processors.pb_social_links",
+                "app.context_processors.pb_social_link_choices",
             ],
         },
     },
@@ -203,6 +155,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ###############################################################################
 MIDDLEWARE = (
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
@@ -233,9 +186,10 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
+    "corsheaders",
     "ddcore",
 
-    # "adminsortable2",
+    "adminsortable2",
     # "bootstrap3_datetime",
     # "djangosecure",
     # "django_countries",
@@ -244,7 +198,7 @@ INSTALLED_APPS = (
     # "papertrail",
     "rangefilter",
     # "sslserver",
-    # "storages",
+    "storages",
     "timezone_field",
     "twitter_tag",
     "url_tools",
@@ -355,6 +309,8 @@ AUTH_USER_MODEL = "ddcore.User"
 ###############################################################################
 ### CUSTOM PROJECT SETTINGS                                                 ###
 ###############################################################################
+PAYPAL_SHARE_LINK = "https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&currency_code=USD"
+
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
 
@@ -390,10 +346,9 @@ BOWER_INSTALLED_APPS = (
     # "equalheight",
     "jquery#3.7.1",
     # "jquery.inputmask",
-    # "jquery-colorbox",
+    "jquery-colorbox",
     "jquery-file-upload#10.32.0",
     "jquery-popup-overlay#1.6.0",
-    # "jquery-scrolltotop",
     # "jquery-shorten-js",
     # "jquery-sticky",
     "jquery-ui#1.12.1",
@@ -402,7 +357,7 @@ BOWER_INSTALLED_APPS = (
     # "modernizr",
     "moment#2.30.1",
     "noty#3.1.4",
-    # "readmore-js",
+    "readmore-js",
     # "seiyria-bootstrap-slider",
     # "smooth-scroll.js",
     # "tablesorter",
@@ -413,19 +368,19 @@ BOWER_INSTALLED_APPS = (
 ###############################################################################
 ### DJANGO CKEDITOR                                                         ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "ckeditor",
-#     "ckeditor_uploader",
-# )
+INSTALLED_APPS += (
+    "ckeditor",
+    "ckeditor_uploader",
+)
 
-# AWS_QUERYSTRING_AUTH = False
+AWS_QUERYSTRING_AUTH = False
 
-# CKEDITOR_BROWSE_SHOW_DIRS = True
-# CKEDITOR_IMAGE_BACKEND = "pillow"
-# CKEDITOR_RESTRICT_BY_DATE = True
-# CKEDITOR_RESTRICT_BY_USER = False
-# CKEDITOR_UPLOAD_PATH = "uploads/"
-# CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
+CKEDITOR_BROWSE_SHOW_DIRS = True
+CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_RESTRICT_BY_DATE = True
+CKEDITOR_RESTRICT_BY_USER = False
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 
 # CKEDITOR_CONFIGS = {
 #     "default": {
@@ -576,10 +531,10 @@ BOWER_INSTALLED_APPS = (
 #     },
 # }
 
-# IMAGE_QUALITY = 60
-# THUMBNAIL_SIZE = (300, 300)
+IMAGE_QUALITY = 60
+THUMBNAIL_SIZE = (300, 300)
 
-# X_FRAME_OPTIONS = "SAMEORIGIN"
+X_FRAME_OPTIONS = "SAMEORIGIN"
 
 
 ###############################################################################
@@ -807,7 +762,7 @@ REST_FRAMEWORK = {
 #         "licenseUrl":
 #             "http://www.apache.org/licenses/LICENSE-2.0.html",
 #         "termsOfServiceUrl":        "http://helloreverb.com/terms/",
-#         "title":                    "SaneSide - Swagger API Docs",
+#         "title":                    "2Remember - Swagger API Docs",
 #     },
 #     "doc_expansion":                "list",
 # }
@@ -1012,12 +967,12 @@ WHITENOISE_MAX_AGE = 31536000
 ###############################################################################
 ### MAILING                                                                 ###
 ###############################################################################
-EMAIL_SENDER = "no-reply@saneside.com"
-EMAIL_SUPPORT = "support@saneside.com"
+EMAIL_SENDER = "no-reply@2remember.live"
+EMAIL_SUPPORT = "support@2remember.live"
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
-# SENDGRID_API_KEY = "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"
+# SENDGRID_API_KEY = ""
 
 
 ###############################################################################
@@ -1026,18 +981,18 @@ EMAIL_SUPPORT = "support@saneside.com"
 
 
 ###############################################################################
-### SANESIDE SOCIAL LINKS                                                   ###
+### 2REMEMBER SOCIAL LINKS                                                  ###
 ###############################################################################
 PB_SOCIAL_LINKS = {
     # --- On behalf of "artem.suvorov@gamil.com" / S1
-    "PB_FACEBOOK":  "https://www.facebook.com/saneside",
-    # --- On behalf of "support@saneside.com"    / S1
-    "PB_TWITTER":   "https://twitter.com/sanesidedotcom",
+    "PB_FACEBOOK":  "#",
+    # --- On behalf of "support@2remember.live"    / S1
+    "PB_TWITTER":   "https://x.com/2rememberlive",
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
-    # --- On behalf of "support@saneside.com"    / S1
-    "PB_INSTAGRAM": "https://www.instagram.com/sanesidedotcom",
+    # --- On behalf of "support@2remember.live"    / S1
+    "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }
 

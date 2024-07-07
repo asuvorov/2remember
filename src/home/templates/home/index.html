@@ -5,157 +5,168 @@
 
 {% block title %}{{ block.super }}{% endblock %}
 
+{% block important_message %}
+<div class="alert alert-warning alert-dismissible fade d-flex align-items-center show mb-md-0" role="alert" style="border-radius:0;">
+    <i class="bi bi-exclamation-octagon flex-shrink-0 me-2"></i><strong>Holy Guacamole!</strong>&nbsp;Pardon our Dust, as we are working hard on delivering more exciting Features.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endblock %}
+
 {% block breadcrumbs %}
 {% endblock %}
 
+<!-- START CAROUSEL -->
 {% block carousel %}
     {% include "home/fragments/carousel.html" %}
 {% endblock %}
+<!--  END  CAROUSEL -->
 
 {% block content %}
-<!-- START HERO -->
-<!--  END  HERO -->
-
 <!-- START MARKETING MESSAGES -->
+<div id="index-features" class="mt-3">
+    <div class="row g-2" align="center">
+        <div class="col-12 header">
+            <h2>{% trans "How it works" %}</h2>
+        </div>
+
+        <div class="col-lg-4 feature">
+            <span><i class="flaticon-fluff1"></i></span>
+            <p>{% trans "Create Your Event" %}</p>
+            <small>{% trans "After signing up, you can create your first Event, and start uploading your Photos right away." %}</small>
+        </div>
+
+        <div class="col-lg-4 feature">
+            <span><i class="flaticon-user73"></i></span>
+            <p>{% trans "Invite your Comrades" %}</p>
+            <small>{% trans "Your Comrades don't have to be registered on our Platform. Just send a private Link to your Event and you're good." %}</small>
+        </div>
+
+        <div class="col-lg-4 feature">
+            <span><i class="flaticon-square56"></i></span>
+            <p>{% trans "Share your Photos" %}</p>
+            <small>{% trans "Upload Photos or other related Attachments (e.g. Documents, Links, etc.) to your Event. Allow Visitors to see and download their favorite Photos." %}</small>
+        </div>
+    </div>
+</div>
 <!--  END  MARKETING MESSAGES -->
 
+<hr class="featurette-divider">
+
+<!-- START DEVELOPER HERO -->
+<div id="index-developer-hero" class="mb-6">
+    <div class="row flex-lg-row-reverse align-items-center py-5 rounded-3 border shadow-lg" style="background-color:#eef;">
+        <div class="col-10 col-sm-8 col-lg-6">
+            <img src="{{ STATIC_URL }}img/python-programming-language.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+        </div>
+        <div class="col-lg-6">
+            <h1 class="fw-bold lh-1 mb-3">Open To Hire</h1>
+            <p class="lead">
+                <strong>Strong Background</strong> in Software Development and a deep Passion for Problem-solving.<br/>
+                <strong>Involvement</strong> in a diverse Range of Projects, from building scalable Web Applications to Computer Vision.<br/>
+                <strong>Belief</strong> in continuous learning and active seeking out for new Challenges to expand the Skills.<br/>
+                <strong>Value</strong> the Teamwork and Communication. <strong>Enjoyment</strong> of exchanging Ideas and collaborating to find the best Solutions.<br/>
+                <strong>Excitement</strong> for utilizing Skills, learning from talented Peers, and contributing to the Development of innovative Software Solutions, that impact Lives in positive Way.<br/>
+            </p>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="https://github.com/asuvorov" class="btn btn-github d-flex gap-2 align-items-center"><i class="bi bi-github"></i> GitHub</a>
+                <a href="https://www.linkedin.com/in/artem-suvorov-810bbb40" class="btn btn-linkedin d-flex gap-2 align-items-center"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                <a href="{% url 'open-to-hire' %}" class="btn btn-warning d-flex gap-2 align-items-center">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--  END  DEVELOPER HERO -->
+
+<hr class="featurette-divider">
+
 <!-- START FEATURETTES -->
+<div id="index-featurette" class="mb-6">
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Collect Photos with Ease</h2>
+            <p class="lead">
+                Instant and in-Bulk Photo uploading to our centralized Storage, makes your Event(s) readily available and safely stored.
+            </p>
+        </div>
+        <div class="col-md-5">
+            <img class="img-fluid" src="{{ STATIC_URL }}img/collect.png" height="500" width="500" alt=""/>
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Curb the Photo Chaos</h2>
+            <p class="lead">
+                Organize your Photos and Videos based on:<br/>
+                <strong>-- Event Names</strong> - Give clear and specific Titles to your Event(s), for Instance "Together as Family" or "Sea World Orlando, 2024".<br/>
+                <strong>-- Chronology</strong> - If you have your Events by Dates, you can align them in perfect Order.<br/>
+                <strong>-- Flavor</strong> - If you have a lot of Hobbies or Interests, you can mark your Events with Categories and/or Tags, associate with certain Place or Organization, etc. This way, you can easily retrieve the Memories of the Time of your Life.
+            </p>
+        </div>
+        <div class="col-md-5 order-md-1">
+            <img class="img-fluid" src="{{ STATIC_URL }}img/curb.png" height="500" width="500" alt=""/>
+        </div>
+    </div>
+
+    <hr class="featurette-divider">
+
+    <div class="row featurette">
+        <div class="col-md-7">
+            <h2 class="featurette-heading">Event Sharing</h2>
+            <p class="lead">
+                If you're all about Privacy, then the private Link, that leads only to the Event you want to be seen, is all for you.<br/>
+                Only the Comrades you invite can use the private Link to access your personal Memories.<br/>
+            </p>
+        </div>
+        <div class="col-md-5">
+            <img class="img-fluid" src="{{ STATIC_URL }}img/share.png" height="500" width="500" alt=""/>
+        </div>
+    </div>
+</div>
 <!--  END  FEATURETTES -->
 
+<hr class="featurette-divider">
+
 <!-- START TWITTER FEED -->
+<div id="index-latest-twitter" class="mb-6">
+    <div class="row flex-lg-row-reverse align-items-center py-5 rounded-3 border shadow-lg text-center" style="background-color:#eef;">
+        <div class="col-12">
+            <img src="{{ STATIC_URL }}img/twitt.png" alt="Latest from Twitter - 2Remember Platform." />
+            <h2>{% trans "Latest from Twitter" %}</h2>
+
+                {% get_tweets for "2rememberlive" as tweets exclude "replies, retweets" limit 10 %}
+                {# get_tweets for "2rememberlive" as tweets limit 10 #}
+
+            <div id="twitter-carousel" class="carousel slide" data-ride="carousel">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner">
+                {% for tweet in tweets  %}
+                    <div class="{% if forloop.first %}active {% endif %}item">{{ tweet.html|safe }}</div>
+                {% endfor %}
+                </div>
+
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                {% for tweet in tweets %}
+                    <li data-target="twitter-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
+                {% endfor %}
+                </ol>
+
+                <!-- Carousel Nav -->
+            {% comment %}
+                <a class="carousel-control left" href="#twitter-carousel" data-slide="prev">&lsaquo;</a>
+                <a class="carousel-control right" href="#twitter-carousel" data-slide="next">&rsaquo;</a>
+            {% endcomment %}
+            </div>
+
+            {#<a class="btn btn-primary">Follow us</a>#}
+            <a href="https://twitter.com/2remember" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true" data-align="center">{% trans "Follow" %} @2rememberlive</a>
+        </div>
+    </div>
+</div>
 <!--  END  TWITTER FEED -->
-
-<div id="body-navs" class="hero">
-    <div id="index" class="container">
-        <div class="row">
-            <div class="col-xs-24 col-xs-offset-0 col-sm-22 col-sm-offset-1 col-md-20 col-md-offset-2 body-navs-header">
-                <h1>
-                {% blocktrans %}
-                    Have Fun<br/>
-                    Meet new People<br/>
-                    Make the World a better Place
-                {% endblocktrans %}
-                </h1>
-            </div>
-        </div>
-    </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="body-navs-next" align="center">
-                    <h4>{% trans "Online Platform for volunteering work" %}</h4>
-
-                    <div class="body-navs-next-btn">
-                        <a class="btn" data-scroll href="#welcome">{% trans "Find out more" %}</a>
-                    </div>
-
-                    <div class="body-navs-next-img">
-                        <h4>{% trans "Find out more" %}</h4>
-
-                        <a data-scroll href="#welcome">
-                            <img src="{{ STATIC_URL }}img/move-down-button.png" class="move-up" style="display:block;" alt="Find out more - SaneSide Platform." />
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="welcome">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-xs-offset-0 col-sm-20 col-sm-offset-2 col-md-16 col-md-offset-4" align="center">
-                <h2>{% trans "Welcome" %}</h2>
-
-                <p>{% trans "SaneSide is an online Platform for volunteering Work" %}</p>
-                <p>
-                    {% trans "On SaneSide you can find and post Opportunities to volunteer your Time for a good Cause." %}<br/>
-                    {% trans "Do you want to meet new People, have fun, and make the World a better Place?" %}<br/>
-                    {% trans "Find your first Event on SaneSide." %}
-                </p>
-
-                <a class="btn" href="{% url 'signup' %}">{% trans "Right Now" %}</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="how-it-works">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24" align="center">
-                <h2>{% trans "How it works" %}</h2>
-
-                <div class="row">
-                    <div class="col-xs-24 col-sm-12 col-md-6 feature">
-                        <span><i class="flaticon-fluff1"></i></span>
-                        <p>{% trans "Tell us, where you need the Help or what Activity you offer" %}</p>
-                        <small>{% trans "After signing up to our Platform, you can start creating your Events. You will be asked to describe your Event (Description, Time &amp; Place, Category, etc.), which will help other Members to find your Event with ease." %}</small>
-                    </div>
-
-                    <div class="col-xs-24 col-sm-12 col-md-6 feature">
-                        <span><i class="flaticon-user73"></i></span>
-                        <p>{% trans "All interested Members will apply for the Event" %}</p>
-                        <small>{% trans "Registered Members will apply for your Event. You can review their Profiles, Examples of current and/or past Experience, and other Members' Reviews. Your contact Details are hidden from the unregistered Users." %}</small>
-                    </div>
-
-                    <div class="col-xs-24 col-sm-12 col-md-6 feature">
-                        <span><i class="flaticon-square56"></i></span>
-                        <p>{% trans "Make a Decision" %}</p>
-                        <small>{% trans "Our Platform allows you to engage with applied Members before accepting their Participation in your Event. Ask Questions, provide them with additional Information, and ensure, that they are as excited about your Event as you are." %}</small>
-                    </div>
-
-                    <div class="col-xs-24 col-sm-12 col-md-6 feature">
-                        <span><i class="flaticon-huge3"></i></span>
-                        <p>{% trans "Accomplish your Event" %}</p>
-                        <small>{% trans "Once you have found the right Participants for the Event, confirm their Participation in the Event, and get it done. After the Event has taken its Place, review Experience Reports, and leave Feedback for each Person, participated in." %}</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="latest-twitter">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-22 col-xs-offset-1 col-sm-20 col-sm-offset-2 col-md-16 col-md-offset-4 header" align="center">
-                <img src="{{ STATIC_URL }}img/twitt.png" alt="Latest from Twitter - SaneSide Platform." />
-                <h2>{% trans "Latest from Twitter" %}</h2>
-
-                    {% get_tweets for "sanesidedotcom" as tweets exclude "replies, retweets" limit 10 %}
-                    {# get_tweets for "sanesidedotcom" as tweets limit 10 #}
-
-                <div id="twitter-carousel" class="carousel slide" data-ride="carousel">
-                    <!-- Wrapper for slides -->
-                    <div class="carousel-inner">
-                    {% for tweet in tweets  %}
-                        <div class="{% if forloop.first %}active {% endif %}item">{{ tweet.html|safe }}</div>
-                    {% endfor %}
-                    </div>
-
-                    <!-- Indicators -->
-                    <ol class="carousel-indicators">
-                    {% for tweet in tweets %}
-                        <li data-target="twitter-carousel" data-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %}></li>
-                    {% endfor %}
-                    </ol>
-
-                    <!-- Carousel Nav -->
-                {% comment %}
-                    <a class="carousel-control left" href="#twitter-carousel" data-slide="prev">&lsaquo;</a>
-                    <a class="carousel-control right" href="#twitter-carousel" data-slide="next">&rsaquo;</a>
-                {% endcomment %}
-                </div>
-
-                {#<a class="btn btn-primary">Follow us</a>#}
-                <a href="https://twitter.com/sanesidedotcom" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true" data-align="center">{% trans "Follow" %} @sanesidedotcom</a>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- START SCRIPT -->
 <script>

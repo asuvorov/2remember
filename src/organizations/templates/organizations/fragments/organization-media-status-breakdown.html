@@ -2,16 +2,16 @@
 
 {% comment %}
     Input Parameters:
-        :<request>
+        :<request> - Request
 {% endcomment %}
 
 {% if organization.author == request.user %}
-    <a class="btn btn-primary" href="{% url 'organization-edit' organization.slug %}"><i class="fa fa-edit fa-fw"></i> {% trans "Edit Organization" %}</a>
-    <a class="btn btn-success" href="{% url 'organization-populate-newsletter' organization.slug %}"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Populate Newsletter" %}</a>
-    <a class="btn btn-primary" href="{% url 'event-create' %}?organization={{ organization.id }}"><i class="fa fa-wrench fa-fw"></i> {% trans "Create Event" %}</a>
-{% elif request.user.is_authenticated %}
+    <a class="btn btn-warning w-100 mb-2" href="{% url 'organization-edit' organization.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Organization" %}</a>
+    <a class="btn btn-success w-100 mb-2" href="{% url 'organization-populate-newsletter' organization.slug %}"><i class="bi bi-send"></i>&nbsp;{% trans "Populate Newsletter" %}</a>
+    <a class="btn btn-primary w-100" href="{% url 'event-create' %}?organization={{ organization.id }}"><i class="bi bi-wrench-adjustable-circle"></i>&nbsp;{% trans "Create Event" %}</a>
+{% else %}
     {% if not is_subscribed %}
-        <a class="btn btn-primary subscribe" href="#"><i class="fa fa-paper-plane fa-fw"></i> {% trans "Subscribe" %}</a>
+        <a class="btn btn-primary w-100 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
     {% endif %}
 
     <!-- Add Complaint -->
@@ -26,6 +26,6 @@
             </p>
         </p>
 
-        <a class="btn btn-danger btn-centered add-complaint" href="#"><i class="fa fa-info-circle fa-fw"></i> {% trans "Complain" %}</a>
+        <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
     {% endif %}
 {% endif %}

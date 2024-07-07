@@ -4,8 +4,8 @@
 
 Dear, {{ user.first_name }}!
 
-You have withdrawn your Participation in Event "{{ event.name }}"!
+You have withdrawn your Participation in Event "{{ event.title }}"!
 
 Link to the Event Details Page: {{ event_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

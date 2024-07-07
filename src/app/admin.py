@@ -3,6 +3,7 @@
 """
 
 from django.contrib import admin
+from django.utils.html import format_html
 
 # from djangoseo.admin import register_seo_admin
 from rangefilter.filters import DateRangeFilter
@@ -26,6 +27,43 @@ from ddcore.models.View import View
 
 
 # register_seo_admin(admin.site, Metadata)
+
+class ImagesAdminMixin:
+    """Mixin for displaying Images in Django Admin."""
+
+    def avatar_image_tag(self, obj):
+        """Render Avatar Thumbnail."""
+        if obj.avatar:
+            return format_html(f"<img src='{obj.avatar.url}' width='60' height='60' />")
+
+        if obj.user.profile.avatar:
+            return format_html(f"<img src='{obj.user.profile.avatar.url}' width='100' height='100' />")
+
+        return "(Sin Imagen)"
+
+    avatar_image_tag.short_description = "Avatar"
+    avatar_image_tag.allow_tags = True
+
+    def preview_image_tag(self, obj):
+        """Render Preview Thumbnail."""
+        if obj.preview:
+            return format_html(f"<img src='{obj.preview.url}' width='100' height='60' />")
+
+        return "(Sin Imagen)"
+
+    preview_image_tag.short_description = "Preview"
+    preview_image_tag.allow_tags = True
+
+    def cover_image_tag(self, obj):
+        """Render Cover Thumbnail."""
+        if obj.cover:
+            return format_html(f"<img src='{obj.cover.url}' width='100' height='60' />")
+
+        return "(Sin Imagen)"
+
+    cover_image_tag.short_description = "Cover"
+    cover_image_tag.allow_tags = True
+
 
 # =============================================================================
 # ===

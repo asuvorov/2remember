@@ -5,13 +5,13 @@
 import datetime
 import inspect
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth import (
     authenticate,
     login,
     logout)
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.contenttypes.models import ContentType
 from django.core.paginator import (
@@ -25,9 +25,6 @@ from django.http import (
 from django.shortcuts import (
     get_object_or_404,
     render)
-from django.utils.http import (
-    base36_to_int,
-    int_to_base36)
 from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.cache import cache_page
@@ -52,27 +49,33 @@ from app.forms import (
     SocialLinkFormSet)
 from events.models import (
     EventStatus,
-    Participation,
-    ParticipationStatus)
-from organizations.models import OrganizationStaff
+    # Participation,
+    # ParticipationStatus
+    )
+# from organizations.models import OrganizationStaff
 
 from .forms import (
     LoginForm,
+    ForgotPasswordForm,
     ResetPasswordForm,
     UserForm,
-    UserPrivacyAdminsForm,
-    UserPrivacyGeneralForm,
-    UserPrivacyMembersForm,
+    # UserPrivacyAdminsForm,
+    # UserPrivacyGeneralForm,
+    # UserPrivacyMembersForm,
     UserProfileEditForm,
     UserProfileForm)
 from .models import (
-    UserPrivacyAdmins,
-    UserPrivacyGeneral,
-    UserPrivacyMembers,
+    # UserPrivacyAdmins,
+    # UserPrivacyGeneral,
+    # UserPrivacyMembers,
     UserProfile)
 from .utils import (
     get_admin_events,
     get_participations_intersection)
+
+
+app_label, model_name = settings.AUTH_USER_MODEL.split(".")
+user_model = apps.get_model(app_label, model_name)
 
 
 # =============================================================================
@@ -82,9 +85,9 @@ from .utils import (
 # =============================================================================
 def _retrieve_account_list_with_privacy(request):
     """Docstring."""
-    accounts = User.objects.filter(
+    accounts = user_model.objects.filter(
         is_active=True,
-        privacy_general__hide_profile_from_list=False,
+        # privacy_general__hide_profile_from_list=False,
     ).exclude(
         id=request.user.id,
     )
@@ -94,8 +97,8 @@ def _retrieve_account_list_with_privacy(request):
 
 def is_profile_complete(user):
     """Docstring."""
-    return user.profile.is_completed
-
+    # FIXME: return user.profile.is_completed
+    return True
 
 # =============================================================================
 # ===
@@ -147,26 +150,27 @@ def account_signup(request):
 
             # -----------------------------------------------------------------
             # --- Create User Privacy.
-            UserPrivacyGeneral.objects.create(user=user)
-            UserPrivacyMembers.objects.create(user=user)
-            UserPrivacyAdmins.objects.create(user=user)
+            # UserPrivacyGeneral.objects.create(user=user)
+            # UserPrivacyMembers.objects.create(user=user)
+            # UserPrivacyAdmins.objects.create(user=user)
 
-            uidb36 = int_to_base36(user.id)
+            uidb36 = str(user.id)  # int_to_base36(user.id)
             token = token_generator.make_token(user)
 
-            domain_name = request.get_host()
+            # domain_name = request.get_host()
             url = reverse(
                 "signup-confirm", kwargs={
                     "uidb36":   uidb36,
                     "token":    token,
                 })
-            confirmation_link = f"http://{domain_name}{url}"
+            # confirmation_link = f"http://{domain_name}{url}"
 
             # -----------------------------------------------------------------
-            # --- Send Email Notification(s).
-            profile.email_notify_signup_confirmation(
-                request=request,
-                url=confirmation_link)
+            # --- FIXME: Send Email Notification(s).
+            # profile.email_notify_signup_confirmation(
+            #     request=request,
+            #     url=confirmation_link)
+            return HttpResponseRedirect(url)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
@@ -187,13 +191,21 @@ def account_signup(request):
 
 def account_signup_confirm(request, uidb36=None, token=None):
     """Sign up confirm."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] UIDB36           : %s" % uidb36, "yellow")
+    cprint("[---  DUMP   ---] TOKEN            : %s" % token, "yellow")
+
     assert uidb36 is not None and token is not None
 
     try:
-        uid_int = base36_to_int(uidb36)
-        user = User.objects.get(id=uid_int)
-    except (ValueError, User.DoesNotExist):
+        user = user_model.objects.get(id=uidb36)
+    except (ValueError, user_model.DoesNotExist):
         user = None
+
+    cprint("[---  INFO   ---] USER             : %s" % user, "cyan")
 
     if (
             user is not None and
@@ -206,16 +218,16 @@ def account_signup_confirm(request, uidb36=None, token=None):
         user.backend = "django.contrib.auth.backends.ModelBackend"
         login(request, user)
 
-        domain_name = request.get_host()
-        url = reverse(
-            "signin", kwargs={})
-        signin_link = f"http://{domain_name}{url}"
+        # domain_name = request.get_host()
+        # url = reverse(
+        #     "signin", kwargs={})
+        # signin_link = f"http://{domain_name}{url}"
 
         # ---------------------------------------------------------------------
-        # --- Send Email Notification(s).
-        user.profile.email_notify_signup_confirmed(
-            request=request,
-            url=signin_link)
+        # --- FIXME: Send Email Notification(s).
+        # user.profile.email_notify_signup_confirmed(
+        #     request=request,
+        #     url=signin_link)
 
         # ---------------------------------------------------------------------
         # --- Save the Log.
@@ -248,14 +260,10 @@ def account_signin(request):
             if redirect_to:
                 return HttpResponseRedirect(redirect_to)
 
-            return HttpResponseRedirect(
-                reverse("my-profile-view"))
+            return HttpResponseRedirect(reverse("my-profile-view"))
 
     if request.method == "POST":
         if form.is_valid():
-            # if not redirect_to:
-            #     redirect_to = settings.LOGIN_REDIRECT_URL
-
             data = form.cleaned_data
             user = authenticate(
                 username=data["username"],
@@ -268,7 +276,6 @@ def account_signin(request):
                     request.session.set_expiry(settings.SESSION_COOKIE_AGE)
                 else:
                     request.session.set_expiry(0)
-                # return HttpResponseRedirect(redirect_to)
 
                 # -------------------------------------------------------------
                 # --- Track IP.
@@ -280,8 +287,7 @@ def account_signin(request):
                 if redirect_to:
                     return HttpResponseRedirect(redirect_to)
 
-                return HttpResponseRedirect(
-                    reverse("my-profile-view"))
+                return HttpResponseRedirect(reverse("my-profile-view"))
 
             form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
 
@@ -299,11 +305,9 @@ def account_signin(request):
 @login_required
 def account_signout(request, next_page):
     """Sign out."""
-    response = logout(
-        request,
-        next_page=next_page)
+    logout(request)
 
-    return response
+    return HttpResponseRedirect(reverse("index"))
 
 
 # =============================================================================
@@ -311,24 +315,77 @@ def account_signout(request, next_page):
 # === PASSWORD
 # ===
 # =============================================================================
+def password_forgot(request):
+    """Forgot Password."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    form = ForgotPasswordForm(request.POST or None)
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    if request.method == "POST":
+        if form.is_valid():
+            user = user_model.objects.get(email=form.cleaned_data["email"])
+            uidb36 = str(user.id)  # int_to_base36(user.id)
+            token = token_generator.make_token(user)
+
+            # domain_name = request.get_host()
+            url = reverse(
+                "password-renew", kwargs={
+                    "uidb36":   uidb36,
+                    "token":    token,
+                })
+            # confirmation_link = f"http://{domain_name}{url}"
+
+            # -----------------------------------------------------------------
+            # --- FIXME: Send Email Notification(s).
+            # user.profile.email_notify_password_reset(
+            #     request=request,
+            #     url=confirmation_link)
+            return HttpResponseRedirect(url)
+
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+
+        # ---------------------------------------------------------------------
+        # --- Failed to sign up.
+        # --- Save the Log.
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/account-password-forgot.html", {
+            "form":     form,
+        })
+
+
 def password_renew(request, uidb36=None, token=None):
     """Renew Password."""
     assert uidb36 is not None and token is not None
 
     try:
-        uid_int = base36_to_int(uidb36)
-        user = User.objects.get(id=uid_int)
-    except (ValueError, User.DoesNotExist):
+        user_id = uidb36  # base36_to_int(uidb36)
+        user = user_model.objects.get(id=user_id)
+    except (ValueError, user_model.DoesNotExist):
         user = None
 
-    if user is not None and token_generator.check_token(user, token):
+    if (
+            user is not None and
+            token_generator.check_token(user, token)):
         # ---------------------------------------------------------------------
         # --- Instant log-in after confirmation.
         user.backend = "django.contrib.auth.backends.ModelBackend"
         login(request, user)
 
-        return HttpResponseRedirect(
-            reverse("password-reset"))
+        return HttpResponseRedirect(reverse("password-reset"))
 
     info = _("An Error has occurred.")
 
@@ -341,9 +398,14 @@ def password_renew(request, uidb36=None, token=None):
 @login_required
 def password_reset(request):
     """Reset Password."""
-    form = ResetPasswordForm(
-        request.POST or None)
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    form = ResetPasswordForm(request.POST or None)
 
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
     if request.method == "POST":
         if form.is_valid():
             request.user.set_password(form.cleaned_data["password"])
@@ -359,9 +421,11 @@ def password_reset(request):
                 request=request,
                 url=signin_link)
 
-            return HttpResponseRedirect(
-                reverse("my-profile-view"))
+            return HttpResponseRedirect(reverse("my-profile-view"))
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/account-password-reset.html", {
             "form":     form,
@@ -790,10 +854,6 @@ def my_profile_edit(request):
         request.POST or None,
         request.FILES or None,
         instance=request.user.profile.address)
-    nform = PhoneForm(
-        request.POST or None,
-        request.FILES or None,
-        instance=request.user.profile.phone_number)
 
     formset_phone = PhoneFormSet(
         request.POST or None, request.FILES or None,
@@ -815,11 +875,9 @@ def my_profile_edit(request):
         if (
                 pform.is_valid() and
                 aform.is_valid() and
-                nform.is_valid() and
                 formset_phone.is_valid() and
                 formset_social.is_valid()):
             request.user.profile.address = aform.save()
-            request.user.profile.phone_number = nform.save()
             request.user.profile.save()
 
             request.user.first_name = pform.cleaned_data["first_name"]
@@ -855,7 +913,6 @@ def my_profile_edit(request):
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
     is_newly_created = False
-
     if request.user.profile.is_newly_created:
         is_newly_created = True
 
@@ -867,12 +924,11 @@ def my_profile_edit(request):
     # -------------------------------------------------------------------------
     return render(
         request, "accounts/my-profile-edit.html", {
-            "pform":            pform,
-            "aform":            aform,
-            "nform":            nform,
-            "formset_phone":    formset_phone,
-            "formset_social":   formset_social,
-            "is_newly_created": is_newly_created,
+            "pform":                pform,
+            "aform":                aform,
+            "formset_phone":        formset_phone,
+            "formset_social":       formset_social,
+            "is_newly_created":     is_newly_created,
         })
 
 
@@ -963,19 +1019,27 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    is_complained = False
+    created_organizations = []
+    related_organizations = []
     show_complain_form = False
 
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
     account = get_object_or_404(
-        User,
+        user_model,
         pk=user_id)
 
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the Phone Numbers.
+    # -------------------------------------------------------------------------
+    phone_numbers = Phone.objects.filter(
+        content_type=ContentType.objects.get_for_model(account.profile),
+        object_id=account.profile.id)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Account Social Links.
@@ -996,14 +1060,13 @@ def profile_view(request, user_id):
     if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Account.
-        is_complained = account.profile.is_complained_by_user(request.user)
-
-        if not is_complained:
+        if not account.profile.is_complained_by_user(request.user):
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
             #     Event(s), as the Account.
-            if len(get_participations_intersection(request.user, account)) > 0:
-                show_complain_form = True
+            # if len(get_participations_intersection(request.user, account)) > 0:
+            #     show_complain_form = True
+            show_complain_form = True
 
     # -------------------------------------------------------------------------
     # --- Get QuerySet of Organizations with the Organization Privacy Settings:
@@ -1014,84 +1077,85 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, where the User is
     #     a Staff Member.
-    staff_member_organizations = account.profile.staff_member_organizations.all()
+    # staff_member_organizations = account.profile.staff_member_organizations.all()
 
     # -------------------------------------------------------------------------
     # --- Retrieve the List of Organizations, where the User is
     #     a Group Member.
-    group_member_organizations = account.profile.group_member_organizations.all()
+    # group_member_organizations = account.profile.group_member_organizations.all()
 
-    if request.user.is_authenticated:
-        # ---------------------------------------------------------------------
-        # --- Retrieve the List of Organizations, created by User.
-        created_organizations = account.created_organizations.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        )
+    # if request.user.is_authenticated:
+    #     # ---------------------------------------------------------------------
+    #     # --- Retrieve the List of Organizations, created by User.
+    #     created_organizations = account.created_organizations.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     )
 
-        # ---------------------------------------------------------------------
-        # --- Related Organizations.
-        related_organizations = staff_member_organizations | group_member_organizations
-        related_organizations = related_organizations.filter(
-            Q(is_hidden=False) |
-            Q(
-                Q(pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                is_hidden=True,
-            ),
-            is_deleted=False,
-        )
-    else:
-        # ---------------------------------------------------------------------
-        # --- Retrieve the List of Organizations, created by User.
-        created_organizations = account.created_organizations.filter(
-            is_hidden=False,
-            is_deleted=False)
+    #     # ---------------------------------------------------------------------
+    #     # --- Related Organizations.
+    #     related_organizations = staff_member_organizations | group_member_organizations
+    #     related_organizations = related_organizations.filter(
+    #         Q(is_hidden=False) |
+    #         Q(
+    #             Q(pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             is_hidden=True,
+    #         ),
+    #         is_deleted=False,
+    #     )
+    # else:
+    #     # ---------------------------------------------------------------------
+    #     # --- Retrieve the List of Organizations, created by User.
+    #     created_organizations = account.created_organizations.filter(
+    #         is_hidden=False,
+    #         is_deleted=False)
 
-        # ---------------------------------------------------------------------
-        # --- Related Organizations.
-        related_organizations = staff_member_organizations | group_member_organizations
-        related_organizations = related_organizations.filter(
-            is_hidden=False,
-            is_deleted=False)
+    #     # ---------------------------------------------------------------------
+    #     # --- Related Organizations.
+    #     related_organizations = staff_member_organizations | group_member_organizations
+    #     related_organizations = related_organizations.filter(
+    #         is_hidden=False,
+    #         is_deleted=False)
 
-    related_organizations = related_organizations.exclude(id__in=created_organizations)
+    # related_organizations = related_organizations.exclude(id__in=created_organizations)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    account.profile.increase_views_count(request)
+    # account.profile.increase_views_count(request)
 
     return render(
         request, "accounts/foreign-profile-info.html", {
-            "account":                      account,
-            "created_organizations":        created_organizations,
-            "related_organizations":        related_organizations,
-            "social_links":                 social_links,
-            "show_complain_form":           show_complain_form,
+            "account":                  account,
+            "created_organizations":    created_organizations,
+            "related_organizations":    related_organizations,
+            "phone_numbers":            phone_numbers,
+            "social_links":             social_links,
+            "show_complain_form":       show_complain_form,
         })
 
 
@@ -1106,7 +1170,7 @@ def profile_participations(request, user_id):
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
     account = get_object_or_404(
-        User,
+        user_model,
         pk=user_id)
 
     if account == request.user:
@@ -1225,7 +1289,7 @@ def profile_events(request, user_id):
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
     account = get_object_or_404(
-        User,
+        user_model,
         pk=user_id)
 
     if account == request.user:

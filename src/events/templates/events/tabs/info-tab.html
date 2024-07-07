@@ -11,14 +11,14 @@ Event Details - Info
     <div class="col-xs-24 col-sm-16 col-md-18">
         <div class="thumbnail">
         {% if event.avatar %}
-            {% generateimage "common:giant_fill_wide" source=event.avatar -- alt=event.name %}
+            {% generateimage "common:giant_fill_wide" source=event.avatar -- alt=event.title %}
         {% endif %}
         </div>
 
         <div class="chl-info-section">
             <div class="event-name">
-                <h4 class="hidden-sm hidden-md hidden-lg">{{ event.name }} ({{ event.duration }}h)</h4>
-                <h2 class="hidden-xs">{{ event.name }} ({{ event.duration }}h)</h2>
+                <h4 class="hidden-sm hidden-md hidden-lg">{{ event.title }} ({{ event.duration }}h)</h4>
+                <h2 class="hidden-xs">{{ event.title }} ({{ event.duration }}h)</h2>
             </div>
 
             <div class="hidden-sm hidden-md hidden-lg">
@@ -35,7 +35,7 @@ Event Details - Info
         <div class="chl-info-section">
             <div class="event-details">
                 <p>
-                    <i class="fa fa-map-marker fa-fw"></i>
+                    <i class="bi bi-map-marker"></i>
                 {% if event.addressless %}
                     <span class="label label-warning">{% trans "Location is not provided" %}</span>
                 {% else %}
@@ -55,22 +55,22 @@ Event Details - Info
                     <tr>
                         <td><strong>{% trans "Venue Local Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
+                            <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}<br/>
+                            <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "Your Local Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
+                            <i class="bi bi-calendar-date"></i> {{ event.get_start_date_time_tz|localtime|date:"M j, Y" }}<br/>
+                            <i class="bi bi-clock-o"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                     <tr>
                         <td><strong>{% trans "UTC Time" %}</strong></td>
                         <td>
-                            <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
-                            <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
+                            <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|utc|date:"M j, Y" }}<br/>
+                            <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                         </td>
                     </tr>
                 </table>
@@ -84,27 +84,27 @@ Event Details - Info
                     <tr>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
+                                <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"F j, Y" }}<br/>
+                                <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
+                                <i class="bi bi-calendar-date"></i> {{ event.get_start_date_time_tz|localtime|date:"F j, Y" }}<br/>
+                                <i class="bi bi-clock-o"></i> {{ event.get_start_date_time_tz|localtime|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|localtime|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                         <td>
                             <p>
-                                <i class="fa fa-calendar fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
-                                <i class="fa fa-clock-o fa-fw"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
+                                <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|utc|date:"F j, Y" }}<br/>
+                                <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|utc|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|utc|date:"f a"|default:"12 a.m." }})
                             </p>
                         </td>
                     </tr>
                 </table>
             {% elif event.is_dateless %}
                 <p>
-                    <i class="fa fa-calendar fa-fw"></i>
+                    <i class="bi bi-calendar-date"></i>
                     <span class="label label-warning">{% trans "Dateless" %}</span>
                 </p>
             {% endif %}
@@ -113,13 +113,13 @@ Event Details - Info
 
         <div class="chl-info-section">
             <div class="event-category">
-                <p><i class="fa fa-plus-square-o fa-fw"></i><strong>{% trans "Category" %}: </strong>{{ event.stat_category_name }}</p>
+                <p><i class="bi bi-plus-square-o"></i><strong>{% trans "Category" %}: </strong>{{ event.stat_category_name }}</p>
             </div>
 
             <div class="event-tags">
             {% if event.tags.all and event.hashtag %}
                 <p>
-                    <i class="fa fa-tags fa-fw"></i>
+                    <i class="bi bi-tags"></i>
                 {% for tag in event.tags.all %}
                     <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
                     {% if not forloop.last %}, {% endif %}
@@ -127,11 +127,11 @@ Event Details - Info
 
                     <span class="vert-delimiter">|</span>
 
-                    <i class="fa fa-hashtag fa-fw"></i>{{ event.hashtag }}
+                    <i class="bi bi-hashtag"></i>{{ event.hashtag }}
                 </p>
             {% elif event.tags.all %}
                 <p>
-                    <i class="fa fa-tags fa-fw"></i>
+                    <i class="bi bi-tags"></i>
                 {% for tag in event.tags.all %}
                     <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
                     {% if not forloop.last %}, {% endif %}
@@ -139,7 +139,7 @@ Event Details - Info
                 </p>
             {% elif event.hashtag %}
                 <p>
-                    <i class="fa fa-hashtag fa-fw"></i>{{ event.hashtag }}
+                    <i class="bi bi-hashtag"></i>{{ event.hashtag }}
                 </p>
             {% endif %}
             </div>
@@ -147,7 +147,7 @@ Event Details - Info
             <div class="event-organization">
             {% if event.organization and not event.organization.is_deleted %}
                 <p>
-                    <i class="fa fa-institution fa-fw"></i><strong>{% trans "Organized by" %}</strong>
+                    <i class="bi bi-institution"></i><strong>{% trans "Organized by" %}</strong>
                     <a href="{% url 'organization-details' event.organization.slug %}">{{ event.organization.name }}</a>
                 </p>
             {% endif %}
@@ -158,7 +158,7 @@ Event Details - Info
                 {% if event.author.profile.avatar %}
                     {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
                 {% else %}
-                    <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                 {% endif %}
                     {% trans "Posted by" %}
                     <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
@@ -184,7 +184,7 @@ Event Details - Info
     {% if roles_breakdown %}
         <div class="event-roles-breakdown">
             <h4>{% trans "Roles Breakdown" %}
-                <a data-toggle="collapse" href="#collapse-roles-breakdown"  aria-expanded="false" aria-controls="collapse-roles-breakdown"><i class="toggle-icon fa fa-fw fa-chevron-down"></i></a>
+                <a data-toggle="collapse" href="#collapse-roles-breakdown"  aria-expanded="false" aria-controls="collapse-roles-breakdown"><i class="toggle-icon bi bi-chevron-down"></i></a>
             </h4>
 
             <div id="collapse-roles-breakdown" class="collapse">
@@ -196,23 +196,23 @@ Event Details - Info
                             </th>
                             <th>
                                 <span class="hidden-xs">{% trans "Required" %}</span>
-                                <i class="fa fa-fw fa-binoculars txt-info hidden-sm hidden-md hidden-lg"></i>
+                                <i class="bi bi-binoculars txt-info hidden-sm hidden-md hidden-lg"></i>
                             </th>
                             <th>
                                 <span class="hidden-xs">{% trans "Applied" %}</span>
-                                <i class="fa fa-fw fa-paper-plane txt-warning hidden-sm hidden-md hidden-lg"></i>
+                                <i class="bi bi-paper-plane txt-warning hidden-sm hidden-md hidden-lg"></i>
                             </th>
                             <th>
                                 <span class="hidden-xs">{% trans "Rejected" %}</span>
-                                <i class="fa fa-fw fa-times txt-danger hidden-sm hidden-md hidden-lg"></i>
+                                <i class="bi bi-times txt-danger hidden-sm hidden-md hidden-lg"></i>
                             </th>
                             <th>
                                 <span class="hidden-xs">{% trans "Confirmed" %}</span>
-                                <i class="fa fa-fw fa-check txt-success hidden-sm hidden-md hidden-lg"></i>
+                                <i class="bi bi-check txt-success hidden-sm hidden-md hidden-lg"></i>
                             </th>
                             <th>
                                 <span class="hidden-xs">{% trans "Left" %}</span>
-                                <i class="fa fa-fw fa-user hidden-sm hidden-md hidden-lg"></i>
+                                <i class="bi bi-user hidden-sm hidden-md hidden-lg"></i>
                             </th>
                         </tr>
                     </thead>
@@ -248,9 +248,9 @@ Event Details - Info
     {% if not event.is_draft %}
         <div class="instance-comments">
             <h4>{% trans "Comments" %} ({{ event.get_comment_list.count }})
-                <a data-toggle="collapse" href="#collapse-comments"  aria-expanded="false" aria-controls="collapse-comments"><i class="toggle-icon fa fa-fw fa-chevron-down"></i></a>
+                <a data-toggle="collapse" href="#collapse-comments"  aria-expanded="false" aria-controls="collapse-comments"><i class="toggle-icon bi bi-chevron-down"></i></a>
             {% if request.user.is_authenticated %}
-                <a class="add-comment btn btn-rounded pull-right" href="#"><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+                <a class="add-comment btn pull-right" href="#"><i class="bi bi-plus"></i> {% trans "Add" %}</a>
             {% endif %}
             </h4>
 
@@ -263,7 +263,7 @@ Event Details - Info
     {% endif %}
     </div>
 
-    <div class="col-xs-24 col-sm-8 col-md-6 right-sidebar">
+    <div id="tips" class="col-md-3 right-sidebar">
         <div class="hidden-xs">
             {% include "events/fragments/event-media-status-breakdown.html" %}
         </div>
@@ -296,10 +296,10 @@ Event Details - Info
         <div class="panel panel-primary">
             <div class="panel-body">
                 <div class="social-buttons">
-                    <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="fa fa-facebook fa-fw"></i></button>
-                    <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="fa fa-twitter fa-fw"></i></button>
-                    <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="fa fa-linkedin fa-fw"></i></button>
-                    <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="fa fa-google-plus fa-fw"></i></button>
+                    <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="bi bi-facebook"></i></button>
+                    <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="bi bi-twitter"></i></button>
+                    <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="bi bi-linkedin"></i></button>
+                    <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="bi bi-google-plus"></i></button>
                 </div>
             </div>
         </div>
@@ -501,10 +501,10 @@ Event Details - Info
         window.open("http://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + document.location.href + "&p[images][0]=&p[title]=&p[summary]=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_tw() {
-        window.open("http://twitter.com/home?status=" + "{{ event.name }}".substr(0,100) + " " + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+        window.open("http://twitter.com/home?status=" + "{{ event.title }}".substr(0,100) + " " + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_li() {
-        window.open("http://www.linkedin.com/shareArticle?mini=true&url=" + document.location.href + "&title=" + "{{ event.name }}" + "&summary=&source=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+        window.open("http://www.linkedin.com/shareArticle?mini=true&url=" + document.location.href + "&title=" + "{{ event.title }}" + "&summary=&source=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
     }
     function share_on_gp() {
         window.open("https://plus.google.com/share?url=" + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
@@ -529,17 +529,17 @@ Event Details - Info
     </div>
 
     <div class="social-buttons hidden-xs" align="center">
-        <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="fa fa-facebook fa-fw fa-3x"></i></button>
-        <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="fa fa-twitter fa-fw fa-3x"></i></button>
-        <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="fa fa-linkedin fa-fw fa-3x"></i></button>
-        <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="fa fa-google-plus fa-fw fa-3x"></i></button>
+        <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="bi bi-facebook fa-3x"></i></button>
+        <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="bi bi-twitter fa-3x"></i></button>
+        <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="bi bi-linkedin fa-3x"></i></button>
+        <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="bi bi-google-plus fa-3x"></i></button>
     </div>
 
     <div class="social-buttons hidden-sm hidden-md hidden-lg" align="center">
-        <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="fa fa-facebook fa-fw fa-2x"></i></button>
-        <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="fa fa-twitter fa-fw fa-2x"></i></button>
-        <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="fa fa-linkedin fa-fw fa-2x"></i></button>
-        <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="fa fa-google-plus fa-fw fa-2x"></i></button>
+        <button class="btn btn-facebook" onclick="javascript:share_on_fb();"><i class="bi bi-facebook fa-2x"></i></button>
+        <button class="btn btn-twitter" onclick="javascript:share_on_tw();"><i class="bi bi-twitter fa-2x"></i></button>
+        <button class="btn btn-linkedin" onclick="javascript:share_on_li();"><i class="bi bi-linkedin fa-2x"></i></button>
+        <button class="btn btn-google-plus" onclick="javascript:share_on_gp();"><i class="bi bi-google-plus fa-2x"></i></button>
     </div>
 
     <div class="popup-overlay-info">

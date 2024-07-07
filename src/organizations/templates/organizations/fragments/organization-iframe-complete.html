@@ -28,17 +28,17 @@
     <body>
         <div id="organization-widget">
             <a href="{% url 'index' %}">
-                <img src="{% static 'favicon/favicon-32x32.png' %}" alt="SaneSide Platform - Volunteering and Community Service made easy." />
+                <img src="{% static 'favicon/favicon-32x32.png' %}" alt="2Remember Platform - Volunteering and Community Service made easy." />
             </a>
             <a href="{% url 'organization-details' organization.slug %}">
             {% if organization.avatar %}
                 {% generateimage "iframe:thumbnail" source=organization.avatar -- alt=organization.name %}
             {% else %}
-                <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ organization.name }}. SaneSide Platform - Volunteering and Community Service made easy." />
+                <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ organization.name }}. 2Remember Platform - Volunteering and Community Service made easy." />
             {% endif %}
             </a>
 
-            <p>{{ organization.name }} {% trans "Completed Events on SaneSide" %}:</p>
+            <p>{{ organization.name }} {% trans "Completed Events on 2Remember" %}:</p>
 
             <table class="table condensed-table">
             {% for event in events_completed %}
@@ -46,24 +46,24 @@
                     <td>
                         <a class="" href="{% url 'event-details' event.slug %}">
                         {% if event.avatar %}
-                            {% generateimage "iframe:thumbnail" source=event.avatar -- alt=event.name %}
+                            {% generateimage "iframe:thumbnail" source=event.avatar -- alt=event.title %}
                         {% else %}
-                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.name }}. SaneSide Platform - Volunteering and Community Service made easy." />
+                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.title }}. 2Remember Platform - Volunteering and Community Service made easy." />
                         {% endif %}
                         </a>
                     </td>
                     <td>
-                        <a class="" href="{% url 'event-details' event.slug %}">{{ event.name }}</a>
+                        <a class="" href="{% url 'event-details' event.slug %}">{{ event.title }}</a>
                     </td>
                     <td>{{ event.start_date }}</td>
-                    <td><span class="label label-info">{{ event.duration }}h</span></td>
+                    <td><span class="label label-info">{# event.duration #}h</span></td>
                     <td>
                     {% for participation in event.get_acknowledged_qs %}
                         <a href="{% url 'profile-view' participation.user_id %}">
                         {% if event.avatar %}
                             {% generateimage "iframe:thumbnail" source=participation.user.profile.avatar -- alt=participation.user.profile.auth_name %}
                         {% else %}
-                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.name }}. SaneSide Platform - Volunteering and Community Service made easy." />
+                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.title }}. 2Remember Platform - Volunteering and Community Service made easy." />
                         {% endif %}
                         </a>
                     {% endfor %}

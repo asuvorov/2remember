@@ -16,7 +16,7 @@ Foreign Profile - Canceled Participations
             <thead>
                 <tr class="active">
                     <th colspan="2">
-                        <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a> canceled on {{ participation.date_cancelled }}
+                        <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a> canceled on {{ participation.date_cancelled }}
                     </th>
                 </tr>
             </thead>
@@ -53,11 +53,11 @@ Foreign Profile - Canceled Participations
                 <td>
                     <a href="{% url 'event-details' participation.event.slug %}">
                     {% if participation.event.avatar %}
-                        {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.name %}
+                        {% generateimage "common:thumbnail" source=participation.event.avatar -- alt=participation.event.title %}
                     {% endif %}
                     </a>
                 </td>
-                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a></td>
+                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a></td>
                 <td>{{ participation.date_created }}</td>
                 <td>{{ participation.date_cancelled }}</td>
                 <td>

@@ -32,7 +32,7 @@ For more Information on how to work in the Project, check out some of the other 
 
 ### Download and install `bower` Applications
 
-	python manage.py bower install 
+	python manage.py bower install
 
 ## Install `lessc` (and optional `recess`):
 
@@ -70,4 +70,4 @@ For more Information on how to work in the Project, check out some of the other 
 
 1. `RDS` Instance
 
-		mysql -h saneside.csisnutyjpxo.us-west-2.rds.amazonaws.com -P 3306 -u saneside_admin -p
+		mysql -h 2remember.csisnutyjpxo.us-west-2.rds.amazonaws.com -P 3306 -u 2remember_admin -p

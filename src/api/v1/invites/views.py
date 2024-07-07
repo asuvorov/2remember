@@ -21,8 +21,9 @@ from annoying.functions import get_object_or_None
 from api.auth import CsrfExemptSessionAuthentication
 from events.models import (
     Event,
-    Participation,
-    ParticipationStatus)
+    # Participation,
+    # ParticipationStatus
+    )
 from invites.models import (
     Invite,
     InviteStatus)

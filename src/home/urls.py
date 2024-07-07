@@ -14,6 +14,9 @@ urlpatterns = [
     re_path(r"^$",
         views.index,
         name="index"),
+    re_path(r"^open-to-hire/$",
+        views.open_to_hire,
+        name="open-to-hire"),
 
     # -------------------------------------------------------------------------
     # --- Terms & Conditions.
