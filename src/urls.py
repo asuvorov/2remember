@@ -27,6 +27,10 @@ admin.autodiscover()
 # schema_view = get_swagger_view(title="2Remember API")
 
 
+def trigger_error(request):
+    division_by_zero = 1 / 0
+
+
 sitemaps = {
     "accounts":         AccountSitemap,
     "blog":             BlogPostSitemap,
@@ -37,6 +41,7 @@ sitemaps = {
 
 
 urlpatterns = [
+    path("sentry-debug", trigger_error),
     re_path(r"", include("social_django.urls", namespace="social")),
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
     re_path(r"^grappelli/", include("grappelli.urls")),

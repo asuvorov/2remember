@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
@@ -10,6 +12,11 @@ from rest_framework.permissions import AllowAny
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from app.decorators import log_default
+
+
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -37,6 +44,7 @@ class APIStatusViewSet(APIView):
     # serializer_class =
     # model =
 
+    @log_default(my_logger=logger)
     def get(self, request):
         """GET: Status.
 
@@ -104,6 +112,7 @@ class APIVersionViewSet(APIView):
     # serializer_class =
     # model =
 
+    @log_default(my_logger=logger)
     def get(self, request):
         """GET: Version.
 

@@ -42,6 +42,7 @@ from ddcore.Utilities import (
 )
 
 # pylint: disable=import-error
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     PhoneForm,
@@ -691,12 +692,13 @@ def account_online_list(request):
 # ===
 # =============================================================================
 @login_required
+@log_default
 def my_profile_view(request):
     """My Profile."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    # cprint("***" * 27, "green")
+    # cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    # cprint("***" * 27, "green")
+    # cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
 
     # -------------------------------------------------------------------------
     # --- Get or create User's Profile.
