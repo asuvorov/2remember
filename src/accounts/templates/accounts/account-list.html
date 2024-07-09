@@ -36,22 +36,17 @@
         <div class="col-md-9">
             <h3>{{ page_title }}</h3>
 
-            <div class="controllers">
-            </div>
+            <!-- START CONTROLLERS -->
+            <!--  END  CONTROLLERS -->
 
-            <div class="row g-2">
-            {% for account in accounts %}
-                <div class="col-6 col-md-4 col-lg-3">
-                    {% include "accounts/fragments/account-thumbnail.html" with account=account %}
-                </div>
-            {% empty %}
-                <div class="col-12">
-                    <p><span class="label label-info">{% trans "There are no Members at the Moment." %}</span></p>
-                </div>
-            {% endfor %}
+            <!-- START FILTER FORM -->
+            <!--  END  FILTER FORM -->
 
-                <div id="page-selection"></div>
-            </div>
+            <!-- START EVENTS -->
+            <section class="position-relative">
+                {% include "accounts/fragments/account-list.html" %}
+            </section>
+            <!--  END  EVENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">

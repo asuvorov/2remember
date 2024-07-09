@@ -18,65 +18,14 @@
             padding:            10px 0;
         }
     }
-
-    .event-list {
-        background-color:   @white;
-        border-top:         3px solid @brand-primary;
-        width:              100%;
-        height:             80px;
-        padding:            0px;
-        margin:             0px 0px 10px;
-
-        & > time {
-            display:            inline-block;
-            text-align:         center;
-            text-transform:     uppercase;
-            width:              80px;
-            height:             80px;
-            color:              @white;
-            background-color:   @brand-primary;
-            padding:            10px;
-
-            & > span {
-                display:    none;
-            }
-            & > .day {
-                display:            block;
-                font-size:          28pt;
-                font-weight:        200;
-                line-height:        1;
-            }
-            & > .month {
-                display:            block;
-                font-size:          12pt;
-                font-weight:        800;
-                line-height:        1;
-            }
-        }
-
-        & > .info {
-            padding:        20px;
-            text-align:     left;
-            display:        inline-block;
-            position:       absolute;
-
-            & > .title {
-                font-size:      @font-size-h3;
-                font-weight:    800;
-                margin:         0px;
-            }
-            & > .desc {
-                color:          @gray;
-                font-weight:    200;
-                margin:         0px;
-            }
-        }
-    }
 }
-
 #event-category-list {
     // --- Mixin
     #instance.page-list();
+}s
+section#event-list-grouper {
+    height:             auto;
+    min-height:         500px;
 }
 
 // ----------------------------------------------------------------------------
@@ -294,8 +243,61 @@
 }
 
 // ----------------------------------------------------------------------------
-// ---
+// --- Common
 // ----------------------------------------------------------------------------
+.event-list-date-grouper {
+    background-color:   @white;
+    border-top:         3px solid @brand-primary;
+    width:              100%;
+    height:             80px;
+    padding:            0px;
+    margin:             0px 0px 10px;
+
+    & > time {
+        display:            inline-block;
+        text-align:         center;
+        text-transform:     uppercase;
+        width:              80px;
+        height:             80px;
+        color:              @white;
+        background-color:   @brand-primary;
+        padding:            10px;
+
+        & > span {
+            display:    none;
+        }
+        & > .day {
+            display:            block;
+            font-size:          28pt;
+            font-weight:        200;
+            line-height:        1;
+        }
+        & > .month {
+            display:            block;
+            font-size:          12pt;
+            font-weight:        800;
+            line-height:        1;
+        }
+    }
+
+    & > .info {
+        padding:        20px;
+        text-align:     left;
+        display:        inline-block;
+        position:       absolute;
+
+        & > .title {
+            font-size:      @font-size-h3;
+            font-weight:    800;
+            margin:         0px;
+        }
+        & > .desc {
+            color:          @gray;
+            font-weight:    200;
+            margin:         0px;
+        }
+    }
+}
 .label-confirmation-required {
     position:               absolute;
     top:                    5px;
@@ -369,7 +371,7 @@
 @media (max-width: 479px) {
     /* <= 479px */
     #event-list {
-        .event-list {
+        .event-list-date-grouper {
             width:              100%;
             height:             60px;
 

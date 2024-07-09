@@ -1,20 +1,15 @@
 {% load i18n %}
 {% load static %}
 
-<div id="my-carousel" class="carousel slide mb-6" data-bs-ride="carousel">
+<div id="my-carousel" class="carousel carousel-fade slide mb-6" data-bs-ride="carousel">
     <div class="carousel-indicators">
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="2" aria-label="Slide 4"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
     </div>
 
     <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="{{ STATIC_URL }}img/40Zs9z.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
-        </div>
-
-        <div class="carousel-item">
+        <div class="carousel-item active" data-bs-interval="5000">
             <img src="{{ STATIC_URL }}img/DSC02177.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption text-start">
@@ -25,7 +20,7 @@
             </div>
         </div>
 
-        <div class="carousel-item">
+        <div class="carousel-item" data-bs-interval="5000">
             <img src="{{ STATIC_URL }}img/DSC02160.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption">
@@ -36,7 +31,7 @@
             </div>
         </div>
 
-        <div class="carousel-item">
+        <div class="carousel-item" data-bs-interval="5000">
             <img src="{{ STATIC_URL }}img/DSC02173.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption text-end">
@@ -48,11 +43,11 @@
         </div>
     </div>
 
-    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#my-carousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#my-carousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>

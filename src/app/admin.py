@@ -31,6 +31,16 @@ from ddcore.models.View import View
 class ImagesAdminMixin:
     """Mixin for displaying Images in Django Admin."""
 
+    def image_tag(self, obj):
+        """Render Image Thumbnail."""
+        if obj.image:
+            return format_html(f"<img src='{obj.image.url}' width='60' height='60' />")
+
+        return "(Sin Imagen)"
+
+    image_tag.short_description = "Avatar"
+    image_tag.allow_tags = True
+
     def avatar_image_tag(self, obj):
         """Render Avatar Thumbnail."""
         if obj.avatar:
