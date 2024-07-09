@@ -2,7 +2,7 @@
 
 <div class="row">
 {% for event in request.user.posted_events.all %}
-    <div class="col-6 col-md-4 col-lg-3">
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
     </div>
 {% empty %}
