@@ -132,18 +132,10 @@
     // --- Initialize Max Length
     $("[maxlength]").maxlength({
         alwaysShow:         false,
-        threshold:          10,
-        warningClass:       "label label-success",
-        limitReachedClass:  "label label-danger",
-        placement:          "top-right",
-        validate:           true
-    });
-    $("[maxlength]").maxlength({
-        alwaysShow:         false,
-        threshold:          100,
-        warningClass:       "label label-success",
-        limitReachedClass:  "label label-danger",
-        placement:          "top-right",
+        threshold:          50,
+        warningClass:       "badge text-bg-warning",
+        limitReachedClass:  "badge text-bg-danger",
+        placement:          "top-right-inside",
         validate:           true
     });
 
