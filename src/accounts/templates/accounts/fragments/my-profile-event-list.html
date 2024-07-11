@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+<div class="row g-2">
+{% for event in request.user.posted_events.all|slice:":8" %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
+    </div>
+{% empty %}
+    <div class="col-12">
+        <span class="badge text-bg-warning">{% trans "There are no posted Events at the Moment" %}</span>
+    </div>
+{% endfor %}
+</div>
+
+<div class="row g-2">
+    <div class="col-md-4 offset-md-4">
+        <a class="btn btn-warning w-100 my-3" href="{% url 'my-profile-events' %}">{% trans "SEE MORE" %} <i class="bi bi-chevron-double-right"></i></a>
+    </div>
+</div>

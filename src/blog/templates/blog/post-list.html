@@ -8,10 +8,7 @@
     Input Parameters:
         :<request> - Request
 
-        :<form>           - Event Form
-        :<aform>          - Address Form
-        :<formset_roles>  - Roles Formset
-        :<formset_social> - Social Links Formset
+        :<posts> - List of Posts
 {% endcomment %}
 
 {% block title %}{% trans "Our Blog" %} - {{ block.super }}{% endblock %}
@@ -38,24 +35,26 @@
     <div class="row g-2">
         <div class="col-md-9">
         {% if request.user.is_staff %}
-            <div class="controllers">
+            <!-- START CONTROLLERS -->
+            <section class="controllers">
                 <a class="btn btn-primary" href="{% url 'post-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Post" %}</a>
-            </div>
+            </section>
+            <!--  END  CONTROLLERS -->
         {% endif %}
 
-            <div class="row g-2">
-                {% for post in posts %}
-                <div class="col-12">
-                    {% include "blog/fragments/post-thumbnail-hor.html" %}
-                </div>
-                {% empty %}
-                {% endfor %}
+            <!-- START FILTER FORM -->
+            <!--  END  FILTER FORM -->
 
-                <div id="page-selection"></div>
-            </div>
+            <!-- START ORGANIZATIONS -->
+            <section id="event-list-grouper" class="position-relative">
+                {% include "blog/fragments/post-list.html" %}
+            </section>
+            <!--  END  ORGANIZATIONS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+
             <!-- Tag Cloud -->
             <section id="tag-cloud">
                 <h4>{% trans "Tag Cloud" %}</h4>

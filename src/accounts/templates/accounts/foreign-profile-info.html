@@ -8,6 +8,7 @@
     Input Parameters:
         :<request> - Request
 
+        :<account>       - Account.
         :[phone_numbers] - Phone Numbers
         :[social_links]  - Social Links.
 {% endcomment %}
@@ -178,7 +179,7 @@
             <!-- START PROFILE EVENTS -->
             <section id="profile-events">
                 <h3>{% trans "Events" %}</h3>
-                {% include "accounts/fragments/foreign-profile-events.html" %}
+                {% include "accounts/fragments/foreign-profile-event-list.html" %}
             </section>
             <!--  END  PROFILE EVENTS -->
         </div>
