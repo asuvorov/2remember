@@ -12,14 +12,14 @@
                 <form id="event-participation-post-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <p class="note">
-                        <span class="label label-warning">{% trans "Privacy Information" %}</span><br/>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Privacy Information" %}</strong><br/>
                         {% trans "When you sign up for a Event, the Organizer of the Event can see your personal Information, including Phone Number, Email, and Birth Date." %}
-                    </p>
-                    <p class="note">
-                        <span class="label label-warning">{% trans "This is important" %}</span><br/>
-                        <strong>{% trans "By clicking 'Participate', you agree to take part in this Event and to do your best." %}</strong>
-                    </p>
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "This is important" %}</strong><br/>
+                        <p>{% trans "By clicking 'Participate', you agree to take part in this Event and to do your best." %}</p>
+                    </div>
 
                 {% if event.application == event_MODE.CONFIRMATION_REQUIRED or event.event_roles.all %}
                     <div class="form-group">
@@ -29,9 +29,9 @@
                 {% endif %}
 
                 {% if event.event_roles.all %}
-                    <p class="note">
+                    <div class="alert alert-warning" role="alert">
                         <strong>{% trans "Desired Role" %}:</strong>
-                    </p>
+                    </div>
                     <select>
                     {% for role in event.event_roles.all %}
                         <option value="{{ role.id }}">{{ role.name }} ( {{ role.quantity }} )</span></option>

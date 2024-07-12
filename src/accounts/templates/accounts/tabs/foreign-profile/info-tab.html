@@ -108,9 +108,9 @@ Foreign Profile - Info
                     </p>
                 </address>
             {% else %}
-                <p class="note">
-                    <span class="label label-info">{% trans "Information is hidden from Public" %}</span>
-                </p>
+                <div class="alert alert-info" role="alert">
+                    <strong>{% trans "Information is hidden from Public" %}</strong>
+                </div>
             {% endif %}
 
             {% if need_to_know_profile_details %}
@@ -130,9 +130,9 @@ Foreign Profile - Info
                     <p>{{ account.profile.bio|default:"N/A" }}</p>
                 </blockquote>
             {% else %}
-                <p class="note">
-                    <span class="label label-info">{% trans "Information is hidden from Public" %}</span>
-                </p>
+                <div class="alert alert-info" role="alert">
+                    <strong>{% trans "Information is hidden from Public" %}</strong>
+                </div>
             {% endif %}
             </div>
         </div>
