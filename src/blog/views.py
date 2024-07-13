@@ -94,10 +94,13 @@ def post_details(request, slug):
         raise Http404
 
     # -------------------------------------------------------------------------
-    # --- Increment Views Counter
+    # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    # post.increase_views_count(request)
+    post.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "blog/post-details.html", {
             "post":     post,

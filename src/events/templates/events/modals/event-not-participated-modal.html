@@ -14,15 +14,15 @@
 
                     <input type="hidden" name="event_id" value="">
 
-                    <p class="note">
-                        <span class="label label-warning">{% trans "Explain yourself" %}</span><br/>
-                        <strong>{% trans "Not participating in the Event could be very inconvenient for the Organizer. Please, write a Note, explaining why you couldn't make it this Time." %}</strong>
-                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Explain yourself" %}</strong><br/>
+                        <p>{% trans "Not participating in the Event could be very inconvenient for the Organizer. Please, write a Note, explaining why you couldn't make it this Time." %}</p>
+                    </div>
 
-                    <p class="note">
-                        <span class="label label-warning">{% trans "Warning" %}</span><br/>
-                        {% trans "If you apply to the Event in the future, the Organizer will be able to see all Events you withdrew from, and the Reason you entered. Seeing fewer Withdrawals will make you look more trustworthy." %}
-                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Warning" %}</strong><br/>
+                        <p>{% trans "If you apply to the Event in the future, the Organizer will be able to see all Events you withdrew from, and the Reason you entered. Seeing fewer Withdrawals will make you look more trustworthy." %}</p>
+                    </div>
 
                     <div class="form-group">
                         <label for="id_cancellation_text">{% trans "Cancellation Text" %}</label>

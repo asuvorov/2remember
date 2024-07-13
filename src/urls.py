@@ -12,19 +12,16 @@ from django.urls import (
     re_path)
 from django.views.generic.base import TemplateView
 
-# from rest_framework_swagger.views import get_swagger_view
-
 # pylint: disable=import-error
 from accounts.sitemap import AccountSitemap
 from blog.sitemap import BlogPostSitemap
 from events.sitemap import EventSitemap
 from home.sitemap import HomeSitemap
 from organizations.sitemap import OrganizationSitemap
+# from places.sitemap import PlaceSitemap
 
 
 admin.autodiscover()
-
-# schema_view = get_swagger_view(title="2Remember API")
 
 
 sitemaps = {
@@ -62,9 +59,14 @@ urlpatterns = [
     re_path(r"^home/", include("home.urls")),
     re_path(r"^invites/", include("invites.urls")),
     re_path(r"^organizations/", include("organizations.urls")),
+    re_path(r"^places/", include("places.urls")),
 
-    path("humans.txt",TemplateView.as_view(template_name="cyborg/humans.txt", content_type="text/plain")),
-    path("robots.txt",TemplateView.as_view(template_name="cyborg/robots.txt", content_type="text/plain")),
+    path("humans.txt", TemplateView.as_view(
+        template_name="cyborg/humans.txt",
+        content_type="text/plain")),
+    path("robots.txt", TemplateView.as_view(
+        template_name="cyborg/robots.txt",
+        content_type="text/plain")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 handler400 = "app.views.handler400"

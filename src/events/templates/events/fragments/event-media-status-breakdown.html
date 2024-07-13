@@ -24,15 +24,15 @@
 
     <!-- Add Complaint -->
     {% if show_complain_form %}
-        <p class="note">
-            <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
+        <div class="alert alert-danger" role="alert">
+            <strong">{% trans "Disclaimer" %}</strong><br/>
             <p>
             {% blocktrans %}
                 You see this Message, because in the you participated in the Event(s), organized by this event.<br/>
                 Let us know, if there's something to complain about it.
             {% endblocktrans %}
             </p>
-        </p>
+        </div>
 
         <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
     {% endif %}
@@ -47,12 +47,14 @@
     <p><span class="label label-danger">{% trans "This Event already happened" %}</span></p>
 {% elif event.is_confirmation_required %}
     {% if not participation or not participation.is_confirmed_full %}
-        <p class="note">
-            <span class="label label-warning">{% trans "Confirmation required" %}</span><br/>
+        <div class="alert alert-warning" role="alert">
+            <strong>{% trans "Confirmation required" %}</strong><br/>
         {% if not is_admin %}
-            {% trans "You need to write an Application to participate in this Event. The Event Organizer will use your Application Text and your History on 2Remember to decide whether you are a good fit for this Event." %}
+            <p>
+                {% trans "You need to write an Application to participate in this Event. The Event Organizer will use your Application Text and your History on 2Remember to decide whether you are a good fit for this Event." %}
+            </p>
         {% endif %}
-        </p>
+        </div>
     {% endif%}
 {% endif %}
 
@@ -66,17 +68,17 @@
             {% endblocktrans %}
             </strong></p>
 
-            <p class="note">
-                <span class="label label-warning">{% trans "Reporting Materials" %}</span><br/>
-                <strong>{% trans "You can add reporting Materials, manage current Attachments, and describe Achievements." %}</strong>
-            </p>
+            <div class="alert alert-warning" role="alert">
+                <strong>{% trans "Reporting Materials" %}</strong><br/>
+                <p>{% trans "You can add reporting Materials, manage current Attachments, and describe Achievements." %}</p>
+            </div>
 
             <a class="btn btn-primary" href="{% url 'event-reporting-materials' event.slug %}"><i class="bi bi-folder-o"></i> {% trans "Reporting Materials" %}</a>
         {% elif event.is_closed %}
             <p><strong>{% trans "There is nothing to do here." %}</strong></p>
         {% else %}
             {% if event.is_overdue %}
-                <p class="note">
+                <div class="alert alert-warning" role="alert">
                     <strong>
                         {% trans "Please, mark this Event as completed, if it:" %}
                         <ul>
@@ -84,46 +86,44 @@
                             <li>{% trans "has NOT taken Place, but you would like to all of the Participants to keep the Hours 'worked'." %}</li>
                         </ul>
                     </strong>
-
-                    {% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}
-                </p>
+                    <p>{% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}</p>
+                </div>
 
                 <a class="btn btn-success" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCompletePopupModal" tabindex="-1"><i class="bi bi-check-square"></i> {% trans "Complete" %}</a>
 
-                <p class="note">
+                <div class="alert alert-warning" role="alert">
                     <strong>
                     {% blocktrans %}
                         You can also clone the Event, if it hasn't taken Place, but you would like to re-schedule it.<br/>
                         All the Participants will be automatically assigned to the cloned Event.
                     {% endblocktrans %}
                     </strong>
-                </p>
+                </div>
 
                 <a class="btn btn-primary" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClonePopupModal" tabindex="-1"><i class="bi bi-clone"></i> {% trans "Clone Event" %}</a>
             {% else %}
                 <a class="btn btn-primary" href="{% url 'event-edit' event.slug %}"><i class="bi bi-edit"></i> {% trans "Edit Event" %}</a>
 
                 {% if event.is_draft %}
-                    <p class="note">
-                        <span class="label label-warning">{% trans "This is a Draft." %}</span><br/>
-                        <strong>{% trans "Post this Event when you are ready, so other Members can see it." %}</strong>
-                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "This is a Draft." %}</strong><br/>
+                        <p>{% trans "Post this Event when you are ready, so other Members can see it." %}</p>
+                    </div>
 
                     <a class="btn btn-primary" name="post" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCreatePopupModal" tabindex="-1"><i class="bi bi-check"></i> {% trans "Post Event" %}</a>
                 {% elif event.is_dateless %}
-                    <p class="note">
-                        <span class="label label-warning">{% trans "Dateless." %}</span><br/>
-                        {% trans "Unless the Event is intentionally dateless, please, don't forget to provide its starting Date & Time." %}<br/>
-                        <strong>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Dateless." %}</strong><br/>
+                        <p>
+                            {% trans "Unless the Event is intentionally dateless, please, don't forget to provide its starting Date & Time." %}<br/>
                             {% trans "You can mark this Event as completed, if it:" %}
                             <ul>
                                 <li>{% trans "has taken Place as planned;" %}</li>
                                 <li>{% trans "has NOT taken Place, but you would like to all of the Participants to keep the Hours 'worked'." %}</li>
                             </ul>
-                        </strong>
-
-                        {% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}
-                    </p>
+                            {% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}
+                        </p>
+                    </div>
 
                     <a class="btn btn-success" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCompletePopupModal" tabindex="-1"><i class="bi bi-check-square"></i> {% trans "Complete" %}</a>
                 {% endif %}
@@ -159,25 +159,27 @@
         {% if not event.is_complete %}
             {% if show_signup_form %}
                 {% if event.event_roles.all %}
-                    <p class="note">
-                        <span class="label label-default">{% trans "Event with Roles" %}</span><br/>
+                    <div class="alert alert-default" role="alert">
+                        <strong>{% trans "Event with Roles" %}</strong><br/>
+                        <p>
                         {% blocktrans %}
                             Event Author is looking for the differently skilled Volunteers / Participants.<br/>
                             You will be offered to choose, which Role you want to take, on signing up to the Event / Event.
                         {% endblocktrans %}
-                    </p>
+                        </p>
+                    </div>
                 {% endif %}
 
                 <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationPostPopupModal" tabindex="-1"><i class="bi bi-arrow-up"></i> {% trans "Participate" %}</a>
             {% endif %}
 
             {% if show_withdraw_form %}
-                <p class="note">
+                <div class="alert alert-warning" role="alert">
                 {% if not event.allow_reenter %}
-                    <span class="label label-warning">{% trans "Application Warning" %}</span><br/>
-                    {% trans "Please, be advised, that it's not allowed to apply again to the Event after withdrawing Application." %}
+                    <strong>{% trans "Application Warning" %}</strong><br/>
+                    <p>{% trans "Please, be advised, that it's not allowed to apply again to the Event after withdrawing Application." %}</p>
                 {% endif %}
-                </p>
+                </div>
 
                 <a class="btn btn-danger" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationWithdrawPopupModal" tabindex="-1"><i class="bi bi-times"></i> {% trans "Withdraw Application" %}</a>
             {% endif %}
@@ -209,15 +211,15 @@
             <!-- Add Complaint -->
             {% if show_complain_form %}
                 <div id="div-add-complaint">
-                    <p class="note">
-                        <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>{% trans "Disclaimer" %}</strong><br/>
                         <p>
                         {% blocktrans %}
                             You see this Message, because you participated in this Event.<br/>
                             Let us know, if there's something to complain about it.
                         {% endblocktrans %}
                         </p>
-                    </p>
+                    </div>
 
                     <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i> {% trans "Complain" %}</a>
                 </div>

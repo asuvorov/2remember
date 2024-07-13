@@ -1118,8 +1118,11 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    # account.profile.increase_views_count(request)
+    account.profile.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/foreign-profile-info.html", {
             "account":                  account,
@@ -1307,10 +1310,13 @@ def profile_events(request, user_id):
     #     )
 
     # -------------------------------------------------------------------------
-    # --- FIXME: Increment Views Counter.
+    # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    # account.profile.increase_views_count(request)
+    account.profile.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/foreign-profile-events.html", {
             "account":      account,
