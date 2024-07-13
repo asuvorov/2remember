@@ -175,28 +175,28 @@
     /*************************************************************************/
     // ------------------------------------------------------------------------
     // --- Initialize Bootpag
-    // $("#page-selection").bootpag({
-    //     total:          "{{ page_total }}",
-    //     maxVisible:     5,
-    //     page:           "{{ page_number }}",
-    //     leaps:          true,
-    //     prev:           "<i class='bi bi-angle-double-left '></i>",
-    //     next:           "<i class='bi bi-angle-double-right'></i>",
-    //     href:           "?page={{ page_number }}",
-    //     hrefVariable:   "{{ page_number }}",
-    //     firstLastUse:   true,
-    //     first:          "<i class='bi bi-long-arrow-left '></i>",
-    //     last:           "<i class='bi bi-long-arrow-right'></i>",
-    //     wrapClass:      "pagination",
-    //     activeClass:    "active",
-    //     disabledClass:  "disabled",
-    //     nextClass:      "next",
-    //     prevClass:      "prev",
-    //     lastClass:      "last",
-    //     firstClass:     "first"
-    // }).on("page", function (event, page_num) {
-    //     console.log(">>> PAGE:", page_num);
-    // });
+    $("#page-selection").bootpag({
+        total:          "{{ page_total }}",
+        maxVisible:     5,
+        page:           "{{ page_number }}",
+        leaps:          true,
+        prev:           "<i class='bi bi-chevron-double-left'></i>",
+        next:           "<i class='bi bi-chevron-double-right'></i>",
+        href:           "?page={{ page_number }}",
+        hrefVariable:   "{{ page_number }}",
+        firstLastUse:   true,
+        first:          "<i class='bi bi-arrow-left'></i>",
+        last:           "<i class='bi bi-arrow-right'></i>",
+        wrapClass:      "pagination justify-content-center",
+        activeClass:    "active",
+        disabledClass:  "disabled",
+        nextClass:      "next",
+        prevClass:      "prev",
+        lastClass:      "last",
+        firstClass:     "first"
+    }).on("page", function (event, page_num) {
+        console.log(">>> PAGE:", page_num);
+    });
 
     // ------------------------------------------------------------------------
     // --- Initialize BX-Slider
@@ -377,5 +377,11 @@
             var newUrl = $(this).attr("href").replace("youtube.com/watch?v=", "youtube.com/v/");
             $(this).attr("href", newUrl);
         });
+
+        // --------------------------------------------------------------------
+        // --- Pagination Styles.
+        // --------------------------------------------------------------------
+        $("ul.pagination li").addClass("page-item");
+        $("ul.pagination li a").addClass("page-link");
     });
 </script>

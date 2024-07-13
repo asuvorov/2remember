@@ -1,8 +1,87 @@
 {% extends "accounts/foreign-profile-base.html" %}
 
-{% load i18n %}
 {% load accounttags %}
+{% load i18n %}
+{% load imagekit %}
+{% load taggit_templatetags2_tags %}\
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<account> - Account
+        :<events>  - List of Events
+{% endcomment %}
+
+{% block title %}{% trans "Events List" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'profile-view' account.id %}">{{ account.profile.auth_name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Events" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content%}
+<div id="foreign-profile-events" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START CONTROLLERS -->
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <!--  END  FILTER FORM -->
+
+            <!-- START EVENTS -->
+            <section id="event-list-grouper" class="position-relative">
+                {% include "events/fragments/event-list-grouper.html" %}
+            </section>
+            <!--  END  EVENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+
+            <!-- Tag Cloud -->
+            <section id="tag-cloud">
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% get_taglist as taglist for "events.event" %}
+                {% get_tagcloud as tagcloud for "events.event" %}
+
+                <div class="tag-cloud">
+                {% for tag in tagcloud %}
+                    <a href="?tag={{ tag.id }}">
+                        <font size="{{ tag.weight|floatformat:0 }}">
+                            {{ tag.name }} ({{ tag.num_times }})
+                        </font>
+                    </a>
+                {% endfor %}
+                </div>
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% comment %}
 {% block extra_content %}
     {% need_to_know_affiliated_events_tag request account as need_to_know_affiliated_events %}
 
@@ -29,3 +108,4 @@
 
 <!-- Scripts -->
 {% endblock %}
+{% endcomment %}

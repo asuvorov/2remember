@@ -129,7 +129,7 @@
             <!-- START PROFILE EVENTS -->
             <section id="profile-events">
                 <h3>{% trans "Events" %}</h3>
-                {% include "accounts/fragments/my-profile-events.html" %}
+                {% include "accounts/fragments/my-profile-event-list.html" %}
             </section>
             <!--  END  PROFILE EVENTS -->
 
@@ -145,29 +145,10 @@
                 </div>
             </section>
             <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
             <section>
                 {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
             </section>

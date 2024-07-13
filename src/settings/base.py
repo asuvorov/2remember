@@ -336,7 +336,7 @@ BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
 # BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
     # "awesome-bootstrap-checkbox",
-    # "bootpag",
+    "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
     # "bootstrap-rating",

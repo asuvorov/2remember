@@ -1,0 +1,27 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<posts> - List of Posts
+{% endcomment %}
+
+<div class="row g-2">
+{% for post in posts %}
+    <div class="col-12">
+        {% include "blog/fragments/post-thumbnail-hor.html" %}
+    </div>
+{% empty %}
+    <div class="col-12">
+        <span class="badge text-bg-warning">{% trans "There are no Blog Posts at the Moment" %}</span>
+    </div>
+{% endfor %}
+</div>
+
+<div class="row g-2">
+    <div class="col-12">
+        <!-- <div id="page-selection" class="position-absolute bottom-0 start-50 translate-middle-x"></div> -->
+        <div id="page-selection" class="my-3"></div>
+    </div>
+</div>
