@@ -43,7 +43,7 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "classes":  (""),
             "fields":   (
                 ("preview", "preview_image_tag"),
-                "title",
+                ("title", "slug"),
                 "description",
                 "category",
                 ("color", "icon", "image"),
@@ -53,8 +53,8 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
 
     list_display = [
         "id",
-        "title", "preview", "preview_image_tag",
-        "category", "color", "icon", "image",
+        "title", "slug", "category",
+        "preview", "preview_image_tag",
         "created", "modified",
     ]
     list_display_links = [
@@ -65,6 +65,7 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "title",
     ]
     readonly_fields = [
+        "slug",
         "preview_image_tag",
     ]
     inlines = []

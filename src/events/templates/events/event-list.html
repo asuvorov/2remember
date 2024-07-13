@@ -51,7 +51,7 @@
                         {% for event_category_3, event_category_icon in event_category_icons %}
                             {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
                                 <div class="category-item">
-                                    <a href="#" title="{{ event_category_name }}" category="{{ event_category_1 }}">
+                                    <a href="?cat={{ event_category_name|slugify }}" title="{{ event_category_name }}" category="{{ event_category_1 }}">
                                         <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
                                     </a>
                                 </div>
@@ -101,18 +101,15 @@
             </div>
             <!--  END  FILTER FORM -->
 
-            <div class="row g-2">
-            {% for event in events %}
-                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
-                </div>
-            {% endfor %}
-
-                <div id="page-selection"></div>
-            </div>
+            <!-- START EVENTS -->
+            <section id="event-list-grouper" class="position-relative">
+                {% include "events/fragments/event-list-grouper.html" %}
+            </section>
+            <!--  END  EVENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Tag Cloud -->
             <section id="tag-cloud">
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "events.event" %}
@@ -138,40 +135,6 @@
     </div>
 </div>
 
-{% comment %}
-        {% regroup events|dictsort:"start_date" by start_date|date:"Y" as events_by_year %}
-        {% for events_year in events_by_year %}
-            {#<h2>{{ events_year.grouper }}</h2>#}
-            {% regroup events_year.list by start_date|date:"F" as events_by_month %}
-            {% for events_month in events_by_month %}
-                {#<h3>{{ events_month.grouper }}</h3>#}
-                {% regroup events_month.list by start_date|date:"d" as events_by_day %}
-                {% for events_day in events_by_day %}
-                    {#<h4>{{ events_day.grouper }}</h4>#}
-
-                    <div class="event-list">
-                        <time>
-                            <span class="day"  >{{ events_day.grouper }}</span>
-                            <span class="month">{{ events_month.grouper|slice:":3" }}</span>
-                        </time>
-
-                        <div class="info">
-                            <span class="title">{{ events_month.grouper }} {{ events_day.grouper }}, {{ events_year.grouper }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                    {% for event in events_day.list %}
-                        <div class="col-12">
-                            {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
-                        </div>
-                    {% endfor %}
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% endfor %}
-{% endcomment %}
-
 <!-- Script -->
 
 <script>
@@ -188,30 +151,24 @@
     /*************************************************************************/
     /*** Event Category Toggle                                             ***/
     /*************************************************************************/
-    $(".category-item").click(function (event) {
-        var element = $(this);
-
-        var event = window.event || event;
-
-        event.preventDefault();
-
-        var category_id = $(this).children().attr("category");
-
-        console.log(">>> CATEGORY ID:", category_id);
-
-        if (category_id === "") {
-            $(".event-thumb-container").show("slow", function () {
-                fixFooter();
-            });
-        } else {
-            $(".event-thumb-container[category!='" + category_id + "']").hide("slow", function () {
-                fixFooter();
-
-                $(".event-thumb-container[category='" + category_id + "']").show("slow", function () {
-                    fixFooter();
-                });
-            });
-        }
-    })
+    // $(".category-item").click(function (event) {
+    //     var element = $(this);
+    //     var event = window.event || event;
+    //     event.preventDefault();
+    //     var category_id = $(this).children().attr("category");
+    //     console.log(">>> CATEGORY ID:", category_id);
+    //     if (category_id === "") {
+    //         $(".event-thumb-container").show("slow", function () {
+    //             fixFooter();
+    //         });
+    //     } else {
+    //         $(".event-thumb-container[category!='" + category_id + "']").hide("slow", function () {
+    //             fixFooter();
+    //             $(".event-thumb-container[category='" + category_id + "']").show("slow", function () {
+    //                 fixFooter();
+    //             });
+    //         });
+    //     }
+    // })
 </script>
 {% endblock %}

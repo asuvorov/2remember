@@ -4,8 +4,9 @@
 
 from django.contrib.sitemaps import Sitemap
 
-from .choices import PostStatus
-from .models import Post
+from .models import (
+    Post,
+    PostStatus)
 
 
 class BlogPostSitemap(Sitemap):

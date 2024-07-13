@@ -52,6 +52,7 @@ from events.models import (
     # Participation,
     # ParticipationStatus
     )
+from events.utils import get_event_list
 # from organizations.models import OrganizationStaff
 
 from .forms import (
@@ -70,35 +71,15 @@ from .models import (
     # UserPrivacyMembers,
     UserProfile)
 from .utils import (
+    get_account_list_with_privacy,
     get_admin_events,
-    get_participations_intersection)
+    get_participations_intersection,
+    is_profile_complete)
 
 
 app_label, model_name = settings.AUTH_USER_MODEL.split(".")
 user_model = apps.get_model(app_label, model_name)
 
-
-# =============================================================================
-# ===
-# === HELPERS
-# ===
-# =============================================================================
-def _retrieve_account_list_with_privacy(request):
-    """Docstring."""
-    accounts = user_model.objects.filter(
-        is_active=True,
-        # privacy_general__hide_profile_from_list=False,
-    ).exclude(
-        id=request.user.id,
-    )
-
-    return accounts
-
-
-def is_profile_complete(user):
-    """Docstring."""
-    # FIXME: return user.profile.is_completed
-    return True
 
 # =============================================================================
 # ===
@@ -440,35 +421,20 @@ def password_reset(request):
 @cache_page(60 * 1)
 def account_list(request):
     """List of the Members."""
-    accounts = _retrieve_account_list_with_privacy(request)
+    # -------------------------------------------------------------------------
+    # --- Retrieve Account List.
+    # -------------------------------------------------------------------------
+    accounts, page_total, page_number = get_account_list_with_privacy(request)
 
     # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
+    # --- Return Response.
     # -------------------------------------------------------------------------
-    paginator = Paginator(
-        accounts,
-        settings.MAX_MEMBERS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        accounts = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        accounts = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        accounts = paginator.page(paginator.num_pages)
-
     return render(
         request, "accounts/account-list.html", {
             "accounts":     accounts,
             "page_title":   _("All Members"),
-            "page_total":   paginator.num_pages,
-            "page_number":  accounts.number,
+            "page_total":   page_total,
+            "page_number":  page_number,
         })
 
 
@@ -692,7 +658,7 @@ def account_online_list(request):
 # =============================================================================
 @login_required
 def my_profile_view(request):
-    """My Profile."""
+    """My Profile Details."""
     cprint("***" * 27, "green")
     cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
     cprint("***" * 27, "green")
@@ -780,7 +746,7 @@ def my_profile_view(request):
 
 @login_required
 def my_profile_invitations(request):
-    """My Profile."""
+    """My Profile Invitations."""
     # -------------------------------------------------------------------------
     # --- Get or create User's Profile.
     # -------------------------------------------------------------------------
@@ -797,7 +763,7 @@ def my_profile_invitations(request):
 
 @login_required
 def my_profile_participations(request):
-    """My Profile."""
+    """My Profile Participations."""
     # -------------------------------------------------------------------------
     # --- Get or create User's Profile.
     # -------------------------------------------------------------------------
@@ -814,19 +780,25 @@ def my_profile_participations(request):
 
 @login_required
 def my_profile_events(request):
-    """My Profile."""
+    """My Profile Events."""
     # -------------------------------------------------------------------------
-    # --- Get or create User's Profile.
+    # --- Initials.
     # -------------------------------------------------------------------------
-    try:
-        assert request.user.profile
-    except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
-        UserProfile.objects.create(user=request.user)
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    events, page_total, page_number = get_event_list(request, author=request.user)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
-        request, "accounts/my-profile-events.html", {})
+        request, "accounts/my-profile-events.html", {
+            "events":       events,
+            "page_total":   page_total,
+            "page_number":  page_number,
+        })
 
 
 @login_required
@@ -1284,17 +1256,21 @@ def profile_events(request, user_id):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve the User Account.
-    # -------------------------------------------------------------------------
     account = get_object_or_404(
         user_model,
         pk=user_id)
-
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    events, page_total, page_number = get_event_list(request, author=account)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Get QuerySet of Admin Events with
@@ -1305,38 +1281,40 @@ def profile_events(request, user_id):
     #        a) User is the Organization Staff Member (and/or Author);
     #        b) User is the Organization Group Member.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        admin_events = get_admin_events(account).filter(
-            Q(organization=None) |
-            Q(organization__is_hidden=False) |
-            Q(
-                Q(organization__pk__in=OrganizationStaff
-                    .objects.filter(
-                        member=request.user,
-                    ).values_list(
-                        "organization_id", flat=True
-                    )) |
-                Q(organization__pk__in=request.user
-                    .organization_group_members
-                    .all().values_list(
-                        "organization_id", flat=True
-                    )),
-                organization__is_hidden=True,
-            ),
-        )
-    else:
-        admin_events = get_admin_events(account).filter(
-            Q(organization=None) |
-            Q(organization__is_hidden=False),
-        )
+    # if request.user.is_authenticated:
+    #     admin_events = get_admin_events(account).filter(
+    #         Q(organization=None) |
+    #         Q(organization__is_hidden=False) |
+    #         Q(
+    #             Q(organization__pk__in=OrganizationStaff
+    #                 .objects.filter(
+    #                     member=request.user,
+    #                 ).values_list(
+    #                     "organization_id", flat=True
+    #                 )) |
+    #             Q(organization__pk__in=request.user
+    #                 .organization_group_members
+    #                 .all().values_list(
+    #                     "organization_id", flat=True
+    #                 )),
+    #             organization__is_hidden=True,
+    #         ),
+    #     )
+    # else:
+    #     admin_events = get_admin_events(account).filter(
+    #         Q(organization=None) |
+    #         Q(organization__is_hidden=False),
+    #     )
 
     # -------------------------------------------------------------------------
-    # --- Increment Views Counter.
+    # --- FIXME: Increment Views Counter.
     # -------------------------------------------------------------------------
-    account.profile.increase_views_count(request)
+    # account.profile.increase_views_count(request)
 
     return render(
         request, "accounts/foreign-profile-events.html", {
             "account":      account,
-            "admin_events": admin_events,
+            "events":       events,
+            "page_total":   page_total,
+            "page_number":  page_number,
         })
