@@ -12,9 +12,9 @@
                 <form id="event-complete-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <p class="note">
-                        {% trans "The Event Description will appear on the Resume of the Participants. Please update the Description if it not longer properly reflects what happened at the Event." %}
-                    </p>
+                    <div class="alert alert-warning" role="alert">
+                        <p>{% trans "The Event Description will appear on the Resume of the Participants. Please update the Description if it not longer properly reflects what happened at the Event." %}</p>
+                    </div>
 
                     <div class="form-group">
                         <label for="id_description_text">{% trans "Description" %}</label>
