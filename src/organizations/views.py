@@ -379,11 +379,6 @@ def organization_details(request, slug=None):
         organization.save()
 
     # -------------------------------------------------------------------------
-    # --- FIXME: Increment the Views Counter.
-    # -------------------------------------------------------------------------
-    # organization.increase_views_count(request)
-
-    # -------------------------------------------------------------------------
     # --- FIXME: Check, if authenticated User already subscribed to the Organization
     #     Newsletters and Notifications.
     # -------------------------------------------------------------------------
@@ -393,6 +388,14 @@ def organization_details(request, slug=None):
     #         request.user in organization.subscribers.all()):
     #     is_subscribed = True
 
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    organization.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,

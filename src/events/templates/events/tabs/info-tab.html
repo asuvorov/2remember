@@ -315,10 +315,10 @@ Event Details - Info
     {% else %}
         <div class="panel panel-danger">
             <div class="panel-body">
-                <p class="note">
-                    <span class="label label-warning">{% trans "Information hidden" %}</span><br/>
-                    {% trans "Log in to see the Phone # and Email Address of the Contact Person." %}
-                </p>
+                <div class="alert alert-warning" role="alert">
+                    <strong>{% trans "Information hidden" %}</strong><br/>
+                    <p>{% trans "Log in to see the Phone # and Email Address of the Contact Person." %}</p>
+                </div>
             </div>
         </div>
     {% endif %}

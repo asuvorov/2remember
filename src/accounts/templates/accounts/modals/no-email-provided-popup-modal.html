@@ -9,21 +9,25 @@
             </div>
 
             <div class="modal-body">
-                <p class="note">
-                    <span class="label label-warning">{% trans "Please, provide / update your Email Address" %}</span><br/>
+                <div class="alert alert-warning" role="alert">
+                    <strong>{% trans "Please, provide / update your Email Address" %}</strong><br/>
+                    <p>
                     {% blocktrans %}
                         We noticed, that your Email Address hasn't been provided yet.<br/>
                         For the best Experience, it is highly recommended, that you set your Email Address, so that you can be aware of everything, what happens to your Events, Participations, etc.
                     {% endblocktrans %}
-                </p>
+                    </p>
+                </div>
 
-                 <p class="note">
-                    <span class="label label-success">{% trans "Legal Notice" %}</span><br/>
+                <div class="alert alert-success" role="alert">
+                    <strong>{% trans "Legal Notice" %}</strong><br/>
+                    <p>
                     {% blocktrans %}
                         We do not use your Email Address for the promotional Purposes.<br/>
                         Our Goal is to keep you informed and updated.
                     {% endblocktrans %}
-                </p>
+                    </p>
+                </div>
 
                 <div class="row">
                     <div class="col-xs-24 col-xs-offset-0 col-sm-18 col-sm-offset-3 col-md-18 col-md-offset-3">

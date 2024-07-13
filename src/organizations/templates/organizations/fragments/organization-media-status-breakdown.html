@@ -16,15 +16,15 @@
 
     <!-- Add Complaint -->
     {% if show_complain_form %}
-        <p class="note">
-            <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
+        <div class="alert alert-danger" role="alert">
+            <strong>{% trans "Disclaimer" %}</strong><br/>
             <p>
             {% blocktrans %}
                 You see this Message, because in the you participated in the Event(s), organized by this Organization.<br/>
                 Let us know, if there's something to complain about it.
             {% endblocktrans %}
             </p>
-        </p>
+        </div>
 
         <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
     {% endif %}

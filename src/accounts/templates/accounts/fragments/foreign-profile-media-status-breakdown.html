@@ -62,8 +62,8 @@
         <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i> {% trans "Complain" %}</a>
     {% endif %}
 {% else %}
-    <p class="note">
-        <span class="label label-warning">{% trans "Login required" %}</span><br/>
+    <div class="alert alert-danger" role="alert">
+        <strong>{% trans "Login required" %}</strong><br/>
         <p>{% trans "You must have a User Account to see more Details." %}</p>
-    </p>
+    </div>
 {% endif %}

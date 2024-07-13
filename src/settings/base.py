@@ -732,43 +732,6 @@ REST_FRAMEWORK = {
 
 
 ###############################################################################
-### DJANGO REST FRAMEWORK SWAGGER                                           ###
-###############################################################################
-# INSTALLED_APPS += (
-#     "rest_framework_swagger",
-# )
-# SWAGGER_SETTINGS = {
-#     "exclude_namespaces":           [],
-#     "api_version":                  "1.0",
-#     "api_path":                     "/",
-#     "enabled_methods": [
-#         "get",
-#         "post",
-#         "put",
-#         "patch",
-#         "delete",
-#     ],
-#     "api_key":                      "",
-#     "is_authenticated":             True,
-#     "is_superuser":                 False,
-#     "unauthenticated_user":         "django.contrib.auth.models.AnonymousUser",
-#     "permission_denied_handler":    "app.views.permission_denied_handler",
-#     "resource_access_handler":      "app.views.resource_access_handler",
-#     #"base_path":                    "helloreverb.com/docs",
-#     "info": {
-#         "contact":                  "artem.suvorov@gmail.com",
-#         "description":              "This is a sample Server Petstore Server. You can find out more about Swagger at <a href=\"http://swagger.wordnik.com\">http://swagger.wordnik.com</a> or on irc.freenode.net, #swagger. For this Sample, you can use the API Key \"special-key\" to test the authorization Filters",
-#         "license":                  "Apache 2.0",
-#         "licenseUrl":
-#             "http://www.apache.org/licenses/LICENSE-2.0.html",
-#         "termsOfServiceUrl":        "http://helloreverb.com/terms/",
-#         "title":                    "2Remember - Swagger API Docs",
-#     },
-#     "doc_expansion":                "list",
-# }
-
-
-###############################################################################
 ### DJANGO ROSETTA                                                          ###
 ##############################################################################
 INSTALLED_APPS += (
