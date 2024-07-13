@@ -28,7 +28,7 @@
         <div class="container">
             <form action="/search/" method="GET">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="fa fa-search fa-fw"></i></span>
+                    <span class="input-group-addon"><i class="bi bi-search"></i></span>
 
                     <input type="hidden" name="models" value="blog.post" id="id_models_0">
                     <input type="hidden" name="models" value="events.event" id="id_models_1">
@@ -38,7 +38,7 @@
 
                     <input name="q" type="text" class="form-control" placeholder="Search">
 
-                    <span class="input-group-addon close-search"><i class="fa fa-times fa-fw"></i></span>
+                    <span class="input-group-addon close-search"><i class="bi bi-times"></i></span>
                 </div>
             </form>
         </div>
@@ -50,10 +50,10 @@
         <div class="attr-nav">
             <ul>
                 <li class="search">
-                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="Quick Search"><i class="fa fa-search fa-fw"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="Quick Search"><i class="bi bi-search"></i></a>
                 </li>
                 <li class="side-menu">
-                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="Quick Links"><i class="fa fa-bars fa-fw"></i></a>
+                    <a href="#" data-toggle="tooltip" data-placement="bottom" title="Quick Links"><i class="bi bi-bars"></i></a>
                 </li>
                 <li class="dropdown">
                 {% if user.is_authenticated %}
@@ -61,37 +61,37 @@
                     {% if request.user.profile.avatar %}
                         {% generateimage "header:thumbnail" source=request.user.profile.avatar -- alt=request.user.profile.auth_name %}
                     {% else %}
-                        <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="30" width="30" alt="" />
+                        <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                     {% endif %}
                     </a>
 
                     <ul class="dropdown-menu cart-list">
                         <li>
                             <a href="{% url 'my-profile-view' %}">
-                                <i class="fa fa-user-circle-o fa-fw"></i> {{ request.user.profile.auth_name }}
+                                <i class="bi bi-user-circle-o"></i> {{ request.user.profile.auth_name }}
                             </a>
                         </li>
 
                         <li>
                             <a href="{% url 'logout' %}">
-                                <i class="fa fa-sign-out fa-fw"></i> {% trans "Log out" %}
+                                <i class="bi bi-sign-out"></i> {% trans "Log out" %}
                             </a>
                         </li>
                     </ul>
                 {% else %}
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" >
-                        <i class="fa fa-user fa-fw"></i>
+                        <i class="bi bi-user"></i>
                     </a>
 
                     <ul class="dropdown-menu cart-list">
                         <li>
                             <a href="{% url 'signup' %}">
-                                <i class="fa fa-user-plus fa-fw"></i> {% trans "Sign up" %}
+                                <i class="bi bi-user-plus"></i> {% trans "Sign up" %}
                             </a>
                         </li>
                         <li>
                             <a href="{% url 'signin' %}">
-                                <i class="fa fa-sign-in fa-fw"></i> {% trans "Log in" %}
+                                <i class="bi bi-sign-in"></i> {% trans "Log in" %}
                             </a>
                         </li>
                     </ul>
@@ -104,7 +104,7 @@
         <!-- Start Header Navigation -->
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
-                <i class="fa fa-bars fa-fw"></i>
+                <i class="bi bi-bars"></i>
             </button>
 
             <a class="navbar-brand" href="{% url 'index' %}">
@@ -136,7 +136,7 @@
                         <li><a href="{% url 'event-dateless-list' %}">{% trans "Dateless" %}</a></li>
                         <li><a href="{% url 'event-featured-list' %}">{% trans "Featured" %}</a></li>
                     {% if request.user.is_authenticated and request.user.profile.is_completed %}
-                        <li><a href="{% url 'event-create' %}"><i class="fa fa-plus fa-fw"></i> {% trans "Create" %}</a></li>
+                        <li><a href="{% url 'event-create' %}"><i class="bi bi-plus"></i> {% trans "Create" %}</a></li>
                     {% endif %}
                     </ul>
                 </li>
@@ -177,7 +177,7 @@
 
     <!-- Start Side Menu -->
     <div class="side">
-        <a href="#" class="close-side"><i class="fa fa-times fa-fw"></i></a>
+        <a href="#" class="close-side"><i class="bi bi-times"></i></a>
 
         <div class="widget" style="height:26px;">
             <ul class="link">

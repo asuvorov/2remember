@@ -1,10 +1,5 @@
 """
-(C) 1995-2024 Copycat Software Corporation. All Rights Reserved.
-
-The Copyright Owner has not given any Authority for any Publication of this Work.
-This Work contains valuable Trade Secrets of Copycat, and must be maintained in Confidence.
-Use of this Work is governed by the Terms and Conditions of a License Agreement with Copycat.
-
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
 import os
@@ -60,7 +55,6 @@ setup(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
-        "Programming Language :: Go",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.9.6",
@@ -78,6 +72,7 @@ setup(
         # "APScheduler==3.9.1",
         # "Pillow==9.4.0",
         # "bumpversion==0.6.0",
+        "boto3==1.34.122",
         "djangorestframework==3.15.1",
         # "djangorestframework-jsonp==1.0.2",
         "django-admin-rangefilter==0.12.4",
@@ -85,6 +80,7 @@ setup(
         # "django-bootstrap3-datetimepicker==2.2.3",
         "django-bower==5.2.0",
         "django-compressor==4.4",
+        "django-cors-headers-4.4.0",
         # "django-debug-toolbar==3.8.1",
         # "django-easy-pdf==0.1.1",
         # "django-easy-timezones==0.8.0",
@@ -104,7 +100,7 @@ setup(
         # "django-seo2==1.0.1",
         # "django-simple-captcha==0.5.17",
         # "django-sslserver==0.22",
-        # "django-storages==1.13.2",
+        "django-storages==1.14.3",
         "django-taggit==5.0.1",
         "django-taggit-templatetags2==1.6.1",
         "django-timezone-field==6.1.0",
@@ -114,6 +110,7 @@ setup(
         # "fabric==3.0.0",
         "lxml==5.2.1",
         "mock==5.1.0",
+        # "mysqlclient==2.2.4",
         # "pendulum==2.1.2",
         # "pep8==1.7.1",
         # "pep257==0.7.0",

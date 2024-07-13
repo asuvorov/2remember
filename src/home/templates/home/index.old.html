@@ -35,7 +35,7 @@
                         <h4>{% trans "Find out more" %}</h4>
 
                         <a data-scroll href="#welcome">
-                            <img src="{{ STATIC_URL }}img/move-down-button.png" class="move-up" style="display:block;" alt="Find out more - SaneSide Platform." />
+                            <img src="{{ STATIC_URL }}img/move-down-button.png" class="move-up" style="display:block;" alt="Find out more - 2Remember Platform." />
                         </a>
                     </div>
                 </div>
@@ -50,11 +50,11 @@
             <div class="col-xs-24 col-xs-offset-0 col-sm-20 col-sm-offset-2 col-md-16 col-md-offset-4" align="center">
                 <h2>{% trans "Welcome" %}</h2>
 
-                <p>{% trans "SaneSide is an online Platform for volunteering Work" %}</p>
+                <p>{% trans "2Remember is an online Platform for volunteering Work" %}</p>
                 <p>
-                    {% trans "On SaneSide you can find and post Opportunities to volunteer your Time for a good Cause." %}<br/>
+                    {% trans "On 2Remember you can find and post Opportunities to volunteer your Time for a good Cause." %}<br/>
                     {% trans "Do you want to meet new People, have fun, and make the World a better Place?" %}<br/>
-                    {% trans "Find your first Event on SaneSide." %}
+                    {% trans "Find your first Event on 2Remember." %}
                 </p>
 
                 <a class="btn" href="{% url 'signup' %}">{% trans "Right Now" %}</a>
@@ -103,11 +103,11 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-22 col-xs-offset-1 col-sm-20 col-sm-offset-2 col-md-16 col-md-offset-4 header" align="center">
-                <img src="{{ STATIC_URL }}img/twitt.png" alt="Latest from Twitter - SaneSide Platform." />
+                <img src="{{ STATIC_URL }}img/twitt.png" alt="Latest from Twitter - 2Remember Platform." />
                 <h2>{% trans "Latest from Twitter" %}</h2>
 
-                    {% get_tweets for "sanesidedotcom" as tweets exclude "replies, retweets" limit 10 %}
-                    {# get_tweets for "sanesidedotcom" as tweets limit 10 #}
+                    {% get_tweets for "2remember" as tweets exclude "replies, retweets" limit 10 %}
+                    {# get_tweets for "2remember" as tweets limit 10 #}
 
                 <div id="twitter-carousel" class="carousel slide" data-ride="carousel">
                     <!-- Wrapper for slides -->
@@ -132,7 +132,7 @@
                 </div>
 
                 {#<a class="btn btn-primary">Follow us</a>#}
-                <a href="https://twitter.com/sanesidedotcom" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true" data-align="center">{% trans "Follow" %} @sanesidedotcom</a>
+                <a href="https://twitter.com/2remember" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true" data-align="center">{% trans "Follow" %} @2remember</a>
             </div>
         </div>
     </div>

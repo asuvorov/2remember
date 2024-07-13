@@ -4,8 +4,8 @@
 
 Dear, {{ user.first_name }}!
 
-The Event "{{ event.name }}", you signed up for, was closed for the following Reason:
+The Event "{{ event.title }}", you signed up for, was closed for the following Reason:
 
 {{ closed_reason }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

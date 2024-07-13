@@ -1,3 +1,8 @@
+https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#nginx-and-uwsgi-and-test-py
+
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/tutorial-connect-ec2-instance-to-rds-database.html
+https://kevinkiruri.medium.com/connect-to-rds-from-ec2-64b66378ca5d
+
 ===============================================================================
 I18N, L10N, TZ
 ===============================================================================

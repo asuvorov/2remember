@@ -14,9 +14,9 @@ from annoying.functions import get_object_or_None
 from passwords.fields import PasswordField
 
 from .models import (
-    UserPrivacyAdmins,
-    UserPrivacyGeneral,
-    UserPrivacyMembers,
+    # UserPrivacyAdmins,
+    # UserPrivacyGeneral,
+    # UserPrivacyMembers,
     UserProfile)
 
 
@@ -138,16 +138,14 @@ class UserForm(forms.ModelForm):
             email=self.cleaned_data.get("email", ""))
 
         if user:
-            raise forms.ValidationError(
-                _("User already exists."))
+            raise forms.ValidationError(_("User already exists."))
 
         return self.cleaned_data["email"]
 
     def clean_retry(self):
         """Docstring."""
         if self.cleaned_data["retry"] != self.cleaned_data.get("password", ""):
-            raise forms.ValidationError(
-                _("Passwords don't match."))
+            raise forms.ValidationError(_("Passwords don't match."))
 
         return self.cleaned_data["retry"]
 
@@ -256,7 +254,7 @@ class UserProfileEditForm(forms.ModelForm):
         self.fields["last_name"].initial = self.user.last_name
         self.fields["email"].initial = self.user.email
         self.fields["email"].required = False
-        self.fields["email"].widget.attrs["class"] = "disabled"
+        self.fields["email"].widget.attrs["class"] = "form-control disabled"
         self.fields["email"].widget.attrs["readonly"] = True
 
     first_name = forms.CharField(
@@ -341,6 +339,34 @@ class UserProfileEditForm(forms.ModelForm):
 
 # =============================================================================
 # ===
+# === FORGOT PASSWORD FORM
+# ===
+# =============================================================================
+class ForgotPasswordForm(forms.Form):
+    """Forgot Password Form."""
+
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "class":        "form-control",
+                "placeholder":  _("Email"),
+                "value":        ""
+            }))
+
+    def clean_email(self):
+        """Docstring."""
+        user = get_object_or_None(
+            user_model,
+            email=self.cleaned_data.get("email", ""))
+
+        if not user:
+            raise forms.ValidationError(_("User does not exist."))
+
+        return self.cleaned_data["email"]
+
+
+# =============================================================================
+# ===
 # === RESET PASSWORD FORM
 # ===
 # =============================================================================
@@ -381,47 +407,47 @@ class ResetPasswordForm(forms.Form):
 # === USER PRIVACY GENERAL FORM
 # ===
 # =============================================================================
-class UserPrivacyGeneralForm(forms.ModelForm):
-    """User Privacy (general) Form."""
+# class UserPrivacyGeneralForm(forms.ModelForm):
+#     """User Privacy (general) Form."""
 
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         """Docstring."""
+#         super().__init__(*args, **kwargs)
 
-        if self.instance and self.instance.id:
-            pass
+#         if self.instance and self.instance.id:
+#             pass
 
-    class Meta:
-        model = UserPrivacyGeneral
-        fields = [
-            "hide_profile_from_search",
-            "hide_profile_from_list",
-        ]
-        widgets = {
-            "hide_profile_from_search": forms.CheckboxInput(
-                attrs={
-                    "class":        "form-control",
-                }),
-            "hide_profile_from_list": forms.CheckboxInput(
-                attrs={
-                    "class":        "form-control",
-                }),
-            }
+#     class Meta:
+#         model = UserPrivacyGeneral
+#         fields = [
+#             "hide_profile_from_search",
+#             "hide_profile_from_list",
+#         ]
+#         widgets = {
+#             "hide_profile_from_search": forms.CheckboxInput(
+#                 attrs={
+#                     "class":        "form-control",
+#                 }),
+#             "hide_profile_from_list": forms.CheckboxInput(
+#                 attrs={
+#                     "class":        "form-control",
+#                 }),
+#             }
 
-    def clean(self):
-        """Docstring."""
-        cleaned_data = super().clean()
+#     def clean(self):
+#         """Docstring."""
+#         cleaned_data = super().clean()
 
-        return cleaned_data
+#         return cleaned_data
 
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
+#     def save(self, commit=True):
+#         """Docstring."""
+#         instance = super().save(commit=False)
 
-        if commit:
-            instance.save()
+#         if commit:
+#             instance.save()
 
-        return instance
+#         return instance
 
 
 # =============================================================================
@@ -429,69 +455,69 @@ class UserPrivacyGeneralForm(forms.ModelForm):
 # === USER PRIVACY MEMBERS FORM
 # ===
 # =============================================================================
-class UserPrivacyMembersForm(forms.ModelForm):
-    """User Privacy (Members) Form."""
+# class UserPrivacyMembersForm(forms.ModelForm):
+#     """User Privacy (Members) Form."""
 
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         """Docstring."""
+#         super().__init__(*args, **kwargs)
 
-        if self.instance and self.instance.id:
-            pass
+#         if self.instance and self.instance.id:
+#             pass
 
-    class Meta:
-        model = UserPrivacyMembers
-        fields = [
-            "profile_details", "contact_details",
-            "events_upcoming", "events_completed",
-            "events_affiliated",
-            "participations_canceled", "participations_rejected",
-        ]
-        widgets = {
-            "profile_details": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "contact_details": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_upcoming": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_completed": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_affiliated": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "participations_canceled": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "participations_rejected": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            }
+#     class Meta:
+#         model = UserPrivacyMembers
+#         fields = [
+#             "profile_details", "contact_details",
+#             "events_upcoming", "events_completed",
+#             "events_affiliated",
+#             "participations_canceled", "participations_rejected",
+#         ]
+#         widgets = {
+#             "profile_details": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "contact_details": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_upcoming": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_completed": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_affiliated": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "participations_canceled": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "participations_rejected": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             }
 
-    def clean(self):
-        """Docstring."""
-        cleaned_data = super().clean()
+#     def clean(self):
+#         """Docstring."""
+#         cleaned_data = super().clean()
 
-        return cleaned_data
+#         return cleaned_data
 
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
+#     def save(self, commit=True):
+#         """Docstring."""
+#         instance = super().save(commit=False)
 
-        if commit:
-            instance.save()
+#         if commit:
+#             instance.save()
 
-        return instance
+#         return instance
 
 
 # =============================================================================
@@ -499,66 +525,66 @@ class UserPrivacyMembersForm(forms.ModelForm):
 # === USER PRIVACY ADMINS FORM
 # ===
 # =============================================================================
-class UserPrivacyAdminsForm(forms.ModelForm):
-    """User Privacy (Admins) Form."""
+# class UserPrivacyAdminsForm(forms.ModelForm):
+#     """User Privacy (Admins) Form."""
 
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        super().__init__(*args, **kwargs)
+#     def __init__(self, *args, **kwargs):
+#         """Docstring."""
+#         super().__init__(*args, **kwargs)
 
-        if self.instance and self.instance.id:
-            pass
+#         if self.instance and self.instance.id:
+#             pass
 
-    class Meta:
-        model = UserPrivacyAdmins
-        fields = [
-            "profile_details", "contact_details",
-            "events_upcoming", "events_completed",
-            "events_affiliated",
-            "participations_canceled", "participations_rejected",
-        ]
-        widgets = {
-            "profile_details": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "contact_details": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_upcoming": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_completed": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "events_affiliated": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "participations_canceled": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "participations_rejected": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            }
+#     class Meta:
+#         model = UserPrivacyAdmins
+#         fields = [
+#             "profile_details", "contact_details",
+#             "events_upcoming", "events_completed",
+#             "events_affiliated",
+#             "participations_canceled", "participations_rejected",
+#         ]
+#         widgets = {
+#             "profile_details": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "contact_details": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_upcoming": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_completed": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "events_affiliated": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "participations_canceled": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             "participations_rejected": forms.Select(
+#                 attrs={
+#                     "class":        "form-control form-select",
+#                 }),
+#             }
 
-    def clean(self):
-        """Docstring."""
-        cleaned_data = super().clean()
+#     def clean(self):
+#         """Docstring."""
+#         cleaned_data = super().clean()
 
-        return cleaned_data
+#         return cleaned_data
 
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
+#     def save(self, commit=True):
+#         """Docstring."""
+#         instance = super().save(commit=False)
 
-        if commit:
-            instance.save()
+#         if commit:
+#             instance.save()
 
-        return instance
+#         return instance

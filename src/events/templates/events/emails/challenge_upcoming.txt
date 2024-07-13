@@ -4,8 +4,8 @@
 
 Dear, {{ user.first_name }}!
 
-Don't forget that you are signed up for the Event "{{ event.name }}" on {{ event.start_date }} at {{ event.start_time|date:"G:i"|default:"0:00" }}. Please, don’t forget to show up!
+Don't forget that you are signed up for the Event "{{ event.title }}" on {{ event.start_date }} at {{ event.start_time|date:"G:i"|default:"0:00" }}. Please, don’t forget to show up!
 
 Link to the Event Details Page: {{ event_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

@@ -8,4 +8,4 @@ The Organization "{{ organization.name }}", were you added as a Contact Person, 
 
 Link to the Organization Details Page: {{ organization_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

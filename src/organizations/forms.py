@@ -29,27 +29,27 @@ class CreateEditOrganizationForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
-        self.contact_choices = [
-            # ("no", _("None")),
-            ("me", _("Me (%s)") % (self.user.email)),
-            ("he", _("Affiliate different Person")),
-        ]
-        self.fields["contact"].choices = self.contact_choices
-        self.fields["contact"].initial = "me"
+        # self.contact_choices = [
+        #     # ("no", _("None")),
+        #     ("me", _("Me (%s)") % (self.user.email)),
+        #     ("he", _("Affiliate different Person")),
+        # ]
+        # self.fields["contact"].choices = self.contact_choices
+        # self.fields["contact"].initial = "me"
 
-        if (
-                self.instance and
-                self.instance.is_alt_person):
-            self.fields["contact"].initial = "he"
+        # if (
+        #         self.instance and
+        #         self.instance.is_alt_person):
+        #     self.fields["contact"].initial = "he"
 
         # ---------------------------------------------------------------------
-        # --- Modify Fields
+        # --- Modify Fields.
         self.fields["is_hidden"].help_text = _(
             "You can make your Organization hidden from the Public, so only Subscribers and "
             "Members, invited by you, will be able to see the Organization's Activity and sign up "
             "for its Events.")
 
-    contact = forms.ChoiceField(widget=forms.RadioSelect())
+    # contact = forms.ChoiceField(widget=forms.RadioSelect())
 
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
@@ -68,8 +68,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
         fields = [
             "preview", "cover", "title", "description", "tags", "hashtag",
             "addressless", "is_hidden", "website", "video", "email",
-            "is_alt_person", "alt_person_fullname",
-            "alt_person_email", "alt_person_phone",
+            # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -84,7 +83,12 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "placeholder":  _("Organization Description"),
                     "maxlength":    1000,
                 }),
-            "tags": TagWidget(),
+            "tags": TagWidget(
+                attrs={
+                    "class":        "form-control",
+                    "placeholder":  _("Tags"),
+                    # "data-role":    "tagsinput",
+                }),
             "hashtag": forms.TextInput(
                 attrs={
                     "class":        "form-control",
@@ -95,10 +99,10 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 attrs={
                     "class":        "form-check-input",
                 }),
-            "is_alt_person": forms.CheckboxInput(
-                attrs={
-                    "class":        "form-check-input",
-                }),
+            # "is_alt_person": forms.CheckboxInput(
+            #     attrs={
+            #         "class":        "form-check-input",
+            #     }),
             "website": forms.URLInput(
                 attrs={
                     "class":        "form-control",
@@ -115,23 +119,23 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "placeholder":  _("Organization Email"),
                     "maxlength":    100,
                 }),
-            "alt_person_fullname": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Full Name"),
-                    "maxlength":    80,
-                }),
-            "alt_person_email": forms.EmailInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Email"),
-                    "maxlength":    100,
-                }),
-            "alt_person_phone": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Phone Number"),
-                }),
+            # "alt_person_fullname": forms.TextInput(
+            #     attrs={
+            #         "class":        "form-control",
+            #         "placeholder":  _("Full Name"),
+            #         "maxlength":    80,
+            #     }),
+            # "alt_person_email": forms.EmailInput(
+            #     attrs={
+            #         "class":        "form-control",
+            #         "placeholder":  _("Email"),
+            #         "maxlength":    100,
+            #     }),
+            # "alt_person_phone": forms.TextInput(
+            #     attrs={
+            #         "class":        "form-control",
+            #         "placeholder":  _("Phone Number"),
+            #     }),
             }
 
     def clean(self):
@@ -144,30 +148,30 @@ class CreateEditOrganizationForm(forms.ModelForm):
 
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields.
-        if self.cleaned_data["contact"] == "me":
-            self.cleaned_data["is_alt_person"] = False
-        else:
-            self.cleaned_data["is_alt_person"] = True
+        # if self.cleaned_data["contact"] == "me":
+        #     self.cleaned_data["is_alt_person"] = False
+        # else:
+        #     self.cleaned_data["is_alt_person"] = True
 
-            if not self.cleaned_data["alt_person_fullname"]:
-                self._errors["alt_person_fullname"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if not self.cleaned_data["alt_person_fullname"]:
+        #         self._errors["alt_person_fullname"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_fullname"]
+        #         del self.cleaned_data["alt_person_fullname"]
 
-            if not self.cleaned_data["alt_person_email"]:
-                self._errors["alt_person_email"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if not self.cleaned_data["alt_person_email"]:
+        #         self._errors["alt_person_email"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_email"]
+        #         del self.cleaned_data["alt_person_email"]
 
-            if (
-                    "alt_person_phone" in self.cleaned_data and
-                    not self.cleaned_data["alt_person_phone"]):
-                self._errors["alt_person_phone"] = self.error_class(
-                    [_("This Field is required.")])
+        #     if (
+        #             "alt_person_phone" in self.cleaned_data and
+        #             not self.cleaned_data["alt_person_phone"]):
+        #         self._errors["alt_person_phone"] = self.error_class(
+        #             [_("This Field is required.")])
 
-                del self.cleaned_data["alt_person_phone"]
+        #         del self.cleaned_data["alt_person_phone"]
 
         return self.cleaned_data
 

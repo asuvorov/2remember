@@ -5,14 +5,14 @@
         :<request>
 {% endcomment %}
 
-{% if request.user.is_authenticated and request.user.is_staff %}
-    <a class="btn btn-primary btn-centered" href="{% url 'post-edit' post.slug %}"><i class="fa fa-edit fa-fw"></i> {% trans "Edit Post" %}</a>
+{% if request.user.is_staff %}
+    <a class="btn btn-warning w-100 mb-2" name="edit" href="{% url 'post-edit' post.slug %}"><i class="bi bi-braces-asterisk"></i> {% trans "Edit Post" %}</a>
     {% if post.is_draft %}
-        <p class="note">
-            <span class="label label-warning">{% trans "This is a Draft." %}</span><br/>
+        <div class="alert alert-warning mb-md-3" role="alert">
+            <p class="mb-0"><i class="bi bi-exclamation-triangle flex-shrink-0 me-2"></i>{% trans "This is a Draft." %}</p>
             <strong>{% trans "Publish this Post when you are ready, so other Members can see it." %}</strong>
-        </p>
+        </div>
 
-        <a class="btn btn-success btn-centered" name="post" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#postPublishPopupModal" tabindex="-1"><i class="fa fa-check fa-fw"></i> {% trans "Publish Post" %}</a>
+        <a class="btn btn-success w-100" name="post" data-bs-toggle="modal" data-bs-target="#postPublishPopupModal"><i class="bi bi-check-square"></i> {% trans "Publish Post" %}</a>
     {% endif %}
 {% endif %}

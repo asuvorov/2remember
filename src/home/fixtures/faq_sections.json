@@ -3,33 +3,55 @@
         "model":        "home.section",
         "pk":           1,
         "fields": {
-            "author":       1,
+            "author":       "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
             "title":        "General Questions",
-            "order":        0,
-            "created":      "2017-01-01",
-            "modified":     "2017-01-01"
+            "order":        1,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
         }
     },
     {
         "model":        "home.section",
         "pk":           2,
         "fields": {
-            "author":       1,
-            "title":        "Events",
-            "order":        1,
-            "created":      "2017-01-01",
-            "modified":     "2017-01-01"
+            "author":       "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
+            "title":        "Account/Profile",
+            "order":        2,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
         }
     },
     {
         "model":        "home.section",
         "pk":           3,
         "fields": {
-            "author":       1,
+            "author":       "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
+            "title":        "Events",
+            "order":        3,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    },
+    {
+        "model":        "home.section",
+        "pk":           4,
+        "fields": {
+            "author":       "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
+            "title":        "Places",
+            "order":        4,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    },
+    {
+        "model":        "home.section",
+        "pk":           5,
+        "fields": {
+            "author":       "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
             "title":        "Organizations",
-            "order":        2,
-            "created":      "2017-01-01",
-            "modified":     "2017-01-01"
+            "order":        5,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
         }
     }
 ]

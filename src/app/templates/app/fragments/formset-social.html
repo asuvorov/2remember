@@ -14,7 +14,7 @@
     <div data-formset-body>
         <!-- New forms will be inserted in here -->
     {% for fs in formset_social %}
-        <div class="row g-3" data-formset-form>
+        <div class="row g-3 mb-2" data-formset-form>
             {{ fs.id }}
             <div class="form-floating col-3">
                 {{ fs.social_app }}
@@ -26,7 +26,7 @@
             </div>
             <div class="col-3">
                 <div class="hidden">{{ fs.DELETE }}</div>
-                <a type="button" class="btn btn-rounded pull-right" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                <a type="button" class="btn btn-danger" data-formset-delete-button><i class="bi bi-person-dash"></i></a>
             </div>
         </div>
     {% endfor %}
@@ -35,7 +35,7 @@
     <!-- The empty form template. By wrapping this in a <script> tag, the __prefix__ placeholder can easily be replaced in both attributes and any scripts -->
     <script type="form-template" data-formset-empty-form>
     {% escapescript %}
-        <div class="row g-3" data-formset-form>
+        <div class="row g-3 mb-2" data-formset-form>
             {{ formset_social.empty_form.id }}
             <div class="form-floating col-3">
                 {{ formset_social.empty_form.social_app }}
@@ -47,14 +47,14 @@
             </div>
             <div class="col-3">
                 <div class="hidden">{{ formset_social.empty_form.DELETE }}</div>
-                <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-delete-button><i class="fa fa-minus fa-fw"></i> {% trans "Del" %}</a>
+                <a type="button" class="btn btn-danger" style="width:auto;" data-formset-delete-button><i class="bi bi-person-dash"></i></a>
             </div>
         </div>
     {% endescapescript %}
     </script>
 
     <!-- This Button will add a new Form, when clicked -->
-    <a type="button" class="btn btn-rounded pull-right" style="width:auto;" data-formset-add><i class="fa fa-plus fa-fw"></i> {% trans "Add" %}</a>
+    <a type="button" class="btn btn-primary" style="width:auto;" data-formset-add><i class="bi bi-person-plus"></i></a>
 
     <script>
         jQuery(function ($) {

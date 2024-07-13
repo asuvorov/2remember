@@ -17,22 +17,22 @@
                     <input type="hidden" name="invitee_id" value="">
 
                     <div id="staff_only" style="display:none;">
-                        <p class="note">
-                            <span class="label label-warning">{% trans "Warning!!!" %}</span><br/>
+                        <div class="alert alert-warning" role="alert">
+                            <strong>{% trans "Warning!!!" %}</strong><br/>
+                            <p>
                             {% blocktrans %}
                                 We noticed, that your Organization doesn't have Groups.<br/>
                                 The Invitee will be added to the Organization as a Staff Member by default.
                             {% endblocktrans %}
-                        </p>
+                            </p>
+                        </div>
                     </div>
 
                     <div id="staff_or_group" style="display:none;">
-                         <p class="note">
-                            <span class="label label-success">{% trans "Notice" %}</span><br/>
-                            {% blocktrans %}
-                                Please, choose, where you'd like to add the Invitee.
-                            {% endblocktrans %}
-                        </p>
+                        <div class="alert alert-success" role="alert">
+                            <strong>{% trans "Notice" %}</strong><br/>
+                            <p>{% trans "Please, choose, where you'd like to add the Invitee." %}</p>
+                        </div>
 
                         <div class="form-group">
                             <div class="radio radio-primary">

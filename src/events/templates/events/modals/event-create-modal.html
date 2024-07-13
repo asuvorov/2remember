@@ -12,9 +12,9 @@
                 <form id="event-create-modal-form" action="" method="POST">
                     {% csrf_token %}
 
-                    <p class="note">
-                        {% trans "You can update the Description." %}
-                    </p>
+                    <div class="alert alert-info" role="alert">
+                        <p>{% trans "You can update the Description." %}</p>
+                    </div>
 
                     <div class="form-group">
                         <label for="id_description_text">{% trans "Description" %}</label>

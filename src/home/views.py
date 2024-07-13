@@ -71,6 +71,13 @@ def index(request):
 
 
 @cache_page(60 * 60 * 24)
+def open_to_hire(request):
+    """Docstring."""
+    return render(
+        request, "home/resume.html", {})
+
+
+@cache_page(60 * 60 * 24)
 def privacy_policy(request):
     """Docstring."""
     return render(
@@ -88,12 +95,10 @@ def user_agreement(request):
 def our_team(request):
     """Docstring."""
     teams = Team.objects.all()
-    members = TeamMember.objects.all()
 
     return render(
         request, "home/our-team.html", {
             "teams":    teams,
-            "members":  members,
         })
 
 

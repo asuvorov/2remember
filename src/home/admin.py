@@ -7,6 +7,9 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from rangefilter.filters import DateRangeFilter
 
+# pylint: disable=import-error
+from app.admin import ImagesAdminMixin
+
 from .models import (
     Partner,
     Section,
@@ -18,14 +21,14 @@ from .models import (
 # === PARTNER ADMIN
 # ===
 # =============================================================================
-class PartnerAdmin(admin.ModelAdmin):
+class PartnerAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Partner Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
-                ("avatar", "image_tag",),
+                ("avatar", "avatar_image_tag",),
                 "name",
             ),
         }),
@@ -41,7 +44,7 @@ class PartnerAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "name", "image_tag", "website",
+        "name", "avatar_image_tag", "website",
         "created", "modified",
     ]
     list_display_links = [
@@ -56,7 +59,7 @@ class PartnerAdmin(admin.ModelAdmin):
         "name",
     ]
     readonly_fields = [
-        "image_tag",
+        "avatar_image_tag",
     ]
 
 admin.site.register(Partner, PartnerAdmin)

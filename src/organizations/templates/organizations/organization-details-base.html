@@ -1,15 +1,26 @@
 {% extends "base.html" %}
 
-{% load seo %}
+{# load seo #}
 {% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
 
 {% block title %}{% trans "Organization" %} "{{ organization.name }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
-    {% get_metadata %}
-
+    {# get_metadata #}
+{% comment %}
     <link rel="image_src" href="{{ organization.cover.url }}" />
     <meta name="description" content="{{ organization.description|truncatechars:300 }}" />
+{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
@@ -18,54 +29,169 @@
 {% block extra_script %}
 {% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
-                    <i class="fa fa-chevron-circle-right"></i>
-                    <a href="{% url 'organization-details' organization.slug %}">{% trans "Details" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="nav-sub-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                <a class="btn" href="{% url 'organization-details' organization.slug %}">
-                    <i class="fa fa-fw fa-info-circle"></i>
-                    <span class="hidden-xs">{% trans "Information" %}</span>
-                </a>
-            </div>
-
-            <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                <a class="btn" href="{% url 'organization-staff' organization.slug %}">
-                    <i class="fa fa-fw fa-id-card"></i>
-                    <span class="badge" style="background-color:#5bc0de;">{{ organization.organization_staff_members.all.count }}</span>&nbsp;
-                    <span class="hidden-xs">{% trans "Staff" %}</span>
-                    {#<span><i class="fa fa-info-circle fa-fw txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Staff Members can create Events on behalf of this Organization." %}'></i></span>#}
-                </a>
-            </div>
-
-            <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                <a class="btn" href="{% url 'organization-groups' organization.slug %}">
-                    <i class="fa fa-fw fa-users"></i>
-                    <span class="badge" style="background-color:#5bc0de;">{{ organization.organization_groups.all.count }}</span>&nbsp;
-                    <span class="hidden-xs">{% trans "Groups" %}</span>
-                {% if is_staff_member %}
-                    {#<span><i class="fa fa-info-circle fa-fw txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Here you can create the Organization Groups and invite SaneSide Members to them." %}'></i></span>#}
-                {% endif %}
-                </a>
-            </div>
-        </div>
-    </div>
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ organization.title }}</li>
+        </ol>
+    </nav>
 </div>
 {% endblock %}
 
+{% block header %}
+{% comment %}
+<div class="container">
+    <header class="d-flex justify-content-center pb-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'organization-details' organization.slug %}" class="nav-link active" aria-current="page">{% trans "Information" %}</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'organization-staff' organization.slug %}" class="nav-link">
+                    {% trans "Staff" %}
+                    {#<span><i class="bi bi-info-circle txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Staff Members can create Events on behalf of this Organization." %}'></i></span>#}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'organization-groups' organization.slug %}" class="nav-link">
+                    {% trans "Groups" %}
+                    {#<span><i class="bi bi-info-circle txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Here you can create the Organization Groups and invite 2Remember Members to them." %}'></i></span>#}
+                </a>
+            </li>
+        </ul>
+    </header>
+</div>
+{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
 {% block extra_content %}
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var organization_id = "{{ organization.id }}";
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", organization_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Organization."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Comment                                                       ***/
+    /*************************************************************************/
+    $(".add-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var organization_id = "{{ organization.id }}";
+
+        $("#comment-add-modal-form").find("input[name='organization_id']").val(organization_id);
+        $("#commentAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Delete Comment                                                    ***/
+    /*************************************************************************/
+{% comment %}
+    $(".delete-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var comment_id = $(this).attr("comment");
+
+        $.ajax({
+            url:    "{% url 'api-comment-details' 0 %}".replace("0", comment_id),
+            type:   "DELETE"
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).parent().parent().hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to delete the Comment."
+                }).show();
+            };
+        });
+
+        return true;
+    })
+{% endcomment %}
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var organization_id = "{{ organization.id }}";
+
+        $("#complaint-add-modal-form").find("input[name='organization_id']").val(organization_id);
+        $("#complaintAddPopupModal").modal("show");
+    })
+</script>
 {% endblock %}

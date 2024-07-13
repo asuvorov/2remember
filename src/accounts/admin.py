@@ -13,12 +13,15 @@ from ddcore.models import (
     User,
     UserLogin)
 
+# pylint: disable=import-error
+from app.admin import ImagesAdminMixin
+
 from .models import (
     Team,
     TeamMember,
-    UserPrivacyGeneral,
-    UserPrivacyMembers,
-    UserPrivacyAdmins,
+    # UserPrivacyGeneral,
+    # UserPrivacyMembers,
+    # UserPrivacyAdmins,
     UserProfile)
 
 
@@ -105,7 +108,7 @@ admin.site.register(User, UserAdmin)
 # === USER PROFILE ADMIN
 # ===
 # =============================================================================
-class UserProfileAdmin(admin.ModelAdmin):
+class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """User Profile Admin."""
 
     fieldsets = (
@@ -113,18 +116,18 @@ class UserProfileAdmin(admin.ModelAdmin):
             "classes":  (""),
             "fields":   (
                 "user",
-                ("avatar", "image_tag",),
+                ("avatar", "avatar_image_tag",),
                 "nickname",
                 "bio",
                 ("gender", "birth_day",),
             ),
         }),
-        ("Address & Phone #", {
+        ("Address", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("address", "phone_number",),
+                "address",
             ),
         }),
         ("Flags", {
@@ -140,7 +143,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "user", "image_tag",
+        "user", "avatar_image_tag",
         "is_newly_created",
         "created_by", "created", "modified_by", "modified",
     ]
@@ -155,7 +158,7 @@ class UserProfileAdmin(admin.ModelAdmin):
         "user",
     ]
     readonly_fields = [
-        "image_tag",
+        "avatar_image_tag",
     ]
 
     papertrail_type_filters = {
@@ -187,73 +190,73 @@ admin.site.register(UserProfile, UserProfileAdmin)
 # === USER PROFILE PRIVACY ADMIN
 # ===
 # =============================================================================
-class UserPrivacyGeneralAdmin(admin.ModelAdmin):
-    """User Profile Privacy General."""
+# class UserPrivacyGeneralAdmin(admin.ModelAdmin):
+#     """User Profile Privacy General."""
 
-    list_display = [
-        "id",
-        "user",
-        "created_by", "created", "modified_by", "modified",
-    ]
-    list_display_links = [
-        "user",
-    ]
-    list_filter = [
-        ("created", DateRangeFilter),
-        ("modified", DateRangeFilter),
-    ]
-    search_fields = [
-        "user",
-    ]
-
-
-admin.site.register(UserPrivacyGeneral, UserPrivacyGeneralAdmin)
+#     list_display = [
+#         "id",
+#         "user",
+#         "created_by", "created", "modified_by", "modified",
+#     ]
+#     list_display_links = [
+#         "user",
+#     ]
+#     list_filter = [
+#         ("created", DateRangeFilter),
+#         ("modified", DateRangeFilter),
+#     ]
+#     search_fields = [
+#         "user",
+#     ]
 
 
-class UserPrivacyMembersAdmin(admin.ModelAdmin):
-    """User Profile Privacy Members."""
-
-    list_display = [
-        "id",
-        "user",
-        "created_by", "created", "modified_by", "modified",
-    ]
-    list_display_links = [
-        "user",
-    ]
-    list_filter = [
-        ("created", DateRangeFilter),
-        ("modified", DateRangeFilter),
-    ]
-    search_fields = [
-        "user",
-    ]
+# admin.site.register(UserPrivacyGeneral, UserPrivacyGeneralAdmin)
 
 
-admin.site.register(UserPrivacyMembers, UserPrivacyMembersAdmin)
+# class UserPrivacyMembersAdmin(admin.ModelAdmin):
+#     """User Profile Privacy Members."""
+
+#     list_display = [
+#         "id",
+#         "user",
+#         "created_by", "created", "modified_by", "modified",
+#     ]
+#     list_display_links = [
+#         "user",
+#     ]
+#     list_filter = [
+#         ("created", DateRangeFilter),
+#         ("modified", DateRangeFilter),
+#     ]
+#     search_fields = [
+#         "user",
+#     ]
 
 
-class UserPrivacyAdminsAdmin(admin.ModelAdmin):
-    """User Profile Privacy Admins."""
-
-    list_display = [
-        "id",
-        "user",
-        "created_by", "created", "modified_by", "modified",
-    ]
-    list_display_links = [
-        "user",
-    ]
-    list_filter = [
-        ("created", DateRangeFilter),
-        ("modified", DateRangeFilter),
-    ]
-    search_fields = [
-        "user",
-    ]
+# admin.site.register(UserPrivacyMembers, UserPrivacyMembersAdmin)
 
 
-admin.site.register(UserPrivacyAdmins, UserPrivacyAdminsAdmin)
+# class UserPrivacyAdminsAdmin(admin.ModelAdmin):
+#     """User Profile Privacy Admins."""
+
+#     list_display = [
+#         "id",
+#         "user",
+#         "created_by", "created", "modified_by", "modified",
+#     ]
+#     list_display_links = [
+#         "user",
+#     ]
+#     list_filter = [
+#         ("created", DateRangeFilter),
+#         ("modified", DateRangeFilter),
+#     ]
+#     search_fields = [
+#         "user",
+#     ]
+
+
+# admin.site.register(UserPrivacyAdmins, UserPrivacyAdminsAdmin)
 
 
 # =============================================================================
@@ -346,14 +349,14 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
 admin.site.register(Team, TeamAdmin)
 
 
-class TeamMemberAdmin(admin.ModelAdmin):
+class TeamMemberAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Team Member Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
-                ("user", "image_tag",),
+                ("user", "avatar_image_tag",),
                 "team",
                 "position",
                 "order",
@@ -363,7 +366,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
 
     list_display = [
         "id",
-        "user", "image_tag", "position", "order", "team",
+        "user", "avatar_image_tag", "position", "order", "team",
         "created", "modified",
     ]
     list_display_links = [
@@ -378,7 +381,7 @@ class TeamMemberAdmin(admin.ModelAdmin):
         "user", "position", "team",
     ]
     readonly_fields = [
-        "image_tag",
+        "avatar_image_tag",
     ]
 
     def formfield_for_dbfield(self, db_field, **kwargs):

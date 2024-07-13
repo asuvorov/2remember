@@ -9,4 +9,4 @@ Your Account was successfully confirmed.
 To log-in, please, follow this link:
 {{ login_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

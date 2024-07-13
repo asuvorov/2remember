@@ -1,0 +1,8 @@
+{% comment %}
+    Input Parameters:
+        :<instance>
+{% endcomment %}
+
+<div class="" style="color:orange;">
+    <input id="id_instance_rating" name="instance_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ instance.get_rating_avg }}" />
+</div>

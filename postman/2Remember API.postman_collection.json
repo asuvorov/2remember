@@ -1,0 +1,94 @@
+{
+	"info": {
+		"_postman_id": "2349c231-ed8f-4ee7-a40a-092b3c66816b",
+		"name": "2Remember API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6245273"
+	},
+	"item": [
+		{
+			"name": "v1",
+			"item": [
+				{
+					"name": "Accounts",
+					"item": []
+				},
+				{
+					"name": "App",
+					"item": []
+				},
+				{
+					"name": "Blog",
+					"item": []
+				},
+				{
+					"name": "Events",
+					"item": []
+				},
+				{
+					"name": "Home",
+					"item": []
+				},
+				{
+					"name": "Invites",
+					"item": []
+				},
+				{
+					"name": "Organizations",
+					"item": []
+				},
+				{
+					"name": "Places",
+					"item": []
+				}
+			]
+		},
+		{
+			"name": "Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/v1/status",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"v1",
+						"status"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Version",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/version",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"version"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

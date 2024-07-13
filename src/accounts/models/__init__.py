@@ -5,5 +5,5 @@
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
 from . Team import *
-from . UserPrivacy import *
+# from . UserPrivacy import *
 from . UserProfile import *

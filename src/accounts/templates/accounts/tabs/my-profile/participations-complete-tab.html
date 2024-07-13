@@ -16,7 +16,7 @@ My Profile - Completed Events.
             <thead>
                 <tr class="active">
                     <th colspan="2">
-                        {% trans "Event" %} <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a>
+                        {% trans "Event" %} <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a>
                     </th>
                 </tr>
             </thead>
@@ -69,22 +69,22 @@ My Profile - Completed Events.
                     {% is_complained_event_tag participation.event request.user as is_complained %}
 
                     {% if participation.is_waiting_for_selfreflection or participation.is_selfreflection_rejected %}
-                        <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-check fa-fw" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
+                        <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-check" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
                     {% endif %}
 
                     {% if participation.is_waiting_for_selfreflection %}
-                        <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-times fa-fw" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
+                        <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-times" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
                     {% endif %}
 
                     {% if not is_rated %}
                         {% if participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
-                            <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="fa fa-star fa-fw" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
+                            <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="bi bi-star" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
                         {% endif %}
                     {% endif %}
 
                     {% if not is_complained %}
                         {% if participation.is_waiting_for_selfreflection or participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
-                            <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-info-circle fa-fw" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
+                            <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-info-circle" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
                         {% endif %}
                     {% endif %}
                     </td>
@@ -116,11 +116,11 @@ My Profile - Completed Events.
                 <td>
                     <a href="{% url 'event-details' participation.event.slug %}">
                     {% if participation.event.avatar %}
-                        {% generateimage "common:thumbnail_wide" source=participation.event.avatar -- alt=participation.event.name %}
+                        {% generateimage "common:thumbnail_wide" source=participation.event.avatar -- alt=participation.event.title %}
                     {% endif %}
                     </a>
                 </td>
-                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.name }}</a></td>
+                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a></td>
                 <td>
                     <span class="desc">{{ participation.selfreflection_activity_text|default:"N/A" }}</span>
                 </td>
@@ -150,22 +150,22 @@ My Profile - Completed Events.
                 {% is_complained_event_tag participation.event request.user as is_complained %}
 
                 {% if participation.is_waiting_for_selfreflection or participation.is_selfreflection_rejected %}
-                    <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-check fa-fw" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
+                    <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-check" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
                 {% endif %}
 
                 {% if participation.is_waiting_for_selfreflection %}
-                    <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-times fa-fw" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
+                    <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-times" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
                 {% endif %}
 
                 {% if not is_rated %}
                     {% if participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
-                        <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="fa fa-star fa-fw" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
+                        <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="bi bi-star" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
                     {% endif %}
                 {% endif %}
 
                 {% if not is_complained %}
                     {% if participation.is_waiting_for_selfreflection or participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
-                        <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="fa fa-info-circle fa-fw" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
+                        <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-info-circle" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
                     {% endif %}
                 {% endif %}
                 </td>

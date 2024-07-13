@@ -27,13 +27,14 @@
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'about-us' %}">{% trans "About us" %}</a></li>
                     <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'contact-us' %}">{% trans "Contact us" %}</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link p-0 text-body-secondary" href="{% url 'open-to-hire' %}">{% trans "Open to hire" %}</a></li>
                 </ul>
             </div>
 
             <div class="col-md-5 offset-md-1 mb-3">
                 <form>
-                    <h5>Subscribe to our newsletter</h5>
-                    <p>Monthly digest of what's new and exciting from us.</p>
+                    <h5>Subscribe to our Newsletter</h5>
+                    <p>Monthly Digest of what's new and exciting from us.</p>
                     <div class="d-flex flex-column flex-sm-row w-100 gap-2">
                         <label for="newsletter1" class="visually-hidden">Email address</label>
                         <input id="newsletter1" type="text" class="form-control" placeholder="Email address">
@@ -45,14 +46,17 @@
 
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
             <!-- <p class="float-end"><a href="#">Back to Top</a></p> -->
-            <p>Copyright &copy; 2017–2024 2Remember &middot; {{ product_version_num }}</p>
+            <p>
+                Copyright &copy; 2017–2024 &middot; 2Remember &middot; {{ product_version_num }}<br/>
+                <a href="/humans.txt"><img alt="humans.txt" src="{% static 'img/humans-txt-logo.png' %}" width="150" alt="2Remember Platform." /></a>
+            </p>
             <ul class="list-unstyled d-flex">
-                <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#twitter"/></svg></a></li>
-                <li class="ms-3"><a class="link-body-emphasis" href="#"><svg class="bi" width="24" height="24"><use xlink:href="#instagram"/></svg></a></li>
-                <li class="ms-3">
-                    <a class="link-body-emphasis" href="#">Instagram</a>
-                </li>
+                <li class="ms-3"><button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_FACEBOOK }}';" class="btn btn-facebook"><i class="bi bi-facebook"></i></button></li>
+                <li class="ms-3"><button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_TWITTER }}';" class="btn btn-twitter"><i class="bi bi-twitter"></i></button></li>
+                <li class="ms-3"><button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_LINKEDIN }}';" class="btn btn-linkedin"><i class="bi bi-linkedin"></i></button></li>
+                <li class="ms-3"><button onclick="javascript:document.location.href='{{ PB_SOCIAL_LINKS.PB_INSTAGRAM }}';" class="btn btn-instagram"><i class="bi bi-instagram"></i></button></li>
             </ul>
+            <p class="float-end"><a href="#">Back to Top</a></p>
         </div>
     </footer>
 </div>

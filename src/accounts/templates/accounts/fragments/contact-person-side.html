@@ -21,7 +21,7 @@
 
             {% if instance.author.profile.get_rating_avg > 0 %}
                 <div class="" style="color:orange;">
-                    <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ instance.author.profile.get_rating_avg }}" />
+                    <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ instance.author.profile.get_rating_avg }}" />
                 </div>
             {% endif %}
             </h5>
@@ -32,14 +32,14 @@
         <a href="mailto:{{ instance.author.email}}">{{ instance.author.email }}</a><br/>
         {% if instance.author.profile.phone_number.phone_number or instance.author.profile.phone_number.mobile_phone_number %}
             {% if instance.author.profile.phone_number.phone_number %}
-                <i class="fa fa-phone fa-fw"></i>
+                <i class="bi bi-phone"></i>
                 {{ instance.author.profile.phone_number.phone_number }}
                 {% if instance.author.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ instance.author.profile.phone_number.phone_number_ext }}){% endif %}
                 <br/>
             {% endif %}
 
             {% if instance.author.profile.phone_number.mobile_phone_number %}
-                <i class="fa fa-mobile-phone fa-fw"></i>
+                <i class="bi bi-mobile-phone"></i>
                 {{ instance.author.profile.phone_number.mobile_phone_number }}
                 {% if instance.author.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ instance.author.profile.phone_number.mobile_phone_number_ext }}){% endif %}
                 <br/>
@@ -51,7 +51,7 @@
         <strong>{{ instance.alt_person_fullname }}</strong><br/>
         <a href="mailto:{{ instance.alt_person_email }}">{{ instance.alt_person_email }}</a><br/>
     {% if instance.alt_person_phone %}
-        <i class="fa fa-phone fa-fw"></i>
+        <i class="bi bi-phone"></i>
         {{ instance.alt_person_phone }}
         <br/>
     {% endif %}

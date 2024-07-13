@@ -14,4 +14,4 @@ Link to the Member's Profile Page: {{ profile }}
 
 Link to the {{ subject }} Details Page: {{ url }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

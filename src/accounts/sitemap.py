@@ -19,7 +19,7 @@ class AccountSitemap(Sitemap):
     def items(self):
         """Docstring."""
         return UserProfile.objects.filter(
-            user__privacy_general__hide_profile_from_search=False,
+            # user__privacy_general__hide_profile_from_search=False,
             user__is_active=True,
             created__lte=datetime.date.today())
 

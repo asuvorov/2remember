@@ -4,8 +4,9 @@
 
 from django.contrib.sitemaps import Sitemap
 
-from .choices import PostStatus
-from .models import Post
+from .models import (
+    Post,
+    PostStatus)
 
 
 class BlogPostSitemap(Sitemap):
@@ -17,7 +18,7 @@ class BlogPostSitemap(Sitemap):
 
     def items(self):
         """Docstring."""
-        return Post.objects.filter(status=PostStatus.VISIBLE)
+        return Post.objects.filter(status=PostStatus.PUBLISHED)
 
     def lastmod(self, obj):
         """Docstring."""

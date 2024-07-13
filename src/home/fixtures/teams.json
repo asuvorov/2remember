@@ -1,0 +1,42 @@
+[
+    {
+        "model":        "accounts.team",
+        "pk":           1,
+        "fields": {
+            "name":         "Management",
+            "order":        1,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    },
+    {
+        "model":        "accounts.team",
+        "pk":           2,
+        "fields": {
+            "name":         "Partners",
+            "order":        2,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    },
+    {
+        "model":        "accounts.team",
+        "pk":           3,
+        "fields": {
+            "name":         "QA",
+            "order":        3,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    },
+    {
+        "model":        "accounts.team",
+        "pk":           4,
+        "fields": {
+            "name":         "IT",
+            "order":        4,
+            "created":      "2024-01-01",
+            "modified":     "2024-01-01"
+        }
+    }
+]

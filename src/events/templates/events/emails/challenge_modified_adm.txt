@@ -4,8 +4,8 @@
 
 Dear, {{ admin.first_name }}!
 
-Your Event "{{ event.name }}" was modified!
+Your Event "{{ event.title }}" was modified!
 
 Link to the Event Details Page: {{ event_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

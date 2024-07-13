@@ -4,10 +4,10 @@
 
 Dear, {{ event.author.first_name }}!
 
-Member {{ participation.user.first_name }} was accepted to participate in your Event "{{ event.name }}"{% if participation.role %} for the Role of "{{ participation.role.name }}"{% endif %}!
+Member {{ participation.user.first_name }} was accepted to participate in your Event "{{ event.title }}"{% if participation.role %} for the Role of "{{ participation.role.name }}"{% endif %}!
 
 Link to the Event Details Page: {{ event_link }}
 
 Link to the Member's Profile Page: {{ profile_link }}
 
-Thank you, SaneSide Team.
+Thank you, 2Remember Team.

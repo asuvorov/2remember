@@ -1,0 +1,31 @@
+{% load i18n %}
+
+<div class="alert alert-warning mb-md-3" role="alert">
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
+</div>
+
+<ul class="list-unstyled d-flex justify-content-center">
+    <li class="ms-3"><button onclick="javascript:share_on_facebook();" class="btn btn-facebook"><i class="bi bi-facebook"></i></button></li>
+    <li class="ms-3"><button onclick="javascript:share_on_twitter();" class="btn btn-twitter"><i class="bi bi-twitter"></i></button></li>
+    <li class="ms-3"><button onclick="javascript:share_on_linkedin();" class="btn btn-linkedin"><i class="bi bi-linkedin"></i></button></li>
+</ul>
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Share on ...                                                      ***/
+    /*************************************************************************/
+    var height = 300;
+    var width = 500;
+    var centeredY = (screen.height - height)/2;
+    var centeredX = (screen.width - width)/2;
+
+    function share_on_facebook() {
+        window.open("http://www.facebook.com/sharer/sharer.php?s=100&p[url]=" + document.location.href + "&p[images][0]=&p[title]=&p[summary]=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+    }
+    function share_on_twitter() {
+        window.open("http://twitter.com/home?status=" + "{{ organization.name }}".substr(0,100) + " " + document.location.href, "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+    }
+    function share_on_linkedin() {
+        window.open("http://www.linkedin.com/shareArticle?mini=true&url=" + document.location.href + "&title=" + "{{ organization.name }}" + "&summary=&source=", "_blank", "height=" + height + ", width=" + width + ", left=" + centeredX + ", top=" + centeredY).focus();
+    }
+</script>

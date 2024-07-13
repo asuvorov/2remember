@@ -21,7 +21,7 @@
         {% if profile.avatar and need_to_know_profile_details %}
             {% generateimage "common:thumbnail_bigger" source=profile.avatar -- alt=profile.auth_name %}
         {% else %}
-            <img src="{{ STATIC_URL }}img/no-avatar-{{ profile.stat_gender_name|default:'male' }}.png" height="100" width="100" alt="" />
+            <img src="{{ STATIC_URL }}img/no-avatar.png" height="100" width="100" alt="" />
         {% endif %}
 
             <p>
@@ -33,7 +33,7 @@
                 {% elif profile.short_name %}
                     {{ profile.short_name }}
                 {% else %}
-                    <i class="fa fa-user-secret fa-fw"></i>
+                    <i class="bi bi-user-secret"></i>
                 {% endif %}
             {% endif %}
 
@@ -43,7 +43,7 @@
 
             {% if profile.get_rating_avg > 0 %}
                 <div class="pull-right" style="color:orange; position:absolute; top:0; left:15px;">
-                    <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="fa fa-star fa-fw" data-empty="fa fa-star-o fa-fw" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ profile.get_rating_avg }}" />
+                    <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ profile.get_rating_avg }}" />
                 </div>
             {% endif %}
             </p>
@@ -51,7 +51,7 @@
     {% endwith %}
 
     {% if is_admin %}
-        <a class="btn btn-danger btn-centered remove-mbr" group="{{ group.id }}" member="{{ account.id }}" href="#">{% trans "Remove" %}</a>
+        <a class="btn btn-danger remove-mbr" group="{{ group.id }}" member="{{ account.id }}" href="#">{% trans "Remove" %}</a>
     {% endif %}
     </div>
 </div>

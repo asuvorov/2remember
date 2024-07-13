@@ -16,7 +16,7 @@
             <li class="breadcrumb-item"><a href="{% url 'my-profile-invitations' %}">{% trans "Invitations" %}</a></li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
 {% block extra_content %}
@@ -25,7 +25,7 @@
         <div class="col-12">
             <!-- START PROFILE RECEIVED INVITATIONS -->
             <section id="profile-invitations-received">
-                <h3>{% trans "Received Invitations" %} <a class="btn btn-rounded btn-danger pull-right inv-received-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a></h3>
+                <h3>{% trans "Received Invitations" %} <a class="btn btn-danger pull-right inv-received-archive" href="#"><i class="bi bi-minus"></i> {% trans "Archive" %}</a></h3>
                 {% include "accounts/tabs/my-profile/invitations-received-tab.html" %}
             </section>
             <!--  END  PROFILE RECEIVED INVITATIONS -->
@@ -34,7 +34,7 @@
 
             <!-- START PROFILE SENT INVITATIONS -->
             <section id="profile-invitations-sent">
-                <h3>{% trans "Sent Invitations" %} <a class="btn btn-rounded btn-danger pull-right inv-sent-archive" href="#"><i class="fa fa-minus fa-fw"></i> {% trans "Archive" %}</a></h3>
+                <h3>{% trans "Sent Invitations" %} <a class="btn btn-danger pull-right inv-sent-archive" href="#"><i class="bi bi-minus"></i> {% trans "Archive" %}</a></h3>
                 {% include "accounts/tabs/my-profile/invitations-sent-tab.html" %}
             </section>
             <!--  END  PROFILE SENT INVITATIONS -->

@@ -14,23 +14,6 @@ from .base import *
 # -----------------------------------------------------------------------------
 DEBUG = True
 
-DATABASES = {
-    "default": {
-        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME":     config("DB_NAME", default="sqlite.db"),
-        "USER":     config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST":     config("DB_HOST", default=""),
-        "PORT":     config("DB_PORT", default=""),
-        "OPTIONS": {
-            # "autocommit": True,
-        }
-    }
-}
-
-# SECRET_KEY = config("SECRET_KEY", default="")
-SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
-
 
 ###############################################################################
 ### AWS SETTINGS                                                            ###
@@ -133,35 +116,35 @@ LOGGING = {
             "class":                "django.utils.log.AdminEmailHandler",
             "formatter":            "verbose",
         },
-        "saneside_logfile": {
+        "2remember_logfile": {
             "level":                "DEBUG",
             "filters": [
                 "require_debug_true",
             ],
             "class":                "logging.handlers.RotatingFileHandler",
-            "filename":             "saneside.log",
+            "filename":             "2remember.log",
             "maxBytes":             1024 * 1024 * 5,  # 5 MB
             "backupCount":          7,
             "formatter":            "verbose",
         },
     },
     "loggers": {
-        "saneside": {
+        "2remember": {
             "handlers": [
                 "console",
-                "saneside_logfile",
+                "2remember_logfile",
             ],
         },
         "django": {
             "handlers": [
                 "console",
-                "saneside_logfile",
+                "2remember_logfile",
             ],
         },
         "django.request": {
             "handlers": [
                 "mail_admins",
-                "saneside_logfile",
+                "2remember_logfile",
             ],
             "level":                "ERROR",
             "propagate":            False,
@@ -169,7 +152,7 @@ LOGGING = {
         "py.warnings": {
             "handlers": [
                 "console",
-                "saneside_logfile",
+                "2remember_logfile",
             ],
         },
     },

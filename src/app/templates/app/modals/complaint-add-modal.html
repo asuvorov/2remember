@@ -13,17 +13,23 @@
                     {% csrf_token %}
 
                     <input type="hidden" name="account_id" value="">
-                    <input type="hidden" name="challenge_id" value="">
+                    <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
 
-                    <p class="note">
-                        <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
-                        <strong>{% trans "So, you are going to leave a Complaint." %}</strong><br/>
-
-                        Before proceeding, evaluate all the Cons and Pros, and continue only if it is worth it.<br/>
-                        Please, be honest.<br/>
-                        For providing knowingly false and slandering Information, your Account will be blocked, and the IP Address blacklisted, for Life.<br/>
-                    </p>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                        {% blockstrans %}
+                            Disclaimer<br/>So, you are going to leave a Complaint.
+                        {% endblocktrans %}
+                        </strong><br/>
+                        <p>
+                        {% blocktrans %}
+                            Before proceeding, evaluate all the Cons and Pros, and continue only if it is worth it.<br/>
+                            Please, be honest.<br/>
+                            For providing knowingly false and slandering Information, your Account will be blocked, and the IP Address blacklisted, for Life.
+                        {% endblocktrans %}
+                        </p>
+                    </div>
 
                     <div class="form-group">
                         <label for="id_complaint_text">{% trans "Please, enter a Complaint" %}</label>
@@ -47,12 +53,12 @@
     function complaint_add() {
         var complaint_text = $("#complaint-add-modal-form").find("textarea[name='complaint_text']").val();
         var account_id = $("#complaint-add-modal-form").find("input[name='account_id']").val();
-        var challenge_id = $("#complaint-add-modal-form").find("input[name='challenge_id']").val();
+        var event_id = $("#complaint-add-modal-form").find("input[name='event_id']").val();
         var organization_id = $("#complaint-add-modal-form").find("input[name='organization_id']").val();
 
         $.post("{% url 'api-complaint-list' %}", {
             "account_id":           account_id,
-            "challenge_id":         challenge_id,
+            "event_id":             event_id,
             "organization_id":      organization_id,
             "complaint_text":       complaint_text,
             "csrfmiddlewaretoken":  $("#complaint-add-modal-form").find("input[name='csrfmiddlewaretoken']").val()
@@ -69,7 +75,7 @@
 
             // ----------------------------------------------------------------
             // --- Related to the `Accounts: My Profile Page: Completed Challenges Tab`
-            $(".action-" + challenge_id).find(".add-complaint").hide("slow");
+            $(".action-" + event_id).find(".add-complaint").hide("slow");
 
             // ----------------------------------------------------------------
             // --- Related to the `Challenges: Details Page: Info Tab`

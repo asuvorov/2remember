@@ -3,7 +3,6 @@
 """
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 from django.core.files import File
@@ -13,6 +12,8 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.fields import RichTextUploadingField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from taggit.managers import TaggableManager
 
 from ddcore import enum
@@ -38,11 +39,11 @@ from app.utils import update_seo_model_instance_metadata
 # -----------------------------------------------------------------------------
 PostStatus = enum(
     DRAFT="0",
-    VISIBLE="1",
+    PUBLISHED="1",
     CLOSED="2")
 post_status_choices = [
     (PostStatus.DRAFT,      _("Draft")),
-    (PostStatus.VISIBLE,    _("Visible")),
+    (PostStatus.PUBLISHED,  _("Published")),
     (PostStatus.CLOSED,     _("Closed")),
 ]
 
@@ -86,7 +87,9 @@ def blog_cover_directory_path(instance, filename):
 
 
 @autoconnect
-class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
+class Post(
+        TitleSlugDescriptionBaseModel,
+        CommentMixin, RatingMixin, ViewMixin):
     """Post Model."""
 
     # -------------------------------------------------------------------------
@@ -98,7 +101,19 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
         related_name="posted_posts",
         verbose_name=_("Post Author"),
         help_text=_("Post Author"))
-    preview = models.ImageField(upload_to=blog_preview_directory_path)
+
+    preview = models.ImageField(
+        upload_to=blog_preview_directory_path,
+        blank=True)
+    preview_thumbnail = ImageSpecField(
+        source="preview",
+        processors=[
+            ResizeToFill(600, 400)
+        ],
+        format="JPEG",
+        options={
+            "quality":  80,
+        })
     cover = models.ImageField(
         upload_to=blog_cover_directory_path,
         blank=True)
@@ -128,6 +143,11 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
         choices=post_status_choices, default=PostStatus.DRAFT,
         verbose_name=_("Status"),
         help_text=_("Post Status"))
+
+    allow_comments = models.BooleanField(
+        default=True,
+        verbose_name=_("I would like to allow Comments"),
+        help_text=_("I would like to allow Comments"))
 
     objects = PostManager()
 
@@ -181,9 +201,9 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
         return self.status == PostStatus.DRAFT
 
     @property
-    def is_visible(self):
+    def is_published(self):
         """Docstring."""
-        return self.status == PostStatus.VISIBLE
+        return self.status == PostStatus.PUBLISHED
 
     @property
     def is_closed(self):
@@ -192,15 +212,6 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
 
     # -------------------------------------------------------------------------
     # --- Methods
-    def image_tag(self):
-        """Render Avatar Thumbnail."""
-        if self.avatar:
-            return f"<img src='{self.avatar.url}' width='100' height='60' />"
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Avatar"
-    image_tag.allow_tags = True
 
     # -------------------------------------------------------------------------
     # --- Signals
@@ -217,41 +228,53 @@ class Post(TitleSlugDescriptionBaseModel, CommentMixin, RatingMixin, ViewMixin):
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Update/insert SEO Model Instance Metadata
-        update_seo_model_instance_metadata(
-            title=self.title,
-            description=self.content,
-            keywords=", ".join(self.tags.names()),
-            heading=self.title,
-            path=self.get_absolute_url(),
-            object_id=self.id,
-            content_type_id=ContentType.objects.get_for_model(self).id)
+        # --- FIXME: Update/insert SEO Model Instance Metadata
+        # update_seo_model_instance_metadata(
+        #     title=self.title,
+        #     description=self.content,
+        #     keywords=", ".join(self.tags.names()),
+        #     heading=self.title,
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Avatar Images is:
+        # --- The Path for uploading Preview Images is:
         #
-        #            MEDIA_ROOT/blog/<id>/avatars/<filename>
+        #            MEDIA_ROOT/blog/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Blog Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Blog looks like:
         #
-        #            MEDIA_ROOT/blog/None/avatars/<filename>
+        #            MEDIA_ROOT/blog/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Avatar File in the Path;
-        #     2. Assign the Avatar File Content to the Blog Avatar Object;
-        #     3. Save the Blog Instance. Now the Avatar Image in the
+        #     1. Open the Preview File in the Path;
+        #     2. Assign the Preview File Content to the Blog Preview Object;
+        #     3. Save the Blog Instance. Now the Preview Image in the
         #        correct Path;
-        #     4. Delete previous Avatar File;
+        #     4. Delete previous Preview File;
         #
-        if created:
-            avatar = File(storage.open(self.avatar.file.name, "rb"))
+        try:
+            if created:
+                preview = File(storage.open(self.preview.file.name, "rb"))
 
-            self.avatar = avatar
-            self.save()
+                self.preview = preview
+                self.save()
 
-            storage.delete(avatar.file.name)
+                storage.delete(preview.file.name)
+
+                # -------------------------------------------------------------
+                cover = File(storage.open(self.cover.file.name, "rb"))
+
+                self.cover = cover
+                self.save()
+
+                storage.delete(cover.file.name)
+
+        except Exception as exc:
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

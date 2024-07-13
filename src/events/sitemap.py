@@ -9,6 +9,7 @@ from django.db.models import Q
 
 from .models import (
     Event,
+    Visibility,
     EventStatus)
 
 
@@ -21,9 +22,7 @@ class EventSitemap(Sitemap):
 
     def items(self):
         """Docstring."""
-        return Event.objects.filter(
-            start_date__gte=datetime.date.today(),
-            status=EventStatus.UPCOMING)
+        return Event.objects.filter(visibility=Visibility.PUBLIC)
 
     def lastmod(self, obj):
         """Docstring."""

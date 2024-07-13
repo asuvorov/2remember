@@ -15,8 +15,9 @@ from rest_framework.views import APIView
 from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
-from blog.choices import PostStatus
-from blog.models import Post
+from blog.models import (
+    Post,
+    PostStatus)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

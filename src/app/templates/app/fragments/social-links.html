@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<social_links>
+{% endcomment %}
+
+<div class="alert alert-warning mb-md-3" role="alert">
+{% blocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
+{% endblocktrans %}
+</div>
+
+<ul class="list-unstyled d-flex justify-content-center">
+{% for social_link in social_links %}
+    <li class="ms-3">
+        <button onclick="javascript:document.location.href='{{ social_link.url }}';" class="{{ social_link.stat_social_app_button }}">
+            <i class="{{ social_link.stat_social_app_icon }}"></i>
+        </button>
+    </li>
+{% endfor %}
+</ul>

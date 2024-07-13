@@ -6,7 +6,6 @@ import datetime
 import uuid
 
 from django.conf import settings
-from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 from django.core.files import File
@@ -16,19 +15,17 @@ from django.db.models import Sum
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from phonenumber_field.modelfields import PhoneNumberField
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFill
 from taggit.managers import TaggableManager
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
     Address,
     AttachmentMixin,
-    BaseModel,
     CommentMixin,
     ComplaintMixin,
-    Phone,
     RatingMixin,
-    TitleDescriptionBaseModel,
     TitleSlugDescriptionBaseModel,
     ViewMixin)
 from ddcore.uuids import get_unique_filename
@@ -90,12 +87,12 @@ def organization_cover_directory_path(instance, filename):
 
 @autoconnect
 class Organization(
-        TitleSlugDescriptionBaseModel, AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin,
-        ViewMixin):
+        TitleSlugDescriptionBaseModel,
+        AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
     """Organization Model."""
 
     # -------------------------------------------------------------------------
-    # --- Basics
+    # --- Basics.
     uid = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -109,8 +106,22 @@ class Organization(
         related_name="created_organizations",
         verbose_name=_("Author"),
         help_text=_("Organization Author"))
-    preview = models.ImageField(upload_to=organization_preview_directory_path)
-    cover = models.ImageField(upload_to=organization_cover_directory_path)
+
+    preview = models.ImageField(
+        upload_to=organization_preview_directory_path,
+        blank=True)
+    preview_thumbnail = ImageSpecField(
+        source="preview",
+        processors=[
+            ResizeToFill(600, 400)
+        ],
+        format="JPEG",
+        options={
+            "quality":  80,
+        })
+    cover = models.ImageField(
+        upload_to=organization_cover_directory_path,
+        blank=True)
 
     # -------------------------------------------------------------------------
     # --- Tags
@@ -138,16 +149,8 @@ class Organization(
         verbose_name=_("Address"),
         help_text=_("Organization Address"))
 
-    phone_number = models.ForeignKey(
-        Phone,
-        db_index=True,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-        verbose_name=_("Phone Numbers"),
-        help_text=_("Organization Phone Numbers"))
-
     # -------------------------------------------------------------------------
-    # --- URLs
+    # --- URLs.
     website = models.URLField(
         db_index=True,
         null=True, blank=True,
@@ -165,36 +168,44 @@ class Organization(
         help_text=_("Organization Email"))
 
     # -------------------------------------------------------------------------
-    # --- Social Links
+    # --- Social Links.
 
     # -------------------------------------------------------------------------
-    # --- Subscribers
-    subscribers = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        db_index=True,
-        blank=True,
-        related_name="organization_subscribers",
-        verbose_name=_("Subscribers"),
-        help_text=_("Organization Subscribers"))
+    # --- Followers.
+
+    # -------------------------------------------------------------------------
+    # --- Subscribers.
+    # subscribers = models.ManyToManyField(
+    #     settings.AUTH_USER_MODEL,
+    #     db_index=True,
+    #     blank=True,
+    #     related_name="organization_subscribers",
+    #     verbose_name=_("Subscribers"),
+    #     help_text=_("Organization Subscribers"))
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
-    is_alt_person = models.BooleanField(default=False)
-    alt_person_fullname = models.CharField(
-        max_length=80, null=True, blank=True,
-        verbose_name=_("Full Name"),
-        help_text=_("Organization Contact Person Full Name"))
-    alt_person_email = models.EmailField(
-        max_length=80, null=True, blank=True,
-        verbose_name=_("Email"),
-        help_text=_("Organization Contact Person Email"))
-    alt_person_phone = PhoneNumberField(
-        blank=True,
-        verbose_name=_("Phone Number"),
-        help_text=_("Please, use the International Format, e.g. +1-202-555-0114."))
+    # is_alt_person = models.BooleanField(default=False)
+    # alt_person_fullname = models.CharField(
+    #     max_length=80, null=True, blank=True,
+    #     verbose_name=_("Full Name"),
+    #     help_text=_("Organization Contact Person Full Name"))
+    # alt_person_email = models.EmailField(
+    #     max_length=80, null=True, blank=True,
+    #     verbose_name=_("Email"),
+    #     help_text=_("Organization Contact Person Email"))
+    # alt_person_phone = PhoneNumberField(
+    #     blank=True,
+    #     verbose_name=_("Phone Number"),
+    #     help_text=_("Please, use the International Format, e.g. +1-202-555-0114."))
 
     # -------------------------------------------------------------------------
     # --- Flags
+    allow_comments = models.BooleanField(
+        default=True,
+        verbose_name=_("I would like to allow Comments"),
+        help_text=_("I would like to allow Comments"))
+
     is_newly_created = models.BooleanField(default=True)
     is_hidden = models.BooleanField(default=False)
     is_deleted = models.BooleanField(default=False)
@@ -273,16 +284,6 @@ class Organization(
     # -------------------------------------------------------------------------
     # --- Methods.
     # -------------------------------------------------------------------------
-    def image_tag(self):
-        """Render Preview Thumbnail."""
-        if self.preview:
-            return f"<img src='{self.preview.url}' width='100' height='60' />"
-
-        return "(Sin Imagen)"
-
-    image_tag.short_description = "Preview"
-    image_tag.allow_tags = True
-
     def email_notify_admin_org_created(self, request=None):
         """Send Notification to the Organization Admin."""
         # ---------------------------------------------------------------------
@@ -361,10 +362,7 @@ class Organization(
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Update/insert SEO Model Instance Metadata
-        #
-        # --- FIXME
-        #
+        # --- FIXME: Update/insert SEO Model Instance Metadata
         # update_seo_model_instance_metadata(
         #     title=self.title,
         #     description=self.description,
@@ -377,13 +375,13 @@ class Organization(
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
         #
-        #            MEDIA_ROOT/organizations/<id>/avatars/<filename>
+        #            MEDIA_ROOT/organizations/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Organization Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Organization looks like:
         #
-        #            MEDIA_ROOT/organizations/None/avatars/<filename>
+        #            MEDIA_ROOT/organizations/None/previews/<filename>
         #
         # --- To fix this:
         #     1. Open the Preview File in the Path;
@@ -392,13 +390,25 @@ class Organization(
         #        correct Path;
         #     4. Delete previous Preview File;
         #
-        if created:
-            preview = File(storage.open(self.preview.file.name, "rb"))
+        try:
+            if created:
+                preview = File(storage.open(self.preview.file.name, "rb"))
 
-            self.preview = preview
-            self.save()
+                self.preview = preview
+                self.save()
 
-            storage.delete(preview.file.name)
+                storage.delete(preview.file.name)
+
+                # -------------------------------------------------------------
+                cover = File(storage.open(self.cover.file.name, "rb"))
+
+                self.cover = cover
+                self.save()
+
+                storage.delete(cover.file.name)
+
+        except Exception as exc:
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

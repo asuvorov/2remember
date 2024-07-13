@@ -7,8 +7,8 @@
 # you save bandwidth and server resources.
 #
 # This file will be ignored unless it is at the root of your host:
-# Used:    http://example.com/robots.txt
-# Ignored: http://example.com/site/robots.txt
+# Used:    http://2remember.live/robots.txt
+# Ignored: http://2remember.live/site/robots.txt
 #
 # For more information about the robots.txt standard, see:
 # http://www.robotstxt.org/wc/robots.html
@@ -19,7 +19,7 @@
 User-agent: *
 Crawl-delay: 10
 
-Sitemap: https://domain.com/sitemap.xml
+Sitemap: https://2remember.live/sitemap.xml
 
 # Directories
 Disallow: /media/
@@ -39,23 +39,29 @@ Disallow: /accounts/my-profile/edit/
 Disallow: /accounts/my-profile/delete/
 Disallow: /accounts/my-profile/privacy/
 Disallow: /accounts/my-profile/events/export/
+Disallow: /accounts/password/forgot/
 Disallow: /accounts/password/renew/
 Disallow: /accounts/password/reset/
 Disallow: /admin/
 Disallow: /api/v*/
 Disallow: /blog/create/
 Disallow: /blog/*edit$
-Disallow: /events/create/
-Disallow: /events/*edit$
 Disallow: /captcha/
 Disallow: /ckeditor/
+Disallow: /docs/
+Disallow: /events/create/
+Disallow: /events/*edit$
+Disallow: /grappelli/
 Disallow: /i18n/
 Disallow: /invites/
 Disallow: /organizations/create/
 Disallow: /organizations/*edit$
 Disallow: /organizations/populate/
 Disallow: /organizations/iframe/
+Disallow: /places/create/
+Disallow: /places/*edit$
 Disallow: /rosetta/
+Disallow: /social/
 # Disallow: /search/
 
 # Paths (no clean URLs)

@@ -15,17 +15,16 @@ from rest_framework.views import APIView
 from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
-from blog.choices import PostStatus
-from blog.models import Post
+from blog.models import (
+    Post,
+    PostStatus)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ BLOG
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === BLOG
+# ===
+# =============================================================================
 class BlogArchiveViewSet(APIView):
     """Blog Archive View Set."""
 
@@ -135,10 +134,7 @@ class PostPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Post
         # ---------------------------------------------------------------------
-        post = get_object_or_None(
-            Post,
-            id=post_id)
-
+        post = get_object_or_None(Post, id=post_id)
         if not post:
             return Response({
                 "message":      _("Post not found."),
@@ -148,7 +144,7 @@ class PostPublishViewSet(APIView):
         post.save()
 
         # ---------------------------------------------------------------------
-        # --- TODO: Send confirmation Email
+        # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
@@ -200,10 +196,7 @@ class PostCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Post
         # ---------------------------------------------------------------------
-        post = get_object_or_None(
-            Post,
-            id=post_id)
-
+        post = get_object_or_None(Post, id=post_id)
         if not post:
             return Response({
                 "message":      _("Post not found."),

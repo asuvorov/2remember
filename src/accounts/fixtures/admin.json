@@ -2,6 +2,7 @@
     {
         "model":    "ddcore.User",
         "fields": {
+            "id":           "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
             "first_name":   "Artem",
             "last_name":    "Suvorov",
             "username":     "admin",
