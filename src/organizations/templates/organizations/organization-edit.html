@@ -49,7 +49,7 @@
                     <div class="card mb-3 shadow">
                         <div class="row g-0">
                             <div class="col-md-3">
-                                <div class="thumbnail avatar">
+                                <div id="prerunner">
                                 {% if organization.preview %}
                                     {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.preview.title class='img-fluid rounded-start' %}
                                 {% else %}
@@ -380,4 +380,8 @@
         })
     });
 </script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=organization %}
 {% endblock %}

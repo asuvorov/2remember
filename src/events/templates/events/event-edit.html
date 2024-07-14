@@ -60,7 +60,7 @@
                     <div class="card mb-3 shadow">
                         <div class="row g-0">
                             <div class="col-md-3">
-                                <div class="thumbnail avatar">
+                                <div id="prerunner">
                                 {% if event.preview %}
                                     {% generateimage "common:medium_fill" source=event.preview -- alt=event.preview.title class='img-fluid rounded-start' %}
                                 {% else %}
@@ -75,12 +75,12 @@
                                     <div class="row g-2">
                                         <div class="col-12">
                                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*" required>
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
                                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                         <div class="col-12">
                                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*" required>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
                                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                     </div>
@@ -482,4 +482,8 @@
         });
     });
 </script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=event %}
 {% endblock %}

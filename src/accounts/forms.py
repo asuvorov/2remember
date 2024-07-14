@@ -187,7 +187,7 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            "avatar", "nickname", "bio", "gender", "birth_day", "receive_newsletters",
+            "avatar", "cover", "nickname", "bio", "gender", "birth_day", "receive_newsletters",
         ]
         widgets = {
             "nickname": forms.TextInput(
@@ -292,8 +292,7 @@ class UserProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            "avatar", "nickname", "bio", "gender", "birth_day",
-            "receive_newsletters",
+            "avatar", "cover", "nickname", "bio", "gender", "birth_day", "receive_newsletters",
         ]
         widgets = {
             "nickname": forms.TextInput(

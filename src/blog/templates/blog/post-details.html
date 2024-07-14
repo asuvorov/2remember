@@ -233,5 +233,21 @@
     /*** Global Variables                                                  ***/
     /*************************************************************************/
     var element;
+
+    $(document).ready(function () {
+        // --------------------------------------------------------------------
+        // --- Reveal a Cover Image.
+        // --------------------------------------------------------------------
+    {% if post.cover %}
+        $("div.bg-image").css({
+            "background-image":         "url({{ post.cover.url }})",
+            "background-size":          "contain",
+            "background-repeat":        "no-repeat",
+            "background-attachment":    "fixed",
+            "height":                   "75vh",
+            "width":                    "100%"
+        })
+    {% endif %}
+    });
 </script>
 {% endblock %}

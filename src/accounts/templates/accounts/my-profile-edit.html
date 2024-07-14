@@ -77,10 +77,17 @@
                                 <div class="card-body">
                                     <h3>{% trans "Appearance" %}</h3>
 
-                                    <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
-                                    <input id="id_avatar" name="avatar" class="form-control" type="file">
-                                    <div class="form-group {% if pform.avatar.errors %}has-error{% endif %}">
-                                        <div class="invalid-feedback">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
+                                            <input id="id_avatar" name="avatar" class="form-control" type="file" accept="image/*">
+                                            <span class="help-block">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
+                                            <span class="help-block">{% if pform.cover.errors %}{% for error in pform.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -193,6 +200,76 @@
     </div>
 </div>
 
+<!-- Pop-up Overlays -->
+
+{% if is_newly_created %}
+<div id="edit-profile-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
+    <div class="popup-overlay-heading">
+        <h4>{% trans "Welcome to 2Remember" %}</h4>
+    </div>
+
+    <div class="popup-overlay-info">
+        <div class="alert alert-success">
+        {% blocktrans %}
+            <p>
+                Thank you for signing up to 2Remember.
+            </p>
+
+            <p>
+                Before you start creating the Events,<br/>
+                we will need some more Information about you.<br/>
+                Please, complete your personal Information in the Form.
+            </p>
+        {% endblocktrans %}
+        </div>
+    </div>
+
+    <!-- Add an optional Button to close the Pop-up -->
+    <div class="popup-overlay-footer">
+        <button class="btn btn-default edit-profile-popup-overlay_close">{% trans "Close" %}</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** jQuery pop-up Overlay                                         ***/
+        /*********************************************************************/
+        /***
+         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
+        ***/
+        var options = {
+            type:               "overlay",      // "tooltip"
+            autoopen:           true,           // def. false
+            scrolllock:         true,           // def. false
+            background:         true,
+            backgroundactive:   false,
+            color:              "#000",
+            opacity:            0.5,
+            horizontal:         "center",
+            vertical:           "center",
+            offsettop:          0,
+            offsetleft:         0,
+            escape:             true,
+            blur:               true,
+            setzindex:          true,
+            autozindex:         false,
+            keepfocus:          true,
+            focusdelay:         50,
+            outline:            false,
+            detach:             false,
+            //openelement:                ".{popup_id}_open",
+            //closeelement:               ".{popup_id}_close",
+            transition:         "all 0.5s"
+        };
+
+        $("#edit-profile-popup-overlay").popup(options);
+    });
+</script>
+{% endif %}
+
+<!-- Scripts -->
+
 <script>
     /*************************************************************************/
     /*** Form Submitting                                                   ***/
@@ -265,75 +342,8 @@
         {% endfor %}
     });
 </script>
+{% endblock %}
 
-<!-- Pop-up Overlays -->
-
-{% if is_newly_created %}
-<div id="edit-profile-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
-    <div class="popup-overlay-heading">
-        <h4>{% trans "Welcome to 2Remember" %}</h4>
-    </div>
-
-    <div class="popup-overlay-info">
-        <div class="alert alert-success">
-        {% blocktrans %}
-            <p>
-                Thank you for signing up to 2Remember.
-            </p>
-
-            <p>
-                Before you start creating the Events,<br/>
-                we will need some more Information about you.<br/>
-                Please, complete your personal Information in the Form.
-            </p>
-        {% endblocktrans %}
-        </div>
-    </div>
-
-    <!-- Add an optional Button to close the Pop-up -->
-    <div class="popup-overlay-footer">
-        <button class="btn btn-default edit-profile-popup-overlay_close">{% trans "Close" %}</button>
-    </div>
-</div>
-
-<!-- Scripts -->
-
-<script>
-    $(document).ready(function () {
-        /*********************************************************************/
-        /*** jQuery pop-up Overlay                                         ***/
-        /*********************************************************************/
-        /***
-         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
-        ***/
-        var options = {
-            type:               "overlay",      // "tooltip"
-            autoopen:           true,           // def. false
-            scrolllock:         true,           // def. false
-            background:         true,
-            backgroundactive:   false,
-            color:              "#000",
-            opacity:            0.5,
-            horizontal:         "center",
-            vertical:           "center",
-            offsettop:          0,
-            offsetleft:         0,
-            escape:             true,
-            blur:               true,
-            setzindex:          true,
-            autozindex:         false,
-            keepfocus:          true,
-            focusdelay:         50,
-            outline:            false,
-            detach:             false,
-            //openelement:                ".{popup_id}_open",
-            //closeelement:               ".{popup_id}_close",
-            transition:         "all 0.5s"
-        };
-
-        $("#edit-profile-popup-overlay").popup(options);
-    });
-</script>
-{% endif %}
-
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=request.user.profile %}
 {% endblock %}
