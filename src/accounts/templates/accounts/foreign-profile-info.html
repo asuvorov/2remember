@@ -186,6 +186,14 @@
                 {% include "accounts/fragments/foreign-profile-event-list.html" %}
             </section>
             <!--  END  PROFILE EVENTS -->
+
+            <hr>
+
+            <!-- START PROFILE COMMENTS -->
+            <section id="profile-comments">
+                {% include "app/fragments/instance-comments.html" with instance=account.profile %}
+            </section>
+            <!--  END  PROFILE COMMENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
@@ -222,12 +230,39 @@
 <!-- Modals -->
 
 {% if request.user.is_authenticated %}
+    {% include "app/modals/comment-add-modal.html" %}
     {% include "app/modals/complaint-add-modal.html" %}
 
-    {% include "invites/modals/invite-to-event-popup-modal.html" %}
-    {% include "invites/modals/invite-to-organization-popup-modal.html" %}
+    {# include "invites/modals/invite-to-event-popup-modal.html" #}
+    {# include "invites/modals/invite-to-organization-popup-modal.html" #}
 {% endif %}
 
 <!-- Scripts -->
 
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+        event.preventDefault();
+
+        $("#complaintAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Housekeeping.                                                     ***/
+    /*************************************************************************/
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='account_id']").val("{{ account.profile.id }}");
+        $("#complaint-add-modal-form").find("input[name='account_id']").val("{{ account.profile.id }}");
+    });
+</script>
 {% endblock %}

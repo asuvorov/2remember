@@ -30,6 +30,7 @@ class CreateEditPostForm(forms.ModelForm):
         model = Post
         fields = [
             "preview", "cover", "title", "description", "content", "tags", "hashtag",
+            "allow_comments",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -50,6 +51,10 @@ class CreateEditPostForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Hashtag"),
                     "maxlength":    80,
+                }),
+            "allow_comments": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
                 }),
             }
 

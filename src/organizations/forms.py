@@ -69,6 +69,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
             "preview", "cover", "title", "description", "tags", "hashtag",
             "addressless", "is_hidden", "website", "video", "email",
             # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
+            "allow_comments",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -136,6 +137,10 @@ class CreateEditOrganizationForm(forms.ModelForm):
             #         "class":        "form-control",
             #         "placeholder":  _("Phone Number"),
             #     }),
+            "allow_comments": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                }),
             }
 
     def clean(self):

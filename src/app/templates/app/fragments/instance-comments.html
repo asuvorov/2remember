@@ -9,14 +9,91 @@
         :<is_admin>
 {% endcomment %}
 
+<h3>
+    {% trans "Comments" %}
+{% if instance.allow_comments %}
+    <a data-bs-toggle="collapse" data-bs-target="#collapse-comments" aria-expanded="false" aria-controls="collapse-comments"><i class="bi bi-chevron-bar-contract"></i></a>
+    {% if request.user.is_authenticated %}
+        <a class="add-comment btn btn-primary" href="#"><i class="bi bi-plus-lg"></i></a>
+    {% endif %}
+{% endif %}
+</h3>
+
 <div class="alert alert-warning mb-md-3" role="alert">
 {% blocktrans %}
     <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
 {% endblocktrans %}
 </div>
 
-<div id="collapse-comments" class="collapse">
-{% for comment in instance.get_comment_list %}
-    {% include "common/fragments/comment-hor.html" with comment=comment is_admin=is_admin %}
-{% endfor %}
-</div>
+{% if instance.allow_comments %}
+    <div id="collapse-comments" class="collapse">
+    {% for comment in instance.get_comment_list %}
+        {% include "app/fragments/comment-hor.html" %}
+    {% endfor %}
+    </div>
+
+    <!-- Scripts -->
+
+    <script type="text/javascript">
+        /*********************************************************************/
+        /*** Add Comment                                                   ***/
+        /*********************************************************************/
+        $(".add-comment").click(function (event) {
+            element = $(this);
+
+            var event = window.event || event;
+            event.preventDefault();
+
+            $("#commentAddPopupModal").modal("show");
+        })
+
+        /*********************************************************************/
+        /*** Delete Comment                                                ***/
+        /*********************************************************************/
+        $(".delete-comment").click(function (event) {
+            element = $(this);
+
+            var comment_id = $(this).attr("comment-id");
+            var event = window.event || event;
+            event.preventDefault();
+
+            $.ajax({
+                url:    "{% url 'api-comment-details' 0 %}".replace("0", comment_id),
+                type:   "DELETE"
+            }).done(function (data) {
+                console.log("Success ===> Data :", data);
+
+                $(element).parent().parent().hide("slow", function () {
+                    $(element).parent().parent().parent().parent().parent().remove();
+                });
+
+                new Noty({
+                    type:   "info",
+                    text:   data.message
+                }).show();
+            }).fail(function (data) {
+                console.log("Fail    ===> Data :", data);
+
+                try {
+                    new Noty({
+                        type:   "error",
+                        text:   data.responseJSON.message
+                    }).show();
+                } catch (err) {
+                    new Noty({
+                        type:   "error",
+                        text:   "Failed to delete the Comment."
+                    }).show();
+                };
+            });
+
+            return true;
+        })
+    </script>
+{% else %}
+    <div class="alert alert-warning mb-md-3" role="alert">
+    {% blocktrans %}
+        <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Comments Section was disabled by an Author/Owner.</p>
+    {% endblocktrans %}
+    </div>
+{% endif %}

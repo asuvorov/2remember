@@ -135,6 +135,7 @@ class CreateEditEventForm(forms.ModelForm):
             "organization",
             # "application", "allow_reenter",
             # "accept_automatically", "acceptance_text",
+            "allow_comments",
         ]
         widgets = {
             "title": forms.TextInput(
@@ -207,6 +208,10 @@ class CreateEditEventForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Write the Feedback here..."),
                     "maxlength":    1000,
+                }),
+            "allow_comments": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
                 }),
             }
 
