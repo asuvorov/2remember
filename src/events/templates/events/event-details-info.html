@@ -223,5 +223,127 @@
     /*************************************************************************/
     var participation_id;
     var element;
+
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", event_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Event."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Comment                                                       ***/
+    /*************************************************************************/
+    $(".add-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $("#comment-add-modal-form").find("input[name='event_id']").val(event_id);
+        $("#commentAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Delete Comment                                                    ***/
+    /*************************************************************************/
+{% comment %}
+    $(".delete-comment").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var comment_id = $(this).attr("comment");
+
+        $.ajax({
+            url:    "{% url 'api-comment-details' 0 %}".replace("0", comment_id),
+            type:   "DELETE"
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).parent().parent().hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to delete the Comment."
+                }).show();
+            };
+        });
+
+        return true;
+    })
+{% endcomment %}
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = "{{ event.id }}";
+
+        $("#complaint-add-modal-form").find("input[name='event_id']").val(event_id);
+        $("#complaintAddPopupModal").modal("show");
+    })
 </script>
 {% endblock %}

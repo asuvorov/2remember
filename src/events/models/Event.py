@@ -156,7 +156,7 @@ day_of_month_choices.append(("32", _("Last Day of Month")))
 # --- Event Model.
 # -----------------------------------------------------------------------------
 def event_preview_directory_path(instance, filename):
-    """Event Directory Path.
+    """Event Preview Image Directory Path.
 
     File will be uploaded to
 
@@ -168,7 +168,7 @@ def event_preview_directory_path(instance, filename):
 
 
 def event_cover_directory_path(instance, filename):
-    """Event Directory Path.
+    """Event Cover Image Directory Path.
 
     File will be uploaded to
 

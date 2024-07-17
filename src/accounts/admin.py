@@ -9,12 +9,23 @@ from adminsortable2.admin import (
     SortableInlineAdminMixin)
 from rangefilter.filters import DateRangeFilter
 
+from ddcore.admin import (
+    # AddressInline,
+    CommentInline,
+    ComplaintInline,
+    ImagesAdminMixin,
+    PhoneNumberInline,
+    SocialLinkInline,
+    RatingInline,
+    ViewInline)
 from ddcore.models import (
     User,
     UserLogin)
 
 # pylint: disable=import-error
-from app.admin import ImagesAdminMixin
+from blog.models import Post
+from events.models import Event
+from organizations.models import Organization
 
 from .models import (
     Team,
@@ -30,6 +41,81 @@ from .models import (
 # === USER ADMIN
 # ===
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Inlines.
+# -----------------------------------------------------------------------------
+class PostInline(admin.TabularInline):
+    """Post Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+    fields = [
+        "id", "title", "status", "allow_comments",
+        "created_by", "created", "modified_by", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
+
+    model = Post
+    fk_name = "author"
+    extra = 1
+
+
+class EventInline(admin.TabularInline):
+    """Event Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+    fields = [
+        "id", "title", "start_date", "organization",
+        "visibility", "addressless", "allow_comments", "is_newly_created",
+        "created_by", "created", "modified_by", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
+
+    model = Event
+    fk_name = "author"
+    extra = 1
+
+
+class OrganizationInline(admin.TabularInline):
+    """Organization Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+    fields = [
+        "id", "title",
+        "addressless", "allow_comments", "is_newly_created",
+        "created_by", "created", "modified_by", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
+
+    model = Organization
+    fk_name = "author"
+    extra = 1
+
+
+# -----------------------------------------------------------------------------
+# --- User Admin.
+# -----------------------------------------------------------------------------
 class UserAdmin(admin.ModelAdmin):
     """User Admin.
 
@@ -78,6 +164,11 @@ class UserAdmin(admin.ModelAdmin):
     ]
     search_fields = []
     readonly_fields = ["id"]
+    inlines = [
+        PostInline,
+        EventInline,
+        OrganizationInline,
+    ]
 
     papertrail_type_filters = {
         "Account Events": (
@@ -108,6 +199,14 @@ admin.site.register(User, UserAdmin)
 # === USER PROFILE ADMIN
 # ===
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Inlines.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# --- User Profile Admin.
+# -----------------------------------------------------------------------------
 class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """User Profile Admin."""
 
@@ -116,18 +215,19 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "classes":  (""),
             "fields":   (
                 "user",
-                ("avatar", "avatar_image_tag",),
+                ("avatar", "avatar_image_tag"),
+                ("cover", "cover_image_tag"),
                 "nickname",
                 "bio",
                 ("gender", "birth_day",),
             ),
         }),
-        ("Address", {
+        ("Location", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                "address",
+                ("addressless", "address"),
             ),
         }),
         ("Flags", {
@@ -135,16 +235,15 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                "receive_newsletters",
-                "is_newly_created",
+                ("allow_comments", "receive_newsletters", "is_newly_created"),
             ),
         }),
     )
 
     list_display = [
         "id",
-        "user", "avatar_image_tag",
-        "is_newly_created",
+        "user", "avatar_image_tag", "cover_image_tag",
+        "allow_comments", "receive_newsletters", "is_newly_created",
         "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
@@ -159,6 +258,16 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
     ]
     readonly_fields = [
         "avatar_image_tag",
+        "cover_image_tag",
+    ]
+    inlines = [
+        # AddressInline,
+        PhoneNumberInline,
+        SocialLinkInline,
+        CommentInline,
+        ComplaintInline,
+        RatingInline,
+        ViewInline,
     ]
 
     papertrail_type_filters = {
@@ -264,6 +373,14 @@ admin.site.register(UserProfile, UserProfileAdmin)
 # === USER LOGIN ADMIN
 # ===
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Inlines.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# --- User Login Admin.
+# -----------------------------------------------------------------------------
 class UserLoginAdmin(admin.ModelAdmin):
     """User Login Admin."""
 
@@ -301,6 +418,10 @@ admin.site.register(UserLogin, UserLoginAdmin)
 # === TEAM ADMIN
 # ===
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Inlines.
+# -----------------------------------------------------------------------------
 class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
     """Team Member Inline."""
 
@@ -314,6 +435,9 @@ class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
     model = TeamMember
 
 
+# -----------------------------------------------------------------------------
+# --- Team Admin.
+# -----------------------------------------------------------------------------
 class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Team Admin."""
 
@@ -349,6 +473,9 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
 admin.site.register(Team, TeamAdmin)
 
 
+# -----------------------------------------------------------------------------
+# --- Team Member Admin.
+# -----------------------------------------------------------------------------
 class TeamMemberAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Team Member Admin."""
 

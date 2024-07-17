@@ -21,6 +21,7 @@ from ddcore.models import (
     RatingMixin,
     UserProfile as UserProfileBase,
     ViewMixin)
+from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
 from events.models import (
@@ -58,6 +59,15 @@ privacy_choices = [
 # -----------------------------------------------------------------------------
 # --- User Profile Model.
 # -----------------------------------------------------------------------------
+def user_cover_directory_path(instance, filename):
+    """User Cover Image Directory Path."""
+    # --- File will be uploaded to
+    #     MEDIA_ROOT/accounts/<id>/covers/<filename>
+    fname = get_unique_filename(filename.split("/")[-1])
+
+    return f"accounts/{instance.user.id}/covers/{fname}"
+
+
 @autoconnect
 class UserProfile(
         UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
@@ -68,6 +78,9 @@ class UserProfile(
 
     # -------------------------------------------------------------------------
     # --- Basics (defined in `ddcore`).
+    cover = models.ImageField(
+        upload_to=user_cover_directory_path,
+        blank=True)
 
     # -------------------------------------------------------------------------
     # --- Address & Phone Number.
@@ -298,6 +311,15 @@ class UserProfile(
                 self.save()
 
                 storage.delete(avatar.file.name)
+
+                # -------------------------------------------------------------
+                cover = File(storage.open(self.cover.file.name, "rb"))
+
+                self.cover = cover
+                self.save()
+
+                storage.delete(cover.file.name)
+
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 

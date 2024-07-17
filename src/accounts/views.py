@@ -687,6 +687,13 @@ def my_profile_view(request):
         print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     # -------------------------------------------------------------------------
+    # --- Retrieve the Phone Numbers.
+    # -------------------------------------------------------------------------
+    phone_numbers = Phone.objects.filter(
+        content_type=ContentType.objects.get_for_model(profile),
+        object_id=profile.id)
+
+    # -------------------------------------------------------------------------
     # --- Retrieve the Profile Social Links.
     # -------------------------------------------------------------------------
     social_links = SocialLink.objects.filter(
@@ -730,6 +737,7 @@ def my_profile_view(request):
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
             "show_no_email_popup_modal":    show_no_email_popup_modal,
+            "phone_numbers":                phone_numbers,
             "social_links":                 social_links,
         }))
 

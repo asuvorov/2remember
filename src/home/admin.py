@@ -7,8 +7,9 @@ from django.contrib import admin
 from adminsortable2.admin import SortableAdminMixin
 from rangefilter.filters import DateRangeFilter
 
+from ddcore.admin import ImagesAdminMixin
+
 # pylint: disable=import-error
-from app.admin import ImagesAdminMixin
 
 from .models import (
     Partner,

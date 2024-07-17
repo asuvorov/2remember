@@ -3,11 +3,13 @@ X.Y.Z (YYYY-MM-DD)
 
 New
 ~~~
+- Added Cover Images on Instances view/edit Pages.
 - Added Google Analytics Tag.
 
 Changes
 ~~~~~~~
-- Updated Sitemap generating Logic.
+- Updated Admins.
+- Updated Sitemap-generating Logic.
 
 Fix
 ~~~
