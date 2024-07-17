@@ -53,8 +53,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ event.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if event.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ event.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}

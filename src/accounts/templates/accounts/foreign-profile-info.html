@@ -88,7 +88,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
 
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
@@ -121,8 +121,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
                                     {% endif %}
@@ -138,9 +137,9 @@
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
                                     {% endfor %}
-                                {% endif %}
 
                                     <br/>
+                                {% endif %}
 
                                     <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                 </p>
@@ -220,6 +219,8 @@
 </div>
 
 <!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=account.profile %}
 
 {% if request.user.is_authenticated %}
     {% include "app/modals/complaint-add-modal.html" %}
