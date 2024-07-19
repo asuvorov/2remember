@@ -3,6 +3,7 @@ X.Y.Z (YYYY-MM-DD)
 
 New
 ~~~
+- Added commenting on Instances.
 - Added Cover Images on Instances view/edit Pages.
 - Added Google Analytics Tag.
 

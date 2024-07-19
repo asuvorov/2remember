@@ -109,10 +109,18 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Max Length
-    $("[maxlength]").maxlength({
+    $("input[maxlength]").maxlength({
         alwaysShow:         false,
-        threshold:          50,
+        threshold:          25,
         warningClass:       "badge text-bg-warning",
+        limitReachedClass:  "badge text-bg-danger",
+        placement:          "top-right-inside",
+        validate:           true
+    });
+    $("textarea[maxlength]").maxlength({
+        alwaysShow:         true,
+        threshold:          50,
+        warningClass:       "badge text-bg-success",
         limitReachedClass:  "badge text-bg-danger",
         placement:          "top-right-inside",
         validate:           true

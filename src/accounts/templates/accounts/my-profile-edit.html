@@ -176,9 +176,14 @@
                 <section id="profile-complete">
                     <h3>{% trans "Complete" %}</h3>
 
-                    <div class="form-check text-start my-3">
+                    <div class="form-check text-start my-1">
+                        {{ pform.allow_comments }}
+                        {{ pform.allow_comments.label }}
+                    </div>
+
+                    <div class="form-check text-start my-1">
                         {{ pform.receive_newsletters }}
-                        {{ pform.receive_newsletters.label_tag }}
+                        {{ pform.receive_newsletters.label }}
                     </div>
 
                     <div class="row">
@@ -211,10 +216,7 @@
     <div class="popup-overlay-info">
         <div class="alert alert-success">
         {% blocktrans %}
-            <p>
-                Thank you for signing up to 2Remember.
-            </p>
-
+            <p>Thank you for signing up to 2Remember.</p>
             <p>
                 Before you start creating the Events,<br/>
                 we will need some more Information about you.<br/>

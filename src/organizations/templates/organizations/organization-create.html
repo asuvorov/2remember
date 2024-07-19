@@ -163,6 +163,10 @@
                 <!-- START ORGANIZATION COMPLETE -->
                 <section id="organization-complete">
                     <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
                     <p>{% trans "You have successfully completed all Steps." %}</p>
 
                     <div class="row">

@@ -96,15 +96,34 @@
                 <!-- START POST CONTENT -->
                 <section id="post-content">
                     <h3>{% trans "Content" %}</h3>
-
                     <div class="row g-3">
-                        <div class="orm-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                        <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
                             {{ form.content }}
                             <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
                 </section>
                 <!--  END  POST CONTENT -->
+
+                <!-- START POST COMPLETE -->
+                <section id="post-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+                    <p>{% trans "You have successfully completed all Steps." %}</p>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="post-create" class="post-create">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Create this Post" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST COMPLETE -->
             </form>
         </div>
 
