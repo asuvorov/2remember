@@ -5,7 +5,6 @@
 from django.contrib import admin
 from django.utils.html import format_html
 
-# from djangoseo.admin import register_seo_admin
 from rangefilter.filters import DateRangeFilter
 
 from ddcore.models.Address import Address
@@ -22,11 +21,6 @@ from ddcore.models.Phone import Phone
 from ddcore.models.Rating import Rating
 from ddcore.models.SocialLink import SocialLink
 from ddcore.models.View import View
-
-# from .seo import Metadata
-
-
-# register_seo_admin(admin.site, Metadata)
 
 
 # =============================================================================

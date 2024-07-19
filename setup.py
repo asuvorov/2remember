@@ -91,6 +91,7 @@ setup(
         "django-grappelli==4.0.1",
         # "django-haystack==3.2.1",
         "django-imagekit==5.0.0",
+        "django-meta==2.4.2",
         # "django-mptt==0.14.0",
         # "django-mptt-admin==2.4.1",
         "django-passwords==0.3.12",

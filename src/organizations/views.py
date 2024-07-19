@@ -290,9 +290,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -399,6 +397,7 @@ def organization_details(request, slug=None):
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,
+            "meta":                     organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
             "phone_numbers":            phone_numbers,
@@ -423,9 +422,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -452,9 +449,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -478,9 +473,7 @@ def organization_groups(request, slug=None):
 # @organization_staff_member_required
 def organization_edit(request, slug=None):
     """Edit Organization."""
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -661,9 +654,7 @@ def organization_populate_newsletter(request, slug=None):
 @cache_page(60)
 def organization_iframe_upcoming(request, organization_id):
     """Organization iFrame for upcoming Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
+    organization = get_object_or_404(Organization, pk=organization_id)
     events_upcoming = Event.objects.filter(
         status=EventStatus.UPCOMING,
         organization=organization,
