@@ -26,7 +26,7 @@
 </div>
 
 {% if instance.allow_comments %}
-    <div id="collapse-comments" class="collapse">
+    <div id="collapse-comments" {#class="collapse"#}>
     {% for comment in instance.get_comment_list %}
         {% include "app/fragments/comment-hor.html" %}
     {% endfor %}

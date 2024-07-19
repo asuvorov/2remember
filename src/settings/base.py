@@ -340,7 +340,6 @@ BOWER_INSTALLED_APPS = (
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
     # "bootstrap-rating",
-    # "bootstrap-tabcollapse",
     # "bootstrap-tagsinput",
     # "bx-slider.js",
     # "equalheight",

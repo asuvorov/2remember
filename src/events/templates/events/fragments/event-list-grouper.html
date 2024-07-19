@@ -1,35 +1,28 @@
 {% load i18n %}
 
 <div>
-    {% regroup events|dictsort:"start_date" by start_date|date:"Y" as events_by_year %}
+    {% regroup events|dictsortreversed:"start_date" by start_date|date:"Y" as events_by_year %}
     {% for events_year in events_by_year %}
-        {#<h2>{{ events_year.grouper }}</h2>#}
         {% regroup events_year.list by start_date|date:"F" as events_by_month %}
         {% for events_month in events_by_month %}
-            {#<h3>{{ events_month.grouper }}</h3>#}
-            {% regroup events_month.list by start_date|date:"d" as events_by_day %}
-            {% for events_day in events_by_day %}
-                {#<h4>{{ events_day.grouper }}</h4>#}
+            <div class="event-list-date-grouper">
+                <time>
+                    <span class="year">{{ events_year.grouper }}</span>
+                    <span class="month">{{ events_month.grouper|slice:":3" }}</span>
+                </time>
 
-                <div class="event-list-date-grouper">
-                    <time>
-                        <span class="day">{{ events_day.grouper }}</span>
-                        <span class="month">{{ events_month.grouper|slice:":3" }}</span>
-                    </time>
-
-                    <div class="info">
-                        <span class="title">{{ events_month.grouper }} {{ events_day.grouper }}, {{ events_year.grouper }}</span>
-                    </div>
+                <div class="info">
+                    <span class="title">{{ events_month.grouper }}, {{ events_year.grouper }}</span>
                 </div>
+            </div>
 
-                <div class="row g-2">
-                {% for event in events_day.list %}
-                    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                        {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
-                    </div>
-                {% endfor %}
+            <div class="row g-2 mb-3">
+            {% for event in events_month.list %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
                 </div>
             {% endfor %}
+            </div>
         {% endfor %}
     {% empty %}
         <div class="col-12">
