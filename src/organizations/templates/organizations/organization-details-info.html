@@ -139,16 +139,7 @@
 
             <!-- START ORGANIZATION COMMENTS -->
             <section id="organization-comments">
-            {% comment %}
-                <h3>
-                    {% trans "Comments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-comments" aria-expanded="false" aria-controls="collapse-comments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    <a class="add-comment btn btn-primary" href="#"><i class="bi bi-plus"></i></a>
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-comments.html" with instance=organization %}
-            {% endcomment %}
             </section>
             <!--  END  ORGANIZATION COMMENTS -->
         </div>
@@ -217,8 +208,8 @@
 {% include "app/modals/instance-view-on-map-modal.html" with instance=organization %}
 
 {% if request.user.is_authenticated %}
-    {# include "app/modals/comment-add-modal.html" #}
-    {# include "app/modals/complaint-add-modal.html" #}
+    {% include "app/modals/comment-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
 {% endif %}
 
 <!-- Scripts -->
@@ -235,11 +226,9 @@
     $(".subscribe").click(function (event) {
         element = $(this);
 
-        var event = window.event || event;
-
-        event.preventDefault();
-
         var organization_id = "{{ organization.id }}";
+        var event = window.event || event;
+        event.preventDefault();
 
         $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", organization_id), {
         }).done(function (data) {
@@ -273,82 +262,20 @@
     });
 
     /*************************************************************************/
-    /*** Add Comment                                                       ***/
-    /*************************************************************************/
-    $(".add-comment").click(function (event) {
-        element = $(this);
-
-        var event = window.event || event;
-
-        event.preventDefault();
-
-        var organization_id = "{{ organization.id }}";
-
-        $("#comment-add-modal-form").find("input[name='organization_id']").val(organization_id);
-        $("#commentAddPopupModal").modal("show");
-    })
-
-    /*************************************************************************/
-    /*** Delete Comment                                                    ***/
-    /*************************************************************************/
-{% comment %}
-    $(".delete-comment").click(function (event) {
-        element = $(this);
-
-        var event = window.event || event;
-
-        event.preventDefault();
-
-        var comment_id = $(this).attr("comment");
-
-        $.ajax({
-            url:    "{% url 'api-comment-details' 0 %}".replace("0", comment_id),
-            type:   "DELETE"
-        }).done(function (data) {
-            console.log("Success");
-            console.log("Data :", data);
-
-            $(element).parent().parent().hide("slow");
-
-            new Noty({
-                type:   "info",
-                text:   data.message
-            }).show();
-        }).fail(function (data) {
-            console.log("Fail");
-            console.log("Data :", data);
-
-            try {
-                new Noty({
-                    type:   "error",
-                    text:   data.responseJSON.message
-                }).show();
-            } catch (err) {
-                new Noty({
-                    type:   "error",
-                    text:   "Failed to delete the Comment."
-                }).show();
-            };
-        });
-
-        return true;
-    })
-{% endcomment %}
-
-    /*************************************************************************/
     /*** Add Complaint                                                     ***/
     /*************************************************************************/
     $(".add-complaint").click(function (event) {
         element = $(this);
 
         var event = window.event || event;
-
         event.preventDefault();
 
-        var organization_id = "{{ organization.id }}";
-
-        $("#complaint-add-modal-form").find("input[name='organization_id']").val(organization_id);
         $("#complaintAddPopupModal").modal("show");
     })
+
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+        $("#complaint-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+    });
 </script>
 {% endblock %}

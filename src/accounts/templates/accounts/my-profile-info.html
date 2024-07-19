@@ -134,18 +134,13 @@
             </section>
             <!--  END  PROFILE EVENTS -->
 
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-                <div>
-                {% comment %}
-                    <p>
-                        <strong>{% trans "Hours spent" %}</strong>
-                        <span class="badge pull-right">{{ sum_of_hours_spent }}</span>
-                    </p>
-                {% endcomment %}
-                </div>
+            <hr>
+
+            <!-- START PROFILE COMMENTS -->
+            <section id="profile-comments">
+                {% include "app/fragments/instance-comments.html" with instance=request.user.profile %}
             </section>
-            <!--  END  PROFILE COMPLETE -->
+            <!--  END  PROFILE COMMENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
