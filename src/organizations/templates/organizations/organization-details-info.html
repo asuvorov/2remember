@@ -97,7 +97,6 @@
                             {% else %}
                                 <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                             {% endif %}
-                                {% trans "Posted by" %}
                                 <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
                                 {{ organization.created|timesince }} {% trans "ago" %}
                             </div>
@@ -124,15 +123,6 @@
 
             <!-- START ORGANIZATION ATTACHMENTS -->
             <section id="organization-attachments">
-                <h3>
-                    {% trans "Attachments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'organization-edit' organization.slug %}#organization-attachments"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-attachments.html" with instance=organization %}
             </section>
             <!--  END  ORGANIZATION ATTACHMENTS -->

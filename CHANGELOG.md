@@ -10,9 +10,12 @@ New
 
 Changes
 ~~~~~~~
+- Rearranged the Instances' Attachments Section.
 - Updated Admins.
+- Updated Event List grouping.
 - Updated Sitemap-generating Logic.
 
 Fix
 ~~~
 - Views Count.
+- Cover Images' Appearance on the Instances' view/edit Pages.
