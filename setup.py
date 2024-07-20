@@ -106,6 +106,7 @@ setup(
         "django-url-tools-py3==0.2.1",
         # "elasticsearch==8.6.1",
         # "fabric==3.0.0",
+        "json-log-formatter==1.0",
         "lxml==5.2.1",
         "mock==5.1.0",
         # "mysqlclient==2.2.4",

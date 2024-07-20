@@ -1,0 +1,12 @@
+files:
+  - path: /opt/apps/2remember/logs/json.log"
+    tag:  site
+  - path: /var/log/nginx/access.log"
+    tag:  nginx-access
+  - path: /var/log/nginx/error.log"
+    tag:  nginx-error
+destination:
+  host:     logs4.papertrailapp.com
+  port:     50129
+  protocol: tls
+pid_file:   /tmp/remote_syslog.pid

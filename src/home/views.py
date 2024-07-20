@@ -2,14 +2,13 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from itertools import chain
 from operator import attrgetter
 
-import geoip2
-
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.gis.geoip2 import GeoIP2
 from django.http import HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
@@ -17,12 +16,11 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from ddcore.Utilities import get_client_ip
-
 # pylint: disable=import-error
 from accounts.models import (
     Team,
     TeamMember)
+from app.decorators import log_default
 from blog.models import Post
 from events.models import Event
 from organizations.models import Organization
@@ -36,22 +34,16 @@ from .models import (
     FAQ)
 
 
+logger = logging.getLogger(__name__)
+
+
 # -----------------------------------------------------------------------------
 # --- Index
 # -----------------------------------------------------------------------------
 @cache_page(60 * 60)
+@log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
-    try:
-        geo = GeoIP2()
-        ip_addr = get_client_ip(request)
-        # ip_addr = "108.162.209.69"
-        country = geo.country(ip_addr)
-        city = geo.city(ip_addr)
-
-    except geoip2.errors.AddressNotFoundError:
-        pass
-
     timeline_qs = []
     # timeline_qs = sorted(
     #     chain(
@@ -71,6 +63,7 @@ def index(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def open_to_hire(request):
     """Docstring."""
     return render(
@@ -78,6 +71,7 @@ def open_to_hire(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def privacy_policy(request):
     """Docstring."""
     return render(
@@ -85,6 +79,7 @@ def privacy_policy(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def user_agreement(request):
     """Docstring."""
     return render(
@@ -92,6 +87,7 @@ def user_agreement(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def our_team(request):
     """Docstring."""
     teams = Team.objects.all()
@@ -103,6 +99,7 @@ def our_team(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def our_partners(request):
     """Docstring."""
     partners = Partner.objects.all()
@@ -114,12 +111,14 @@ def our_partners(request):
 
 
 @cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def about_us(request):
     """Docstring."""
     return render(
         request, "home/about-us.html", {})
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def contact_us(request):
     """Docstring."""
     # -------------------------------------------------------------------------
@@ -139,6 +138,7 @@ def contact_us(request):
 # --- FAQ
 # -----------------------------------------------------------------------------
 @cache_page(60 * 5)
+@log_default(my_logger=logger, cls_or_self=False)
 def faq(request):
     """List of FAQs."""
     # -------------------------------------------------------------------------
@@ -154,6 +154,7 @@ def faq(request):
 
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def faq_create(request):
     """Create FAQ."""
     # -------------------------------------------------------------------------
@@ -178,6 +179,7 @@ def faq_create(request):
 
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def faq_edit(request, faq_id):
     """Edit FAQ."""
     # -------------------------------------------------------------------------
@@ -215,6 +217,7 @@ def faq_edit(request, faq_id):
 # -----------------------------------------------------------------------------
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def feature(request):
     """Docstring."""
     return render(

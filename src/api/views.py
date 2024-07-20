@@ -84,6 +84,7 @@ class APIStatusViewSet(APIView):
             }
         }, status=status.HTTP_200_OK)
 
+
 api_status = APIStatusViewSet.as_view()
 
 
@@ -151,5 +152,6 @@ class APIVersionViewSet(APIView):
                 "version":      settings.PRODUCT_VERSION_NUM,
             }
         }, status=status.HTTP_200_OK)
+
 
 api_version = APIVersionViewSet.as_view()

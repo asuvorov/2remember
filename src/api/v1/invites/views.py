@@ -3,6 +3,7 @@
 """
 
 import datetime
+import logging
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -19,6 +20,7 @@ from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
+from app.decorators import log_default
 from events.models import (
     Event,
     # Participation,
@@ -31,6 +33,9 @@ from organizations.models import (
     Organization,
     OrganizationGroup,
     OrganizationStaff)
+
+
+logger = logging.getLogger(__name__)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -49,6 +54,7 @@ class InviteListViewSet(APIView):
     # serializer_class = InviteSerializer
     # model = Invite
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Invite create.
 
@@ -214,6 +220,7 @@ class InviteListViewSet(APIView):
             "message":      _("Successfully sent the Invitation."),
         }, status=status.HTTP_200_OK)
 
+
 invite_list = InviteListViewSet.as_view()
 
 
@@ -226,6 +233,7 @@ class InviteArchiveViewSet(APIView):
     # serializer_class = InviteSerializer
     # model = Invite
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Invite archive.
 
@@ -286,6 +294,7 @@ class InviteArchiveViewSet(APIView):
             "message":      _("Successfully archived the Invitations."),
         }, status=status.HTTP_200_OK)
 
+
 invite_archive_all = InviteArchiveViewSet.as_view()
 
 
@@ -298,6 +307,7 @@ class InviteAcceptViewSet(APIView):
     # serializer_class = InviteSerializer
     # model = Invite
 
+    @log_default(my_logger=logger)
     def post(self, request, invite_id):
         """POST: Invite create.
 
@@ -396,6 +406,7 @@ class InviteAcceptViewSet(APIView):
             "message":      _("Successfully accepted the Invitation."),
         }, status=status.HTTP_200_OK)
 
+
 invite_accept = InviteAcceptViewSet.as_view()
 
 
@@ -408,6 +419,7 @@ class InviteRejectViewSet(APIView):
     # serializer_class = InviteSerializer
     # model = Invite
 
+    @log_default(my_logger=logger)
     def post(self, request, invite_id):
         """POST: Invite create.
 
@@ -482,6 +494,7 @@ class InviteRejectViewSet(APIView):
             "message":      _("Successfully rejected the Invitation."),
         }, status=status.HTTP_200_OK)
 
+
 invite_reject = InviteRejectViewSet.as_view()
 
 
@@ -494,6 +507,7 @@ class InviteRevokeViewSet(APIView):
     # serializer_class = InviteSerializer
     # model = Invite
 
+    @log_default(my_logger=logger)
     def post(self, request, invite_id):
         """POST: Invite create.
 
@@ -561,5 +575,6 @@ class InviteRevokeViewSet(APIView):
         return Response({
             "message":      _("Successfully revoked the Invitation."),
         }, status=status.HTTP_200_OK)
+
 
 invite_revoke = InviteRevokeViewSet.as_view()

@@ -24,10 +24,6 @@ from organizations.sitemap import OrganizationSitemap
 admin.autodiscover()
 
 
-def trigger_error(request):
-    division_by_zero = 1 / 0
-
-
 sitemaps = {
     "accounts":         AccountSitemap,
     "blog":             BlogPostSitemap,
@@ -38,7 +34,6 @@ sitemaps = {
 
 
 urlpatterns = [
-    path("sentry-debug", trigger_error),
     re_path(r"", include("social_django.urls", namespace="social")),
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
     re_path(r"^grappelli/", include("grappelli.urls")),
@@ -49,9 +44,8 @@ urlpatterns = [
     re_path(r"^rosetta/", include("rosetta.urls")),
     # re_path(r"^search/", include("haystack.urls")),
     re_path(r"^sitemap\.xml$", sitemap, {
-            "sitemaps":     sitemaps,
-        },
-        name="django.contrib.sitemaps.views.sitemap"),
+        "sitemaps":     sitemaps,
+    }, name="django.contrib.sitemaps.views.sitemap"),
 
     re_path(r"^", include("home.urls")),
     re_path(r"^accounts/", include("accounts.urls")),
