@@ -61,6 +61,9 @@ urlpatterns = [
     re_path(r"^organizations/", include("organizations.urls")),
     re_path(r"^places/", include("places.urls")),
 
+    path("ads.txt", TemplateView.as_view(
+        template_name="cyborg/ads.txt",
+        content_type="text/plain")),
     path("humans.txt", TemplateView.as_view(
         template_name="cyborg/humans.txt",
         content_type="text/plain")),

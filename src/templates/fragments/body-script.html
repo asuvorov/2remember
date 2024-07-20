@@ -15,27 +15,6 @@
     /*** Custom Scripts                                                    ***/
     /*************************************************************************/
     // ------------------------------------------------------------------------
-    // --- Avatar Preview
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $("div#prerunner img").attr("src", e.target.result);
-                $("div#prerunner ing").parent().show();
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#id_avatar").change(function () {
-        $("#spinner").fadeIn("slow");
-
-        readURL(this);
-
-        $("#spinner").fadeOut("slow");
-    });
-
-    // ------------------------------------------------------------------------
     // --- Fix Footer
     //$('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
     //    fixFooter();
@@ -70,37 +49,6 @@
         }
     }
 
-    // ------------------------------------------------------------------------
-    // --- Toggle collapsing Area
-    // $("a[data-toggle='collapse']").click(function () {
-    //     $(this).find("i.toggle-icon").toggleClass(
-    //         "fa-chevron-up fa-chevron-down");
-    // })
-    // $(".collapse").on("shown.bs.collapse", function () {
-    //     fixFooter();
-    // })
-    // $(".collapse").on("hidden.bs.collapse", function () {
-    //     fixFooter();
-    // })
-
-    // ------------------------------------------------------------------------
-    // --- Wrapper for Avatar Image File Input Field
-    // var wrapper = $("<div/>").css({
-    //     height:         0,
-    //     width:          0,
-    //     "overflow":     "hidden"
-    // });
-    // var fileInput = $("#id_avatar:file").wrap(wrapper);
-
-    // fileInput.change(function () {
-    //     $this = $(this);
-    //     $("#file").val($this.val());
-    // })
-
-    // $("#file").click(function () {
-    //     fileInput.click();
-    // }).show();
-
     /*************************************************************************/
     /*** Bootstrap Plug-ins                                                ***/
     /*************************************************************************/
@@ -130,10 +78,18 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Max Length
-    $("[maxlength]").maxlength({
+    $("input[maxlength]").maxlength({
         alwaysShow:         false,
-        threshold:          50,
+        threshold:          25,
         warningClass:       "badge text-bg-warning",
+        limitReachedClass:  "badge text-bg-danger",
+        placement:          "top-right-inside",
+        validate:           true
+    });
+    $("textarea[maxlength]").maxlength({
+        alwaysShow:         true,
+        threshold:          50,
+        warningClass:       "badge text-bg-success",
         limitReachedClass:  "badge text-bg-danger",
         placement:          "top-right-inside",
         validate:           true
@@ -373,6 +329,9 @@
     // });
 
     $(document).ready(function () {
+        // --------------------------------------------------------------------
+        // --- Alter YouTube Video Links.
+        // --------------------------------------------------------------------
         $("a.gallery-videos").each(function () {
             var newUrl = $(this).attr("href").replace("youtube.com/watch?v=", "youtube.com/v/");
             $(this).attr("href", newUrl);

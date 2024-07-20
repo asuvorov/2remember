@@ -20,7 +20,7 @@ PRODUCT_NAME = "2Remember"
 
 VERSION_API = "v1"
 VERSION_MAJOR = 0
-VERSION_MINOR = 1
+VERSION_MINOR = 2
 VERSION_PATCH = 0
 
 PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
@@ -340,7 +340,6 @@ BOWER_INSTALLED_APPS = (
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
     # "bootstrap-rating",
-    # "bootstrap-tabcollapse",
     # "bootstrap-tagsinput",
     # "bx-slider.js",
     # "equalheight",

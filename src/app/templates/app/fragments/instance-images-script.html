@@ -1,0 +1,90 @@
+{% comment %}
+    Input Parameters:
+        :<instance>
+{% endcomment %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // --------------------------------------------------------------------
+        // --- Update/refresh Avatar Image.
+        // --------------------------------------------------------------------
+        function readAvatarURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("div#prerunner img").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#id_avatar").change(function () {
+            $("#spinner").fadeIn("slow");
+
+            readAvatarURL(this);
+
+            $("#spinner").fadeOut("slow");
+        });
+
+        // --------------------------------------------------------------------
+        // --- Update/refresh Preview Image.
+        // --------------------------------------------------------------------
+        function readPreviewURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $("div#prerunner img").attr("src", e.target.result);
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#id_preview").change(function () {
+            $("#spinner").fadeIn("slow");
+
+            readPreviewURL(this);
+
+            $("#spinner").fadeOut("slow");
+        });
+
+        // --------------------------------------------------------------------
+        // --- Update/refresh Cover Image.
+        // --------------------------------------------------------------------
+        function readCoverURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $("div.bg-image").css({
+                        "background-image":         "url(" + e.target.result + ")",
+                        "background-size":          "contain",  // "cover"
+                        "background-repeat":        "repeat-x",
+                        "background-attachment":    "fixed",
+                        "height":                   "75vh",
+                        "width":                    "100%"
+                    })
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        $("#id_cover").change(function () {
+            $("#spinner").fadeIn("slow");
+
+            readCoverURL(this);
+
+            $("#spinner").fadeOut("slow");
+        });
+
+        // --------------------------------------------------------------------
+        // --- Reveal a Cover Image.
+        // --------------------------------------------------------------------
+    {% if instance.cover %}
+        $("div.bg-image").css({
+            "background-image":         "url({{ instance.cover.url }})",
+            "background-size":          "contain",  // "cover"
+            "background-repeat":        "repeat-x",
+            "background-attachment":    "fixed",
+            "height":                   "75vh",
+            "width":                    "100%"
+        })
+    {% endif %}
+    });
+</script>

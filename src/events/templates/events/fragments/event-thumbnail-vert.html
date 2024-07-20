@@ -73,8 +73,7 @@
         {% else %}
             <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
         {% endif %}
-            <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a>
-            {% trans "created" %} {{ event.created|timesince }} {% trans "ago" %}
+            <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
         </p>
     </div>
 

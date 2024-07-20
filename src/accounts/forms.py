@@ -187,7 +187,8 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            "avatar", "nickname", "bio", "gender", "birth_day", "receive_newsletters",
+            "avatar", "cover", "nickname", "bio", "gender", "birth_day",
+            "allow_comments", "receive_newsletters",
         ]
         widgets = {
             "nickname": forms.TextInput(
@@ -211,10 +212,14 @@ class UserProfileForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                 }),
+            "allow_comments": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                }),
             "receive_newsletters": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
-                })
+                }),
             }
 
     def clean(self):
@@ -292,8 +297,8 @@ class UserProfileEditForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = [
-            "avatar", "nickname", "bio", "gender", "birth_day",
-            "receive_newsletters",
+            "avatar", "cover", "nickname", "bio", "gender", "birth_day",
+            "allow_comments", "receive_newsletters",
         ]
         widgets = {
             "nickname": forms.TextInput(
@@ -317,10 +322,14 @@ class UserProfileEditForm(forms.ModelForm):
                     "class":        "form-control",
                     # "type":         "date",
                 }),
+            "allow_comments": forms.CheckboxInput(
+                attrs={
+                    "class":        "form-check-input",
+                }),
             "receive_newsletters": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
-                })
+                }),
             }
 
     def clean(self):

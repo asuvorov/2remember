@@ -20,9 +20,7 @@
 
     {% block extra_meta %}{% endblock %}
     {% block extra_style %}{% endblock %}
-    {% block extra_script %}
-        {% include "fragments/head-extra-script.html" %}
-    {% endblock %}
+    {% block extra_script %}{% endblock %}
     {% block extra_head %}{% endblock %}
     </head>
 
@@ -31,50 +29,48 @@
             <img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Loading..."/>
         </div>
 
-        <header data-bs-theme="dark">
-        {% block navbar %}
-            {% include "fragments/navbar.html" %}
+        <div class="bg-image">
+            <header data-bs-theme="dark">
+            {% block navbar %}
+                {% include "fragments/navbar.html" %}
+            {% endblock %}
+
+            {% block important_message %}
+            {% endblock %}
+
+            {% block breadcrumbs %}
+            {% endblock %}
+
+            {% block header %}
+            {% endblock %}
+
+            {% block carousel %}
+            {% endblock %}
+            </header>
+
+            <main class="container">
+            {% block content %}
+            {% endblock %}
+
+            {% block extra_content %}
+            {% endblock %}
+
+            {% block footer %}
+                {% include "fragments/footer.html" %}
+            {% endblock %}
+            </main>
+
+            <!-- Modals -->
+        {% if not request.user.is_authenticated %}
+            {% include "accounts/modals/forgot-password-popup-modal.html" %}
+        {% endif %}
+
+            {% include "home/modals/privacy-policy-popup-modal.html" %}
+            {% include "home/modals/user-agreement-popup-modal.html" %}
+
+        {% block script %}
+            {% include "fragments/body-script.html" %}
         {% endblock %}
-
-        {% block important_message %}
-        {% endblock %}
-
-        {% block breadcrumbs %}
-        {% endblock %}
-
-        {% block header %}
-        {% endblock %}
-
-        {% block carousel %}
-        {% endblock %}
-        </header>
-
-<!-- Background image -->
-<!-- <div class="bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg'); height:50vh; width:100%; overflow:hidden;"></div> -->
-<!-- Background image -->
-
-        <main class="container">
-        {% block content %}
-        {% endblock %}
-
-        {% block extra_content %}
-        {% endblock %}
-
-        {% block footer %}
-            {% include "fragments/footer.html" %}
-        {% endblock %}
-        </main>
-
-        <!-- Modals -->
-    {% if not request.user.is_authenticated %}
-        {% include "accounts/modals/forgot-password-popup-modal.html" %}
-    {% endif %}
-
-        {% include "home/modals/privacy-policy-popup-modal.html" %}
-        {% include "home/modals/user-agreement-popup-modal.html" %}
-
-    {% block script %}
-        {% include "fragments/body-script.html" %}
-    {% endblock %}
+        </div>
     </body>
 </html>

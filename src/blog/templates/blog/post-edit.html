@@ -9,6 +9,7 @@
     Input Parameters:
         :<request> - Request
 
+        :<post> - Post
         :<form> - Post Form
 {% endcomment %}
 
@@ -44,18 +45,35 @@
 
                 <!-- START POST APPEARENCE -->
                 <section id="post-appearance">
-                    <h3>{% trans "Appearance" %}</h3>
+                    <div class="card mb-3 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <div id="prerunner">
+                                {% if post.preview %}
+                                    {% generateimage "common:medium_fill" source=post.preview -- alt=post.preview.title class='img-fluid rounded-start' %}
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h3>{% trans "Appearance" %}</h3>
 
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*" required>
-                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                        <div class="col-md-6">
-                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*" required>
-                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*" required>
+                                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*" required>
+                                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -97,15 +115,38 @@
                 <!-- START POST CONTENT -->
                 <section id="post-content">
                     <h3>{% trans "Content" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
 
                     <div class="row g-3">
-                        <div class="orm-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                        <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
                             {{ form.content }}
                             <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
                 </section>
                 <!--  END  POST CONTENT -->
+
+                <!-- START POST COMPLETE -->
+                <section id="post-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="submit" class="post-edit">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Save Changes" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST COMPLETE -->
             </form>
         </div>
 
@@ -132,4 +173,8 @@
         return true;
     })
 </script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=post %}
 {% endblock %}
