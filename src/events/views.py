@@ -45,8 +45,9 @@ from ddcore.models.Attachment import (
 from ddcore.models.SocialLink import SocialLink
 
 # pylint: disable=import-error
-from accounts.utils import is_event_admin
-from accounts.views import is_profile_complete
+from accounts.utils import (
+    is_event_admin,
+    is_profile_complete)
 from app.forms import (
     AddressForm,
     SocialLinkFormSet)
@@ -59,7 +60,6 @@ from .forms import (
     AddEventMaterialsForm,
     # RoleFormSet,
     FilterEventForm)
-from .helpers import get_event_list
 from .models import (
     Category,
     Event,
@@ -68,6 +68,7 @@ from .models import (
     # ParticipationStatus,
     # Role
     )
+from .utils import get_event_list
 
 
 logger = logging.getLogger("py.warnings")
@@ -84,16 +85,6 @@ def event_list(request):
     cprint("***" * 27, "green")
     cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
     cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve Data from the Request.
-    # -------------------------------------------------------------------------
-    category_slug = request.GET.get("cat", None)
 
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
@@ -104,15 +95,7 @@ def event_list(request):
     #     status=EventStatus.UPCOMING,
     #     start_date__gte=datetime.date.today(),
     #
-    events = get_event_list(request)
-
-    if category_slug:
-        category = get_object_or_None(
-            Category,
-            slug=category_slug)
-
-        if category:
-            events = events.filter(category=category.category)
+    events, page_total, page_number = get_event_list(request)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -122,53 +105,14 @@ def event_list(request):
         qs=events)
 
     # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID.
+    # --- Return Response.
     # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            events = events.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Event List.
-    # -------------------------------------------------------------------------
-    events = events[:settings.MAX_EVENTS_PER_QUERY]
-    cprint("[---  INFO   ---] EVENTS          : %s" % events, "cyan")
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        events,
-        settings.MAX_EVENTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        events = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        events = paginator.page(paginator.num_pages)
-
-    cprint("[---  INFO   ---] EVENTS          : %s" % events, "cyan")
-
     return render(
         request, "events/event-list.html", {
             "events":       events,
             "page_title":   _("All Events"),
-            "page_total":   paginator.num_pages,
-            "page_number":  events.number,
+            "page_total":   page_total,
+            "page_number":  page_number,
             "filter_form":  filter_form,
         })
 
@@ -769,7 +713,11 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
     # -------------------------------------------------------------------------
+    event.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "events/event-details-info.html", {
             "event":                        event,

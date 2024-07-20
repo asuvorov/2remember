@@ -55,12 +55,13 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ request.user.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if request.user.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ request.user.profile.addressnotes }}</small></p>
                                     {% endif %}
                                 {% endif %}
+
+                                    <br/>
 
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
@@ -70,9 +71,9 @@
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
                                     {% endfor %}
-                                {% endif %}
 
                                     <br/>
+                                {% endif %}
 
                                     <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
                                     <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
@@ -129,45 +130,21 @@
             <!-- START PROFILE EVENTS -->
             <section id="profile-events">
                 <h3>{% trans "Events" %}</h3>
-                {% include "accounts/fragments/my-profile-events.html" %}
+                {% include "accounts/fragments/my-profile-event-list.html" %}
             </section>
             <!--  END  PROFILE EVENTS -->
 
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-                <div>
-                {% comment %}
-                    <p>
-                        <strong>{% trans "Hours spent" %}</strong>
-                        <span class="badge pull-right">{{ sum_of_hours_spent }}</span>
-                    </p>
-                {% endcomment %}
-                </div>
-            </section>
-            <!--  END  PROFILE COMPLETE -->
+            <hr>
 
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
+            <!-- START PROFILE COMMENTS -->
+            <section id="profile-comments">
+                {% include "app/fragments/instance-comments.html" with instance=request.user.profile %}
             </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
-
-            <!-- START PROFILE COMPLETE -->
-            <section id="profile-complete">
-            </section>
-            <!--  END  PROFILE COMPLETE -->
+            <!--  END  PROFILE COMMENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
             <section>
                 {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
             </section>
@@ -194,6 +171,8 @@
 </div>
 
 <!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=request.user.profile %}
 
 {% if request.user.is_authenticated %}
     {% include "accounts/modals/no-email-provided-popup-modal.html" %}

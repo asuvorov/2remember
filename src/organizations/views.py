@@ -12,10 +12,6 @@ from django.contrib.auth.decorators import (
 from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
-from django.core.paginator import (
-    EmptyPage,
-    PageNotAnInteger,
-    Paginator)
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.shortcuts import (
@@ -24,9 +20,7 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from termcolor import (
-    colored,
-    cprint)
+from termcolor import cprint
 
 from ddcore.models import (
     AttachedDocument,
@@ -37,13 +31,12 @@ from ddcore.models import (
     SocialApp,
     SocialLink)
 from ddcore.Utilities import (
-    get_client_ip,
     get_website_title,
     get_youtube_video_id,
     validate_url)
 
 # pylint: disable=import-error
-from accounts.views import is_profile_complete
+from accounts.utils import is_profile_complete
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
@@ -63,6 +56,7 @@ from .forms import CreateEditOrganizationForm
 from .models import (
     Organization,
     OrganizationStaff)
+from .utils import get_organization_list
 
 
 # =============================================================================
@@ -104,54 +98,20 @@ def organization_list(request):
     #         is_hidden=False,
     #         is_deleted=False,
     #     ).order_by("title")
-    organizations = Organization.objects.filter(
-        is_hidden=False,
-        is_deleted=False,
-    ).order_by("title")
 
     # -------------------------------------------------------------------------
-    # --- Filter the QuerySet by Tag ID.
+    # --- Retrieve Organization List.
     # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-    if tag_id:
-        try:
-            organizations = organizations.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception:
-            pass
+    organizations, page_total, page_number = get_organization_list(request)
 
     # -------------------------------------------------------------------------
-    # --- Slice the Organization List.
+    # --- Return Response.
     # -------------------------------------------------------------------------
-    organizations = organizations[:settings.MAX_ORGANIZATIONS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate the QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        organizations,
-        settings.MAX_ORGANIZATIONS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        organizations = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        organizations = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is our of Range (e.g. 9999), deliver last Page of
-        #     the Results.
-        organizations = paginator.page(paginator.num_pages)
-
     return render(
         request, "organizations/organization-list.html", {
             "organizations":    organizations,
-            "page_total":       paginator.num_pages,
-            "page_number":      organizations.number,
+            "page_total":       page_total,
+            "page_number":      page_number,
         })
 
 
@@ -189,11 +149,15 @@ def organization_directory(request):
     #         is_hidden=False,
     #         is_deleted=False,
     #     ).order_by("name")
-    organizations = Organization.objects.filter(
-        is_hidden=False,
-        is_deleted=False,
-    ).order_by("title")
 
+    # -------------------------------------------------------------------------
+    # --- Retrieve Organization List.
+    # -------------------------------------------------------------------------
+    organizations, page_total, page_number = get_organization_list(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "organizations/organization-directory.html", {
             "organizations":    organizations,
@@ -415,11 +379,6 @@ def organization_details(request, slug=None):
         organization.save()
 
     # -------------------------------------------------------------------------
-    # --- FIXME: Increment the Views Counter.
-    # -------------------------------------------------------------------------
-    # organization.increase_views_count(request)
-
-    # -------------------------------------------------------------------------
     # --- FIXME: Check, if authenticated User already subscribed to the Organization
     #     Newsletters and Notifications.
     # -------------------------------------------------------------------------
@@ -429,6 +388,14 @@ def organization_details(request, slug=None):
     #         request.user in organization.subscribers.all()):
     #     is_subscribed = True
 
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    organization.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,

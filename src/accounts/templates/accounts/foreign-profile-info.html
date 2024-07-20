@@ -8,6 +8,7 @@
     Input Parameters:
         :<request> - Request
 
+        :<account>       - Account.
         :[phone_numbers] - Phone Numbers
         :[social_links]  - Social Links.
 {% endcomment %}
@@ -87,12 +88,14 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
 
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
                                     {% endif %}
                                 {% endif %}
+
+                                    <br/>
 
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
@@ -118,12 +121,13 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
                                     {% endif %}
                                 {% endif %}
+
+                                    <br/>
 
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
@@ -133,9 +137,9 @@
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
                                     {% endfor %}
-                                {% endif %}
 
                                     <br/>
+                                {% endif %}
 
                                     <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                 </p>
@@ -178,9 +182,17 @@
             <!-- START PROFILE EVENTS -->
             <section id="profile-events">
                 <h3>{% trans "Events" %}</h3>
-                {% include "accounts/fragments/foreign-profile-events.html" %}
+                {% include "accounts/fragments/foreign-profile-event-list.html" %}
             </section>
             <!--  END  PROFILE EVENTS -->
+
+            <hr>
+
+            <!-- START PROFILE COMMENTS -->
+            <section id="profile-comments">
+                {% include "app/fragments/instance-comments.html" with instance=account.profile %}
+            </section>
+            <!--  END  PROFILE COMMENTS -->
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
@@ -216,13 +228,42 @@
 
 <!-- Modals -->
 
+{% include "app/modals/instance-view-on-map-modal.html" with instance=account.profile %}
+
 {% if request.user.is_authenticated %}
+    {% include "app/modals/comment-add-modal.html" %}
     {% include "app/modals/complaint-add-modal.html" %}
 
-    {% include "invites/modals/invite-to-event-popup-modal.html" %}
-    {% include "invites/modals/invite-to-organization-popup-modal.html" %}
+    {# include "invites/modals/invite-to-event-popup-modal.html" #}
+    {# include "invites/modals/invite-to-organization-popup-modal.html" #}
 {% endif %}
 
 <!-- Scripts -->
 
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+        event.preventDefault();
+
+        $("#complaintAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Housekeeping.                                                     ***/
+    /*************************************************************************/
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='account_id']").val("{{ account.profile.id }}");
+        $("#complaint-add-modal-form").find("input[name='account_id']").val("{{ account.profile.id }}");
+    });
+</script>
 {% endblock %}

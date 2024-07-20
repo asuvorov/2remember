@@ -3,16 +3,24 @@
 """
 
 from django.contrib import admin
-from django.contrib.contenttypes import admin as ct_admin
 
 from rangefilter.filters import DateRangeFilter
 
-from ddcore.models.Comment import Comment
-from ddcore.models.Complaint import Complaint
-from ddcore.models.SocialLink import SocialLink
+from ddcore.admin import (
+    # AddressInline,
+    AttachedImageInline,
+    AttachedDocumentInline,
+    AttachedVideoUrlInline,
+    AttachedUrlInline,
+    CommentInline,
+    ComplaintInline,
+    ImagesAdminMixin,
+    PhoneNumberInline,
+    SocialLinkInline,
+    RatingInline,
+    ViewInline)
 
 # pylint: disable=import-error
-from app.admin import ImagesAdminMixin
 
 from .models import (
     Category,
@@ -43,7 +51,7 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "classes":  (""),
             "fields":   (
                 ("preview", "preview_image_tag"),
-                "title",
+                ("title", "slug"),
                 "description",
                 "category",
                 ("color", "icon", "image"),
@@ -53,8 +61,8 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
 
     list_display = [
         "id",
-        "title", "preview", "preview_image_tag",
-        "category", "color", "icon", "image",
+        "title", "slug", "category",
+        "preview", "preview_image_tag",
         "created", "modified",
     ]
     list_display_links = [
@@ -65,6 +73,7 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "title",
     ]
     readonly_fields = [
+        "slug",
         "preview_image_tag",
     ]
     inlines = []
@@ -113,45 +122,6 @@ admin.site.register(Category, CategoryAdmin)
 #     model = Role
 
 
-class CommentInline(ct_admin.GenericTabularInline):
-    """Comment Inline."""
-
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
-
-    model = Comment
-
-
-class ComplaintInline(ct_admin.GenericTabularInline):
-    """Complaint Inline."""
-
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
-
-    model = Complaint
-
-
-class SocialLinkInline(ct_admin.GenericTabularInline):
-    """Social Link Inline."""
-
-    classes = [
-        "grp-collapse grp-closed",
-    ]
-    inline_classes = [
-        "grp-collapse grp-closed",
-    ]
-
-    model = SocialLink
-
-
 # -----------------------------------------------------------------------------
 # --- Event Admin.
 # -----------------------------------------------------------------------------
@@ -175,14 +145,13 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "classes":  (""),
             "fields":   (
                 "author",
-                ("preview", "preview_image_tag", "cover", "cover_image_tag"),
-                "event_url",
-                "title",
+                ("preview", "preview_image_tag"),
+                ("cover", "cover_image_tag"),
+                ("title", "event_url"),
                 "description",
-                "category",
-                ("status", "application"),
+                ("category", "visibility", "organization"),
+                # ("status", "application"),
                 # "duration",
-                "organization",
                 # "achievements",
                 # "closed_reason",
             ),
@@ -208,7 +177,8 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("start_date", "start_time", "start_tz", "start_date_time_tz"),
+                "start_date",
+                # ("start_date", "start_time", "start_tz", "start_date_time_tz"),
             ),
         }),
         # ("Contact Person", {
@@ -225,7 +195,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                "is_newly_created",
+                ("allow_comments", "is_newly_created"),
                 # "allow_reenter",
                 # ("accept_automatically", "acceptance_text",),
             ),
@@ -233,15 +203,11 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     )
 
     list_display = [
-        "id",
-        "title", "preview_image_tag", "cover_image_tag",
-        # "status",
-        "event_url",
-        # "start_date", "start_time", "start_tz",
-        "organization",
-        # "application",
-        "author",
-        "created", "modified",
+        "id", "title", "author",
+        "preview_image_tag", "cover_image_tag", "start_date",
+        "organization", "visibility",
+        "addressless", "allow_comments", "is_newly_created",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "title",
@@ -263,9 +229,15 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     inlines = [
         # RoleInline,
         SocialLinkInline,
+        # ParticipationInline,
+        AttachedImageInline,
+        AttachedDocumentInline,
+        AttachedVideoUrlInline,
+        AttachedUrlInline,
         CommentInline,
         ComplaintInline,
-        # ParticipationInline,
+        RatingInline,
+        ViewInline,
     ]
 
     papertrail_type_filters = {

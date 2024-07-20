@@ -6,8 +6,9 @@ from django.contrib import admin
 
 from rangefilter.filters import DateRangeFilter
 
+from ddcore.admin import ImagesAdminMixin
+
 # pylint: disable=import-error
-from app.admin import ImagesAdminMixin
 
 from .models import Post
 
@@ -20,13 +21,26 @@ from .models import Post
 class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Post Admin."""
 
+    def post_url(self, obj):
+        """Docstring."""
+        try:
+            return f"<a href=\"{obj.public_url()}\" target=\"_blank\">{obj.public_url()}</a>"
+        except:
+            pass
+
+        return ""
+
+    post_url.short_description = "Post URL"
+    post_url.allow_tags = True
+
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "author",
-                ("preview", "preview_image_tag", "cover", "cover_image_tag"),
-                "title",
+                ("preview", "preview_image_tag"),
+                ("cover", "cover_image_tag"),
+                ("title", "post_url"),
                 "description",
                 "content",
                 "status",
@@ -40,18 +54,26 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("tags", "hashtag"),
             ),
         }),
+        ("Flags", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                "allow_comments",
+            ),
+        }),
     )
 
     list_display = [
-        "id",
-        "title", "preview_image_tag", "cover_image_tag", "description", "status", "author",
-        "created", "modified",
+        "id", "title", "author",
+        "preview_image_tag", "cover_image_tag", "status", "allow_comments",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "id", "title",
     ]
     list_filter = [
-        "status", "author",
+        "author", "status",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
@@ -59,7 +81,7 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "title", "description", "author",
     ]
     readonly_fields = [
-        "preview_image_tag", "cover_image_tag",
+        "preview_image_tag", "cover_image_tag", "post_url",
     ]
 
     papertrail_type_filters = {

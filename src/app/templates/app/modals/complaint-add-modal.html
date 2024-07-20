@@ -16,14 +16,20 @@
                     <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
 
-                    <p class="note">
-                        <span class="label label-danger">{% trans "Disclaimer" %}</span><br/>
-                        <strong>{% trans "So, you are going to leave a Complaint." %}</strong><br/>
-
-                        Before proceeding, evaluate all the Cons and Pros, and continue only if it is worth it.<br/>
-                        Please, be honest.<br/>
-                        For providing knowingly false and slandering Information, your Account will be blocked, and the IP Address blacklisted, for Life.<br/>
-                    </p>
+                    <div class="alert alert-danger" role="alert">
+                        <strong>
+                        {% blocktrans %}
+                            Disclaimer<br/>So, you are going to leave a Complaint.
+                        {% endblocktrans %}
+                        </strong><br/>
+                        <p>
+                        {% blocktrans %}
+                            Before proceeding, evaluate all the Cons and Pros, and continue only if it is worth it.<br/>
+                            Please, be honest.<br/>
+                            For providing knowingly false and slandering Information, your Account will be blocked, and the IP Address blacklisted, for Life.
+                        {% endblocktrans %}
+                        </p>
+                    </div>
 
                     <div class="form-group">
                         <label for="id_complaint_text">{% trans "Please, enter a Complaint" %}</label>

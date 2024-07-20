@@ -148,9 +148,7 @@ class APIVersionViewSet(APIView):
             "code":         2000,
             "message":      "SUCCESS",
             "response":     {
-                "version":      "0.0.0",  # get_version(settings.PROJECT_PATH, "__init__.py"),
-                "version_num":  settings.PRODUCT_VERSION_NUM,
-                "version_full": settings.PRODUCT_VERSION_FULL,
+                "version":      settings.PRODUCT_VERSION_NUM,
             }
         }, status=status.HTTP_200_OK)
 

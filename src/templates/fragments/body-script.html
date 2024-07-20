@@ -15,27 +15,6 @@
     /*** Custom Scripts                                                    ***/
     /*************************************************************************/
     // ------------------------------------------------------------------------
-    // --- Avatar Preview
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $("div#prerunner img").attr("src", e.target.result);
-                $("div#prerunner ing").parent().show();
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#id_avatar").change(function () {
-        $("#spinner").fadeIn("slow");
-
-        readURL(this);
-
-        $("#spinner").fadeOut("slow");
-    });
-
-    // ------------------------------------------------------------------------
     // --- Fix Footer
     //$('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
     //    fixFooter();
@@ -70,37 +49,6 @@
         }
     }
 
-    // ------------------------------------------------------------------------
-    // --- Toggle collapsing Area
-    // $("a[data-toggle='collapse']").click(function () {
-    //     $(this).find("i.toggle-icon").toggleClass(
-    //         "fa-chevron-up fa-chevron-down");
-    // })
-    // $(".collapse").on("shown.bs.collapse", function () {
-    //     fixFooter();
-    // })
-    // $(".collapse").on("hidden.bs.collapse", function () {
-    //     fixFooter();
-    // })
-
-    // ------------------------------------------------------------------------
-    // --- Wrapper for Avatar Image File Input Field
-    // var wrapper = $("<div/>").css({
-    //     height:         0,
-    //     width:          0,
-    //     "overflow":     "hidden"
-    // });
-    // var fileInput = $("#id_avatar:file").wrap(wrapper);
-
-    // fileInput.change(function () {
-    //     $this = $(this);
-    //     $("#file").val($this.val());
-    // })
-
-    // $("#file").click(function () {
-    //     fileInput.click();
-    // }).show();
-
     /*************************************************************************/
     /*** Bootstrap Plug-ins                                                ***/
     /*************************************************************************/
@@ -130,20 +78,20 @@
 
     // ------------------------------------------------------------------------
     // --- Initialize Max Length
-    $("[maxlength]").maxlength({
+    $("input[maxlength]").maxlength({
         alwaysShow:         false,
-        threshold:          10,
-        warningClass:       "label label-success",
-        limitReachedClass:  "label label-danger",
-        placement:          "top-right",
+        threshold:          25,
+        warningClass:       "badge text-bg-warning",
+        limitReachedClass:  "badge text-bg-danger",
+        placement:          "top-right-inside",
         validate:           true
     });
-    $("[maxlength]").maxlength({
-        alwaysShow:         false,
-        threshold:          100,
-        warningClass:       "label label-success",
-        limitReachedClass:  "label label-danger",
-        placement:          "top-right",
+    $("textarea[maxlength]").maxlength({
+        alwaysShow:         true,
+        threshold:          50,
+        warningClass:       "badge text-bg-success",
+        limitReachedClass:  "badge text-bg-danger",
+        placement:          "top-right-inside",
         validate:           true
     });
 
@@ -183,28 +131,28 @@
     /*************************************************************************/
     // ------------------------------------------------------------------------
     // --- Initialize Bootpag
-    // $("#page-selection").bootpag({
-    //     total:          "{{ page_total }}",
-    //     maxVisible:     5,
-    //     page:           "{{ page_number }}",
-    //     leaps:          true,
-    //     prev:           "<i class='bi bi-angle-double-left '></i>",
-    //     next:           "<i class='bi bi-angle-double-right'></i>",
-    //     href:           "?page={{ page_number }}",
-    //     hrefVariable:   "{{ page_number }}",
-    //     firstLastUse:   true,
-    //     first:          "<i class='bi bi-long-arrow-left '></i>",
-    //     last:           "<i class='bi bi-long-arrow-right'></i>",
-    //     wrapClass:      "pagination",
-    //     activeClass:    "active",
-    //     disabledClass:  "disabled",
-    //     nextClass:      "next",
-    //     prevClass:      "prev",
-    //     lastClass:      "last",
-    //     firstClass:     "first"
-    // }).on("page", function (event, page_num) {
-    //     console.log(">>> PAGE:", page_num);
-    // });
+    $("#page-selection").bootpag({
+        total:          "{{ page_total }}",
+        maxVisible:     5,
+        page:           "{{ page_number }}",
+        leaps:          true,
+        prev:           "<i class='bi bi-chevron-double-left'></i>",
+        next:           "<i class='bi bi-chevron-double-right'></i>",
+        href:           "?page={{ page_number }}",
+        hrefVariable:   "{{ page_number }}",
+        firstLastUse:   true,
+        first:          "<i class='bi bi-arrow-left'></i>",
+        last:           "<i class='bi bi-arrow-right'></i>",
+        wrapClass:      "pagination justify-content-center",
+        activeClass:    "active",
+        disabledClass:  "disabled",
+        nextClass:      "next",
+        prevClass:      "prev",
+        lastClass:      "last",
+        firstClass:     "first"
+    }).on("page", function (event, page_num) {
+        console.log(">>> PAGE:", page_num);
+    });
 
     // ------------------------------------------------------------------------
     // --- Initialize BX-Slider
@@ -381,9 +329,18 @@
     // });
 
     $(document).ready(function () {
+        // --------------------------------------------------------------------
+        // --- Alter YouTube Video Links.
+        // --------------------------------------------------------------------
         $("a.gallery-videos").each(function () {
             var newUrl = $(this).attr("href").replace("youtube.com/watch?v=", "youtube.com/v/");
             $(this).attr("href", newUrl);
         });
+
+        // --------------------------------------------------------------------
+        // --- Pagination Styles.
+        // --------------------------------------------------------------------
+        $("ul.pagination li").addClass("page-item");
+        $("ul.pagination li a").addClass("page-link");
     });
 </script>

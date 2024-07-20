@@ -2,12 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
-from django.core.paginator import (
-    EmptyPage,
-    PageNotAnInteger,
-    Paginator)
 from django.http import (
     Http404,
     HttpResponseRedirect)
@@ -18,71 +13,29 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.views.decorators.cache import cache_page
 
-from .choices import PostStatus
 from .forms import CreateEditPostForm
-from .models import Post
+from .models import (
+    Post,
+    PostStatus)
+from .utils import get_post_list
 
 
-@cache_page(60 * 5)
+@cache_page(60 * 1)
 def post_list(request):
     """List of the all Blog Posts."""
     # -------------------------------------------------------------------------
-    # --- Retrieve Blog Posts
+    # --- Retrieve Blog Post List.
     # -------------------------------------------------------------------------
-    if request.user.is_staff:
-        posts = Post.objects.filter(
-            status__in=[
-                PostStatus.VISIBLE,
-                PostStatus.DRAFT,
-            ]
-        )
-    else:
-        posts = Post.objects.filter(
-            status__in=[
-                PostStatus.VISIBLE,
-            ]
-        )
+    posts, page_total, page_number = get_post_list(request)
 
     # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID
+    # --- Return Response.
     # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            posts = posts.filter(tags__id=tag_id).distinct()
-        except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Post List
-    # -------------------------------------------------------------------------
-    posts = posts[:settings.MAX_POSTS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet
-    # -------------------------------------------------------------------------
-    paginator = Paginator(posts, settings.MAX_POSTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        posts = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If page is not an integer, deliver first page.
-        posts = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If page is our of range (e.g. 9999), deliver last page of
-        #     results.
-        posts = paginator.page(paginator.num_pages)
-
     return render(
         request, "blog/post-list.html", {
             "posts":        posts,
-            "page_total":   paginator.num_pages,
-            "page_number":  posts.number,
+            "page_total":   page_total,
+            "page_number":  page_number,
         })
 
 
@@ -141,10 +94,13 @@ def post_details(request, slug):
         raise Http404
 
     # -------------------------------------------------------------------------
-    # --- Increment Views Counter
+    # --- Increment Views Counter.
     # -------------------------------------------------------------------------
-    # post.increase_views_count(request)
+    post.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "blog/post-details.html", {
             "post":     post,

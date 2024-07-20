@@ -53,8 +53,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ organization.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if organization.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ organization.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}
@@ -98,7 +97,6 @@
                             {% else %}
                                 <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                             {% endif %}
-                                {% trans "Posted by" %}
                                 <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
                                 {{ organization.created|timesince }} {% trans "ago" %}
                             </div>
@@ -125,31 +123,13 @@
 
             <!-- START ORGANIZATION ATTACHMENTS -->
             <section id="organization-attachments">
-                <h3>
-                    {% trans "Attachments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'organization-edit' organization.slug %}#organization-attachments"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-attachments.html" with instance=organization %}
             </section>
             <!--  END  ORGANIZATION ATTACHMENTS -->
 
             <!-- START ORGANIZATION COMMENTS -->
             <section id="organization-comments">
-            {% comment %}
-                <h3>
-                    {% trans "Comments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-comments" aria-expanded="false" aria-controls="collapse-comments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    <a class="add-comment btn btn-primary" href="#"><i class="bi bi-plus"></i></a>
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-comments.html" with instance=organization %}
-            {% endcomment %}
             </section>
             <!--  END  ORGANIZATION COMMENTS -->
         </div>
@@ -214,11 +194,12 @@
 </div>
 
 <!-- Modals -->
+
 {% include "app/modals/instance-view-on-map-modal.html" with instance=organization %}
 
 {% if request.user.is_authenticated %}
-    {# include "app/modals/comment-add-modal.html" #}
-    {# include "app/modals/complaint-add-modal.html" #}
+    {% include "app/modals/comment-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
 {% endif %}
 
 <!-- Scripts -->
@@ -228,5 +209,63 @@
     /*** Global Variables                                                  ***/
     /*************************************************************************/
     var element;
+
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var organization_id = "{{ organization.id }}";
+        var event = window.event || event;
+        event.preventDefault();
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", organization_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Organization."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+        event.preventDefault();
+
+        $("#complaintAddPopupModal").modal("show");
+    })
+
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+        $("#complaint-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+    });
 </script>
 {% endblock %}

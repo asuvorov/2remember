@@ -40,7 +40,7 @@ Event Details - Info
                     <span class="label label-warning">{% trans "Location is not provided" %}</span>
                 {% else %}
                     {{ event.address.full_address|default:"N/A" }}
-                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#instanceViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
                 {% endif %}
 
                 {% if event.address.notes %}
@@ -315,10 +315,10 @@ Event Details - Info
     {% else %}
         <div class="panel panel-danger">
             <div class="panel-body">
-                <p class="note">
-                    <span class="label label-warning">{% trans "Information hidden" %}</span><br/>
-                    {% trans "Log in to see the Phone # and Email Address of the Contact Person." %}
-                </p>
+                <div class="alert alert-warning" role="alert">
+                    <strong>{% trans "Information hidden" %}</strong><br/>
+                    <p>{% trans "Log in to see the Phone # and Email Address of the Contact Person." %}</p>
+                </div>
             </div>
         </div>
     {% endif %}

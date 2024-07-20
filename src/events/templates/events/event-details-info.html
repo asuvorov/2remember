@@ -53,8 +53,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ event.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if event.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ event.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}
@@ -88,7 +87,6 @@
                             {% else %}
                                 <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                             {% endif %}
-                                {% trans "Posted by" %}
                                 <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
                                 {{ event.created|timesince }} {% trans "ago" %}
                             </div>
@@ -126,31 +124,15 @@
 
             <!-- START EVENT ATTACHMENTS -->
             <section id="event-attachments">
-                <h3>
-                    {% trans "Attachments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'event-edit' event.slug %}#event-attachments"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-attachments.html" with instance=event %}
             </section>
             <!--  END  EVENT ATTACHMENTS -->
 
+            <hr>
+
             <!-- START EVENT COMMENTS -->
             <section id="event-comments">
-            {% comment %}
-                <h3>
-                    {% trans "Comments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-comments" aria-expanded="false" aria-controls="collapse-comments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    <a class="add-comment btn btn-primary" href="#"><i class="bi bi-plus"></i></a>
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-comments.html" with instance=event %}
-            {% endcomment %}
             </section>
             <!--  END  EVENT COMMENTS -->
         </div>
@@ -199,20 +181,20 @@
 {% include "app/modals/instance-view-on-map-modal.html" with instance=event %}
 
 {% if request.user.is_authenticated %}
+    {% include "app/modals/comment-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
+
     {% if event.author == request.user %}
-        {% include "events/modals/event-create-modal.html" %}
-        {% include "events/modals/event-complete-modal.html" %}
-        {% include "events/modals/event-participation-remove-modal.html" %}
+        {# include "events/modals/event-create-modal.html" #}
+        {# include "events/modals/event-complete-modal.html" #}
+        {# include "events/modals/event-participation-remove-modal.html" #}
     {% else %}
-        {% include "events/modals/event-participation-post-modal.html" %}
-        {% include "events/modals/event-participation-withdraw-modal.html" %}
-        {% include "events/modals/event-selfreflection-submit-modal.html" %}
-        {% include "events/modals/event-not-participated-modal.html" %}
+        {# include "events/modals/event-participation-post-modal.html" #}
+        {# include "events/modals/event-participation-withdraw-modal.html" #}
+        {# include "events/modals/event-selfreflection-submit-modal.html" #}
+        {# include "events/modals/event-not-participated-modal.html" #}
         {% include "events/modals/event-rate-modal.html" %}
     {% endif %}
-
-    {# include "app/modals/comment-add-modal.html" #}
-    {# include "app/modals/complaint-add-modal.html" #}
 {% endif %}
 
 <!-- Scripts -->
@@ -223,5 +205,67 @@
     /*************************************************************************/
     var participation_id;
     var element;
+
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var event_id = "{{ event.id }}";
+        var event = window.event || event;
+        event.preventDefault();
+
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", event_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Event."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+        event.preventDefault();
+
+        $("#complaintAddPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Housekeeping.                                                     ***/
+    /*************************************************************************/
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='event_id']").val("{{ event.id }}");
+        $("#complaint-add-modal-form").find("input[name='event_id']").val("{{ event.id }}");
+    });
 </script>
 {% endblock %}

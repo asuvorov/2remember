@@ -95,12 +95,10 @@ def user_agreement(request):
 def our_team(request):
     """Docstring."""
     teams = Team.objects.all()
-    members = TeamMember.objects.all()
 
     return render(
         request, "home/our-team.html", {
             "teams":    teams,
-            "members":  members,
         })
 
 

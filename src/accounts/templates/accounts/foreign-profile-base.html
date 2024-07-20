@@ -80,3 +80,7 @@
 
 {% block content %}
 {% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=account.profile %}
+{% endblock %}
