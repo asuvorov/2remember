@@ -53,8 +53,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ organization.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if organization.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ organization.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}
@@ -205,6 +204,7 @@
 </div>
 
 <!-- Modals -->
+
 {% include "app/modals/instance-view-on-map-modal.html" with instance=organization %}
 
 {% if request.user.is_authenticated %}

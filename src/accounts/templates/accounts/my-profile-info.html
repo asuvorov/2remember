@@ -55,8 +55,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ request.user.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if request.user.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ request.user.profile.addressnotes }}</small></p>
                                     {% endif %}
@@ -72,9 +71,9 @@
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
                                     {% endfor %}
-                                {% endif %}
 
                                     <br/>
+                                {% endif %}
 
                                     <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
                                     <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
@@ -172,6 +171,8 @@
 </div>
 
 <!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=request.user.profile %}
 
 {% if request.user.is_authenticated %}
     {% include "accounts/modals/no-email-provided-popup-modal.html" %}
