@@ -3,9 +3,10 @@ X.Y.Z (YYYY-MM-DD)
 
 New
 ~~~
-- Added commenting on the Instances.
-- Added Cover Images on the Instances' view/edit Pages.
+- Added commenting Feature on Instances.
+- Added Cover Images on Instances view/edit Pages.
 - Added Google Analytics Tag.
+- Added view on Map Feature for Instances.
 
 Changes
 ~~~~~~~
