@@ -43,7 +43,7 @@
     }
 
     $(function () {
-        var url = "{% url 'tmp-upload' %}";
+        var url = "{% url 'api-tmp-upload' %}";
         var csrftoken = "{{ csrf_token }}";
 
         $("input[name='tmp_images_path']").each( function (key, obj) {
@@ -180,7 +180,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'remove-upload' %}", {
+        $.post("{% url 'api-remove-upload' %}", {
             "type":                 type,
             "id":                   id,
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()
@@ -204,7 +204,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'remove-link' %}", {
+        $.post("{% url 'api-remove-link' %}", {
             "type":                 type,
             "id":                   id,
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()

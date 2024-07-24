@@ -48,6 +48,7 @@ from ddcore.models.SocialLink import SocialLink
 from accounts.utils import (
     is_event_admin,
     is_profile_complete)
+from app import attachment_processors
 from app.forms import (
     AddressForm,
     SocialLinkFormSet)
@@ -484,7 +485,7 @@ def event_create(request):
 
         if (
                 form.is_valid() and
-                aform.is_valid()): # and
+                aform.is_valid()):  # and
                 # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
@@ -887,48 +888,11 @@ def event_edit(request, slug):
             #     social_link.object_id = event.id
             #     social_link.save()
 
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Event Images/Documents.
-            cprint("[---  INFO   ---] FILES          : %s" % form.cleaned_data["tmp_files"], "cyan")
-
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
-
-                cprint("[---  INFO   ---] TMP  FILE      : %s" % tmp_file, "cyan")
-                cprint("[---  INFO   ---] MIME TYPE      : %s" % mime_type, "cyan")
-
-                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            cprint("[---  INFO   ---] LINKS          : %s" % request.POST["tmp_links"], "cyan")
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
+            attachment_processors.process(
+                content_type=ContentType.objects.get_for_model(event),
+                object_id=event.id,
+                tmp_files=form.cleaned_data["tmp_files"],
+                tmp_links=request.POST["tmp_links"])
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).

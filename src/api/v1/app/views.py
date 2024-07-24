@@ -5,6 +5,7 @@
 import datetime
 import inspect
 import json
+import logging
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -31,8 +32,6 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-
-# import papertrail
 
 from annoying.functions import get_object_or_None
 from termcolor import cprint
@@ -63,6 +62,132 @@ from events.models import (
 from organizations.models import (
     Organization,
     OrganizationStaff)
+
+
+logger = logging.getLogger("py.warnings")
+
+
+# =============================================================================
+# ===
+# === ATTACHMENTS
+# ===
+# =============================================================================
+class TmpUploadViewSet(APIView):
+    """Temporary Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    def post(self, request):
+        """Upload temporary File."""
+        if not request.FILES:
+            return HttpResponseBadRequest(
+                _("No Files attached."))
+
+        tmp_file = TemporaryFile.objects.create(
+            file=request.FILES["file"],
+            name=request.FILES["file"].name)
+
+        result = {
+            "name":         tmp_file.file.name,
+            "type":         mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
+            "size":         tmp_file.file.size,
+            "tmp_file_id":  tmp_file.id
+        }
+
+        return HttpResponse(
+            json.dumps({
+                "files":    [result]
+            }),
+            content_type="application/json"
+        )
+
+
+tmp_upload = TmpUploadViewSet.as_view()
+
+
+class RemoveUploadViewSet(APIView):
+    """Remove Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    def post(self, request):
+        """Remove uploaded File."""
+        found = False
+
+        upload_type = request.POST.get("type")
+        upload_id = request.POST.get("id")
+
+        if upload_type and upload_id:
+            if upload_type == "document":
+                instance = get_object_or_None(AttachedDocument, id=upload_id)
+            elif upload_type == "image":
+                instance = get_object_or_None(AttachedImage, id=upload_id)
+            elif upload_type == "temp":
+                instance = get_object_or_None(TemporaryFile, id=upload_id)
+
+            if instance:
+                try:
+                    instance.file.delete()
+                except Exception as exc:
+                    print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+
+                instance.delete()
+                found = True
+
+        return HttpResponse(
+            json.dumps({
+                "deleted":  found,
+            }),
+            content_type="application/json"
+        )
+
+
+remove_upload = RemoveUploadViewSet.as_view()
+
+
+class RemoveLinkViewSet(APIView):
+    """Remove Link View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    def post(self, request):
+        """Remove Link."""
+        found = False
+
+        upload_type = request.POST.get("type")
+        upload_id = request.POST.get("id")
+
+        if upload_type and upload_id:
+            if upload_type == "regular":
+                instance = get_object_or_None(AttachedUrl, id=upload_id)
+            elif upload_type == "video":
+                instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
+
+            if instance:
+                instance.delete()
+                found = True
+
+        return HttpResponse(
+            json.dumps({
+                "deleted":  found,
+            }),
+            content_type="application/json"
+        )
+
+
+remove_link = RemoveLinkViewSet.as_view()
 
 
 # =============================================================================

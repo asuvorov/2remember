@@ -16,11 +16,12 @@ from taggit.forms import TagWidget
 
 from ddcore.models.Attachment import TemporaryFile
 
-from .models import (
-    Event,
-    Role,
+from app.choices import (
     month_choices,
     day_of_month_choices)
+from .models import (
+    Event,
+    Role)
 
 
 # -----------------------------------------------------------------------------

@@ -2,6 +2,11 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+from app.choices import (
+    Month, month_choices,
+    DayOfWeek, day_of_week_choices,
+    day_of_month_choices)
+
 from .models import (
     EventCategory, event_category_choices,
     EventCategoryColors, event_category_colors,
@@ -11,9 +16,7 @@ from .models import (
     EventStatus,
     # ParticipationRemoveMode,
     # ParticipationStatus, participation_status_choices,
-    Month, month_choices,
-    DayOfWeek, day_of_week_choices,
-    day_of_month_choices)
+    )
 
 
 def pb_event_choices(request):
