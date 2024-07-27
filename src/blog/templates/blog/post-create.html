@@ -73,7 +73,7 @@
                             <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
-                            {{ form.description }}
+                            {{ form.description }}<br/>
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
@@ -98,7 +98,7 @@
                     <h3>{% trans "Content" %}</h3>
                     <div class="row g-3">
                         <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
-                            {{ form.content }}
+                            {{ form.content }}<br/>
                             <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>

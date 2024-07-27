@@ -185,18 +185,23 @@ def organization_create(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
@@ -489,11 +494,14 @@ def organization_edit(request, slug=None):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
-        user=request.user, instance=organization)
+        request.POST or None,
+        request.FILES or None,
+        user=request.user,
+        instance=organization)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(

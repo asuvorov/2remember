@@ -23,7 +23,7 @@ VERSION_MAJOR = 0
 VERSION_MINOR = 3
 VERSION_PATCH = 0
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC1"
 
 
 ###############################################################################

@@ -61,6 +61,11 @@ class VerboseJSONFormatter(json_log_formatter.VerboseJSONFormatter):
 class Format:
     """Helper Class for formatting Logs of specific Types."""
 
+    CENSORED_KEYS = ("email", "username", "password", "retry")
+    MIN_MASKED_STARS = 3
+    MAX_MASKED_STARS = 16
+    MAX_MASKED_CHARS = 3
+
     @classmethod
     def exception(cls, exc, request_id=None, log_extra=None, **kwargs):
         """Format Exceptions with a Traceback Information.
@@ -252,7 +257,47 @@ class Format:
             logconst.LOG_KEY_NEW_RELIC_APP_NAME:    config("NEW_RELIC_APP_NAME", default="Unknown"),
             **kwargs,
         })
+
+        # ---------------------------------------------------------------------
         return json.loads(
             json.dumps(
-                dict(sorted(log_extra.items(), key=lambda item: item[0])),
+                dict(sorted(cls.validation(log_extra).items(), key=lambda item: item[0])),
                 cls=JSONEncoder))
+
+    @classmethod
+    def validation(cls, param_dict: dict):
+        """Mask/redact sensitive Data.
+
+        Parameters
+        ----------
+        param_dict          :dict       Extra logging Dictionary.
+
+        Returns
+        -------
+                            :dict
+        Raises
+        ------
+
+        """
+        censored_param_dict = param_dict.copy()
+
+        for key, val in censored_param_dict.items():
+            # -------------------------------------------------------------
+            # --- Parse nested Dictionaries.
+            if isinstance(val, dict):
+                censored_param_dict[key] = cls.validation(val)
+            elif (
+                    key in cls.CENSORED_KEYS and
+                    isinstance(val, str)):
+                if len(val) < 5:
+                    censored_param_dict[key] = "*" * len(val)
+                else:
+                    # --- Calculate Number of Characters around the redacted String.
+                    trail_chars = min(cls.MAX_MASKED_CHARS, (len(val) - cls.MIN_MASKED_STARS)//2)
+
+                    # --- Calculate Number of Stars in the redacted String.
+                    trail_stars = min(cls.MAX_MASKED_STARS, len(val[trail_chars:-trail_chars]))
+
+                    censored_param_dict[key] = f"{val[:trail_chars]}{'*' * trail_stars}{val[-trail_chars:]}"
+
+        return censored_param_dict

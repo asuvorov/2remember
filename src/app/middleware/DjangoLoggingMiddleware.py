@@ -40,7 +40,6 @@ class DjangoLoggingMiddleware:
             "request_files":    request.FILES,
             # "request_meta":     request.META,
             "request_headers":  dict(request.headers.items()),
-            "request_length":   len(request.body),
             # "request_session":  dict(request.session.items()),
             "request_user":     request.user,
             "source_ip":        get_client_ip(request),
@@ -52,6 +51,16 @@ class DjangoLoggingMiddleware:
         try:
             log_req.update({
                 "geo_data": request.geo_data,
+            })
+        except Exception as exc:
+            logger.exception("", extra=Format.exception(
+                exc=exc,
+                request_id=request.request_id,
+                log_extra=log_req))
+
+        try:
+            log_req.update({
+                "request_length":   len(request.body),
             })
         except Exception as exc:
             logger.exception("", extra=Format.exception(
