@@ -1,10 +1,14 @@
 files:
-  - path: /opt/apps/2remember/logs/json.log"
+  - path: ~/Workspace/2remember/src/logs/json.log
+    tag:  local
+  - path: /opt/apps/2remember/src/logs/json.log
     tag:  site
-  - path: /var/log/nginx/access.log"
+  - path: /var/log/nginx/access.log
     tag:  nginx-access
-  - path: /var/log/nginx/error.log"
+  - path: /var/log/nginx/error.log
     tag:  nginx-error
+  - path: /var/log/mysql/error.log
+    tag:  mysql-error
 destination:
   host:     logs4.papertrailapp.com
   port:     50129
