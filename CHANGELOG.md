@@ -1,6 +1,9 @@
 X.Y.Z (YYYY-MM-DD)
 ------------------
 
+0.3.0 (2024-07-27)
+------------------
+
 New
 ~~~
 - Added basic default logging Logic and Decorators.
@@ -21,6 +24,7 @@ Changes
 
 Doc
 ~~~
+Added Documentation for setting up logging.
 
 Fix
 ~~~

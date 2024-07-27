@@ -38,11 +38,11 @@ def package_files(directory, home_dir):
 
 
 setup(
-    name="cuddly-disco",
-    version="0.0.0",
+    name="2remember",
+    version="0.3.0",
     description="",
     long_description=long_description,
-    url="https://github.com/asuvorov/cuddly-disco",
+    url="https://github.com/asuvorov/2remember",
     author="",
     author_email="",
     classifiers=[
