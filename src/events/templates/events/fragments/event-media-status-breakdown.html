@@ -16,25 +16,22 @@
 {% endcomment %}
 
 {% if event.author == request.user %}
-    <a class="btn btn-warning w-100" href="{% url 'event-edit' event.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Event" %}</a>
+    <a class="btn btn-warning w-100 mb-2" href="{% url 'event-edit' event.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Event" %}</a>
 {% else %}
     {% if not is_subscribed %}
-        <a class="btn btn-primary w-100 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
+        <a class="btn btn-primary w-100 mb-2 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
     {% endif %}
 
     <!-- Add Complaint -->
     {% if show_complain_form %}
-        <div class="alert alert-danger" role="alert">
+        <div class="alert alert-danger mb-2" role="alert">
             <strong">{% trans "Disclaimer" %}</strong><br/>
-            <p>
-            {% blocktrans %}
-                You see this Message, because in the you participated in the Event(s), organized by this event.<br/>
-                Let us know, if there's something to complain about it.
-            {% endblocktrans %}
-            </p>
+        {% blocktrans %}
+            Let us know, if there's something to complain about it.
+        {% endblocktrans %}
         </div>
 
-        <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
+        <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
     {% endif %}
 {% endif %}
 

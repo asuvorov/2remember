@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.utils.http import int_to_base36
@@ -17,6 +19,12 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from annoying.functions import get_object_or_None
+
+# pylint: disable=import-error
+from app.decorators import log_default
+
+
+logger = logging.getLogger(__name__)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -35,6 +43,7 @@ class EmailUpdateViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Email Update.
 
@@ -94,6 +103,7 @@ class EmailUpdateViewSet(APIView):
             "message":      _("Successfully updated the Email."),
         }, status=status.HTTP_200_OK)
 
+
 email_update = EmailUpdateViewSet.as_view()
 
 
@@ -113,6 +123,7 @@ class ForgotPasswordNotifyViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Forgot Password notify.
 
@@ -197,5 +208,6 @@ class ForgotPasswordNotifyViewSet(APIView):
         return Response({
             "message":      _("Successfully sent the Password Renewal Link."),
         }, status=status.HTTP_200_OK)
+
 
 forgot_password_notify = ForgotPasswordNotifyViewSet.as_view()

@@ -36,9 +36,9 @@ DEBUG_TOOLBAR = True
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..",))
 
 # We have 6 Types of Environments: "local", "dev", "test", "int", "staging", and "prod".
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
+ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
-DJANGO_SETTINGS_MODULE = os.environ.get("DJANGO_SETTINGS_MODULE", "settings.dev")
+DJANGO_SETTINGS_MODULE = config("DJANGO_SETTINGS_MODULE", default="settings.dev")
 
 ADMINS = (
     ("Artem Suvorov", "artem.suvorov@gmail.com"),
@@ -186,15 +186,14 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
-    "corsheaders",
-    "ddcore",
-
     "adminsortable2",
     # "bootstrap3_datetime",
-    # "djangosecure",
+    "corsheaders",
+    "ddcore",
     # "django_countries",
-    # "jquery",
     "djangoformsetjs",
+    # "djangosecure",
+    # "jquery",
     # "papertrail",
     "rangefilter",
     # "sslserver",
@@ -240,62 +239,84 @@ LOGGING = {
     "disable_existing_loggers":     False,
     "filters": {
         "require_debug_false": {
-            "()":                   "django.utils.log.RequireDebugFalse",
+            "()":           "django.utils.log.RequireDebugFalse",
         },
         "require_debug_true": {
-            "()":                   "django.utils.log.RequireDebugTrue",
+            "()":           "django.utils.log.RequireDebugTrue",
         },
     },
     "formatters": {
         "simple": {
-            "format":               "[%(asctime)s] %(levelname)s %(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
         },
         "verbose": {
-            "format":               "[%(asctime)s] %(levelname)s "
-                                    "[%(name)s.%(funcName)s:%(lineno)d] "
-                                    "%(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} [{name}.{funcName}:{lineno}] {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
+        },
+        "json": {
+            "()":           "app.logformat.VerboseJSONFormatter",
         },
     },
     "handlers": {
         "console": {
-            "level":                "INFO",
+            "level":        "INFO",
             "filters": [
                 "require_debug_true",
             ],
-            "class":                "logging.StreamHandler",
-            "formatter":            "simple",
+            "class":        "logging.StreamHandler",
+            "formatter":    "simple",
+        },
+        "json_file": {
+            "level":        "DEBUG",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/json.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "json",
+        },
+        "plain_file": {
+            "level":        "INFO",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/plain.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "verbose",
         },
         "null": {
-            "class":                "logging.NullHandler",
+            "class":        "logging.NullHandler",
         },
         "mail_admins": {
-            "level":                "ERROR",
+            "level":        "ERROR",
             "filters": [
                 "require_debug_false",
             ],
-            "class":                "django.utils.log.AdminEmailHandler",
-            "formatter":            "verbose",
+            "class":        "django.utils.log.AdminEmailHandler",
+            "formatter":    "verbose",
         },
     },
     "loggers": {
+        "": {
+            "level":        "INFO",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
+        },
         "django": {
-            "handlers": [
-                "console",
-            ],
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
         },
         "django.request": {
-            "handlers": [
-                "mail_admins",
-            ],
-            "level":                "ERROR",
-            "propagate":            False,
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file", "mail_admins"],
+            "propagate":    True,
         },
         "py.warnings": {
-            "handlers": [
-                "console",
-            ],
+            "handlers":     ["console", "json_file", "plain_file"],
         },
     },
 }
@@ -1051,3 +1072,30 @@ UPLOADER_SETTINGS = {
         "AUTO_UPLOAD":  True,
     }
 }
+
+
+###############################################################################
+### DJANGO SENTRY                                                           ###
+###############################################################################
+# settings.py
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN", default="https://b22808000322340efd7e59c981cbddd0@o4507562439802880.ingest.us.sentry.io/4507562447208448"),
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+
+###############################################################################
+### DJANGO LOGGING                                                          ###
+###############################################################################
+MIDDLEWARE += (
+    "app.middleware.DjangoRequestIDMiddleware",
+    "app.middleware.DjangoLoggingMiddleware",
+)

@@ -44,9 +44,8 @@ urlpatterns = [
     re_path(r"^rosetta/", include("rosetta.urls")),
     # re_path(r"^search/", include("haystack.urls")),
     re_path(r"^sitemap\.xml$", sitemap, {
-            "sitemaps":     sitemaps,
-        },
-        name="django.contrib.sitemaps.views.sitemap"),
+        "sitemaps":     sitemaps,
+    }, name="django.contrib.sitemaps.views.sitemap"),
 
     re_path(r"^", include("home.urls")),
     re_path(r"^accounts/", include("accounts.urls")),
