@@ -1,6 +1,13 @@
 X.Y.Z (YYYY-MM-DD)
 ------------------
 
+0.3.1 (2024-07-28)
+------------------
+
+Fix
+~~~
+- Fixed a parsing Error in a default logging Decorator.
+
 0.3.0 (2024-07-27)
 ------------------
 
