@@ -39,7 +39,7 @@ def package_files(directory, home_dir):
 
 setup(
     name="2remember",
-    version="0.3.0",
+    version="0.3.1",
     description="",
     long_description=long_description,
     url="https://github.com/asuvorov/2remember",
