@@ -120,6 +120,7 @@ setup(
         # "sendgrid-django==4.2.0",
         "sentry-sdk[django]==2.7.1",
         "social-auth-app-django==5.4.1",
+        "tweepy==4.14.0"
         "whitenoise==6.6.0",
     ],
     license="",

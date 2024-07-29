@@ -967,14 +967,11 @@ EMAIL_SUPPORT = "support@2remember.live"
 ### 2REMEMBER SOCIAL LINKS                                                  ###
 ###############################################################################
 PB_SOCIAL_LINKS = {
-    # --- On behalf of "artem.suvorov@gamil.com" / S1
     "PB_FACEBOOK":  "#",
-    # --- On behalf of "support@2remember.live"    / S1
-    "PB_TWITTER":   "https://x.com/2rememberlive",
+    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live"    / S1
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
-    # --- On behalf of "support@2remember.live"    / S1
     "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }
