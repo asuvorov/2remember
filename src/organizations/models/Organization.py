@@ -30,7 +30,7 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.uuids import get_unique_filename
 
-from app.utils import update_seo_model_instance_metadata
+# pylint: disable=import-error
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
@@ -360,17 +360,6 @@ class Organization(
             ping_google()
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-        # ---------------------------------------------------------------------
-        # --- FIXME: Update/insert SEO Model Instance Metadata
-        # update_seo_model_instance_metadata(
-        #     title=self.title,
-        #     description=self.description,
-        #     keywords=", ".join(self.tags.names()),
-        #     heading=self.title,
-        #     path=self.get_absolute_url(),
-        #     object_id=self.id,
-        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
