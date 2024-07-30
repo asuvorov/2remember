@@ -38,3 +38,5 @@ export CACHE_TIMEOUT=
 
 export EMAIL_BACKEND=
 export SENDGRID_API_KEY=
+
+export SENTRY_DSN=

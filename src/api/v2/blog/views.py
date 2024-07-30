@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import status
@@ -15,18 +17,20 @@ from rest_framework.views import APIView
 from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
+from app.decorators import log_default
 from blog.models import (
     Post,
     PostStatus)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ BLOG
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# ===
+# === BLOG
+# ===
+# =============================================================================
 class BlogArchiveViewSet(APIView):
     """Blog Archive View Set."""
 
@@ -36,6 +40,7 @@ class BlogArchiveViewSet(APIView):
     # serializer_class = PostSerializer
     # model = Post
 
+    @log_default(my_logger=logger)
     def get(self, request):
         """GET: Blog Archive.
 
@@ -95,6 +100,7 @@ class BlogArchiveViewSet(APIView):
             data,
             status=status.HTTP_200_OK)
 
+
 blog_archive = BlogArchiveViewSet.as_view()
 
 
@@ -106,6 +112,7 @@ class PostPublishViewSet(APIView):
     # serializer_class = PostSerializer
     # model = Post
 
+    @log_default(my_logger=logger)
     def post(self, request, post_id):
         """POST: Publish draft Post.
 
@@ -136,10 +143,7 @@ class PostPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Post
         # ---------------------------------------------------------------------
-        post = get_object_or_None(
-            Post,
-            id=post_id)
-
+        post = get_object_or_None(Post, id=post_id)
         if not post:
             return Response({
                 "message":      _("Post not found."),
@@ -149,7 +153,7 @@ class PostPublishViewSet(APIView):
         post.save()
 
         # ---------------------------------------------------------------------
-        # --- TODO: Send confirmation Email
+        # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
@@ -159,6 +163,7 @@ class PostPublishViewSet(APIView):
         return Response({
             "message":      _("Successfully published the Post."),
         }, status=status.HTTP_200_OK)
+
 
 post_publish = PostPublishViewSet.as_view()
 
@@ -171,6 +176,7 @@ class PostCloseViewSet(APIView):
     # serializer_class = PostSerializer
     # model = Post
 
+    @log_default(my_logger=logger)
     def post(self, request, post_id):
         """POST: Close the Post.
 
@@ -201,10 +207,7 @@ class PostCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Post
         # ---------------------------------------------------------------------
-        post = get_object_or_None(
-            Post,
-            id=post_id)
-
+        post = get_object_or_None(Post, id=post_id)
         if not post:
             return Response({
                 "message":      _("Post not found."),
@@ -224,5 +227,6 @@ class PostCloseViewSet(APIView):
         return Response({
             "message":      _("Successfully closed the Post."),
         }, status=status.HTTP_200_OK)
+
 
 post_close = PostCloseViewSet.as_view()

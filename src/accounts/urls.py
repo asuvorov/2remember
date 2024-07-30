@@ -15,18 +15,6 @@ urlpatterns = [
     re_path(r"^$",
         views.account_list,
         name="account-list"),
-    # re_path(r"^near-you/$",
-    #     views.account_near_you_list,
-    #     name="account-near-you-list"),
-    # re_path(r"^might-know/$",
-    #     views.account_might_know_list,
-    #     name="account-might-know-list"),
-    # re_path(r"^new/$",
-    #     views.account_new_list,
-    #     name="account-new-list"),
-    # re_path(r"^online/$",
-    #     views.account_online_list,
-    #     name="account-online-list"),
 
     # -------------------------------------------------------------------------
     # --- Account Registration.
