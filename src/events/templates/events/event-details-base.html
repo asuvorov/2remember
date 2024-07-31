@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-{# load seo #}
 {% load i18n %}
 
 {% comment %}
@@ -16,17 +15,9 @@
 {% block title %}{% trans "Event" %} "{{ event.title }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
-    {# get_metadata #}
-{% comment %}
-    <link rel="image_src" href="{{ event.avatar.url }}" />
-    <meta name="description" content="{{ event.description|striptags|truncatechars:300 }}" />
-{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
-<!-- Background image -->
-<!-- <div class="bg-image" style="background-image: url('https://mdbootstrap.com/img/Photos/Others/images/76.jpg'); height:50vh; width:100%; overflow:hidden;"></div> -->
-<!-- Background image -->
 {% endblock %}
 
 {% block extra_script %}
@@ -36,7 +27,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'event-list' %}">{% trans "Events" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ event.title }}</li>
         </ol>

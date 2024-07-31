@@ -115,6 +115,7 @@ setup(
         # "pep257==0.7.0",
         # "pylint==2.15.10",
         # "pylint-django==2.5.3",
+        "pymemcache==4.0.0",
         "pytz==2024.1",
         # "python-decouple==3.7",
         # "sendgrid-django==4.2.0",

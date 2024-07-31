@@ -1,6 +1,10 @@
 X.Y.Z (YYYY-MM-DD)
 ------------------
 
+Changes
+~~~~~~~
+- Improved Template caching.
+
 0.3.1 (2024-07-28)
 ------------------
 

@@ -1,4 +1,4 @@
-{% load tz %}
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -12,6 +12,9 @@
         :[event_admin]
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 event-thumbnail event.slug LANGUAGE_CODE %}
 <div class="event-thumbnail-vert card mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
     <a href="{% url 'event-details' event.slug %}">
     {% if event.preview %}
@@ -91,7 +94,7 @@
         </p>
     </div>
 </div>
-
+{% endcache %}
 
 
 {% comment %}
