@@ -93,6 +93,7 @@ setup(
         # "django-mptt==0.14.0",
         # "django-mptt-admin==2.4.1",
         "django-passwords==0.3.12",
+        "django-profanity-filter==0.2.1",
         # "django-rest-swagger==2.2.0",
         "django-rosetta==0.10.0",
         # "django-secure==1.0.2",
