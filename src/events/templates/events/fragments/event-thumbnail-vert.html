@@ -12,17 +12,16 @@
         :[event_admin]
 {% endcomment %}
 
-<div class="event-thumbnail-vert card mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
+<div class="event-thumbnail-vert card {% if event.is_private %}card-private{% endif %} mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
     <a href="{% url 'event-details' event.slug %}">
     {% if event.preview %}
         {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid' %}
     {% else %}
     {% endif %}
     <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
-        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">
-            Private
-            <span class="visually-hidden">unread messages</span>
-        </span>
+    {% if event.is_private %}
+        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">Private</span>
+    {% endif %}
     </a>
 
     <div class="card-body">

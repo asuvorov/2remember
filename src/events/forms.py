@@ -135,7 +135,8 @@ class CreateEditEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "preview", "cover", "title", "description", "category", "tags", "hashtag",
+            "preview", "cover", "title", "description", "category", "visibility",
+            "tags", "hashtag",
             # "duration",
             "addressless",
             # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
@@ -159,6 +160,10 @@ class CreateEditEventForm(forms.ModelForm):
                     "maxlength":    1000,
                 }),
             "category": forms.Select(
+                attrs={
+                    "class":        "form-control form-select",
+                }),
+            "visibility": forms.Select(
                 attrs={
                     "class":        "form-control form-select",
                 }),
@@ -288,52 +293,6 @@ class CreateEditEventForm(forms.ModelForm):
         """Docstring."""
         instance = super().save(commit=False)
         instance.author = self.user
-
-        if commit:
-            instance.save()
-
-        return instance
-
-
-class AddEventMaterialsForm(forms.ModelForm):
-    """Add the Event reporting Materials Form."""
-
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        super().__init__(*args, **kwargs)
-
-        if self.instance and self.instance.id:
-            pass
-
-    tmp_files = forms.ModelMultipleChoiceField(
-        widget=forms.widgets.MultipleHiddenInput,
-        queryset=TemporaryFile.objects.all(),
-        required=False)
-    tmp_links = forms.CharField(
-        label=_("Related Links"),
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": _("Separate your Links with a Space"),
-            }),
-        required=False,
-    )
-
-    class Meta:
-        model = Event
-        fields = [
-            # "achievements",
-        ]
-        widgets = {
-            # "achievements": CKEditorUploadingWidget(),
-        }
-
-    def clean(self):
-        """Clean."""
-        return self.cleaned_data
-
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
 
         if commit:
             instance.save()

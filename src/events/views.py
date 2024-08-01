@@ -58,7 +58,6 @@ from .decorators import (
     event_org_staff_member_required)
 from .forms import (
     CreateEditEventForm,
-    AddEventMaterialsForm,
     # RoleFormSet,
     FilterEventForm)
 from .models import (
@@ -976,95 +975,4 @@ def event_edit(request, slug):
             # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
             "event":            event,
-        })
-
-
-@login_required
-@event_org_staff_member_required
-@log_default(my_logger=logger, cls_or_self=False)
-def event_reporting_materials(request, slug):
-    """Add Event reporting Materials."""
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
-    # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
-
-    # -------------------------------------------------------------------------
-    # --- Organizer can add reporting Materials only if Event is completed.
-    #     Closed (deleted) Event cannot be modified.
-    # -------------------------------------------------------------------------
-    if not event.is_complete or event.is_closed:
-        raise Http404
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    form = AddEventMaterialsForm(
-        request.POST or None, request.FILES or None,
-        instance=event)
-
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            form.save_m2m()
-
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Event Images/Documents.
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
-
-                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-            # -----------------------------------------------------------------
-            # --- Send Email Notification(s).
-            event.email_notify_admin_event_edited(request)
-            event.email_notify_alt_person_event_edited(request)
-
-            Participation.email_notify_participants_event_reporting_materials(
-                request=request,
-                event=event)
-
-            # -----------------------------------------------------------------
-            # --- Save the Log.
-
-        # ---------------------------------------------------------------------
-        # --- Failed to edit the Event
-        # --- Save the Log
-
-    return render(
-        request, "events/event-reporting-materials.html", {
-            "form":     form,
-            "event":    event,
         })

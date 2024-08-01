@@ -191,6 +191,8 @@ INSTALLED_APPS = (
     "corsheaders",
     "ddcore",
     # "django_countries",
+    "django_static_fontawesome",
+    "django_static_ionicons",
     "djangoformsetjs",
     # "djangosecure",
     # "jquery",
@@ -356,7 +358,6 @@ STATICFILES_FINDERS += (
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
 # BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
-    # "awesome-bootstrap-checkbox",
     "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
