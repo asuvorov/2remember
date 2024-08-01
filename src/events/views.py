@@ -456,7 +456,7 @@ def event_create(request):
         request.POST or None, request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        country_code=request.geo_data["country_code"])
 
     # formset_roles = RoleFormSet(
     #     request.POST or None, request.FILES or None,
@@ -474,7 +474,7 @@ def event_create(request):
 
         if (
                 form.is_valid() and
-                aform.is_valid()): # and
+                aform.is_valid()):  # and
                 # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
