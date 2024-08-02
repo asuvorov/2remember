@@ -76,6 +76,7 @@ coverage.xml
 # === Django Stuff.
 # =============================================================================
 src/components/
+src/logs/
 src/media/
 src/staticserve/
 src/django_wsgi.py

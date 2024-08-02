@@ -3,3 +3,10 @@
 # QA
 
 # Resolves
+
+# Self-Check
+
+- [ ] Updated CHANGELOG __(optional)__
+- [ ] Bumped Version in `setup.py`, `.bumpversion.cfg`, `src.__init__`, `src.settings.base` __(optional)__
+
+# See also

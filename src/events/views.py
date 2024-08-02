@@ -49,6 +49,7 @@ from accounts.utils import (
     is_event_admin,
     is_profile_complete)
 from app import attachment_processors
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     SocialLinkFormSet)
@@ -72,7 +73,7 @@ from .models import (
 from .utils import get_event_list
 
 
-logger = logging.getLogger("py.warnings")
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -81,12 +82,9 @@ logger = logging.getLogger("py.warnings")
 # ===
 # =============================================================================
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_list(request):
     """List of the all Events."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
     #
@@ -119,6 +117,7 @@ def event_list(request):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_near_you_list(request):
     """List of the Events, near the User."""
     # -------------------------------------------------------------------------
@@ -218,6 +217,7 @@ def event_near_you_list(request):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_new_list(request):
     """List of the new Events."""
     # -------------------------------------------------------------------------
@@ -286,6 +286,7 @@ def event_new_list(request):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_dateless_list(request):
     """List of the dateless Events."""
     events = get_event_list(request).filter(status=EventStatus.UPCOMING)
@@ -345,6 +346,7 @@ def event_dateless_list(request):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_featured_list(request):
     """List of the featured Events."""
     events = get_event_list(request).filter(
@@ -411,6 +413,7 @@ def event_featured_list(request):
 # ===
 # =============================================================================
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_category_list(request):
     """List of the all Event Categories."""
     # -------------------------------------------------------------------------
@@ -431,17 +434,9 @@ def event_category_list(request):
 # =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@log_default(my_logger=logger, cls_or_self=False)
 def event_create(request):
     """Create the Event."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
@@ -466,8 +461,9 @@ def event_create(request):
         )
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     # formset_roles = RoleFormSet(
     #     request.POST or None, request.FILES or None,
@@ -552,6 +548,7 @@ def event_create(request):
 # =============================================================================
 @cache_page(60 * 1)
 # @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_details(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -738,6 +735,7 @@ def event_details(request, slug):
 
 @cache_page(60 * 1)
 @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_confirm(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -771,6 +769,7 @@ def event_confirm(request, slug):
 
 @cache_page(60 * 1)
 @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_acknowledge(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -809,17 +808,9 @@ def event_acknowledge(request, slug):
 # =============================================================================
 @login_required
 # @event_org_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug):
     """Edit Event."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
@@ -954,6 +945,7 @@ def event_edit(request, slug):
 
 @login_required
 @event_org_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_reporting_materials(request, slug):
     """Add Event reporting Materials."""
     # -------------------------------------------------------------------------

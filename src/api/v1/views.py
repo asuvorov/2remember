@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.conf import settings
 from django.db.models import Q
 
@@ -20,14 +22,19 @@ from rest_framework.views import APIView
 
 # pylint: disable=import-error
 from accounts.models import UserProfile
+from app.decorators import log_default
 
 from .serializers import (
     AuthTokenSerializer,
     AutocompleteMemberSerializer)
 
 
+logger = logging.getLogger(__name__)
+
+
 @api_view(("GET",))
 @permission_classes((IsAuthenticated, ))
+@log_default(my_logger=logger, cls_or_self=False)
 def api_root(request):
     """Docstring."""
     return Response({})
@@ -43,6 +50,7 @@ class GetAuthTokenViewSet(APIView):
     serializer_class = AuthTokenSerializer
     model = Token
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST."""
         serializer = self.serializer_class(data=request.DATA)
@@ -58,6 +66,7 @@ class GetAuthTokenViewSet(APIView):
         return Response(
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST)
+
 
 get_auth_token = GetAuthTokenViewSet.as_view()
 
@@ -86,6 +95,7 @@ class AutocompleteMemberViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+    @log_default(my_logger=logger)
     def list(self, request, *args, **kwargs):
         """Docstring."""
         q = request.GET.get("term", "")
@@ -130,19 +140,20 @@ class AutocompleteMemberViewSet(viewsets.ModelViewSet):
 
     def pre_save(self, obj):
         """Docstring."""
-        pass
+
     def post_save(self, obj):
         """Docstring."""
 
+
 autocomplete_member_list = AutocompleteMemberViewSet.as_view({
     "get":      "list",
-    #"post":     "create",
+    # "post":     "create",
 })
 autocomplete_member_detail = AutocompleteMemberViewSet.as_view({
     "get":      "retrieve",
-    #"put":      "update",
-    #"patch":    "partial_update",
-    #"delete":   "destroy",
+    # "put":      "update",
+    # "patch":    "partial_update",
+    # "delete":   "destroy",
 })
 
 

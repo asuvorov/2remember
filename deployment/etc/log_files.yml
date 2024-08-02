@@ -1,0 +1,16 @@
+files:
+  - path: ~/Workspace/2remember/src/logs/json.log
+    tag:  local
+  - path: /opt/apps/2remember/src/logs/json.log
+    tag:  site
+  - path: /var/log/nginx/access.log
+    tag:  nginx-access
+  - path: /var/log/nginx/error.log
+    tag:  nginx-error
+  - path: /var/log/mysql/error.log
+    tag:  mysql-error
+destination:
+  host:     logs4.papertrailapp.com
+  port:     50129
+  protocol: tls
+pid_file:   /tmp/remote_syslog.pid

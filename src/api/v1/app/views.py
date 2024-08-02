@@ -52,6 +52,7 @@ from api.auth import CsrfExemptSessionAuthentication
 #     organization_access_check_required,
 #     organization_staff_member_required,
 #     )
+from app.decorators import log_default
 from blog.models import Post
 from events.models import (
     Event,
@@ -64,7 +65,7 @@ from organizations.models import (
     OrganizationStaff)
 
 
-logger = logging.getLogger("py.warnings")
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -204,6 +205,7 @@ class CommentListViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Comment create.
 
@@ -239,9 +241,6 @@ class CommentListViewSet(APIView):
         ------
 
         """
-        cprint("***" * 27, "green")
-        cprint("*** INSIDE `%s.%s`" % (self.__class__.__name__, inspect.stack()[0][3]), "green")
-
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
@@ -406,6 +405,7 @@ class CommentDetailsViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def delete(self, request, comment_id):
         """DELETE: Comment delete.
 
@@ -427,13 +427,9 @@ class CommentDetailsViewSet(APIView):
         ------
 
         """
-        cprint("***" * 27, "green")
-        cprint("*** INSIDE `%s.%s`" % (self.__class__.__name__, inspect.stack()[0][3]), "green")
-
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
-        cprint("[---  DUMP   ---] COMMENT ID : %s" % comment_id, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Verify Request.
@@ -484,6 +480,7 @@ class ComplaintListViewSet(APIView):
     # serializer_class = ComplaintSerializer
     # model = Complaint
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Complaint create.
 
@@ -507,9 +504,6 @@ class ComplaintListViewSet(APIView):
                     "complaint_text":       "Complaint Text"
                 }
         """
-        cprint("***" * 27, "green")
-        cprint("*** INSIDE `%s.%s`" % (self.__class__.__name__, inspect.stack()[0][3]), "green")
-
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
@@ -736,6 +730,7 @@ class RatingListViewSet(APIView):
     # serializer_class = RatingSerializer
     # model = Rating
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Rating create.
 
@@ -771,9 +766,6 @@ class RatingListViewSet(APIView):
                     "organizer_review_text":        "Organizer Review Text"
                 }
         """
-        cprint("***" * 27, "green")
-        cprint("*** INSIDE `%s.%s`" % (self.__class__.__name__, inspect.stack()[0][3]), "green")
-
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
@@ -789,15 +781,15 @@ class RatingListViewSet(APIView):
         organization_review_text = request.data.get("organization_review_text", "")
         organizer_review_text = request.data.get("organizer_review_text", "")
 
-        cprint("[---  DUMP   ---] event        ID : %s" % event_id, "yellow")
+        cprint("[---  DUMP   ---] EVENT            ID : %s" % event_id, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION     ID : %s" % organization_id, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER        ID : %s" % organizer_id, "yellow")
 
-        cprint("[---  DUMP   ---] event    RATING : %s" % event_rating, "yellow")
+        cprint("[---  DUMP   ---] EVENT        RATING : %s" % event_rating, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION RATING : %s" % organization_rating, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER    RATING : %s" % organizer_rating, "yellow")
 
-        cprint("[---  DUMP   ---] event    REVIEW : %s" % event_review_text, "yellow")
+        cprint("[---  DUMP   ---] EVENT        REVIEW : %s" % event_review_text, "yellow")
         cprint("[---  DUMP   ---] ORGANIZATION REVIEW : %s" % organization_review_text, "yellow")
         cprint("[---  DUMP   ---] ORGANIZER    REVIEW : %s" % organizer_review_text, "yellow")
 
@@ -957,6 +949,7 @@ class RatingDetailsViewSet(APIView):
     # serializer_class = RatingSerializer
     # model = Rating
 
+    @log_default(my_logger=logger)
     def delete(self, request, rating_id):
         """DELETE: Rating delete.
 
@@ -974,13 +967,9 @@ class RatingDetailsViewSet(APIView):
                     "rating_id":        100,
                 }
         """
-        cprint("***" * 27, "green")
-        cprint("*** INSIDE `%s.%s`" % (self.__class__.__name__, inspect.stack()[0][3]), "green")
-
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
-        cprint("[---  DUMP   ---] RATING ID : %s" % rating_id, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Verify Request.

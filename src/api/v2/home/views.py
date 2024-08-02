@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
@@ -18,7 +20,11 @@ from ddcore.SendgridUtil import send_templated_email
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
+from app.decorators import log_default
 from home.models import FAQ
+
+
+logger = logging.getLogger(__name__)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -37,6 +43,7 @@ class FAQDetailsViewSet(APIView):
     # serializer_class = FAQSerializer
     # model = FAQ
 
+    @log_default(my_logger=logger)
     def delete(self, request, faq_id):
         """DELETE: FAQ delete.
 
@@ -90,13 +97,14 @@ class FAQDetailsViewSet(APIView):
             "message":      _("Successfully removed the FAQ."),
         }, status=status.HTTP_200_OK)
 
+
 faq_details = FAQDetailsViewSet.as_view()
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~
-# ~~~ Contact ys
+# ~~~ Contact Us
 # ~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -109,6 +117,7 @@ class ContactUsViewSet(APIView):
     # serializer_class = FAQSerializer
     # model = FAQ
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """POST: Send a Message
 
@@ -188,5 +197,6 @@ class ContactUsViewSet(APIView):
         return Response({
             "message":      _("Successfully sent the Message."),
         }, status=status.HTTP_200_OK)
+
 
 contact_us = ContactUsViewSet.as_view()

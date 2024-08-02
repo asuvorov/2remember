@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from annoying.functions import get_object_or_None
 # from captcha.fields import CaptchaField
 from passwords.fields import PasswordField
+from profanity.validators import validate_is_profane
 
 from .models import (
     # UserPrivacyAdmins,
@@ -34,6 +35,7 @@ class LoginForm(forms.Form):
 
     username = forms.CharField(
         label=_("Email"),
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "class":        "form-control",
@@ -42,6 +44,7 @@ class LoginForm(forms.Form):
             }))
     password = forms.CharField(
         label=_("Password"),
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "min_length":   6,
@@ -80,13 +83,19 @@ class UserForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
+        # ---------------------------------------------------------------------
         # self.fields["username"].required = False
         self.fields["first_name"].required = True
         self.fields["last_name"].required = True
         self.fields["email"].required = True
 
+        # ---------------------------------------------------------------------
+        self.fields["first_name"].validators = [validate_is_profane]
+        self.fields["last_name"].validators = [validate_is_profane]
+
     password = PasswordField(
         label=_("Password"),
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "min_length":   6,
@@ -96,6 +105,8 @@ class UserForm(forms.ModelForm):
                 "value":        "",
             }))
     retry = forms.CharField(
+        label=_("Retry"),
+        required=True,
         widget=forms.PasswordInput(
             render_value=True,
             attrs={
@@ -174,6 +185,10 @@ class UserProfileForm(forms.ModelForm):
 
         if self.instance and self.instance.id:
             pass
+
+        # ---------------------------------------------------------------------
+        self.fields["nickname"].validators = [validate_is_profane]
+        self.fields["bio"].validators = [validate_is_profane]
 
     # captcha = CaptchaField()
     birth_day = forms.DateField(
@@ -255,14 +270,19 @@ class UserProfileEditForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
+        # ---------------------------------------------------------------------
         self.fields["first_name"].initial = self.user.first_name
         self.fields["last_name"].initial = self.user.last_name
         self.fields["email"].initial = self.user.email
-        self.fields["email"].required = False
-        self.fields["email"].widget.attrs["class"] = "form-control disabled"
-        self.fields["email"].widget.attrs["readonly"] = True
+
+        # ---------------------------------------------------------------------
+        self.fields["first_name"].validators = [validate_is_profane]
+        self.fields["last_name"].validators = [validate_is_profane]
+        self.fields["nickname"].validators = [validate_is_profane]
+        self.fields["bio"].validators = [validate_is_profane]
 
     first_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "class":        "form-control",
@@ -271,6 +291,7 @@ class UserProfileEditForm(forms.ModelForm):
                 "maxlength":    30,
             }))
     last_name = forms.CharField(
+        required=True,
         widget=forms.TextInput(
             attrs={
                 "class":        "form-control",
@@ -279,13 +300,16 @@ class UserProfileEditForm(forms.ModelForm):
                 "maxlength":    30,
             }))
     email = forms.EmailField(
+        required=True,
         widget=forms.EmailInput(
             attrs={
-                "class":        "form-control",
+                "class":        "form-control disabled",
                 "placeholder":  _("Email"),
-                "value":        ""
+                "value":        "",
+                "readonly":     True,
             }))
     birth_day = forms.DateField(
+        required=False,
         input_formats=("%m/%d/%Y",),
         widget=forms.DateInput(
             format="%m/%d/%Y",
@@ -355,6 +379,7 @@ class ForgotPasswordForm(forms.Form):
     """Forgot Password Form."""
 
     email = forms.EmailField(
+        required=True,
         widget=forms.EmailInput(
             attrs={
                 "class":        "form-control",
@@ -384,6 +409,7 @@ class ResetPasswordForm(forms.Form):
 
     password = PasswordField(
         label=_("Password"),
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "min_length":   6,
@@ -393,6 +419,8 @@ class ResetPasswordForm(forms.Form):
                 "value":        "",
             }))
     retry = forms.CharField(
+        label=_("Retry"),
+        required=True,
         widget=forms.PasswordInput(
             attrs={
                 "min_length":   6,

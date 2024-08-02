@@ -3,6 +3,7 @@
 """
 
 import inspect
+import logging
 import mimetypes
 
 from django.conf import settings
@@ -37,6 +38,7 @@ from ddcore.Utilities import (
 
 # pylint: disable=import-error
 from accounts.utils import is_profile_complete
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
@@ -59,12 +61,16 @@ from .models import (
 from .utils import get_organization_list
 
 
+logger = logging.getLogger(__name__)
+
+
 # =============================================================================
 # ===
 # === ORGANIZATION LIST
 # ===
 # =============================================================================
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
     # -------------------------------------------------------------------------
@@ -116,6 +122,7 @@ def organization_list(request):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
@@ -171,33 +178,30 @@ def organization_directory(request):
 # =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
@@ -277,6 +281,7 @@ def organization_create(request):
 # =============================================================================
 @cache_page(60 * 1)
 # @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_details(request, slug=None):
     """Organization Details."""
     # -------------------------------------------------------------------------
@@ -413,6 +418,7 @@ def organization_details(request, slug=None):
 
 @cache_page(60 * 1)
 @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
     """Organization Staff."""
     # -------------------------------------------------------------------------
@@ -442,6 +448,7 @@ def organization_staff(request, slug=None):
 
 @cache_page(60 * 1)
 @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
     """Organization Groups."""
     # -------------------------------------------------------------------------
@@ -476,6 +483,7 @@ def organization_groups(request, slug=None):
 # =============================================================================
 @login_required
 # @organization_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_edit(request, slug=None):
     """Edit Organization."""
     organization = get_object_or_404(
@@ -486,11 +494,14 @@ def organization_edit(request, slug=None):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
-        user=request.user, instance=organization)
+        request.POST or None,
+        request.FILES or None,
+        user=request.user,
+        instance=organization)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(
@@ -607,6 +618,7 @@ def organization_edit(request, slug=None):
 # =============================================================================
 @login_required
 # @organization_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_populate_newsletter(request, slug=None):
     """Organization, populate Newsletter."""
     # -------------------------------------------------------------------------
@@ -659,6 +671,7 @@ def organization_populate_newsletter(request, slug=None):
 # ===
 # =============================================================================
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_iframe_upcoming(request, organization_id):
     """Organization iFrame for upcoming Events."""
     organization = get_object_or_404(
@@ -677,6 +690,7 @@ def organization_iframe_upcoming(request, organization_id):
 
 
 @cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_iframe_complete(request, organization_id):
     """Organization iFrame for completed Events."""
     organization = get_object_or_404(
