@@ -301,7 +301,7 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "level":        "INFO",
+            "level":        "DEBUG",
             "handlers":     ["console", "json_file", "plain_file"],
             "propagate":    True,
         },

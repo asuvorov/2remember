@@ -6,6 +6,7 @@ import datetime
 import inspect
 import json
 import logging
+import mimetypes
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -37,9 +38,14 @@ from annoying.functions import get_object_or_None
 from termcolor import cprint
 
 from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
     Comment,
     Complaint,
-    Rating)
+    Rating,
+    TemporaryFile)
 
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
@@ -60,9 +66,7 @@ from events.models import (
     # Participation,
     # ParticipationStatus
     )
-from organizations.models import (
-    Organization,
-    OrganizationStaff)
+from organizations.models import Organization
 
 
 logger = logging.getLogger(__name__)
@@ -82,11 +86,13 @@ class TmpUploadViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """Upload temporary File."""
         if not request.FILES:
-            return HttpResponseBadRequest(
-                _("No Files attached."))
+            return Response({
+                "message":      _("No Files attached."),
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         tmp_file = TemporaryFile.objects.create(
             file=request.FILES["file"],
@@ -99,12 +105,9 @@ class TmpUploadViewSet(APIView):
             "tmp_file_id":  tmp_file.id
         }
 
-        return HttpResponse(
-            json.dumps({
-                "files":    [result]
-            }),
-            content_type="application/json"
-        )
+        return Response({
+            "files":    [result],
+        }, status=status.HTTP_200_OK)
 
 
 tmp_upload = TmpUploadViewSet.as_view()
@@ -119,6 +122,7 @@ class RemoveUploadViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """Remove uploaded File."""
         found = False
@@ -138,17 +142,25 @@ class RemoveUploadViewSet(APIView):
                 try:
                     instance.file.delete()
                 except Exception as exc:
-                    print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+                    # ---------------------------------------------------------
+                    # --- Logging.
+                    # ---------------------------------------------------------
+                    logger.exception("", extra=Format.exception(
+                        exc=exc,
+                        request_id=request.request_id,
+                        log_extra=log_req))
+
+                    cprint(f"###" * 27, "white", "on_red")
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                           f"{type(exc).__name__} : {str(exc)}",
+                           "white", "on_red")
 
                 instance.delete()
                 found = True
 
-        return HttpResponse(
-            json.dumps({
-                "deleted":  found,
-            }),
-            content_type="application/json"
-        )
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
 
 
 remove_upload = RemoveUploadViewSet.as_view()
@@ -163,6 +175,7 @@ class RemoveLinkViewSet(APIView):
     # serializer_class = CommentSerializer
     # model = Comment
 
+    @log_default(my_logger=logger)
     def post(self, request):
         """Remove Link."""
         found = False
@@ -180,12 +193,9 @@ class RemoveLinkViewSet(APIView):
                 instance.delete()
                 found = True
 
-        return HttpResponse(
-            json.dumps({
-                "deleted":  found,
-            }),
-            content_type="application/json"
-        )
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
 
 
 remove_link = RemoveLinkViewSet.as_view()
