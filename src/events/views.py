@@ -880,6 +880,7 @@ def event_edit(request, slug):
             #     social_link.save()
 
             attachment_processors.process(
+                request=request,
                 content_type=ContentType.objects.get_for_model(event),
                 object_id=event.id,
                 tmp_files=form.cleaned_data["tmp_files"],
