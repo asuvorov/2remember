@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import logging
 import mimetypes
 
@@ -93,8 +94,8 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
     for tmp_file in tmp_files:
         mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
 
-        cprint("[---  INFO   ---] TMP  FILE      : %s" % tmp_file, "cyan")
-        cprint("[---  INFO   ---] MIME TYPE      : %s" % mime_type, "cyan")
+        cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
+        cprint(f"                  MIME TYPE      : {mime_type}", "cyan")
 
         if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
             # -----------------------------------------------------------------
@@ -178,9 +179,19 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                     object_id=object_id)
 
             except (IOError, SyntaxError) as exc:
+                cprint(f"###" * 27, "white", "on_red")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                       f"{type(exc).__name__} : {str(exc)}",
+                       "white", "on_red")
+
                 raise ValueError(f"The uploaded file is not a valid image. -- {exc}") from exc
 
             except Exception as exc:
+                cprint(f"###" * 27, "white", "on_red")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                       f"{type(exc).__name__} : {str(exc)}",
+                       "white", "on_red")
+
                 raise ValueError(f"The uploaded file is not a valid image. -- {exc}") from exc
 
             # -----------------------------------------------------------------

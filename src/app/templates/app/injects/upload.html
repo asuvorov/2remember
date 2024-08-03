@@ -77,8 +77,8 @@
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
                     // Render Thumbnails
-                    if (is_image(file.name)) {
-                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.name + "' width='100'>").appendTo("#files");
+                    if (is_image(file.file_name)) {
+                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.file_name + "' width='100'>").appendTo("#files");
                         $("#files-label").show()
                     }
 
@@ -88,7 +88,7 @@
 
                     // --------------------------------------------------------
                     // --- UPLOAD PATH: Used by Javascript to render Thumbnails.
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.file_name).appendTo("#tmp_images_path");
 
                     upload_count++;
                     image_count++;
@@ -126,17 +126,17 @@
             dataType: "json",
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
-                    // Render Thumbnails
-                    if (!is_image(file.name)) {
-                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.name.split("/").pop()) + "<br/>").appendTo("#docs");
+                    // Render Thumbnails.
+                    if (!is_image(file.file_name)) {
+                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.file_name.split("/").pop()) + "<br/>").appendTo("#docs");
                         $("#docs-label").show()
                     }
 
-                    // UPLOAD ID: used by Django to associate upload with record
+                    // UPLOAD ID: Used by Django to associate an Upload with a Record.
                     $("<input type='hidden' id='id_tmp_files_" + upload_count + "' name='tmp_files'>").val(file.tmp_file_id).appendTo("#tmp_files");
 
-                    // UPLOAD PATH: used by Javascript to render thumbnails
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
+                    // UPLOAD PATH: Used by JavaScript to render Thumbnails.
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.file_name).appendTo("#tmp_images_path");
 
                     upload_count++;
                     //real_upload_count++;

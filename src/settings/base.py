@@ -267,7 +267,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "simple",
+            "formatter":    "json",  # "simple",
         },
         "json_file": {
             "level":        "DEBUG",

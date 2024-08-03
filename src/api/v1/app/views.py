@@ -47,6 +47,7 @@ from ddcore.models import (
     Rating,
     TemporaryFile)
 
+# pylint: disable=import-error
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
@@ -58,7 +59,9 @@ from api.auth import CsrfExemptSessionAuthentication
 #     organization_access_check_required,
 #     organization_staff_member_required,
 #     )
+from app import logconst
 from app.decorators import log_default
+from app.logformat import Format
 from blog.models import Post
 from events.models import (
     Event,
@@ -105,6 +108,14 @@ class TmpUploadViewSet(APIView):
             "tmp_file_id":  tmp_file.id
         }
 
+        # ---------------------------------------------------------------------
+        # --- Logging.
+        # ---------------------------------------------------------------------
+        logger.info("REQUEST", extra=Format.api_detailed_info(
+            log_type=logconst.LOG_VAL_TYPE_API_REQUEST,
+            request_id=request.request_id,
+            log_extra=result))
+
         return Response({
             "files":    [result],
         }, status=status.HTTP_200_OK)
@@ -142,18 +153,18 @@ class RemoveUploadViewSet(APIView):
                 try:
                     instance.file.delete()
                 except Exception as exc:
+                    cprint(f"###" * 27, "white", "on_red")
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                           f"{type(exc).__name__} : {str(exc)}",
+                           "white", "on_red")
+
                     # ---------------------------------------------------------
                     # --- Logging.
                     # ---------------------------------------------------------
                     logger.exception("", extra=Format.exception(
                         exc=exc,
                         request_id=request.request_id,
-                        log_extra=log_req))
-
-                    cprint(f"###" * 27, "white", "on_red")
-                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-                           f"{type(exc).__name__} : {str(exc)}",
-                           "white", "on_red")
+                        log_extra={}))
 
                 instance.delete()
                 found = True
