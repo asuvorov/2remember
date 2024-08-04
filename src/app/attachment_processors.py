@@ -104,12 +104,12 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
             try:
                 # -------------------------------------------------------------
                 # --- Verify Image.
-                img = Image.open(tmp_file.file.name)
+                img = Image.open(tmp_file.file)
                 img.verify()
 
                 # -------------------------------------------------------------
                 # --- Reopen Image, because `img.verify()` moves Pointer to the End of the File.
-                img = Image.open(tmp_file.file.name)
+                img = Image.open(tmp_file.file)
 
                 cprint(f"Image's original Size : {img.size}", "yellow")
                 cprint(f"Image's File Format   : {img.format}", "yellow")
@@ -159,22 +159,32 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 if new_width and new_height:
                     img = img.resize((new_width, new_height), Image.LANCZOS)
 
+                cprint(f"               IMG : {img}", "yellow")
+
                 # -------------------------------------------------------------
                 # --- Prepare the Image and save as JPEG.
                 temp_img = BytesIO()
-                img.save(temp_img, format="JPEG", quality=90, optimize=True)
+                img.save(temp_img, format="JPEG", quality=100, optimize=True)
                 temp_img.seek(0)
+
+                cprint(f"               IMG : {img}", "yellow")
+                cprint(f"          TEMP IMG : {temp_img}", "yellow")
 
                 # -------------------------------------------------------------
                 # --- Change File's Extension to `.jpg`
                 original_name, _ = tmp_file.name.lower().split(".")
                 new_name = f"{original_name}.jpg"
 
+                cprint(f"     Original Name : {original_name}", "yellow")
+                cprint(f"     New      Name : {new_name}", "yellow")
+                cprint(f"     Content  File : {ContentFile(temp_img.read())}", "yellow")
+
                 # -------------------------------------------------------------
                 # --- Save the `BytesIO` Object to the `ImageField` with the new Filename.
                 AttachedImage.objects.create(
                     name=new_name,
                     image=ContentFile(temp_img.read()),
+                    # image=File(storage.open(tmp_file.file.name, "rb")),
                     content_type=content_type,
                     object_id=object_id)
 
