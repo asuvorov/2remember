@@ -22,7 +22,7 @@ logger = logging.getLogger()
 
 
 def log_default(
-        _func=None, *, my_logger: logging.Logger = None, cls_or_self = True):
+        _func=None, *, my_logger: logging.Logger = None, cls_or_self=True):
     """Default logging Decorator.
 
     Parameters
