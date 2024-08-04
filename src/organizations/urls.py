@@ -43,14 +43,4 @@ urlpatterns = [
     re_path(r"^(?P<slug>[\w_-]+)/populate/$",
         views.organization_populate_newsletter,
         name="organization-populate-newsletter"),
-
-    # -------------------------------------------------------------------------
-    # --- iFrames.
-    # -------------------------------------------------------------------------
-    # re_path(r"^iframe/upcoming/(?P<organization_id>\d+)/$",
-    #     views.organization_iframe_upcoming,
-    #     name="organization-iframe-upcoming"),
-    # re_path(r"^iframe/complete/(?P<organization_id>\d+)/$",
-    #     views.organization_iframe_complete,
-    #     name="organization-iframe-complete"),
 ]

@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load twitter_tag %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{{ block.super }}{% endblock %}
 
 {% block important_message %}
 <div class="alert alert-warning alert-dismissible fade d-flex align-items-center show mb-md-0" role="alert" style="border-radius:0;">
+{% blocktrans %}
     <i class="bi bi-exclamation-octagon flex-shrink-0 me-2"></i><strong>Holy Guacamole!</strong>&nbsp;Pardon our Dust, as we are working hard on delivering more exciting Features.
+{% endblocktrans %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 {% endblock %}
@@ -23,6 +28,7 @@
 
 {% block content %}
 <!-- START MARKETING MESSAGES -->
+{% cache 3600 index-features LANGUAGE_CODE %}
 <div id="index-features" class="mt-3">
     <div class="row g-2" align="center">
         <div class="col-12 header">
@@ -48,24 +54,28 @@
         </div>
     </div>
 </div>
+{% endcache %}
 <!--  END  MARKETING MESSAGES -->
 
 <hr class="featurette-divider">
 
 <!-- START DEVELOPER HERO -->
+{% cache 3600 index-developer-hero LANGUAGE_CODE %}
 <div id="index-developer-hero" class="mb-6">
     <div class="row flex-lg-row-reverse align-items-center py-5 rounded-3 border shadow-lg" style="background-color:#eef;">
         <div class="col-10 col-sm-8 col-lg-6">
             <img src="{{ STATIC_URL }}img/python-programming-language.jpg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
         </div>
         <div class="col-lg-6">
-            <h1 class="fw-bold lh-1 mb-3">Open To Hire</h1>
+            <h1 class="fw-bold lh-1 mb-3">{% trans "Open To Hire" %}</h1>
             <p class="lead">
+            {% blocktrans %}
                 <strong>Strong Background</strong> in Software Development and a deep Passion for Problem-solving.<br/>
                 <strong>Involvement</strong> in a diverse Range of Projects, from building scalable Web Applications to Computer Vision.<br/>
                 <strong>Belief</strong> in continuous learning and active seeking out for new Challenges to expand the Skills.<br/>
                 <strong>Value</strong> the Teamwork and Communication. <strong>Enjoyment</strong> of exchanging Ideas and collaborating to find the best Solutions.<br/>
                 <strong>Excitement</strong> for utilizing Skills, learning from talented Peers, and contributing to the Development of innovative Software Solutions, that impact Lives in positive Way.<br/>
+            {% endblocktrans %}
             </p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="https://github.com/asuvorov" class="btn btn-github d-flex gap-2 align-items-center"><i class="bi bi-github"></i> GitHub</a>
@@ -75,17 +85,19 @@
         </div>
     </div>
 </div>
+{% endcache %}
 <!--  END  DEVELOPER HERO -->
 
 <hr class="featurette-divider">
 
 <!-- START FEATURETTES -->
+{% cache 3600 index-featurette LANGUAGE_CODE %}
 <div id="index-featurette" class="mb-6">
     <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Collect Photos with Ease</h2>
+            <h2 class="featurette-heading">{% trans "Collect Photos with Ease" %}</h2>
             <p class="lead">
-                Instant and in-Bulk Photo uploading to our centralized Storage, makes your Event(s) readily available and safely stored.
+                {% trans "Instant and in-Bulk Photo uploading to our centralized Storage, makes your Event(s) readily available and safely stored." %}
             </p>
         </div>
         <div class="col-md-5">
@@ -97,12 +109,14 @@
 
     <div class="row featurette">
         <div class="col-md-7 order-md-2">
-            <h2 class="featurette-heading">Curb the Photo Chaos</h2>
+            <h2 class="featurette-heading">{% trans "Curb the Photo Chaos" %}</h2>
             <p class="lead">
+            {% blocktrans %}
                 Organize your Photos and Videos based on:<br/>
                 <strong>-- Event Names</strong> - Give clear and specific Titles to your Event(s), for Instance "Together as Family" or "Sea World Orlando, 2024".<br/>
                 <strong>-- Chronology</strong> - If you have your Events by Dates, you can align them in perfect Order.<br/>
                 <strong>-- Flavor</strong> - If you have a lot of Hobbies or Interests, you can mark your Events with Categories and/or Tags, associate with certain Place or Organization, etc. This way, you can easily retrieve the Memories of the Time of your Life.
+            {% endblocktrans %}
             </p>
         </div>
         <div class="col-md-5 order-md-1">
@@ -114,10 +128,12 @@
 
     <div class="row featurette">
         <div class="col-md-7">
-            <h2 class="featurette-heading">Event Sharing</h2>
+            <h2 class="featurette-heading">{% trans "Event Sharing" %}</h2>
             <p class="lead">
+            {% blocktrans %}
                 If you're all about Privacy, then the private Link, that leads only to the Event you want to be seen, is all for you.<br/>
                 Only the Comrades you invite can use the private Link to access your personal Memories.<br/>
+            {% endblocktrans %}
             </p>
         </div>
         <div class="col-md-5">
@@ -125,11 +141,13 @@
         </div>
     </div>
 </div>
+{% endcache %}
 <!--  END  FEATURETTES -->
 
 <hr class="featurette-divider">
 
 <!-- START TWITTER FEED -->
+{% cache 3600 index-latest-twitter LANGUAGE_CODE %}
 <div id="index-latest-twitter" class="mb-6">
     <div class="row flex-lg-row-reverse align-items-center py-5 rounded-3 border shadow-lg text-center" style="background-color:#eef;">
         <div class="col-12">
@@ -161,7 +179,7 @@
             {% endcomment %}
             </div>
 
-            {#<a class="btn btn-primary">Follow us</a>#}
+            {#<a class="btn btn-primary">{% trans "Follow us" %}</a>#}
             <a href="https://twitter.com/2remember" class="twitter-follow-button" data-show-count="false" data-size="large" data-show-screen-name="false" data-dnt="true" data-align="center">{% trans "Follow" %} @2rememberlive</a>
         </div>
     </div>
@@ -175,5 +193,6 @@
     //-------------------------------------------------------------------------
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
 </script>
+{% endcache %}
 <!--  END  SCRIPT -->
 {% endblock %}
