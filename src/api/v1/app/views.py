@@ -6,6 +6,7 @@ import datetime
 import inspect
 import json
 import logging
+import mimetypes
 
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
@@ -33,16 +34,20 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-# import papertrail
-
 from annoying.functions import get_object_or_None
 from termcolor import cprint
 
 from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
     Comment,
     Complaint,
-    Rating)
+    Rating,
+    TemporaryFile)
 
+# pylint: disable=import-error
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
@@ -54,7 +59,9 @@ from api.auth import CsrfExemptSessionAuthentication
 #     organization_access_check_required,
 #     organization_staff_member_required,
 #     )
+from app import logconst
 from app.decorators import log_default
+from app.logformat import Format
 from blog.models import Post
 from events.models import (
     Event,
@@ -62,12 +69,147 @@ from events.models import (
     # Participation,
     # ParticipationStatus
     )
-from organizations.models import (
-    Organization,
-    OrganizationStaff)
+from organizations.models import Organization
 
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# ===
+# === ATTACHMENTS
+# ===
+# =============================================================================
+class TmpUploadViewSet(APIView):
+    """Temporary Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Upload temporary File."""
+        if not request.FILES:
+            return Response({
+                "message":      _("No Files attached."),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        tmp_file = TemporaryFile.objects.create(
+            file=request.FILES["file"],
+            name=request.FILES["file"].name)
+
+        result = {
+            "name":         tmp_file.file.name,
+            "type":         mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
+            "size":         tmp_file.file.size,
+            "tmp_file_id":  tmp_file.id
+        }
+
+        # ---------------------------------------------------------------------
+        # --- Logging.
+        # ---------------------------------------------------------------------
+        logger.info("REQUEST", extra=Format.api_detailed_info(
+            log_type=logconst.LOG_VAL_TYPE_API_REQUEST,
+            request_id=request.request_id,
+            log_extra=result))
+
+        return Response({
+            "files":    [result],
+        }, status=status.HTTP_200_OK)
+
+
+tmp_upload = TmpUploadViewSet.as_view()
+
+
+class RemoveUploadViewSet(APIView):
+    """Remove Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Remove uploaded File."""
+        found = False
+
+        upload_type = request.POST.get("type")
+        upload_id = request.POST.get("id")
+
+        if upload_type and upload_id:
+            if upload_type == "document":
+                instance = get_object_or_None(AttachedDocument, id=upload_id)
+            elif upload_type == "image":
+                instance = get_object_or_None(AttachedImage, id=upload_id)
+            elif upload_type == "temp":
+                instance = get_object_or_None(TemporaryFile, id=upload_id)
+
+            if instance:
+                try:
+                    instance.file.delete()
+                except Exception as exc:
+                    cprint(f"###" * 27, "white", "on_red")
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                           f"{type(exc).__name__} : {str(exc)}",
+                           "white", "on_red")
+
+                    # ---------------------------------------------------------
+                    # --- Logging.
+                    # ---------------------------------------------------------
+                    logger.exception("", extra=Format.exception(
+                        exc=exc,
+                        request_id=request.request_id,
+                        log_extra={}))
+
+                instance.delete()
+                found = True
+
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
+
+
+remove_upload = RemoveUploadViewSet.as_view()
+
+
+class RemoveLinkViewSet(APIView):
+    """Remove Link View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Remove Link."""
+        found = False
+
+        upload_type = request.POST.get("type")
+        upload_id = request.POST.get("id")
+
+        if upload_type and upload_id:
+            if upload_type == "regular":
+                instance = get_object_or_None(AttachedUrl, id=upload_id)
+            elif upload_type == "video":
+                instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
+
+            if instance:
+                instance.delete()
+                found = True
+
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
+
+
+remove_link = RemoveLinkViewSet.as_view()
 
 
 # =============================================================================

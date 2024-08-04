@@ -267,7 +267,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "simple",
+            "formatter":    "json",  # "simple",
         },
         "json_file": {
             "level":        "DEBUG",
@@ -301,7 +301,7 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "level":        "INFO",
+            "level":        "DEBUG",
             "handlers":     ["console", "json_file", "plain_file"],
             "propagate":    True,
         },
@@ -341,6 +341,48 @@ EVENT_TITLE_RESERVED_WORDS = [
 ORGANIZATION_TITLE_RESERVED_WORDS = [
     "directory", "create",
 ]
+
+SUBSCRIPTION_PLANS = {
+    "BASIC": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "images": {
+                "max_width":            1600,
+                "max_height":           900,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+            },
+            "documents": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "upon_request_only":    False,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "organizations": {
+            "upon_request_only":    True,
+            "max_per_day":          0,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "places": {},
+    }
+}
 
 
 ###############################################################################
@@ -986,18 +1028,23 @@ PB_SOCIAL_LINKS = {
 UPLOADER_SETTINGS = {
     "default": {
         "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
-            "doc", "docx", "txt", "rtf",
+            "bmp", "gif", "jpg", "jpeg", "png", "tif", "tiff", "webp",
+            "csv", "doc", "docx", "odt", "pdf", "rtf", "txt",
         ],
         "CONTENT_TYPES": [
+            "application/msword",
+            "application/pdf",
+            "application/rtf",
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            "image/bmp",
             "image/gif",
             "image/jpeg",
-            "image/pjpeg",
             "image/png",
-            "application/pdf",
-            "application/msword",
+            "image/tiff",
+            "image/webp",
+            "text/csv",
             "text/plain",
-            "text/rtf",
         ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
@@ -1005,71 +1052,68 @@ UPLOADER_SETTINGS = {
     },
     "documents": {
         "FILE_TYPES": [
-            "doc", "docx", "txt", "rtf",
+            "csv", "doc", "docx", "odt", "pdf", "rtf", "txt",
         ],
         "CONTENT_TYPES": [
-            "application/pdf",
             "application/msword",
+            "application/pdf",
+            "application/rtf",
+            "application/vnd.oasis.opendocument.text",
+            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            "text/csv",
             "text/plain",
-            "text/rtf",
-            ],
+        ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "images": {
         "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
+            "bmp", "gif", "jpg", "jpeg", "png", "tif", "tiff", "webp",
         ],
         "CONTENT_TYPES": [
+            "image/bmp",
             "image/gif",
             "image/jpeg",
-            "image/pjpeg",
             "image/png",
-            ],
+            "image/tiff",
+            "image/webp",
+        ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "video": {
         "FILE_TYPES": [
-            "flv", "mpg", "mpeg", "mp4",
-            "avi", "mkv", "ogg",
-            "wmv", "mov", "webm",
+            "avi", "mp4", "mpg", "mpeg", "ogv", "webm",
         ],
         "CONTENT_TYPES": [
-            "video/mpeg",
+            "video/x-msvideo",
             "video/mp4",
+            "video/mpeg"
             "video/ogg",
-            "video/quicktime",
-            "video/webm",
-            "video/x-ms-wmv",
-            "video/x-flv",
-            ],
+            "video/webm"
+        ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "audio": {
         "FILE_TYPES": [
-            "mp3", "mp4", "ogg", "wma", "wax", "wav", "webm",
+            "aac", "mid", "midi", "mp3", "ogv", "wav", "weba",
         ],
         "CONTENT_TYPES": [
-            "audio/basic",
-            "audio/L24",
-            "audio/mp4",
+            "audio/aac",
+            "audio/midi",
             "audio/mpeg",
             "audio/ogg",
-            "audio/vorbis",
-            "audio/x-ms-wma",
-            "audio/x-ms-wax",
-            "audio/vnd.rn-realaudio",
-            "audio/vnd.wave",
+            "audio/wav",
             "audio/webm",
-            ],
+            "audio/x-midi",
+        ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":  True,
+        "AUTO_UPLOAD":      True,
     }
 }
 
