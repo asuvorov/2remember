@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils.translation import gettext_lazy as _
 
 from taggit.forms import TagWidget
+from profanity.validators import validate_is_profane
 
 from ddcore.models.Attachment import TemporaryFile
 
@@ -48,6 +49,12 @@ class CreateEditOrganizationForm(forms.ModelForm):
             "You can make your Organization hidden from the Public, so only Subscribers and "
             "Members, invited by you, will be able to see the Organization's Activity and sign up "
             "for its Events.")
+
+        # ---------------------------------------------------------------------
+        self.fields["title"].validators = [validate_is_profane]
+        self.fields["description"].validators = [validate_is_profane]
+        self.fields["tags"].validators = [validate_is_profane]
+        self.fields["hashtag"].validators = [validate_is_profane]
 
     # contact = forms.ChoiceField(widget=forms.RadioSelect())
 
@@ -143,14 +150,18 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 }),
             }
 
-    def clean(self):
-        """Clean."""
-        # ---------------------------------------------------------------------
-        # --- Validate `title` Field.
-        if self.cleaned_data["title"].lower() in settings.ORGANIZATION_TITLE_RESERVED_WORDS:
+    def clean_title(self):
+        """Clean `title` Field."""
+        title = self.cleaned_data["title"]
+
+        if title.lower() in settings.ORGANIZATION_TITLE_RESERVED_WORDS:
             self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as an Organization Name.")])
 
+        return title
+
+    def clean(self):
+        """Clean."""
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields.
         # if self.cleaned_data["contact"] == "me":

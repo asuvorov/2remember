@@ -11,7 +11,6 @@ from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 
 # pylint: disable=import-error
 from accounts.models import Team
@@ -46,7 +45,6 @@ def index(request):
         })
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def open_to_hire(request):
     """Docstring."""
@@ -54,7 +52,6 @@ def open_to_hire(request):
         request, "home/resume.html", {})
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def privacy_policy(request):
     """Docstring."""
@@ -62,7 +59,6 @@ def privacy_policy(request):
         request, "home/privacy-policy.html", {})
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def user_agreement(request):
     """Docstring."""
@@ -70,7 +66,6 @@ def user_agreement(request):
         request, "home/user-agreement.html", {})
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def our_team(request):
     """Docstring."""
@@ -82,7 +77,6 @@ def our_team(request):
         })
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def our_partners(request):
     """Docstring."""
@@ -94,7 +88,6 @@ def our_partners(request):
         })
 
 
-@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def about_us(request):
     """Docstring."""
@@ -124,7 +117,6 @@ def contact_us(request):
 # === FAQ
 # ===
 # =============================================================================
-@cache_page(60 * 5)
 @log_default(my_logger=logger, cls_or_self=False)
 def faq(request):
     """List of FAQs."""

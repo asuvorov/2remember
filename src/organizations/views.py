@@ -19,7 +19,6 @@ from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 
 from termcolor import cprint
 
@@ -69,7 +68,6 @@ logger = logging.getLogger(__name__)
 # === ORGANIZATION LIST
 # ===
 # =============================================================================
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
@@ -121,7 +119,6 @@ def organization_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_directory(request):
     """Organization Directory."""
@@ -185,18 +182,23 @@ def organization_create(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
@@ -274,7 +276,6 @@ def organization_create(request):
 # === ORGANIZATION DETAILS
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 # @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_details(request, slug=None):
@@ -411,7 +412,6 @@ def organization_details(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
 @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
@@ -441,7 +441,6 @@ def organization_staff(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
 @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
@@ -489,11 +488,14 @@ def organization_edit(request, slug=None):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
-        user=request.user, instance=organization)
+        request.POST or None,
+        request.FILES or None,
+        user=request.user,
+        instance=organization)
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(
@@ -654,47 +656,4 @@ def organization_populate_newsletter(request, slug=None):
         request, "organizations/organization-populate-newsletter.html", {
             "form":             form,
             "organization":     organization,
-        })
-
-
-# =============================================================================
-# ===
-# === ORGANIZATION IFRAMES
-# ===
-# =============================================================================
-@cache_page(60)
-@log_default(my_logger=logger, cls_or_self=False)
-def organization_iframe_upcoming(request, organization_id):
-    """Organization iFrame for upcoming Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_upcoming = Event.objects.filter(
-        status=EventStatus.UPCOMING,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-upcoming.html", {
-            "organization":         organization,
-            "events_upcoming":  events_upcoming,
-        })
-
-
-@cache_page(60)
-@log_default(my_logger=logger, cls_or_self=False)
-def organization_iframe_complete(request, organization_id):
-    """Organization iFrame for completed Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_completed = Event.objects.filter(
-        status=EventStatus.COMPLETE,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-complete.html", {
-            "organization":             organization,
-            "events_completed":     events_completed,
         })

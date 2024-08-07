@@ -1,5 +1,7 @@
+{% load cache %}
 {% load static %}
 
+{% cache 3600 faq-thumb-search LANGUAGE_CODE %}
 <script>
     /*************************************************************************/
     /*** AJAX Spinner                                                      ***/
@@ -344,3 +346,4 @@
         $("ul.pagination li a").addClass("page-link");
     });
 </script>
+{% endcache %}

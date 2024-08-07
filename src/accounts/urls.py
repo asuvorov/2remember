@@ -4,7 +4,6 @@
 
 from django.urls import re_path
 
-# from .pdf_export import CompletedEventsPDF
 from . import views
 
 
@@ -31,8 +30,7 @@ urlpatterns = [
     re_path(r"^signout/$",
         views.account_signout, {
             "next_page":    "/"
-        },
-        name="signout"),
+        }, name="signout"),
 
     # -------------------------------------------------------------------------
     # --- My Profile.
@@ -72,15 +70,6 @@ urlpatterns = [
     re_path(r"^profile/(?P<user_id>[\w_-]+)/events/$",
         views.profile_events,
         name="profile-events"),
-
-    # -------------------------------------------------------------------------
-    # --- Freiwilligenausweis.
-    # -------------------------------------------------------------------------
-    # re_path(r"^my-profile/events/export/$",
-    #     views.my_profile_events_export,
-    #     name="my-profile-events-export"),
-    # re_path(r"^my-profile/events/export.pdf$",
-    #     CompletedEventsPDF.as_view()),
 
     # -------------------------------------------------------------------------
     # --- Password.

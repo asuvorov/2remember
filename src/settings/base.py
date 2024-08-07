@@ -23,7 +23,7 @@ VERSION_MAJOR = 0
 VERSION_MINOR = 3
 VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC2"
 
 
 ###############################################################################
@@ -159,7 +159,9 @@ MIDDLEWARE = (
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
@@ -225,7 +227,61 @@ CACHES = {
     "default": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
-    "some-other-cache": {
+    "memcached": {
+        "BACKEND":  "django.core.cache.backends.memcached.PyMemcacheCache",
+        # "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "unix:/tmp/memcached.sock",
+        "OPTIONS": {
+            "MAX_ENTRIES":      1000,
+            "no_delay":         True,
+            "ignore_exc":       True,
+            "max_pool_size":    4,
+            "use_pooling":      True,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "redis": {
+        "BACKEND":  "django.core.cache.backends.redis.RedisCache",
+        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+            "db":           "10",
+            "parser_class": "redis.connection.PythonParser",
+            "pool_class":   "redis.BlockingConnectionPool",
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "db": {
+        "BACKEND":  "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "filebased": {
+        "BACKEND":  "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "locmem": {
+        "BACKEND":  "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "dummy": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
 }
@@ -609,7 +665,7 @@ MIDDLEWARE += (
     "geoip2_extras.middleware.GeoIP2Middleware",
 )
 GEOIP_PATH = os.path.join(PROJECT_PATH, "geoip/")
-GEOIP2_EXTRAS_CACHE_NAME = "some-other-cache"
+GEOIP2_EXTRAS_CACHE_NAME = "dummy"  # TODO: Explore effective caching Options.
 GEOIP2_EXTRAS_CACHE_TIMEOUT = 3600
 GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 

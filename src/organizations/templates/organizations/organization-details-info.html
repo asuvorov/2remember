@@ -1,5 +1,6 @@
 {% extends "organizations/organization-details-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -10,7 +11,10 @@
         :<organization>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block content %}
+{% cache 60 organization-info organization.slug LANGUAGE_CODE %}
 <div id="organization-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -192,6 +196,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
 

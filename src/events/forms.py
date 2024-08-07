@@ -12,6 +12,7 @@ import pendulum
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
+from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
 
 from ddcore.models.Attachment import TemporaryFile
@@ -23,9 +24,11 @@ from .models import (
     day_of_month_choices)
 
 
-# -----------------------------------------------------------------------------
-# --- EVENT CREATE/EDIT FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === EVENT CREATE/EDIT FORM
+# ===
+# =============================================================================
 class CreateEditEventForm(forms.ModelForm):
     """Create/edit Event Form."""
 
@@ -87,6 +90,12 @@ class CreateEditEventForm(forms.ModelForm):
         # else:
         #     self.fields["start_tz"].initial = settings.TIME_ZONE
 
+        # ---------------------------------------------------------------------
+        self.fields["title"].validators = [validate_is_profane]
+        self.fields["description"].validators = [validate_is_profane]
+        self.fields["tags"].validators = [validate_is_profane]
+        self.fields["hashtag"].validators = [validate_is_profane]
+
     # contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
         input_formats=[
@@ -121,8 +130,7 @@ class CreateEditEventForm(forms.ModelForm):
             attrs={
                 "placeholder": _("Separate your Links with a Space"),
             }),
-        required=False,
-    )
+        required=False)
 
     class Meta:
         model = Event
@@ -224,14 +232,18 @@ class CreateEditEventForm(forms.ModelForm):
 
         return duration
 
-    def clean(self):
-        """Clean."""
-        # ---------------------------------------------------------------------
-        # --- Validate `title` Field
-        if self.cleaned_data["title"].lower() in settings.EVENT_TITLE_RESERVED_WORDS:
+    def clean_title(self):
+        """Clean `title` Field."""
+        title = self.cleaned_data["title"]
+
+        if title.lower() in settings.EVENT_TITLE_RESERVED_WORDS:
             self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as a Event Title.")])
 
+        return title
+
+    def clean(self):
+        """Clean."""
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields
         # --- FIXME
@@ -329,9 +341,11 @@ class AddEventMaterialsForm(forms.ModelForm):
         return instance
 
 
-# -----------------------------------------------------------------------------
-# --- ROLE FORM & FORMSET
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === ROLE FORM & FORMSET
+# ===
+# =============================================================================
 # class RoleForm(forms.ModelForm):
 #     """Role Form."""
 
@@ -419,9 +433,11 @@ class AddEventMaterialsForm(forms.ModelForm):
 #     max_num=10, extra=0, can_delete=True)
 
 
-# -----------------------------------------------------------------------------
-# --- EVENT FILTER FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === EVENT FILTER FORM
+# ===
+# =============================================================================
 class FilterEventForm(forms.Form):
     """Filter Event Form."""
 
