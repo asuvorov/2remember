@@ -3,7 +3,6 @@
 """
 
 from django.contrib import admin
-from django.utils.html import format_html
 
 # from djangoseo.admin import register_seo_admin
 from rangefilter.filters import DateRangeFilter

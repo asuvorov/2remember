@@ -33,7 +33,6 @@ logger = logging.getLogger(__name__)
 # === Index
 # ===
 # =============================================================================
-@cache_page(60 * 60)
 @log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
