@@ -112,6 +112,7 @@ def post_details(request, slug):
     return render(
         request, "blog/post-details.html", {
             "post":     post,
+            "meta":     post.as_meta(request),
         })
 
 

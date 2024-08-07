@@ -7,6 +7,7 @@
 ### Changes
 
 - Improved Template caching.
+- Improved SEO Meta ingesting to the Templates.
 
 # 0.3.1 (2024-07-28)
 

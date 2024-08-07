@@ -12,6 +12,8 @@ from django.utils.translation import gettext_lazy as _
 
 import pendulum
 
+from meta.models import ModelMeta
+
 from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
@@ -70,7 +72,7 @@ def user_cover_directory_path(instance, filename):
 
 @autoconnect
 class UserProfile(
-        UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
+        ModelMeta, UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
         # ParticipationMixin,
         # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
@@ -128,6 +130,46 @@ class UserProfile(
     def __str__(self):
         """Docstring."""
         return self.user.get_full_name()
+
+    # -------------------------------------------------------------------------
+    # --- Metadata.
+    # -------------------------------------------------------------------------
+    _metadata = {
+        "description":  "bio",
+        # "extra_custom_props"
+        # "extra_props"
+        # "facebook_app_id"
+        "image":        "get_meta_image",
+        # "image_height"
+        # "image_object"
+        # "image_width"
+        "keywords":     "nickname",
+        # "locale"
+        # "object_type"
+        # "og_title"
+        # "schemaorg_title"
+        "site_name":    "2Remember",
+        "title":        "title",
+        # "twitter_creator"
+        # "twitter_site"
+        # "twitter_title"
+        # "twitter_type"
+        "url":          "get_absolute_url",
+        # "use_facebook"
+        # "use_og"
+        # "use_schemaorg"
+        # "use_title_tag"
+        # "use_twitter"
+    }
+
+    def get_meta_image(self):
+        """Docstring."""
+        if self.avatar:
+            return self.avatar.url
+
+    # def get_keywords(self):
+    #     """Docstring."""
+    #     return ", ".join(self.tags.names())
 
     # -------------------------------------------------------------------------
     # --- Profile direct URL.
@@ -272,18 +314,6 @@ class UserProfile(
             # -----------------------------------------------------------------
             # --- Logging.
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-        # ---------------------------------------------------------------------
-        # --- FIXME: Update/insert SEO Model Instance Metadata.
-        # update_seo_model_instance_metadata(
-        #     title=self.user.get_full_name(),
-        #     description=self.bio,
-        #     keywords=self.nickname,
-        #     heading=self.user.get_full_name(),
-        #     path=self.get_absolute_url(),
-        #     object_id=self.id,
-        #     content_type_id=ContentType.objects.get_for_model(self).id,
-        # )
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:

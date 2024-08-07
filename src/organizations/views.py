@@ -178,6 +178,15 @@ def organization_directory(request):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -291,9 +300,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -400,6 +407,7 @@ def organization_details(request, slug=None):
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,
+            "meta":                     organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
             "phone_numbers":            phone_numbers,
@@ -424,9 +432,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -453,9 +459,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -480,9 +484,7 @@ def organization_groups(request, slug=None):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_edit(request, slug=None):
     """Edit Organization."""
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
