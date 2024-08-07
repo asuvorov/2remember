@@ -1,7 +1,8 @@
-{% load i18n %}
+{% load cache %}
 {% load static %}
 {% load compress %}
 
+{% cache 3600 faq-thumb-search LANGUAGE_CODE %}
     <!-- Underscore -->
 {% compress js %}
     <script type="text/javascript" charset="utf-8" src="{% static 'underscore/underscore-min.js' %}"></script>
@@ -89,11 +90,6 @@
 {% endcompress %}
 {% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'seiyria-bootstrap-slider/dist/bootstrap-slider.min.js' %}"></script> -->
-{% endcompress %}
-
-    <!-- Twitter Bootstrap Tab Collapse -->
-{% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap-tabcollapse/bootstrap-tabcollapse.js' %}"></script> -->
 {% endcompress %}
 
     <!-- Twitter Bootstrap Tags Input -->
@@ -213,3 +209,4 @@
 {% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-shorten-js/dist/jquery-shorten.min.js' %}"></script> -->
 {% endcompress %}
+{% endcache %}

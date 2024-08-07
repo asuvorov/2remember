@@ -15,11 +15,6 @@
 {% block title %}{% trans "Organization" %} "{{ organization.name }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
-    {# get_metadata #}
-{% comment %}
-    <link rel="image_src" href="{{ organization.cover.url }}" />
-    <meta name="description" content="{{ organization.description|truncatechars:300 }}" />
-{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
@@ -32,7 +27,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ organization.title }}</li>
         </ol>

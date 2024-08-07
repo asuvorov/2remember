@@ -41,7 +41,7 @@ Organization Details - Info
                     <span class="label label-warning">{% trans "Location is not provided" %}</span>
                 {% else %}
                     {{ organization.address.full_address|default:"N/A" }}
-                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
+                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#instanceViewOnMapPopupModal" tabindex="-1">&nbsp;({% trans "View on Map" %})</a>
                 {% endif %}
                 </p>
             {% if organization.address.notes %}

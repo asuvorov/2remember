@@ -1,5 +1,6 @@
 {% extends "accounts/foreign-profile-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load accounttags %}
@@ -13,10 +14,13 @@
         :[social_links]  - Social Links.
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
 {% block content %}
+{% cache 60 foreign-profile-info account.user.id LANGUAGE_CODE %}
 <div id="foreign-profile-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -88,7 +92,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
 
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
@@ -121,8 +125,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ account.profile.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#myProfileViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if account.profile.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ account.profile.addressnotes }}</small></p>
                                     {% endif %}
@@ -138,9 +141,9 @@
                                         <span class="vert-delimiter">|</span>
                                     {% endif %}
                                     {% endfor %}
-                                {% endif %}
 
                                     <br/>
+                                {% endif %}
 
                                     <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
                                 </p>
@@ -212,9 +215,7 @@
             <section>
                 <h4>{% trans "Spotlight" %}</h4>
                 <div class="alert alert-warning mb-md-3" role="alert">
-                {% blocktrans %}
-                    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
-                {% endblocktrans %}
+                    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
                 </div>
             </section>
 
@@ -226,8 +227,11 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=account.profile %}
 
 {% if request.user.is_authenticated %}
     {% include "app/modals/comment-add-modal.html" %}

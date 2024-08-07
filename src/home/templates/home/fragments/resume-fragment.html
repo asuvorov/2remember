@@ -1,5 +1,9 @@
+{% load cache %}
 {% load i18n %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 3600 resume-gragment LANGUAGE_CODE %}
 <section class="px-3 py-3">
     <h3 class="text-center">ARTEM SUVOROV</h3>
     <p class="lead text-center"><em>Senior Software Engineer, Product Engineering</em></p>
@@ -314,3 +318,4 @@
         </ul>
     </div>
 </section>
+{% endcache %}

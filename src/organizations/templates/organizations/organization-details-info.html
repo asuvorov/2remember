@@ -1,5 +1,6 @@
 {% extends "organizations/organization-details-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -10,7 +11,10 @@
         :<organization>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block content %}
+{% cache 60 organization-info organization.slug LANGUAGE_CODE %}
 <div id="organization-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -53,8 +57,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ organization.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#organizationViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if organization.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ organization.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}
@@ -98,7 +101,6 @@
                             {% else %}
                                 <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                             {% endif %}
-                                {% trans "Posted by" %}
                                 <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
                                 {{ organization.created|timesince }} {% trans "ago" %}
                             </div>
@@ -125,15 +127,6 @@
 
             <!-- START ORGANIZATION ATTACHMENTS -->
             <section id="organization-attachments">
-                <h3>
-                    {% trans "Attachments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'organization-edit' organization.slug %}#organization-attachments"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-attachments.html" with instance=organization %}
             </section>
             <!--  END  ORGANIZATION ATTACHMENTS -->
@@ -203,8 +196,10 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
+
 {% include "app/modals/instance-view-on-map-modal.html" with instance=organization %}
 
 {% if request.user.is_authenticated %}

@@ -46,8 +46,7 @@
                             </div>
 
                             <div class="form-group {% if form.answer.errors %}has-error{% endif %}">
-                                {{ form.answer }}
-
+                                {{ form.answer }}<br/>
                                 <span class="help-block">{% if form.answer.errors %}{% for error in form.answer.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                             </div>
 

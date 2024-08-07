@@ -20,10 +20,10 @@ PRODUCT_NAME = "2Remember"
 
 VERSION_API = "v1"
 VERSION_MAJOR = 0
-VERSION_MINOR = 1
-VERSION_PATCH = 0
+VERSION_MINOR = 3
+VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC2"
 
 
 ###############################################################################
@@ -36,9 +36,9 @@ DEBUG_TOOLBAR = True
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..",))
 
 # We have 6 Types of Environments: "local", "dev", "test", "int", "staging", and "prod".
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
+ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
-DJANGO_SETTINGS_MODULE = os.environ.get("DJANGO_SETTINGS_MODULE", "settings.dev")
+DJANGO_SETTINGS_MODULE = config("DJANGO_SETTINGS_MODULE", default="settings.dev")
 
 ADMINS = (
     ("Artem Suvorov", "artem.suvorov@gmail.com"),
@@ -159,7 +159,9 @@ MIDDLEWARE = (
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
@@ -186,15 +188,14 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
-    "corsheaders",
-    "ddcore",
-
     "adminsortable2",
     # "bootstrap3_datetime",
-    # "djangosecure",
+    "corsheaders",
+    "ddcore",
     # "django_countries",
-    # "jquery",
     "djangoformsetjs",
+    # "djangosecure",
+    # "jquery",
     # "papertrail",
     "rangefilter",
     # "sslserver",
@@ -226,7 +227,61 @@ CACHES = {
     "default": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
-    "some-other-cache": {
+    "memcached": {
+        "BACKEND":  "django.core.cache.backends.memcached.PyMemcacheCache",
+        # "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "unix:/tmp/memcached.sock",
+        "OPTIONS": {
+            "MAX_ENTRIES":      1000,
+            "no_delay":         True,
+            "ignore_exc":       True,
+            "max_pool_size":    4,
+            "use_pooling":      True,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "redis": {
+        "BACKEND":  "django.core.cache.backends.redis.RedisCache",
+        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+            "db":           "10",
+            "parser_class": "redis.connection.PythonParser",
+            "pool_class":   "redis.BlockingConnectionPool",
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "db": {
+        "BACKEND":  "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "filebased": {
+        "BACKEND":  "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "locmem": {
+        "BACKEND":  "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "dummy": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
 }
@@ -240,62 +295,84 @@ LOGGING = {
     "disable_existing_loggers":     False,
     "filters": {
         "require_debug_false": {
-            "()":                   "django.utils.log.RequireDebugFalse",
+            "()":           "django.utils.log.RequireDebugFalse",
         },
         "require_debug_true": {
-            "()":                   "django.utils.log.RequireDebugTrue",
+            "()":           "django.utils.log.RequireDebugTrue",
         },
     },
     "formatters": {
         "simple": {
-            "format":               "[%(asctime)s] %(levelname)s %(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
         },
         "verbose": {
-            "format":               "[%(asctime)s] %(levelname)s "
-                                    "[%(name)s.%(funcName)s:%(lineno)d] "
-                                    "%(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} [{name}.{funcName}:{lineno}] {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
+        },
+        "json": {
+            "()":           "app.logformat.VerboseJSONFormatter",
         },
     },
     "handlers": {
         "console": {
-            "level":                "INFO",
+            "level":        "INFO",
             "filters": [
                 "require_debug_true",
             ],
-            "class":                "logging.StreamHandler",
-            "formatter":            "simple",
+            "class":        "logging.StreamHandler",
+            "formatter":    "simple",
+        },
+        "json_file": {
+            "level":        "DEBUG",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/json.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "json",
+        },
+        "plain_file": {
+            "level":        "INFO",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/plain.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "verbose",
         },
         "null": {
-            "class":                "logging.NullHandler",
+            "class":        "logging.NullHandler",
         },
         "mail_admins": {
-            "level":                "ERROR",
+            "level":        "ERROR",
             "filters": [
                 "require_debug_false",
             ],
-            "class":                "django.utils.log.AdminEmailHandler",
-            "formatter":            "verbose",
+            "class":        "django.utils.log.AdminEmailHandler",
+            "formatter":    "verbose",
         },
     },
     "loggers": {
+        "": {
+            "level":        "INFO",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
+        },
         "django": {
-            "handlers": [
-                "console",
-            ],
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
         },
         "django.request": {
-            "handlers": [
-                "mail_admins",
-            ],
-            "level":                "ERROR",
-            "propagate":            False,
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file", "mail_admins"],
+            "propagate":    True,
         },
         "py.warnings": {
-            "handlers": [
-                "console",
-            ],
+            "handlers":     ["console", "json_file", "plain_file"],
         },
     },
 }
@@ -340,7 +417,6 @@ BOWER_INSTALLED_APPS = (
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
     # "bootstrap-rating",
-    # "bootstrap-tabcollapse",
     # "bootstrap-tagsinput",
     # "bx-slider.js",
     # "equalheight",
@@ -589,7 +665,7 @@ MIDDLEWARE += (
     "geoip2_extras.middleware.GeoIP2Middleware",
 )
 GEOIP_PATH = os.path.join(PROJECT_PATH, "geoip/")
-GEOIP2_EXTRAS_CACHE_NAME = "some-other-cache"
+GEOIP2_EXTRAS_CACHE_NAME = "dummy"  # TODO: Explore effective caching Options.
 GEOIP2_EXTRAS_CACHE_TIMEOUT = 3600
 GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 
@@ -1101,3 +1177,30 @@ UPLOADER_SETTINGS = {
         "AUTO_UPLOAD":  True,
     }
 }
+
+
+###############################################################################
+### DJANGO SENTRY                                                           ###
+###############################################################################
+# settings.py
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN", default="https://b22808000322340efd7e59c981cbddd0@o4507562439802880.ingest.us.sentry.io/4507562447208448"),
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+
+###############################################################################
+### DJANGO LOGGING                                                          ###
+###############################################################################
+MIDDLEWARE += (
+    "app.middleware.DjangoRequestIDMiddleware",
+    "app.middleware.DjangoLoggingMiddleware",
+)

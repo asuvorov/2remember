@@ -124,9 +124,10 @@ section#event-list-grouper {
         border-bottom:      3px solid @brand-primary;
 
         h5 {
+            font-size:      1rem;
             font-weight:    bold;
             text-transform: uppercase;
-            padding:        5px;
+            padding:        0px; //5px;
             margin:         0px;
         }
     }
@@ -134,9 +135,10 @@ section#event-list-grouper {
         padding:            .5rem;
 
         h5 {
+            font-size:      1rem;
             font-weight:    bold;
             text-transform: uppercase;
-            padding:        5px 0;
+            padding:        0px; //5px 0;
             margin:         0px;
         }
         i {
@@ -235,14 +237,6 @@ section#event-list-grouper {
 }
 
 // ----------------------------------------------------------------------------
-// --- Event view on Map pop-up Modal
-// ----------------------------------------------------------------------------
-#eventViewOnMapPopupModal {
-    // Mixin
-    #modals.view-on-map();
-}
-
-// ----------------------------------------------------------------------------
 // --- Common
 // ----------------------------------------------------------------------------
 .event-list-date-grouper {
@@ -277,6 +271,12 @@ section#event-list-grouper {
             font-size:          12pt;
             font-weight:        800;
             line-height:        1;
+        }
+        & > .year {
+            display:            block;
+            font-size:          20pt;
+            font-weight:        200;
+            line-height:        1.25;
         }
     }
 
@@ -368,8 +368,8 @@ section#event-list-grouper {
 // ----------------------------------------------------------------------------
 // --- Make Design more responsive
 // ----------------------------------------------------------------------------
-@media (max-width: 479px) {
-    /* <= 479px */
+@media (max-width: 575px) {
+    /* XS   <  576px */
     #event-list {
         .event-list-date-grouper {
             width:              100%;
@@ -450,18 +450,18 @@ section#event-list-grouper {
         }
     }
 }
-@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
-    /* <= 480px <= 767px */
+@media (min-width: 576px) and (max-width: 767px) {
+    /* SM   <= 576px <= 767px */
 }
-@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-    /* <= 768px <= 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    /* MD   <= 768px <= 991px */
 }
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-    /* <= 992px <= 1199px */
+@media (min-width: 992px) and (max-width:1199px) {
+    /* LG   <= 992px <= 1199px */
 }
-@media (min-width: @screen-lg-min) and (max-width: 1599px) {
-    /* <= 1200px <= 1599px */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    /* XL   <= 1200px <= 1399px */
 }
-@media (min-width: 1600px) {
-    /* >= 1600px */
+@media (min-width: 1400px) {
+    /* XXL  >= 1400px */
 }

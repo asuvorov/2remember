@@ -4,7 +4,6 @@
 
 from django.urls import re_path
 
-# from .pdf_export import CompletedEventsPDF
 from . import views
 
 
@@ -15,18 +14,6 @@ urlpatterns = [
     re_path(r"^$",
         views.account_list,
         name="account-list"),
-    # re_path(r"^near-you/$",
-    #     views.account_near_you_list,
-    #     name="account-near-you-list"),
-    # re_path(r"^might-know/$",
-    #     views.account_might_know_list,
-    #     name="account-might-know-list"),
-    # re_path(r"^new/$",
-    #     views.account_new_list,
-    #     name="account-new-list"),
-    # re_path(r"^online/$",
-    #     views.account_online_list,
-    #     name="account-online-list"),
 
     # -------------------------------------------------------------------------
     # --- Account Registration.
@@ -43,8 +30,7 @@ urlpatterns = [
     re_path(r"^signout/$",
         views.account_signout, {
             "next_page":    "/"
-        },
-        name="signout"),
+        }, name="signout"),
 
     # -------------------------------------------------------------------------
     # --- My Profile.
@@ -84,15 +70,6 @@ urlpatterns = [
     re_path(r"^profile/(?P<user_id>[\w_-]+)/events/$",
         views.profile_events,
         name="profile-events"),
-
-    # -------------------------------------------------------------------------
-    # --- Freiwilligenausweis.
-    # -------------------------------------------------------------------------
-    # re_path(r"^my-profile/events/export/$",
-    #     views.my_profile_events_export,
-    #     name="my-profile-events-export"),
-    # re_path(r"^my-profile/events/export.pdf$",
-    #     CompletedEventsPDF.as_view()),
 
     # -------------------------------------------------------------------------
     # --- Password.

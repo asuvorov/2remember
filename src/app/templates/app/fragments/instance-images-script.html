@@ -55,11 +55,11 @@
                 reader.onload = function (e) {
                     $("div.bg-image").css({
                         "background-image":         "url(" + e.target.result + ")",
-                        "background-size":          "contain",  // "contain"
+                        "background-size":          "contain",  // "cover"
                         "background-repeat":        "repeat-x",
                         "background-attachment":    "fixed",
                         "height":                   "75vh",
-                        "width":                    "100vw"
+                        "width":                    "100%"
                     })
                 }
                 reader.readAsDataURL(input.files[0]);
@@ -79,11 +79,11 @@
     {% if instance.cover %}
         $("div.bg-image").css({
             "background-image":         "url({{ instance.cover.url }})",
-            "background-size":          "contain",  // "contain"
+            "background-size":          "contain",  // "cover"
             "background-repeat":        "repeat-x",
             "background-attachment":    "fixed",
             "height":                   "75vh",
-            "width":                    "100vw"
+            "width":                    "100%"
         })
     {% endif %}
     });

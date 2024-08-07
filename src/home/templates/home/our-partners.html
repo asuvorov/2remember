@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% comment %}
     Input Parameters:
@@ -29,10 +32,9 @@
 {% endblock %}
 
 {% block content %}
+{% cache 3600 our-partners LANGUAGE_CODE %}
 <div class="alert alert-warning mb-md-3" role="alert">
-{% blocktrans %}
-    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Page is under Construction.</p>
-{% endblocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Page is under Construction." %}</p>
 </div>
 
 <div id="our-partners" class="bg-body-tertiary p-3">
@@ -52,4 +54,5 @@
     {% endfor %}
     </div>
 </div>
+{% endcache %}
 {% endblock %}

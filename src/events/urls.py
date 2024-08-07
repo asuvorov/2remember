@@ -56,7 +56,4 @@ urlpatterns = [
     re_path(r"^(?P<slug>[\w_-]+)/edit/$",
         views.event_edit,
         name="event-edit"),
-    # re_path(r"^(?P<slug>[\w_-]+)/reporting-materials/$",
-    #     views.event_reporting_materials,
-    #     name="event-reporting-materials"),
 ]

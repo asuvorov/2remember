@@ -3,6 +3,7 @@
 """
 
 import datetime
+import logging
 
 from django.contrib.contenttypes.models import ContentType
 from django.template import loader
@@ -22,6 +23,7 @@ from ddcore.models.Rating import Rating
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
+from app.decorators import log_default
 from events.models import (
     Event,
     EventMode,
@@ -34,6 +36,9 @@ from events.models import (
 from .utils import (
     event_access_check_required,
     event_org_staff_member_required)
+
+
+logger = logging.getLogger(__name__)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,6 +57,7 @@ class EventUpcomingViewSet(APIView):
     # serializer_class = PostSerializer
     # model = Post
 
+    @log_default(my_logger=logger)
     def get(self, request):
         """GET: Events upcoming.
 
@@ -112,6 +118,7 @@ class EventUpcomingViewSet(APIView):
             data,
             status=status.HTTP_200_OK)
 
+
 event_upcoming = EventUpcomingViewSet.as_view()
 
 
@@ -123,6 +130,7 @@ class EventCreateViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Publish draft Event.
 
@@ -197,6 +205,7 @@ class EventCreateViewSet(APIView):
             "message":      _("Successfully published the Event."),
         }, status=status.HTTP_200_OK)
 
+
 event_create = EventCreateViewSet.as_view()
 
 
@@ -208,6 +217,7 @@ class EventCompleteViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Complete Event.
 
@@ -297,6 +307,7 @@ class EventCloneViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Clone the Event.
 
@@ -424,6 +435,7 @@ class EventCloseViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Close the Event.
 
@@ -501,6 +513,7 @@ class EventCloseViewSet(APIView):
             "message":      _("Successfully closed the Event."),
         }, status=status.HTTP_200_OK)
 
+
 event_close = EventCloseViewSet.as_view()
 
 
@@ -519,6 +532,7 @@ class ParticipationPostViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Sign up for the Event.
 
@@ -640,6 +654,7 @@ class ParticipationPostViewSet(APIView):
             "message":      _("Successfully posted the Participation."),
         }, status=status.HTTP_200_OK)
 
+
 participation_post = ParticipationPostViewSet.as_view()
 
 
@@ -651,6 +666,7 @@ class ParticipationWithdrawViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Sign up for the Event.
 
@@ -731,6 +747,7 @@ class ParticipationWithdrawViewSet(APIView):
             "message":      _("Successfully withdrew the Participation."),
         }, status=status.HTTP_200_OK)
 
+
 participation_withdraw = ParticipationWithdrawViewSet.as_view()
 
 
@@ -742,6 +759,7 @@ class ParticipationRemoveViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Remove Participation.
 
@@ -838,6 +856,7 @@ class ParticipationRemoveViewSet(APIView):
             "message":      _("Successfully removed the Participant."),
         }, status=status.HTTP_200_OK)
 
+
 participation_remove = ParticipationRemoveViewSet.as_view()
 
 
@@ -850,6 +869,7 @@ class ParticipationAcceptApplicationViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Accept Participation Request.
 
@@ -951,6 +971,7 @@ class ParticipationAcceptApplicationViewSet(APIView):
             "participant":  rendered,
         }, status=status.HTTP_200_OK)
 
+
 participation_accept_application = ParticipationAcceptApplicationViewSet.as_view()
 
 
@@ -962,6 +983,7 @@ class ParticipationRejectApplicationViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Reject Participation Request.
 
@@ -1058,6 +1080,7 @@ class ParticipationRejectApplicationViewSet(APIView):
             "message":      _("Successfully rejected the Participation Request."),
         }, status=status.HTTP_200_OK)
 
+
 participation_reject_application = ParticipationRejectApplicationViewSet.as_view()
 
 
@@ -1076,6 +1099,7 @@ class SelfreflectionSubmitViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Submit Experience Report (Self-reflection).
 
@@ -1181,6 +1205,7 @@ class SelfreflectionSubmitViewSet(APIView):
             "message":      _("Successfully submitted the Experience Report."),
         }, status=status.HTTP_200_OK)
 
+
 event_selfreflection_submit = SelfreflectionSubmitViewSet.as_view()
 
 
@@ -1192,6 +1217,7 @@ class SelfreflectionAcceptViewSet(APIView):
     # serializer_class = EventSerializer
     # model = Event
 
+    @log_default(my_logger=logger)
     def post(self, request, event_id):
         """POST: Accept Experience Report (Self-reflection).
 
@@ -1306,6 +1332,7 @@ class SelfreflectionAcceptViewSet(APIView):
             "message":      _("Successfully accepted the Experience Report."),
         }, status=status.HTTP_200_OK)
 
+
 participation_accept_selfreflection = SelfreflectionAcceptViewSet.as_view()
 
 
@@ -1412,5 +1439,6 @@ class SelfreflectionRejectViewSet(APIView):
         return Response({
             "message":      _("Successfully rejected the Experience Report."),
         }, status=status.HTTP_200_OK)
+
 
 participation_reject_selfreflection = SelfreflectionRejectViewSet.as_view()

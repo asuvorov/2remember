@@ -102,63 +102,21 @@
 // ----------------------------------------------------------------------------
 // --- Make Design more responsive
 // ----------------------------------------------------------------------------
-@media (max-width: 479px) {
-    /* <= 479px */
-    #post-details {
-        margin-top:         0;
-        margin-bottom:      50px;
-    }
-    #pst-tag-cloud,
-    #pst-calendar {
-        display:            none;
-    }
-
-    .post-thumb-hor,
-    .post-thumb-search {
-        .post-header {
-            h4 {
-                font-size:  @font-size-base;
-            }
-        }
-        .learn-more {
-            display:            flex;
-            align-items:        center;
-            justify-content:    center;
-
-            a {
-                width:          90% !important;
-                float:          none;
-            }
-        }
-    }
-    .actions {
-        margin-top:         10px;
-    }
+@media (max-width: 575px) {
+    /* XS   <  576px */
 }
-@media (min-width: @screen-xs-min) and (max-width: @screen-xs-max) {
-    /* <= 480px <= 767px */
-    #post-details {
-        margin-top:         0;
-        margin-bottom:      50px;
-    }
-    #pst-tag-cloud,
-    #pst-calendar {
-        display:            none;
-    }
-
-    .actions {
-        margin-top:         10px;
-    }
+@media (min-width: 576px) and (max-width: 767px) {
+    /* SM   <= 576px <= 767px */
 }
-@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
-    /* <= 768px <= 991px */
+@media (min-width: 768px) and (max-width: 991px) {
+    /* MD   <= 768px <= 991px */
 }
-@media (min-width: @screen-md-min) and (max-width: @screen-md-max) {
-    /* <= 992px <= 1199px */
+@media (min-width: 992px) and (max-width:1199px) {
+    /* LG   <= 992px <= 1199px */
 }
-@media (min-width: @screen-lg-min) and (max-width: 1599px) {
-    /* <= 1200px <= 1599px */
+@media (min-width: 1200px) and (max-width: 1399px) {
+    /* XL   <= 1200px <= 1399px */
 }
-@media (min-width: 1600px) {
-    /* >= 1600px */
+@media (min-width: 1400px) {
+    /* XXL  >= 1400px */
 }

@@ -3,6 +3,7 @@
 """
 
 import json
+import logging
 
 from django.contrib.auth.models import User
 from django.template import loader
@@ -18,6 +19,7 @@ from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
+from app.decorators import log_default
 from organizations.models import (
     Organization,
     OrganizationGroup,
@@ -27,6 +29,9 @@ from .serializers import OrganizationGroupSerializer
 from .utils import (
     organization_access_check_required,
     organization_staff_member_required,)
+
+
+logger = logging.getLogger(__name__)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -45,6 +50,7 @@ class OrganizationStaffMemberOrderViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Change Organization Staff Members Order.
 
@@ -123,6 +129,7 @@ class OrganizationStaffMemberOrderViewSet(APIView):
             "message":      _("Successfully changed the Staff Members Order."),
         }, status=status.HTTP_200_OK)
 
+
 staff_member_order = OrganizationStaffMemberOrderViewSet.as_view()
 
 
@@ -135,6 +142,7 @@ class OrganizationStaffMemberEditViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Staff Member edit.
 
@@ -206,6 +214,7 @@ class OrganizationStaffMemberEditViewSet(APIView):
             "message":      _("Successfully updated the Staff Member Information."),
         }, status=status.HTTP_200_OK)
 
+
 staff_member_edit = OrganizationStaffMemberEditViewSet.as_view()
 
 
@@ -218,6 +227,7 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Staff Member remove.
 
@@ -284,6 +294,7 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
             "message":      _("Successfully removed the Staff Member."),
         }, status=status.HTTP_200_OK)
 
+
 staff_member_remove = OrganizationStaffMemberRemoveViewSet.as_view()
 
 
@@ -300,6 +311,7 @@ class OrganizationGroupListViewSet(APIView):
         """Return Model QuerySet."""
         return self.model.objects.all()
 
+    @log_default(my_logger=logger)
     def get(self, request, organization_id):
         """GET: Organization Group List.
 
@@ -357,6 +369,7 @@ class OrganizationGroupListViewSet(APIView):
             "message":      _("Successfully pulled out the Groups."),
         }, status=status.HTTP_200_OK)
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Group create.
 
@@ -439,6 +452,7 @@ class OrganizationGroupListViewSet(APIView):
             "org_groups":   rendered,
         }, status=status.HTTP_200_OK)
 
+
 group_list = OrganizationGroupListViewSet.as_view()
 
 
@@ -451,6 +465,7 @@ class OrganizationGroupRemoveViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Group remove.
 
@@ -525,6 +540,7 @@ class OrganizationGroupRemoveViewSet(APIView):
             "message":      _("Successfully removed the Group."),
         }, status=status.HTTP_200_OK)
 
+
 group_remove = OrganizationGroupRemoveViewSet.as_view()
 
 
@@ -537,6 +553,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Group Member remove.
 
@@ -618,6 +635,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
             "message":      _("Successfully removed the Group Member."),
         }, status=status.HTTP_200_OK)
 
+
 group_member_remove = OrganizationGroupMemberRemoveViewSet.as_view()
 
 
@@ -630,6 +648,7 @@ class OrganizationSubscribeViewSet(APIView):
     # serializer_class = OrganizationSerializer
     # model = Organization
 
+    @log_default(my_logger=logger)
     def post(self, request, organization_id):
         """POST: Organization Subscribe.
 
@@ -686,5 +705,6 @@ class OrganizationSubscribeViewSet(APIView):
         return Response({
             "message":      _("You have successfully subscribed to the Organization's Newsletters and Notifications."),
         }, status=status.HTTP_200_OK)
+
 
 subscribe = OrganizationSubscribeViewSet.as_view()

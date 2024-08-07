@@ -1,5 +1,6 @@
 {% extends "events/event-details-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -10,7 +11,10 @@
         :<event>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block content %}
+{% cache 60 event-info event.slug LANGUAGE_CODE %}
 <div id="event-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -53,8 +57,7 @@
                                     <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
                                 {% else %}
                                     {{ event.address.full_address|default:"N/A" }}
-                                    <a data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
-
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
                                     {% if event.address.notes %}
                                         <p class="card-text"><small class="text-muted">{{ event.addressnotes|striptags|escape }}</small></p>
                                     {% endif %}
@@ -88,7 +91,6 @@
                             {% else %}
                                 <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                             {% endif %}
-                                {% trans "Posted by" %}
                                 <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
                                 {{ event.created|timesince }} {% trans "ago" %}
                             </div>
@@ -126,15 +128,6 @@
 
             <!-- START EVENT ATTACHMENTS -->
             <section id="event-attachments">
-                <h3>
-                    {% trans "Attachments" %}
-                    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
-                {% if request.user.is_authenticated %}
-                    {% if is_admin %}
-                        <a class="add-attachment btn btn-primary" href="{% url 'event-edit' event.slug %}#event-attachments"><i class="bi bi-plus-lg"></i></a>
-                    {% endif %}
-                {% endif %}
-                </h3>
                 {% include "app/fragments/instance-attachments.html" with instance=event %}
             </section>
             <!--  END  EVENT ATTACHMENTS -->
@@ -186,6 +179,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
 

@@ -26,7 +26,6 @@ from django.shortcuts import (
     render)
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.cache import cache_page
 
 from annoying.functions import get_object_or_None
 from termcolor import colored, cprint
@@ -48,6 +47,7 @@ from ddcore.models.SocialLink import SocialLink
 from accounts.utils import (
     is_event_admin,
     is_profile_complete)
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     SocialLinkFormSet)
@@ -71,7 +71,7 @@ from .models import (
 from .utils import get_event_list
 
 
-logger = logging.getLogger("py.warnings")
+logger = logging.getLogger(__name__)
 
 
 # =============================================================================
@@ -79,13 +79,9 @@ logger = logging.getLogger("py.warnings")
 # === EVENT LIST
 # ===
 # =============================================================================
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_list(request):
     """List of the all Events."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-
     # -------------------------------------------------------------------------
     # --- Retrieve Event List.
     #
@@ -101,7 +97,8 @@ def event_list(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
+        request.GET or None,
+        request.FILES or None,
         qs=events)
 
     # -------------------------------------------------------------------------
@@ -117,7 +114,7 @@ def event_list(request):
         })
 
 
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_near_you_list(request):
     """List of the Events, near the User."""
     # -------------------------------------------------------------------------
@@ -216,7 +213,7 @@ def event_near_you_list(request):
         })
 
 
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_new_list(request):
     """List of the new Events."""
     # -------------------------------------------------------------------------
@@ -284,7 +281,7 @@ def event_new_list(request):
         })
 
 
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_dateless_list(request):
     """List of the dateless Events."""
     events = get_event_list(request).filter(status=EventStatus.UPCOMING)
@@ -343,7 +340,7 @@ def event_dateless_list(request):
         })
 
 
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_featured_list(request):
     """List of the featured Events."""
     events = get_event_list(request).filter(
@@ -409,7 +406,7 @@ def event_featured_list(request):
 # === EVENT CATEGORY LIST
 # ===
 # =============================================================================
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def event_category_list(request):
     """List of the all Event Categories."""
     # -------------------------------------------------------------------------
@@ -430,17 +427,9 @@ def event_category_list(request):
 # =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@log_default(my_logger=logger, cls_or_self=False)
 def event_create(request):
     """Create the Event."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
@@ -465,8 +454,9 @@ def event_create(request):
         )
     aform = AddressForm(
         request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     # formset_roles = RoleFormSet(
     #     request.POST or None, request.FILES or None,
@@ -484,7 +474,7 @@ def event_create(request):
 
         if (
                 form.is_valid() and
-                aform.is_valid()): # and
+                aform.is_valid()):  # and
                 # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
@@ -549,8 +539,8 @@ def event_create(request):
 # === EVENT DETAILS
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 # @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_details(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -734,8 +724,8 @@ def event_details(request, slug):
         })
 
 
-@cache_page(60 * 1)
 @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_confirm(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -767,8 +757,8 @@ def event_confirm(request, slug):
         })
 
 
-@cache_page(60 * 1)
 @event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_acknowledge(request, slug):
     """Event Details."""
     # -------------------------------------------------------------------------
@@ -807,17 +797,9 @@ def event_acknowledge(request, slug):
 # =============================================================================
 @login_required
 # @event_org_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug):
     """Edit Event."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
@@ -984,94 +966,4 @@ def event_edit(request, slug):
             # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
             "event":            event,
-        })
-
-
-@login_required
-@event_org_staff_member_required
-def event_reporting_materials(request, slug):
-    """Add Event reporting Materials."""
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
-    # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
-
-    # -------------------------------------------------------------------------
-    # --- Organizer can add reporting Materials only if Event is completed.
-    #     Closed (deleted) Event cannot be modified.
-    # -------------------------------------------------------------------------
-    if not event.is_complete or event.is_closed:
-        raise Http404
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    form = AddEventMaterialsForm(
-        request.POST or None, request.FILES or None,
-        instance=event)
-
-    if request.method == "POST":
-        if form.is_valid():
-            form.save()
-            form.save_m2m()
-
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Event Images/Documents.
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
-
-                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-            # -----------------------------------------------------------------
-            # --- Send Email Notification(s).
-            event.email_notify_admin_event_edited(request)
-            event.email_notify_alt_person_event_edited(request)
-
-            Participation.email_notify_participants_event_reporting_materials(
-                request=request,
-                event=event)
-
-            # -----------------------------------------------------------------
-            # --- Save the Log.
-
-        # ---------------------------------------------------------------------
-        # --- Failed to edit the Event
-        # --- Save the Log
-
-    return render(
-        request, "events/event-reporting-materials.html", {
-            "form":     form,
-            "event":    event,
         })
