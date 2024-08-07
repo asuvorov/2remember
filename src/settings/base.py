@@ -23,7 +23,7 @@ VERSION_MAJOR = 0
 VERSION_MINOR = 3
 VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC2"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC3 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>)"
 
 
 ###############################################################################
