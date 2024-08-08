@@ -1,5 +1,6 @@
 {% extends "events/event-details-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -10,7 +11,10 @@
         :<event>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block content %}
+{% cache 60 event-info event.slug LANGUAGE_CODE %}
 <div id="event-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -175,6 +179,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
 

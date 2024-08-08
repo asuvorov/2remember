@@ -62,17 +62,9 @@ MIDDLEWARE_CLASSES = (
 ###############################################################################
 ### DJANGO CACHING                                                          ###
 ###############################################################################
-# CACHES = {
-#     "default": {
-#         "BACKEND":  config("CACHE_BACKEND", default=""),
-#         "LOCATION": config("CACHE_LOCATION", default=""),
-#         "TIMEOUT":  config("CACHE_TIMEOUT", default=""),
-#     }
-# }
-
-# CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="")
-# CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default="")
-# CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="")
+CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="locmem")
+CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default=60)
+CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="staging")
 
 
 ###############################################################################

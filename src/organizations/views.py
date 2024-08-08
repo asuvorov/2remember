@@ -19,7 +19,6 @@ from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 
 from termcolor import cprint
 
@@ -69,7 +68,6 @@ logger = logging.getLogger(__name__)
 # === ORGANIZATION LIST
 # ===
 # =============================================================================
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
@@ -121,7 +119,6 @@ def organization_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_directory(request):
     """Organization Directory."""
@@ -181,6 +178,15 @@ def organization_directory(request):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -279,7 +285,6 @@ def organization_create(request):
 # === ORGANIZATION DETAILS
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 # @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_details(request, slug=None):
@@ -295,9 +300,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -404,6 +407,7 @@ def organization_details(request, slug=None):
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,
+            "meta":                     organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
             "phone_numbers":            phone_numbers,
@@ -416,7 +420,6 @@ def organization_details(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
 @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
@@ -429,9 +432,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -446,7 +447,6 @@ def organization_staff(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
 @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
@@ -459,9 +459,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -486,9 +484,7 @@ def organization_groups(request, slug=None):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_edit(request, slug=None):
     """Edit Organization."""
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -662,47 +658,4 @@ def organization_populate_newsletter(request, slug=None):
         request, "organizations/organization-populate-newsletter.html", {
             "form":             form,
             "organization":     organization,
-        })
-
-
-# =============================================================================
-# ===
-# === ORGANIZATION IFRAMES
-# ===
-# =============================================================================
-@cache_page(60)
-@log_default(my_logger=logger, cls_or_self=False)
-def organization_iframe_upcoming(request, organization_id):
-    """Organization iFrame for upcoming Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_upcoming = Event.objects.filter(
-        status=EventStatus.UPCOMING,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-upcoming.html", {
-            "organization":         organization,
-            "events_upcoming":  events_upcoming,
-        })
-
-
-@cache_page(60)
-@log_default(my_logger=logger, cls_or_self=False)
-def organization_iframe_complete(request, organization_id):
-    """Organization iFrame for completed Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_completed = Event.objects.filter(
-        status=EventStatus.COMPLETE,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-complete.html", {
-            "organization":             organization,
-            "events_completed":     events_completed,
         })

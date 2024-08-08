@@ -1,7 +1,8 @@
+{% load cache %}
 {% load compress %}
-{% load i18n %}
 {% load static %}
 
+{% cache 3600 faq-thumb-search LANGUAGE_CODE %}
     <!-- Underscore -->
 {% compress js %}
     <script type="text/javascript" charset="utf-8" src="{% static 'underscore/underscore-min.js' %}"></script>
@@ -206,3 +207,4 @@
     <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
     <link rel="stylesheet" type="text/css" href="{% static 'ionicons/css/ionicons.css' %}">
 {% endcompress %}
+{% endcache %}

@@ -26,7 +26,6 @@ from django.shortcuts import (
     render)
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.cache import cache_page
 
 from annoying.functions import get_object_or_None
 from termcolor import colored, cprint
@@ -79,7 +78,6 @@ logger = logging.getLogger(__name__)
 # === EVENT LIST
 # ===
 # =============================================================================
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_list(request):
     """List of the all Events."""
@@ -98,7 +96,8 @@ def event_list(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
+        request.GET or None,
+        request.FILES or None,
         qs=events)
 
     # -------------------------------------------------------------------------
@@ -114,7 +113,6 @@ def event_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_near_you_list(request):
     """List of the Events, near the User."""
@@ -214,7 +212,6 @@ def event_near_you_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_new_list(request):
     """List of the new Events."""
@@ -283,7 +280,6 @@ def event_new_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_dateless_list(request):
     """List of the dateless Events."""
@@ -343,7 +339,6 @@ def event_dateless_list(request):
         })
 
 
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_featured_list(request):
     """List of the featured Events."""
@@ -410,7 +405,6 @@ def event_featured_list(request):
 # === EVENT CATEGORY LIST
 # ===
 # =============================================================================
-@cache_page(60)
 @log_default(my_logger=logger, cls_or_self=False)
 def event_category_list(request):
     """List of the all Event Categories."""
@@ -544,7 +538,6 @@ def event_create(request):
 # === EVENT DETAILS
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 # @event_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_details(request, slug):
@@ -566,9 +559,7 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Retrieve the Event.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
+    event = get_object_or_404(Event, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
@@ -717,6 +708,7 @@ def event_details(request, slug):
     return render(
         request, "events/event-details-info.html", {
             "event":                        event,
+            "meta":                         event.as_meta(request),
             "participation":                participation,
             "is_admin":                     is_admin,
             "show_withdraw_form":           show_withdraw_form,
@@ -731,7 +723,6 @@ def event_details(request, slug):
         })
 
 
-@cache_page(60 * 1)
 @event_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_confirm(request, slug):
@@ -765,7 +756,6 @@ def event_confirm(request, slug):
         })
 
 
-@cache_page(60 * 1)
 @event_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_acknowledge(request, slug):

@@ -1,3 +1,4 @@
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load accounttags %}
@@ -7,6 +8,9 @@
         :<account>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 account-thumbnail-search account.user.id LANGUAGE_CODE %}
 <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24" style="margin-bottom:10px;">
 {% with account as profile %}
     <div class="row">
@@ -50,3 +54,4 @@
     </div>
 {% endwith %}
 </div>
+{% endcache %}

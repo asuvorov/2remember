@@ -24,7 +24,6 @@ from django.shortcuts import (
     render)
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
 from termcolor import cprint
@@ -408,7 +407,6 @@ def password_reset(request):
 # === ACCOUNT LIST
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def account_list(request):
     """List of the Members."""
@@ -575,6 +573,7 @@ def my_profile_view(request):
 
     response = HttpResponse(render(
         request, "accounts/my-profile-info.html", {
+            "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
             "show_no_email_popup_modal":    show_no_email_popup_modal,
@@ -830,7 +829,6 @@ def my_profile_privacy(request):
 # === FOREIGN PROFILE
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_view(request, user_id):
     """Foreign Profile Info."""
@@ -844,10 +842,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
-
+    account = get_object_or_404(user_model, pk=user_id)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -972,6 +967,7 @@ def profile_view(request, user_id):
     return render(
         request, "accounts/foreign-profile-info.html", {
             "account":                  account,
+            "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
             "related_organizations":    related_organizations,
             "phone_numbers":            phone_numbers,
@@ -980,7 +976,6 @@ def profile_view(request, user_id):
         })
 
 
-@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_participations(request, user_id):
     """Foreign Profile Participations."""
@@ -1100,7 +1095,6 @@ def profile_participations(request, user_id):
         })
 
 
-@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_events(request, user_id):
     """Foreign Profile Events."""

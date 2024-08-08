@@ -45,6 +45,7 @@ django-geoip2-extras==4.1
 django-grappelli==4.0.1
 # django-haystack==3.2.1
 django-imagekit==5.0.0
+django-meta==2.4.2
 # django-mptt==0.14.0
 # django-mptt-admin==2.4.1
 django-passwords==0.3.12
@@ -52,7 +53,6 @@ django-profanity-filter==0.2.1
 # django-rest-swagger==2.2.0
 django-rosetta==0.10.0
 # django-secure==1.0.2
-# django-seo2==1.0.1
 # django-simple-captcha==0.5.17
 # django-sslserver==0.22
 django-static-fontawesome==6.5.2.0
@@ -102,6 +102,8 @@ lxml==5.2.1
 
 #------------------------------------------------------------------------------
 # --- "P"
+pymemcache==4.0.0
+pytz==2024.1
 
 # -----------------------------------------------------------------------------
 # --- "python-*"

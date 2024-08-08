@@ -1,11 +1,18 @@
+{% load cache %}
 {% load i18n %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 <div class="alert alert-info alert-dismissible" role="alert">
+{% blocktrans %}
     Date last revised: <i>July 1st, 2024</i>
+{% endblocktrans %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
+{% cache 3600 user-agreement-fragment LANGUAGE_CODE %}
 <div id="user-agreement-fragment">
+{% blocktrans %}
     <h3>INTRODUCTION</h3>
     <p>This User Agreement and Privacy Policy governs each Website, Mobile Site, Application and/or other Service, regardless of how distributed, transmitted, published or broadcast (each, a "Service"), provided by "Copycat Software, LLC", its Parent, Subsidiaries and/or Affiliates ("we", "us", or "our"), that links to this User Agreement and Privacy Policy, which is binding on all those, who access, visit and/or use the Service, whether acting as an Individual or on behalf of an Entity, including you and all Persons, Entities or digital Engines of any kind, that harvest, crawl, index, scrape, spider or mine digital Content by an automated or manual Process or otherwise (collectively, "you" or "your").</p>
     <p>Please, read this User Agreement and Privacy Policy carefully. You can access this User Agreement and Privacy Policy any Time in the Footer of the Service's Home Page or initial Screen. <strong>Your Access, Visitation and/or Use of the Service, including without Limitation any Registration on any Aspect of the Service, will constitute your Agreement to this User Agreement and Privacy Policy.</strong> If you do not agree with the Terms and Conditions of this User Agreement and Privacy Policy, you may not access, visit and/or use the Service.</p>
@@ -232,4 +239,6 @@
         <li>Any Delay or Failure by us to exercise or enforce any Right or Provision of the Agreement will not constitute a Waiver of such Right or Provision. No Waiver by us shall have Effect unless such Waiver is set forth in writing, signed by us; nor shall any such Waiver of any Breach or default constitute a Waiver of any subsequent Breach or Default.</li>
         <li>We may sub-license, transfer, sell or assign the Agreement, and/or any of our purported Obligations hereunder, at any Time to any Person or Entity, with or without Notice. You may not sub-license, transfer, sell, or assign the Agreement at any Time to any Person or Entity, and any Attempt to do so will be null and void.</li>
     </ol>
+{% endblocktrans %}
 </div>
+{% endcache %}
