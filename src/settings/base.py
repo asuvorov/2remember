@@ -23,7 +23,7 @@ VERSION_MAJOR = 0
 VERSION_MINOR = 3
 VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC2"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC4 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>, <a href='https://github.com/asuvorov/2remember/pull/197/'>feat: upload files api</a>)"
 
 
 ###############################################################################
@@ -716,6 +716,63 @@ IMAGEKIT_SPEC_CACHEFILE_NAMER = "imagekit.cachefiles.namers.source_name_as_path"
 
 
 ###############################################################################
+### DJANGO META                                                             ###
+###############################################################################
+INSTALLED_APPS += (
+    "meta",
+)
+
+META_SITE_PROTOCOL = "https"
+# META_SITE_DOMAIN = None
+# META_SITE_TYPE = "og:type"
+# META_SITE_NAME = None
+# META_INCLUDE_KEYWORDS = []
+# META_DEFAULT_KEYWORDS = []
+# META_IMAGE_URL =
+META_USE_OG_PROPERTIES = True
+# META_USE_TWITTER_PROPERTIES = False
+# META_USE_SCHEMAORG_PROPERTIES = False
+# META_USE_TITLE_TAG = True
+META_USE_SITES = True
+# META_OG_NAMESPACES =
+# META_OG_SECURE_URL_ITEMS=
+
+#                         # description
+#                         # extra_custom_props
+#                         # extra_props
+#                         # facebook_app_id
+# META_FB_PAGES           # fb_pages              (default: blank)
+# META_DEFAULT_IMAGE      # image                 (must be an absolute URL, ignores META_IMAGE_URL)
+#                         # image_height
+#                         # image_object
+#                         # image_width
+#                         # keywords
+#                         # locale
+#                         # use_facebook
+#                         # use_og
+#                         # use_schemaorg
+#                         # use_title_tag
+#                         # use_twitter
+# META_FB_APPID           # og_app_id             (default: blank)
+# META_FB_AUTHOR_URL      # og_author_url         (default: blank)
+# META_FB_PROFILE_ID      # og_profile_id         (default: blank)
+# META_FB_PUBLISHER       # og_publisher          (default: blank)
+#                         # og_title
+# META_FB_TYPE            # og_type               (default: first META_FB_TYPES)
+# META_SITE_TYPE          # object_type           (default: first META_OBJECT_TYPES)
+#                         # schemaorg_title
+# META_SCHEMAORG_TYPE     # schemaorg_type        (default: first META_SCHEMAORG_TYPE)
+#                         # site_name
+#                         # title
+# META_TWITTER_AUTHOR     # twitter_author        (default: blank)
+#                         # twitter_creator
+# META_TWITTER_SITE       # twitter_site          (default: blank)
+#                         # twitter_title
+# META_TWITTER_TYPE       # twitter_type          (default: first META_TWITTER_TYPES)
+#                         # url
+
+
+###############################################################################
 ### DJANGO MPTT                                                             ###
 ###############################################################################
 # INSTALLED_APPS += (
@@ -843,14 +900,6 @@ ROSETTA_ACCESS_CONTROL_FUNCTION = None
 ROSETTA_LANGUAGE_GROUPS = False
 
 ROSETTA_AUTO_COMPILE = True
-
-
-###############################################################################
-### DJANGO SEO                                                              ###
-###############################################################################
-# INSTALLED_APPS += (
-#     "djangoseo",
-# )
 
 
 ###############################################################################

@@ -573,6 +573,7 @@ def my_profile_view(request):
 
     response = HttpResponse(render(
         request, "accounts/my-profile-info.html", {
+            "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
             "show_no_email_popup_modal":    show_no_email_popup_modal,
@@ -841,10 +842,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
-
+    account = get_object_or_404(user_model, pk=user_id)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -969,6 +967,7 @@ def profile_view(request, user_id):
     return render(
         request, "accounts/foreign-profile-info.html", {
             "account":                  account,
+            "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
             "related_organizations":    related_organizations,
             "phone_numbers":            phone_numbers,

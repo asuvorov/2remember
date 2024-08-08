@@ -558,9 +558,7 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Retrieve the Event.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
+    event = get_object_or_404(Event, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
@@ -709,6 +707,7 @@ def event_details(request, slug):
     return render(
         request, "events/event-details-info.html", {
             "event":                        event,
+            "meta":                         event.as_meta(request),
             "participation":                participation,
             "is_admin":                     is_admin,
             "show_withdraw_form":           show_withdraw_form,
