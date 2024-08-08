@@ -8,6 +8,7 @@
 
 - Improved Template caching.
 - Improved SEO Meta ingesting to the Templates.
+- Moved a Media uploading Logic under REST API.
 
 # 0.3.1 (2024-07-28)
 

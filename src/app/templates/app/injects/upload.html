@@ -3,19 +3,22 @@
     /*** Files Uploading                                                   ***/
     /*************************************************************************/
     var upload_count = $("#tmp_files input").length;
-    var real_upload_count;
 
     var image_count = 0;
     var doc_count = 0;
+    var link_count = 0;
 
     var saved_images = 0;
     var saved_documents = 0;
+    var saved_links = 0;
 
     function csrfSafeMethod(method) {
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
-    //--- Remove uploaded File
+    // ------------------------------------------------------------------------
+    //--- Remove uploaded File.
+    // ------------------------------------------------------------------------
     function removeFile(index, container, event) {
         if (is_image($("#id_tmp_images_path_" + index).val())) {
             image_count--;
@@ -33,13 +36,22 @@
         tally();
     }
 
-    //--- Check, if uploaded File is an Image
+    // ------------------------------------------------------------------------
+    // --- Check, if uploaded File is an Document.
+    // ------------------------------------------------------------------------
+    function is_document(path) {
+        return _.contains({{ documents|safe }}, path.split(".").pop());
+    }
+
+    // ------------------------------------------------------------------------
+    // --- Check, if uploaded File is an Image.
+    // ------------------------------------------------------------------------
     function is_image(path) {
-        return _.contains(["jpg", "jpeg", "gif", "png"], path.split(".").pop());
+        return _.contains({{ images|safe }}, path.split(".").pop());
     }
 
     $(function () {
-        var url = "{% url 'tmp-upload' %}";
+        var url = "{% url 'api-tmp-upload' %}";
         var csrftoken = "{{ csrf_token }}";
 
         $("input[name='tmp_images_path']").each( function (key, obj) {
@@ -63,7 +75,7 @@
         $("#fileupload-images").fileupload({
             url: url,
             crossDomain: false,
-            acceptFileTypes: /(\.|\/)(jpe?g|png|gif)$/i,
+            acceptFileTypes: /(\.|\/)({{ images_str_reg }})$/i,
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type)) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -72,17 +84,20 @@
             dataType: "json",
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
-                    // Render Thumbnails
-                    if (is_image(file.name)) {
-                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.name + "' width='100'>").appendTo("#files");
+                    // --------------------------------------------------------
+                    // --- Render Thumbnails.
+                    if (is_image(file.tmp_file_name)) {
+                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.tmp_file_name + "' width='100'>").appendTo("#files");
                         $("#files-label").show()
                     }
 
-                    // UPLOAD ID: used by Django to associate upload with record
+                    // --------------------------------------------------------
+                    // --- UPLOAD ID: Used by Django to associate Upload with Record.
                     $("<input type='hidden' id='id_tmp_files_" + upload_count + "' name='tmp_files'>").val(file.tmp_file_id).appendTo("#tmp_files");
 
-                    // UPLOAD PATH: used by Javascript to render thumbnails
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
+                    // --------------------------------------------------------
+                    // --- UPLOAD PATH: Used by Javascript to render Thumbnails.
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.tmp_file_name).appendTo("#tmp_images_path");
 
                     upload_count++;
                     image_count++;
@@ -95,6 +110,11 @@
                     $("#progress").css("display", "none");
                 }, 1000);
             },
+            fail: function (e, data) {
+                console.log(">>> FAIL");
+                console.log(">>> e", e);
+                console.log(">>> data", data);
+            },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
 
@@ -105,13 +125,13 @@
         }).prop("disabled", !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : "disabled");
 
         $("#fileupload-images").bind("fileuploadprocessfail", function (e, data) {
-            alert("Sorry, this field only supports the following file types:\n - jpg, png, gif\n\nYour file was not added.");
+            alert("Sorry, this Field only supports the following File Types:\n - {{ images_str }}\n\nYour File was not added.");
         });
 
         $("#fileupload-documents").fileupload({
             url: url,
             crossDomain: false,
-            acceptFileTypes: /(\.|\/)(doc|pdf|txt)$/i,
+            acceptFileTypes: /(\.|\/)({{ documents_str_reg }})$/i,
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type)) {
                     xhr.setRequestHeader("X-CSRFToken", csrftoken);
@@ -120,20 +140,22 @@
             dataType: "json",
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
-                    // Render Thumbnails
-                    if (!is_image(file.name)) {
-                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.name.split("/").pop()) + "<br/>").appendTo("#docs");
+                    // --------------------------------------------------------
+                    // --- Render Thumbnails.
+                    if (is_document(file.tmp_file_name)) {
+                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.tmp_file_name.split("/").pop()) + "<br/>").appendTo("#docs");
                         $("#docs-label").show()
                     }
 
-                    // UPLOAD ID: used by Django to associate upload with record
+                    // --------------------------------------------------------
+                    // --- UPLOAD ID: Used by Django to associate an Upload with a Record.
                     $("<input type='hidden' id='id_tmp_files_" + upload_count + "' name='tmp_files'>").val(file.tmp_file_id).appendTo("#tmp_files");
 
-                    // UPLOAD PATH: used by Javascript to render thumbnails
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
+                    // --------------------------------------------------------
+                    // --- UPLOAD PATH: Used by JavaScript to render Thumbnails.
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.tmp_file_name).appendTo("#tmp_images_path");
 
                     upload_count++;
-                    //real_upload_count++;
                     doc_count++;
 
                     tally();
@@ -156,12 +178,15 @@
         .parent().addClass($.support.fileInput ? undefined : "disabled");
 
         $("#fileupload-documents").bind("fileuploadprocessfail", function (e, data) {
-            alert("Sorry, this field only support the following file types:\n - pdf, doc, plain text \n\nYour file was not added.");
+            alert("Sorry, this Field only supports the following File Types:\n - {{ documents_str }}\n\nYour File was not added.");
         });
 
         tally();
     });
 
+    // ------------------------------------------------------------------------
+    // --- Remove attached File.
+    // ------------------------------------------------------------------------
     function removeAttachedFile(id, type, event) {
         var event = window.event || event;
 
@@ -171,7 +196,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'remove-upload' %}", {
+        $.post("{% url 'api-remove-upload' %}", {
             "type":                 type,
             "id":                   id,
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()
@@ -183,6 +208,9 @@
         });
     }
 
+    // ------------------------------------------------------------------------
+    // --- Remove attached Link.
+    // ------------------------------------------------------------------------
     function removeAttachedLink(id, type, event) {
         var event = window.event || event;
 
@@ -192,7 +220,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'remove-link' %}", {
+        $.post("{% url 'api-remove-link' %}", {
             "type":                 type,
             "id":                   id,
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()
@@ -204,6 +232,9 @@
         });
     }
 
+    // ------------------------------------------------------------------------
+    // --- Update Attachment Counters.
+    // ------------------------------------------------------------------------
     function tally() {
         if (typeof saved_images == "undefined") {
             saved_images = 0;
@@ -213,32 +244,34 @@
             saved_documents = 0;
         }
 
-        var total_uploads = real_upload_count + saved_images + saved_documents;
+        if (typeof saved_links == "undefined") {
+            saved_links = 0;
+        }
+
         var total_images = image_count + saved_images;
         var total_documents = doc_count + saved_documents;
-        var total_links = 0;
+        var total_links = saved_links;
 
         if ($("#id_links").length && $("#id_links").val() != "") {
             total_links += $("#id_links").val().split(" ").length;
         }
         $("#id_tmp_links").val($("#id_links").val());
 
-        if (total_images > 0) {
-            $("#total_images").text("(" + total_images + ")");
-        } else {
-            $("#total_images").text("");
-        }
-
-        if (total_documents > 0) {
-            $("#total_documents").text("(" + total_documents + ")");
-        } else {
-            $("#total_documents").text("");
-        }
-
-        if (total_links > 0) {
-            $("#total_links").text("(" + total_links + ")");
-        } else {
-            $("#total_links").text("");
-        }
+        $("#total_images").text(total_images);
+        $("#total_documents").text(total_documents);
+        $("#total_links").text(total_links);
     }
+
+    // ------------------------------------------------------------------------
+    // --- Initialize Attachment Counters.
+    // ------------------------------------------------------------------------
+    $(document).ready(function () {
+        saved_images = $(".gallery-container").length;
+        saved_documents = $(".documents-container").length;
+        saved_links = $(".links-container").length + $(".video-links-container").length;
+
+        $("#total_images").text(saved_images);
+        $("#total_documents").text(saved_documents);
+        $("#total_links").text(saved_links);
+    })
 </script>

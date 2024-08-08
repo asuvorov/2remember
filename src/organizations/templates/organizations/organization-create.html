@@ -50,12 +50,12 @@
                     <div class="row g-2">
                         <div class="col-md-6">
                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="col-md-6">
                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
