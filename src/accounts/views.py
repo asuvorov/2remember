@@ -44,11 +44,11 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
-from events.models import (
-    EventStatus,
-    # Participation,
-    # ParticipationStatus
-    )
+# from events.models import (
+#     EventStatus,
+#     Participation,
+#     ParticipationStatus
+#     )
 from events.utils import get_event_list
 # from organizations.models import OrganizationStaff
 
@@ -122,7 +122,7 @@ def account_signup(request):
             # --- Create User Profile.
             profile = pform.save(commit=False)
             profile.user = user
-            profile.save()
+            profile.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Create User Privacy.
@@ -509,7 +509,9 @@ def my_profile_view(request):
     try:
         profile = request.user.profile
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION in `{__name__}`:\n"
+               f"                  {type(exc).__name__}\n"
+               f"                  {str(exc)}", "red", "on_white")
 
         profile = UserProfile.objects.create(user=request.user)
 
@@ -602,7 +604,9 @@ def my_profile_invitations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION in `{__name__}`:\n"
+               f"                  {type(exc).__name__}\n"
+               f"                  {str(exc)}", "red", "on_white")
 
         UserProfile.objects.create(user=request.user)
 
@@ -620,7 +624,9 @@ def my_profile_participations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION in `{__name__}`:\n"
+               f"                  {type(exc).__name__}\n"
+               f"                  {str(exc)}", "red", "on_white")
 
         UserProfile.objects.create(user=request.user)
 
@@ -692,7 +698,7 @@ def my_profile_edit(request):
                 formset_phone.is_valid() and
                 formset_social.is_valid()):
             request.user.profile.address = aform.save()
-            request.user.profile.save()
+            request.user.profile.save(request=request)
 
             request.user.first_name = pform.cleaned_data["first_name"]
             request.user.last_name = pform.cleaned_data["last_name"]
@@ -731,7 +737,7 @@ def my_profile_edit(request):
         is_newly_created = True
 
         request.user.profile.is_newly_created = False
-        request.user.profile.save()
+        request.user.profile.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -775,7 +781,9 @@ def my_profile_privacy(request):
         privacy_members, created = UserPrivacyMembers.objects.get_or_create(user=request.user)
         privacy_admins, created = UserPrivacyAdmins.objects.get_or_create(user=request.user)
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION in `{__name__}`:\n"
+               f"                  {type(exc).__name__}\n"
+               f"                  {str(exc)}", "red", "on_white")
 
         # ---------------------------------------------------------------------
         # --- Save the Log.

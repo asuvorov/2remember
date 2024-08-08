@@ -21,6 +21,7 @@ from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 # from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
+from termcolor import cprint
 from timezone_field import TimeZoneField
 
 from ddcore import enum
@@ -36,6 +37,7 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.uuids import get_unique_filename
 
+# pylint: disable=import-error
 from invites.models import Invite
 from organizations.models import Organization
 
@@ -54,28 +56,6 @@ from .Category import (
 # -----------------------------------------------------------------------------
 # --- Event Model Choices.
 # -----------------------------------------------------------------------------
-EventStatus = enum(
-    DRAFT="0",
-    UPCOMING="1",
-    COMPLETE="2",
-    EXPIRED="4",
-    CLOSED="8")
-event_status_choices = [
-    (EventStatus.DRAFT,    _("Draft")),
-    (EventStatus.UPCOMING, _("Upcoming")),
-    (EventStatus.COMPLETE, _("Complete")),
-    (EventStatus.EXPIRED,  _("Expired")),
-    (EventStatus.CLOSED,   _("Closed")),
-]
-
-EventMode = enum(
-    FREE_FOR_ALL="0",
-    CONFIRMATION_REQUIRED="1")
-application_choices = [
-    (EventMode.FREE_FOR_ALL,            _("Anyone can participate.")),
-    (EventMode.CONFIRMATION_REQUIRED,   _("Participate only after a confirmed Application")),
-]
-
 Visibility = enum(
     PUBLIC="0",
     PRIVATE="1")
@@ -83,68 +63,6 @@ visibility_choices = [
     (Visibility.PUBLIC,     _("Public")),
     (Visibility.PRIVATE,    _("Private")),
 ]
-
-Recurrence = enum(
-    DATELESS="0",
-    ONCE="1")
-recurrence_choices = [
-    (Recurrence.DATELESS,   _("Dateless")),
-    (Recurrence.ONCE,       _("Once")),
-]
-
-Month = enum(
-    NONE="",
-    JANUARY="1",
-    FEBRUARY="2",
-    MARCH="3",
-    APRIL="4",
-    MAY="5",
-    JUNE="6",
-    JULY="7",
-    AUGUST="8",
-    SEPTEMBER="9",
-    OCTOBER="10",
-    NOVEMBER="11",
-    DECEMBER="12")
-month_choices = [
-    (Month.NONE,        _("----------")),
-    (Month.JANUARY,     _("January")),
-    (Month.FEBRUARY,    _("February")),
-    (Month.MARCH,       _("March")),
-    (Month.APRIL,       _("April")),
-    (Month.MAY,         _("May")),
-    (Month.JUNE,        _("June")),
-    (Month.JULY,        _("July")),
-    (Month.AUGUST,      _("August")),
-    (Month.SEPTEMBER,   _("September")),
-    (Month.OCTOBER,     _("October")),
-    (Month.NOVEMBER,    _("November")),
-    (Month.DECEMBER,    _("December")),
-]
-
-DayOfWeek = enum(
-    NONE="",
-    SUNDAY="0",
-    MONDAY="1",
-    TUESDAY="2",
-    WEDNESDAY="3",
-    THURSDAY="4",
-    FRIDAY="5",
-    SATURDAY="6")
-day_of_week_choices = [
-    (DayOfWeek.NONE,        _("----------")),
-    (DayOfWeek.SUNDAY,      _("Sunday")),
-    (DayOfWeek.MONDAY,      _("Monday")),
-    (DayOfWeek.TUESDAY,     _("Tuesday")),
-    (DayOfWeek.WEDNESDAY,   _("Wednesday")),
-    (DayOfWeek.THURSDAY,    _("Thursday")),
-    (DayOfWeek.FRIDAY,      _("Friday")),
-    (DayOfWeek.SATURDAY,    _("Saturday")),
-]
-
-day_of_month_choices = [(str(day), str(day)) for day in range(0, 32)]
-day_of_month_choices[0] = ("", _("----------"))
-day_of_month_choices.append(("32", _("Last Day of Month")))
 
 
 # -----------------------------------------------------------------------------
@@ -182,7 +100,58 @@ def event_cover_directory_path(instance, filename):
 class Event(
         ModelMeta, TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
-    """Event Model."""
+    """Event Model.
+
+    Attributes
+    ----------
+    uid                     : str       UUID.
+
+    author                  : obj       Event Author.
+    preview                 : obj       Event Preview Image.
+    preview_thumbnail       : obj       Event Preview Image Thumbnail.
+    cover                   : obj       Event Cover Image.
+
+    title                   : str       Title Field.
+    slug                    : str       Slug Field, populated from Title Field.
+    description             : str       Description Field.
+
+    tags
+    hashtag
+    category
+    visibility
+    private_url             : str       Private URL.
+
+    addressless             : bool      Is addressless?
+    address                 : obj       Profile Address.
+
+    start_date              : datetime  Event Date.
+    custom_data             : dict      Custom Data JSON Field.
+
+    followers
+    subscribers
+    organization
+
+    allow_comments          : bool      Allow Comments?
+    is_hidden               : bool      Is hidden?
+    is_newly_created        : bool      Is newly created?
+
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+
+    created                 : datetime  Timestamp the Object has been created.
+    modified                : datetime  Timestamp the Object has been modified.
+
+    Methods
+    -------
+    save()
+
+    pre_save()                          `pre_save`    Object Signal.
+    post_save()                         `post_save`   Object Signal.
+    pre_delete()                        `pre_delete`  Object Signal.
+    post_delete()                       `posr_delete` Object Signal.
+    m2m_changed()                       `m2m_changed` Object Signal.
+
+    """
 
     # -------------------------------------------------------------------------
     # --- Basics.
@@ -240,16 +209,10 @@ class Event(
         choices=visibility_choices, default=Visibility.PUBLIC,
         verbose_name=_("Visibility"),
         help_text=_("Event Visibility"))
-    # status = models.CharField(
-    #     max_length=2,
-    #     choices=event_status_choices, default=EventStatus.UPCOMING,
-    #     verbose_name=_("Status"),
-    #     help_text=_("Event Status"))
-    # application = models.CharField(
-    #     max_length=2,
-    #     choices=application_choices, default=EventMode.FREE_FOR_ALL,
-    #     verbose_name=_("Application"),
-    #     help_text=_("Event Application"))
+    private_url = models.URLField(
+        max_length=255, null=True, blank=True,
+        verbose_name=_("Private URL"),
+        help_text=_("Event private URL"))
 
     # -------------------------------------------------------------------------
     # --- Location.
@@ -265,14 +228,6 @@ class Event(
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("Event Location"))
-
-    # -------------------------------------------------------------------------
-    # --- Duration.
-    # -------------------------------------------------------------------------
-    # duration = models.PositiveIntegerField(
-    #     default=1,
-    #     verbose_name=_("Duration (hours)"),
-    #     help_text=_("Event Duration"))
 
     # -------------------------------------------------------------------------
     # --- Date/Time.
@@ -299,9 +254,23 @@ class Event(
 
     # -------------------------------------------------------------------------
     # --- Followers.
+    followers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="event_followers",
+        verbose_name=_("Followers"),
+        help_text=_("Event Followers"))
 
     # -------------------------------------------------------------------------
     # --- Subscribers.
+    subscribers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="event_subscribers",
+        verbose_name=_("Subscribers"),
+        help_text=_("Event Subscribers"))
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
@@ -332,23 +301,6 @@ class Event(
         help_text=_("Event Organization"))
 
     # -------------------------------------------------------------------------
-    # --- Achievements.
-    # -------------------------------------------------------------------------
-    # achievements = RichTextUploadingField(
-    #     config_name="awesome_ckeditor",
-    #     null=True, blank=True,
-    #     verbose_name=_("Achievements"),
-    #     help_text=_("Achievements"))
-
-    # -------------------------------------------------------------------------
-    # --- Closed.
-    # -------------------------------------------------------------------------
-    # closed_reason = models.TextField(
-    #     null=True, blank=True,
-    #     verbose_name=_("Reason for closing"),
-    #     help_text=_("Reason for closing"))
-
-    # -------------------------------------------------------------------------
     # --- Flags.
     # -------------------------------------------------------------------------
     allow_comments = models.BooleanField(
@@ -356,28 +308,8 @@ class Event(
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
 
+    is_hidden = models.BooleanField(default=False)
     is_newly_created = models.BooleanField(default=True)
-
-    # allow_reenter = models.BooleanField(
-    #     default=False,
-    #     verbose_name=_(
-    #         "Allow Members to apply again to the Event after withdrawing their Application."),
-    #     help_text=_(
-    #         "Allow Members to apply again to the Event after withdrawing their Application."))
-
-    # accept_automatically = models.BooleanField(
-    #     default=False,
-    #     verbose_name=_(
-    #         "Automatically accept Participants' Experience Reports after the Event completed."),
-    #     help_text=_(
-    #         "Automatically accept Participants' Experience Reports after the Event completed."))
-    # acceptance_text = models.TextField(
-    #     null=True, blank=True,
-    #     verbose_name=_(
-    #         "Acceptance Text"),
-    #     help_text=_(
-    #         "This Text will automatically appear as an Acknowledgment Text for "
-    #         "each Participant after Event has been marked as completed."))
 
     class Meta:
         """Meta."""
@@ -430,8 +362,13 @@ class Event(
         if self.preview:
             return self.preview.url
 
+        return ""
+
     def get_keywords(self):
         """Docstring."""
+        cprint(f">>> TAGS NAMES : {self.tags.names()}")
+        cprint(f">>>              {', '.join(self.tags.names())}")
+
         return ", ".join(self.tags.names())
 
     # -------------------------------------------------------------------------
@@ -470,31 +407,6 @@ class Event(
         return self.start_date is None
 
     @property
-    def is_draft(self):
-        """Docstring."""
-        return self.status == EventStatus.DRAFT
-
-    @property
-    def is_upcoming(self):
-        """Docstring."""
-        return self.status == EventStatus.UPCOMING
-
-    @property
-    def is_complete(self):
-        """Docstring."""
-        return self.status == EventStatus.COMPLETE
-
-    @property
-    def is_expired(self):
-        """Docstring."""
-        return self.status == EventStatus.EXPIRED
-
-    @property
-    def is_closed(self):
-        """Docstring."""
-        return self.status == EventStatus.CLOSED
-
-    @property
     def is_private(self):
         """Docstring."""
         return self.visibility == Visibility.PRIVATE
@@ -507,6 +419,10 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Methods.
     # -------------------------------------------------------------------------
+    def save(self, *args, **kwargs):
+        """Docstring."""
+        super().save(*args, **kwargs)
+
     def public_url(self, request=None):
         """Docstring."""
         if request:
@@ -961,7 +877,9 @@ class Event(
         try:
             ping_google()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -999,7 +917,9 @@ class Event(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -1015,7 +935,9 @@ class Event(
             related_invites.delete()
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def post_delete(self, **kwargs):
         """Docstring."""

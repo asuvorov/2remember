@@ -16,6 +16,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 from taggit.managers import TaggableManager
+from termcolor import cprint
 
 from ddcore import enum
 from ddcore.models import (
@@ -203,37 +204,9 @@ class Post(
         """Docstring."""
         return ", ".join(self.tags.names())
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-
     # -------------------------------------------------------------------------
-    # --- Post direct URL
-    def public_url(self, request=None):
-        """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
-
-        url = reverse(
-            "post-details", kwargs={
-                "slug":     self.slug,
-            })
-        post_link = f"http://{domain_name}{url}"
-
-        return post_link
-
-    def get_absolute_url(self):
-        """Method to be called by Django Sitemap Framework."""
-        url = reverse(
-            "post-details", kwargs={
-                "slug":     self.slug,
-            })
-
-        return url
-
+    # --- Properties.
     # -------------------------------------------------------------------------
-    # --- Post Status Flags
     @property
     def is_draft(self):
         """Docstring."""
@@ -250,10 +223,44 @@ class Post(
         return self.status == PostStatus.CLOSED
 
     # -------------------------------------------------------------------------
-    # --- Methods
+    # --- Methods.
+    # -------------------------------------------------------------------------
+    def save(self, *args, **kwargs):
+        """Docstring."""
+        super().save(*args, **kwargs)
+
+    def public_url(self, request=None):
+        """Docstring."""
+        if request:
+            domain_name = request.get_host()
+        else:
+            domain_name = settings.DOMAIN_NAME
+
+        url = reverse(
+            "post-details", kwargs={
+                "slug":     self.slug,
+            })
+
+        return f"http://{domain_name}{url}"
+
+    def get_absolute_url(self):
+        """Method to be called by Django Sitemap Framework."""
+        return reverse(
+            "post-details", kwargs={
+                "slug":     self.slug,
+            })
 
     # -------------------------------------------------------------------------
-    # --- Signals
+    # --- Static Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Class Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Signals.
+    # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
 
@@ -264,7 +271,9 @@ class Post(
         try:
             ping_google()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -302,7 +311,9 @@ class Post(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

@@ -14,14 +14,16 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
 from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
+from termcolor import cprint
 
 from ddcore.models.Attachment import TemporaryFile
 
 from .models import (
     Event,
     Role,
-    month_choices,
-    day_of_month_choices)
+    # month_choices,
+    # day_of_month_choices
+    )
 
 
 # =============================================================================
@@ -427,7 +429,9 @@ class FilterEventForm(forms.Form):
             self.fields["day"].choices = day_of_month_choices[:-1]
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             del self.fields["year"]
             del self.fields["month"]

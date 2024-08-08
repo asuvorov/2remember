@@ -19,6 +19,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from meta.models import ModelMeta
 from taggit.managers import TaggableManager
+from termcolor import cprint
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
@@ -168,20 +169,24 @@ class Organization(
         help_text=_("Organization Email"))
 
     # -------------------------------------------------------------------------
-    # --- Social Links.
-
-    # -------------------------------------------------------------------------
     # --- Followers.
+    followers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="organization_followers",
+        verbose_name=_("Followers"),
+        help_text=_("Organization Followers"))
 
     # -------------------------------------------------------------------------
     # --- Subscribers.
-    # subscribers = models.ManyToManyField(
-    #     settings.AUTH_USER_MODEL,
-    #     db_index=True,
-    #     blank=True,
-    #     related_name="organization_subscribers",
-    #     verbose_name=_("Subscribers"),
-    #     help_text=_("Organization Subscribers"))
+    subscribers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="organization_subscribers",
+        verbose_name=_("Subscribers"),
+        help_text=_("Organization Subscribers"))
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
@@ -266,7 +271,17 @@ class Organization(
         return ", ".join(self.tags.names())
 
     # -------------------------------------------------------------------------
-    # --- Organization direct URL
+    # --- Properties.
+    # -------------------------------------------------------------------------
+
+
+    # -------------------------------------------------------------------------
+    # --- Methods.
+    # -------------------------------------------------------------------------
+    def save(self, *args, **kwargs):
+        """Docstring."""
+        super().save(*args, **kwargs)
+
     def public_url(self, request=None):
         """Docstring."""
         if request:
@@ -321,9 +336,6 @@ class Organization(
 
         return upcoming_events
 
-    # -------------------------------------------------------------------------
-    # --- Methods.
-    # -------------------------------------------------------------------------
     def email_notify_admin_org_created(self, request=None):
         """Send Notification to the Organization Admin."""
         # ---------------------------------------------------------------------
@@ -387,7 +399,15 @@ class Organization(
             # --- Send Email
 
     # -------------------------------------------------------------------------
-    # --- Signals
+    # --- Static Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Class Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Signals.
     # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
@@ -399,7 +419,9 @@ class Organization(
         try:
             ping_google()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -437,7 +459,9 @@ class Organization(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -452,7 +476,9 @@ class Organization(
             related_invites.delete()
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def post_delete(self, **kwargs):
         """Docstring."""

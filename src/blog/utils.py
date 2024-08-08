@@ -48,7 +48,9 @@ def get_post_list(request, author=None):
         try:
             posts = posts.filter(tags__id=tag_id).distinct()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     # -------------------------------------------------------------------------
     # --- Slice and paginate the Blog Posts List.

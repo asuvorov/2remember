@@ -44,7 +44,7 @@
     <span class="badge text-bg-success">{% trans "Public" %}</span>
 {% endif %}<br/>
 
-{% if request.user.profile.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+{% if event.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
     Allow Comments
 </p>
 

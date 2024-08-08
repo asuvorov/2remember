@@ -57,15 +57,13 @@ from .decorators import (
     event_org_staff_member_required)
 from .forms import (
     CreateEditEventForm,
-    # RoleFormSet,
     FilterEventForm)
 from .models import (
     Category,
     Event,
-    EventStatus,
+    # EventStatus,
     # Participation,
     # ParticipationStatus,
-    # Role
     )
 from .utils import get_event_list
 
@@ -457,10 +455,6 @@ def event_create(request):
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
 
-    # formset_roles = RoleFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="roles",
-    #     queryset=Role.objects.none())
     # formset_social = SocialLinkFormSet(
     #     request.POST or None, request.FILES or None,
     #     queryset=SocialLink.objects.none())
@@ -468,26 +462,17 @@ def event_create(request):
     if request.method == "POST":
         cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
         cprint(f"                  {aform.is_valid()=}", "yellow")
-        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
         # cprint(f"                  {formset_social.is_valid()=}", "yellow")
 
         if (
                 form.is_valid() and
                 aform.is_valid()):  # and
-                # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
             event.address = aform.save(commit=True)
-            event.save()
+            event.save(request=request)
 
             form.save_m2m()
-
-            # -----------------------------------------------------------------
-            # --- Save Roles.
-            # roles = formset_roles.save(commit=True)
-            # for role in roles:
-            #     role.event = event
-            #     role.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
@@ -500,7 +485,7 @@ def event_create(request):
 
             # if "chl-draft" in request.POST:
             #     event.status = EventStatus.DRAFT
-            #     event.save()
+            #     event.save(request=request)
 
             #     # -------------------------------------------------------------
             #     # --- Send Email Notification(s).
@@ -528,7 +513,6 @@ def event_create(request):
         request, "events/event-create.html", {
             "form":             form,
             "aform":            aform,
-            # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
         })
 
@@ -658,31 +642,6 @@ def event_details(request, slug):
         #     raise Http404
 
     # -------------------------------------------------------------------------
-    # --- Prepare the Event Roles Breakdown.
-    # -------------------------------------------------------------------------
-    # roles_breakdown = []
-
-    # if event.event_roles.all():
-    #     for role in event.event_roles.all():
-    #         roles_breakdown.append({
-    #             "name":         role.name,
-    #             "required":     role.quantity,
-    #             "applied":      role.role_participations.filter(
-    #                 status__in=[
-    #                     ParticipationStatus.WAITING_FOR_CONFIRMATION,
-    #                     ParticipationStatus.CONFIRMATION_DENIED,
-    #                     ParticipationStatus.CONFIRMED,
-    #                 ],
-    #             ).count(),
-    #             "rejected":     role.role_participations.filter(
-    #                 status=ParticipationStatus.CONFIRMATION_DENIED,
-    #             ).count(),
-    #             "confirmed":    role.role_participations.filter(
-    #                 status=ParticipationStatus.CONFIRMED,
-    #             ).count(),
-    #         })
-
-    # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
@@ -695,7 +654,7 @@ def event_details(request, slug):
     #     is_newly_created = True
 
     #     event.is_newly_created = False
-    #     event.save()
+    #     event.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
@@ -718,7 +677,6 @@ def event_details(request, slug):
             "show_rate_form":               show_rate_form,
             "show_complain_form":           show_complain_form,
             # "is_newly_created":             is_newly_created,
-            # "roles_breakdown":              roles_breakdown,
             # "social_links":                 social_links,
         })
 
@@ -824,10 +782,6 @@ def event_edit(request, slug):
         required=not request.POST.get("addressless", False),
         instance=event.address)
 
-    # formset_roles = RoleFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="roles",
-    #     queryset=Role.objects.filter(event=event))
     # formset_social = SocialLinkFormSet(
     #     request.POST or None, request.FILES or None,
     #     prefix="socials",
@@ -838,26 +792,17 @@ def event_edit(request, slug):
     if request.method == "POST":
         cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
         cprint(f"                  {aform.is_valid()=}", "yellow")
-        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
         # cprint(f"                  {formset_social.is_valid()=}", "yellow")
 
         if (
                 form.is_valid() and
                 aform.is_valid()):
-                # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             form.save()
             form.save_m2m()
 
             event.address = aform.save(commit=True)
-            event.save()
-
-            # -----------------------------------------------------------------
-            # --- Save Roles.
-            # roles = formset_roles.save(commit=True)
-            # for role in roles:
-            #     role.event = event
-            #     role.save()
+            event.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
@@ -962,7 +907,6 @@ def event_edit(request, slug):
         request, "events/event-edit.html", {
             "form":             form,
             "aform":            aform,
-            # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
             "event":            event,
         })
