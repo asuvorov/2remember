@@ -1,6 +1,6 @@
 {% load cache %}
-{% load static %}
 {% load compress %}
+{% load static %}
 
 {% cache 3600 faq-thumb-search LANGUAGE_CODE %}
     <!-- Underscore -->
@@ -158,14 +158,6 @@
     <script type="text/javascript" charset="utf-8" src="{% static 'jquery-popup-overlay/jquery.popupoverlay.js' %}"></script>
 {% endcompress %}
 
-    <!-- jQuery Scroll to Top -->
-{% compress css %}
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.css' %}" /> -->
-{% endcompress %}
-{% compress js %}
-    <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-scrolltotop/dist/jquery.scrolltotop.min.js' %}"></script> -->
-{% endcompress %}
-
     <!-- jQuery Smooth Scroll -->
 {% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'smooth-scroll.js/dist/smooth-scroll.min.js' %}"></script> -->
@@ -208,5 +200,11 @@
 {% endcompress %}
 {% compress js %}
     <!-- <script type="text/javascript" charset="utf-8" src="{% static 'jquery-shorten-js/dist/jquery-shorten.min.js' %}"></script> -->
+{% endcompress %}
+
+<!-- Extra Icons -->
+{% compress css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'fontawesome/css/all.min.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'ionicons/css/ionicons.css' %}">
 {% endcompress %}
 {% endcache %}

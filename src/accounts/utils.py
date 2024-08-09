@@ -13,7 +13,7 @@ from django.db.models import Q
 # pylint: disable=import-error
 from events.models import (
     Event,
-    EventStatus,
+    # EventStatus,
     Participation)
 
 

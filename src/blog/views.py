@@ -60,7 +60,7 @@ def post_create(request):
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
-            post.save()
+            post.save(request=request)
             form.save_m2m()
 
             # -----------------------------------------------------------------
@@ -74,7 +74,7 @@ def post_create(request):
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
 
-            post.save()
+            post.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Save the Log
@@ -135,7 +135,7 @@ def post_edit(request, slug):
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
-            post.save()
+            post.save(request=request)
             form.save_m2m()
 
             # -----------------------------------------------------------------

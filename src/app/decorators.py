@@ -93,9 +93,9 @@ def log_default(
                 res = func(*args, **kwargs)
                 return res
             except Exception as exc:
-                cprint(f"### EXCEPTION in `{func_name}`:\n",
-                       f"                  {type(exc).__name__}\n"
-                       f"                  {str(exc)}", "red", "on_white")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
                 log_extra[logconst.LOG_KEY_STATUS] = logconst.LOG_VAL_STATUS_FAILURE
                 logger.exception("", extra=Format.exception(

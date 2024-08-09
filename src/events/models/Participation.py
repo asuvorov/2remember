@@ -22,7 +22,8 @@ from ddcore.models import (
 
 from .Event import (
     Event,
-    EventStatus)
+    # EventStatus
+    )
 from .Role import Role
 
 
@@ -218,6 +219,9 @@ class Participation(BaseModel):
         """Docstring."""
         return self.__repr__()
 
+    # -------------------------------------------------------------------------
+    # --- Properties.
+    # -------------------------------------------------------------------------
     @property
     def stat_participation_status_name(self):
         """Docstring."""
@@ -227,8 +231,6 @@ class Participation(BaseModel):
 
         return ""
 
-    # -------------------------------------------------------------------------
-    # --- Participation Statuses
     @property
     def is_waiting_for_confirmation(self):
         """Docstring."""
@@ -280,11 +282,6 @@ class Participation(BaseModel):
         """Docstring."""
         return self.status == ParticipationStatus.ACKNOWLEDGED
 
-    # -------------------------------------------------------------------------
-    # --- Participation Query Sets
-
-    # -------------------------------------------------------------------------
-    # --- Participation custom Flags
     @property
     def is_selfreflection_rejected(self):
         """Docstring."""
@@ -298,7 +295,146 @@ class Participation(BaseModel):
         return False
 
     # -------------------------------------------------------------------------
-    # --- Class Methods
+    # --- Methods.
+    # -------------------------------------------------------------------------
+    def save(self, *args, **kwargs):
+        """Docstring."""
+        super().save(*args, **kwargs)
+
+    def email_notify_event_participant_confirmed(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_confirmed(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_waiting_conf(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_waiting_conf(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_withdrew(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_withdrew(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_removed(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_removed(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_rejected(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_rejected(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_sr_submitted(self, request=None):
+        """Send Notification to the Event Participant."""
+        # --- Render HTML Email Content
+
+        # ---------------------------------------------------------------------
+        # --- Send Email
+
+    def email_notify_event_admin_participant_sr_submitted(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_sr_accepted(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_sr_accepted(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_participant_sr_rejected(self, request=None):
+        """Send Notification to the Event Participant."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    def email_notify_event_admin_participant_sr_rejected(self, request=None):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+
+    # -------------------------------------------------------------------------
+    # --- Static Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Class Methods.
+    # -------------------------------------------------------------------------
     @classmethod
     def email_notify_participants_datetime_event_edited(
             cls, request=None, event=None):
@@ -482,138 +618,8 @@ class Participation(BaseModel):
             # --- Send Email.
 
     # -------------------------------------------------------------------------
-    # --- Methods
-
-    def email_notify_event_participant_confirmed(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_confirmed(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_waiting_conf(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_waiting_conf(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_withdrew(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_withdrew(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_removed(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_removed(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_rejected(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_rejected(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_sr_submitted(self, request=None):
-        """Send Notification to the Event Participant."""
-        # --- Render HTML Email Content
-
-        # ---------------------------------------------------------------------
-        # --- Send Email
-
-    def email_notify_event_admin_participant_sr_submitted(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_sr_accepted(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_sr_accepted(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_participant_sr_rejected(self, request=None):
-        """Send Notification to the Event Participant."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-    def email_notify_event_admin_participant_sr_rejected(self, request=None):
-        """Send Notification to the Event Admin."""
-        # ---------------------------------------------------------------------
-        # --- Render HTML Email Content.
-
-        # ---------------------------------------------------------------------
-        # --- Send Email.
-
-
-    # -------------------------------------------------------------------------
     # --- Signals
+    # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
 

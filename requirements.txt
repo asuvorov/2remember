@@ -55,6 +55,8 @@ django-rosetta==0.10.0
 # django-secure==1.0.2
 # django-simple-captcha==0.5.17
 # django-sslserver==0.22
+django-static-fontawesome==6.5.2.0
+django-static-ionicons==2.0.1.5
 django-taggit==5.0.1
 django-taggit-templatetags2==1.6.1
 django-timezone-field==6.1.0
@@ -116,7 +118,7 @@ pytz==2024.1
 # --- "S"
 # sendgrid-django==4.2.0
 sentry-sdk[django]==2.7.1
-social-auth-app-django==5.4.1
+social-auth-app-django==5.4.2
 
 #------------------------------------------------------------------------------
 # --- "T"

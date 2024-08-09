@@ -1,0 +1,43 @@
+[settings]
+
+# -----------------------------------------------------------------------------
+# --- Rename this File to `settings.ini`, and populate the Values of Interest
+#     to add the Secrets to the `local` Environment.
+# -----------------------------------------------------------------------------
+
+# -----------------------------------------------------------------------------
+# --- Environment Variables.
+# -----------------------------------------------------------------------------
+ENVIRONMENT=
+DJANGO_SETTINGS_MODULE=
+
+CACHE_MIDDLEWARE_ALIAS=
+CACHE_MIDDLEWARE_SECONDS=
+CACHE_MIDDLEWARE_KEY_PREFIX=
+
+DB_ENGINE=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
+
+SECURE_SSL_REDIRECT=true
+
+# -----------------------------------------------------------------------------
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_STORAGE_BUCKET_NAME=
+
+# -----------------------------------------------------------------------------
+EMAIL_BACKEND=
+SENDGRID_API_KEY=
+
+# -----------------------------------------------------------------------------
+SENTRY_DSN=
+
+# -----------------------------------------------------------------------------
+STRIPE_DEBUG=true
+STRIPE_DEFAULT_PLAN=
+STRIPE_PUBLIC_KEY=
+STRIPE_SECRET_KEY=
