@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 
 from ddcore import enum
@@ -85,7 +86,7 @@ def blog_cover_directory_path(instance, filename):
 
 @autoconnect
 class Post(
-        TitleSlugDescriptionBaseModel,
+        ModelMeta, TitleSlugDescriptionBaseModel,
         CommentMixin, RatingMixin, ViewMixin):
     """Post Model."""
 
@@ -160,6 +161,46 @@ class Post(
     def __str__(self):
         """Docstring."""
         return self.__repr__()
+
+    # -------------------------------------------------------------------------
+    # --- Metadata.
+    # -------------------------------------------------------------------------
+    _metadata = {
+        "description":  "description",
+        # "extra_custom_props"
+        # "extra_props"
+        # "facebook_app_id"
+        "image":        "get_meta_image",
+        # "image_height"
+        # "image_object"
+        # "image_width"
+        "keywords":     "get_keywords",
+        # "locale"
+        # "object_type"
+        # "og_title"
+        # "schemaorg_title"
+        "site_name":    "2Remember",
+        "title":        "title",
+        # "twitter_creator"
+        # "twitter_site"
+        # "twitter_title"
+        # "twitter_type"
+        "url":          "get_absolute_url",
+        # "use_facebook"
+        # "use_og"
+        # "use_schemaorg"
+        # "use_title_tag"
+        # "use_twitter"
+    }
+
+    def get_meta_image(self):
+        """Docstring."""
+        if self.preview:
+            return self.preview.url
+
+    def get_keywords(self):
+        """Docstring."""
+        return ", ".join(self.tags.names())
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
