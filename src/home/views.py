@@ -4,9 +4,6 @@
 
 import logging
 
-from itertools import chain
-from operator import attrgetter
-
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -16,13 +13,8 @@ from django.shortcuts import (
 from django.urls import reverse
 
 # pylint: disable=import-error
-from accounts.models import (
-    Team,
-    TeamMember)
+from accounts.models import Team
 from app.decorators import log_default
-from blog.models import Post
-from events.models import Event
-from organizations.models import Organization
 
 from .forms import (
     ContactUsForm,
@@ -36,23 +28,15 @@ from .models import (
 logger = logging.getLogger(__name__)
 
 
-# -----------------------------------------------------------------------------
-# --- Index
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Index
+# ===
+# =============================================================================
 @log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
     timeline_qs = []
-    # timeline_qs = sorted(
-    #     chain(
-    #         Post.objects.all(),
-    #         Event.objects.get_upcoming(),
-    #         Organization.objects.filter(
-    #             is_hidden=False,
-    #             is_deleted=False,
-    #         )
-    #     ),
-    #     key=attrgetter("created"))[:10]
 
     return render(
         request, "home/index.html", {
@@ -118,7 +102,8 @@ def contact_us(request):
     # -------------------------------------------------------------------------
     # --- Form is being sent via POST Request.
     form = ContactUsForm(
-        request.POST or None, request.FILES or None)
+        request.POST or None,
+        request.FILES or None)
 
     return render(
         request, "home/contact-us.html", {
@@ -126,9 +111,11 @@ def contact_us(request):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- FAQ
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === FAQ
+# ===
+# =============================================================================
 @log_default(my_logger=logger, cls_or_self=False)
 def faq(request):
     """List of FAQs."""
@@ -152,7 +139,8 @@ def faq_create(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
 
     if request.method == "POST":
@@ -176,7 +164,6 @@ def faq_edit(request, faq_id):
     # -------------------------------------------------------------------------
     # --- Retrieve FAQ
     # -------------------------------------------------------------------------
-    # -------------------------------------------------------------------------
     faq = get_object_or_404(
         FAQ,
         id=faq_id)
@@ -185,7 +172,8 @@ def faq_edit(request, faq_id):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=faq)
 
@@ -203,9 +191,11 @@ def faq_edit(request, faq_id):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- Feature Test
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Feature Test
+# ===
+# =============================================================================
 @login_required
 @staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)

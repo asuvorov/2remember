@@ -2,14 +2,14 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import json
 import logging
 import mimetypes
 
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
-    HttpResponseBadRequest)
+    HttpResponseBadRequest,
+    JsonResponse)
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
@@ -112,12 +112,9 @@ def tmp_upload(request):
         "tmp_file_id":  tmp_file.id
     }
 
-    return HttpResponse(
-        json.dumps({
-            "files":    [result]
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "files":    [result]
+    })
 
 
 @login_required
@@ -149,12 +146,9 @@ def remove_upload(request):
             instance.delete()
             found = True
 
-    return HttpResponse(
-        json.dumps({
-            "deleted":  found,
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "deleted":  found,
+    })
 
 
 @login_required
@@ -177,9 +171,6 @@ def remove_link(request):
             instance.delete()
             found = True
 
-    return HttpResponse(
-        json.dumps({
-            "deleted":  found,
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "deleted":  found,
+    })
