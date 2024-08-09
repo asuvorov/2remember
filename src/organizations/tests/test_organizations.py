@@ -129,12 +129,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -183,12 +183,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -237,12 +237,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -302,12 +302,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -369,12 +369,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -433,12 +433,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -503,12 +503,12 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -607,12 +607,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -661,12 +661,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -715,12 +715,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -780,12 +780,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -847,12 +847,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -911,12 +911,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -981,12 +981,12 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1070,12 +1070,12 @@ class OrganizationCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1133,12 +1133,12 @@ class OrganizationCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1224,12 +1224,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1266,12 +1266,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1311,12 +1311,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1361,12 +1361,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1406,12 +1406,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1464,12 +1464,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1524,12 +1524,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1574,12 +1574,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1632,12 +1632,12 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1730,12 +1730,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1788,12 +1788,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1854,12 +1854,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1899,12 +1899,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1944,12 +1944,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1994,12 +1994,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2052,12 +2052,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2112,12 +2112,12 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2202,12 +2202,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2260,12 +2260,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2326,12 +2326,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2371,12 +2371,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2416,12 +2416,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2466,12 +2466,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2524,12 +2524,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2584,12 +2584,12 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
+        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
+        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
+        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
+        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
+        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
