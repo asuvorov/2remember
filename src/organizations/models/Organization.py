@@ -31,6 +31,7 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.uuids import get_unique_filename
 
+# pylint: disable=import-error
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
