@@ -36,31 +36,25 @@ client = Client(
     enforce_csrf_checks=True)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ MOCKS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === MOCKS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ MODELS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === MODELS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ VIEWS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === VIEWS
+# ===
+# =============================================================================
 class AccountsListViewTestCase(TestCase):
 
     """Accounts List Test Case."""
@@ -79,9 +73,11 @@ class AccountsListViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Fake
+        # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
         # --- Initials
+        # ---------------------------------------------------------------------
         self.url = reverse("account-list")
 
         # --- Users
@@ -96,21 +92,24 @@ class AccountsListViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
+        # ---------------------------------------------------------------------
         data = {}
         response = client.get(
             self.url,
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
+        # ---------------------------------------------------------------------
         self.assertEqual(
             response.request["PATH_INFO"],
             self.url,
@@ -137,6 +136,7 @@ class AccountsListViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Log in
+        # ---------------------------------------------------------------------
         result = client.login(
             username=self.test_user_1.username,
             password="test"
@@ -145,21 +145,24 @@ class AccountsListViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
+        # ---------------------------------------------------------------------
         data = {}
         response = client.get(
             self.url,
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
-        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
-        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
-        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
-        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
-        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
+        # ---------------------------------------------------------------------
         self.assertEqual(
             response.request["PATH_INFO"],
             self.url,
@@ -200,6 +203,7 @@ class AccountLoginViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Fake
+        # ---------------------------------------------------------------------
 
     def test_account_login(self):
         """Log in."""
@@ -211,26 +215,24 @@ class AccountLoginViewTestCase(TestCase):
             url,
             data=data)
 
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
         # ---------------------------------------------------------------------
         # --- Test Response
+        # ---------------------------------------------------------------------
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ AJAX
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ TEMPLATES
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === TEMPLATES
+# ===
+# =============================================================================
 class AccountLoginTemplateTestCase(TestCase):
 
     """Log in Test Case."""
@@ -244,6 +246,7 @@ class AccountLoginTemplateTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Fake
+        # ---------------------------------------------------------------------
 
     def test_login_page_loading(self):
         """Docstring."""
@@ -257,12 +260,13 @@ class AccountLoginTemplateTestCase(TestCase):
             follow=True,
             secure=True)
 
-        # print ">>> CONTEXT          :", response.context
-        # print ">>> REQUEST          :", response.request
-        # print ">>> STATUS           :", response.status_code
-        # print ">>> TEMPLATES        :", response.templates
-        # print ">>> CONTENT          :", response.content
-        # print ">>> REDIRECT CHAIN   :", response.redirect_chain
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         self.assertEqual(
             response.request["PATH_INFO"], url,
@@ -272,22 +276,18 @@ class AccountLoginTemplateTestCase(TestCase):
             "[---  ERROR  ---] Failed to load \"Login\" Page...")
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ FORMS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === FORMS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ UTILS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === UTILS
+# ===
+# =============================================================================
 
 
 """

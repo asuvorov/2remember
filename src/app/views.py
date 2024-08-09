@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import logging
 import mimetypes
 

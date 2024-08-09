@@ -1030,10 +1030,10 @@ SOCIAL_AUTH_PIPELINE = (
 # -----------------------------------------------------------------------------
 # --- TWITTER
 # -----------------------------------------------------------------------------
-# TWITTER_CONSUMER_KEY = config("X_TWITTER_CONSUMER_KEY", default="")
-# TWITTER_CONSUMER_SECRET = config("X_TWITTER_CONSUMER_SECRET", default="")
-# TWITTER_OAUTH_TOKEN = config("X_TWITTER_ACCESS_KEY", default="")
-# TWITTER_OAUTH_SECRET = config("X_TWITTER_ACCESS_SECRET", default="")
+TWITTER_CONSUMER_KEY = config("X_TWITTER_CONSUMER_KEY", default="")
+TWITTER_CONSUMER_SECRET = config("X_TWITTER_CONSUMER_SECRET", default="")
+TWITTER_OAUTH_TOKEN = config("X_TWITTER_ACCESS_KEY", default="")
+TWITTER_OAUTH_SECRET = config("X_TWITTER_ACCESS_SECRET", default="")
 
 # SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
 # SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET

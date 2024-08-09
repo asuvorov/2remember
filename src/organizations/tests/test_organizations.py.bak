@@ -41,31 +41,25 @@ client = Client(
     enforce_csrf_checks=True)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ MOCKS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === MOCKS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ MODELS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === MODELS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ VIEWS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === VIEWS
+# ===
+# =============================================================================
 class OrganizationListViewTestCase(TestCase):
 
     """Organization List Test Case.
@@ -84,7 +78,7 @@ class OrganizationListViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
         "test_organizations_private.json",
@@ -129,12 +123,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -183,12 +178,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -219,7 +215,8 @@ class OrganizationListViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_private_org(self):
         """Organization List. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Author of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Author of the "
+               "private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -237,12 +234,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -272,11 +270,13 @@ class OrganizationListViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
         """Organization List. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Staff Member of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -302,12 +302,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -341,7 +342,8 @@ class OrganizationListViewTestCase(TestCase):
 
     def test_user_logged_in_and_group_member_of_private_org(self):
         """Organization List. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization List. User logged in, and the Group Member of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -369,12 +371,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -403,11 +406,13 @@ class OrganizationListViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
         """Organization List. User logged in, and Author and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization List. User logged in, and Author and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization List. User logged in, and Author and the "
+               "Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -433,12 +438,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -467,15 +473,18 @@ class OrganizationListViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_author_and_group_member_of_private_org(self):
         """Organization List. User logged in, and Author the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization List. User logged in, and Author the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization List. User logged in, and Author the Group "
+               "Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -503,12 +512,13 @@ class OrganizationListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -537,11 +547,13 @@ class OrganizationListViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
 
 class OrganizationDirectoryViewTestCase(TestCase):
@@ -562,7 +574,7 @@ class OrganizationDirectoryViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
         "test_organizations_private.json",
@@ -607,12 +619,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -643,7 +656,8 @@ class OrganizationDirectoryViewTestCase(TestCase):
 
     def test_user_logged_in(self):
         """Organization Directory. User logged in. Simple Case."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in. Simple Case...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in. Simple Case...",
+               "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -661,12 +675,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -697,7 +712,8 @@ class OrganizationDirectoryViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_private_org(self):
         """Organization Directory. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Author of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Author of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -715,12 +731,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -750,11 +767,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
         """Organization Directory. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Staff "
+               "Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -780,12 +799,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -815,11 +835,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_group_member_of_private_org(self):
         """Organization Directory. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and the Group "
+               "Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -847,12 +869,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -881,11 +904,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
         """Organization Directory. User logged in, and Author and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and Author and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and Author and the "
+               "Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -911,12 +936,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -945,15 +971,18 @@ class OrganizationDirectoryViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
     def test_user_logged_in_and_author_and_group_member_of_private_org(self):
         """Organization Directory. User logged in, and Author the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and Author the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Directory. User logged in, and Author the "
+               "Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -981,12 +1010,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1015,11 +1045,13 @@ class OrganizationDirectoryViewTestCase(TestCase):
         self.assertIn(
             self.test_private_org_1,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
         self.assertIn(
             self.test_private_org_3,
             response.context["organizations"],
-            colored("[---  ERROR  ---] Target Organization is not returned in the List", "white", "on_red"))
+            colored("[---  ERROR  ---] Target Organization is not returned in the List",
+                    "white", "on_red"))
 
 
 class OrganizationCreateViewTestCase(TestCase):
@@ -1035,7 +1067,7 @@ class OrganizationCreateViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_core_addr_acc.json",
     ]
 
@@ -1070,12 +1102,13 @@ class OrganizationCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1133,12 +1166,13 @@ class OrganizationCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1176,7 +1210,7 @@ class OrganizationDetailsViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_accounts_privacy_basic.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
@@ -1211,7 +1245,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_not_logged_in_public_org(self):
         """Organization Details. User NOT logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User NOT logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User NOT logged in. Public "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -1224,12 +1259,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1253,7 +1289,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_not_logged_in_private_org(self):
         """Organization Details. User NOT logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User NOT logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User NOT logged in. Private "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -1266,12 +1303,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1290,7 +1328,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_public_org(self):
         """Organization Details. User logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in. Public "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1311,12 +1350,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1340,7 +1380,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_private_org(self):
         """Organization Details. User logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in. Private "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1361,12 +1402,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1385,7 +1427,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_private_org(self):
         """Organization Details. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Author of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Author of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1406,12 +1449,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1435,7 +1479,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
         """Organization Details. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Staff Member "
+               "of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1464,12 +1509,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1493,7 +1539,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_and_group_member_of_private_org(self):
         """Organization Details. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in, and the Group Member "
+               "of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1524,12 +1571,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1553,7 +1601,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_not_subscriber(self):
         """Organization Details. User logged in. NOT an Organization Subscriber."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in. NOT an Organization Subscriber...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in. NOT an Organization "
+               "Subscriber...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1574,12 +1623,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1606,7 +1656,8 @@ class OrganizationDetailsViewTestCase(TestCase):
 
     def test_user_logged_in_subscriber(self):
         """Organization Details. User logged in. An Organization Subscriber."""
-        cprint("[---  INFO   ---] Test Organization Details. User logged in. An Organization Subscriber...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Details. User logged in. An Organization "
+               "Subscriber...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1632,12 +1683,13 @@ class OrganizationDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1682,7 +1734,7 @@ class OrganizationEditViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
         "test_organizations_private.json",
@@ -1717,7 +1769,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_not_logged_in_public_org(self):
         """Organization Edit. User NOT logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User NOT logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User NOT logged in. Public "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -1730,12 +1783,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1775,7 +1829,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_not_logged_in_private_org(self):
         """Organization Edit. User NOT logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User NOT logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User NOT logged in. Private "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -1788,12 +1843,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1833,7 +1889,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_public_org(self):
         """Organization Edit. User logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in. Public "
+               "Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1854,12 +1911,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1878,7 +1936,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_private_org(self):
         """Organization Edit. User logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in. Private Organization...",
+               "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1899,12 +1958,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1923,7 +1983,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_public_org(self):
         """Organization Edit. User logged in, and the Author of the public Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Author of the public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Author of the "
+               "public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1944,12 +2005,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1973,7 +2035,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_private_org(self):
         """Organization Edit. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Author of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Author of the "
+               "private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1994,12 +2057,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2023,7 +2087,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
         """Organization Edit. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Staff Member of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2052,12 +2117,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2081,7 +2147,8 @@ class OrganizationEditViewTestCase(TestCase):
 
     def test_user_logged_in_and_group_member_of_private_org(self):
         """Organization Edit. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Edit. User logged in, and the Group Member of "
+               "the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2112,12 +2179,13 @@ class OrganizationEditViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2154,7 +2222,7 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts.json",
+        "test_accounts_users.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
         "test_organizations_private.json",
@@ -2189,7 +2257,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_not_logged_in_public_org(self):
         """Organization Populate Newsletter. User NOT logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User NOT logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User NOT logged in. "
+               "Public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -2202,12 +2271,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2247,7 +2317,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_not_logged_in_private_org(self):
         """Organization Populate Newsletter. User NOT logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User NOT logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User NOT logged in. "
+               "Private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -2260,12 +2331,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2305,7 +2377,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_public_org(self):
         """Organization Populate Newsletter. User logged in. Public Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in. Public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in. "
+               "Public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2326,12 +2399,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2350,7 +2424,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_private_org(self):
         """Organization Populate Newsletter. User logged in. Private Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in. Private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in. "
+               "Private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2371,12 +2446,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2395,7 +2471,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_public_org(self):
         """Organization Populate Newsletter. User logged in, and the Author of the public Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the Author of the public Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the "
+               "Author of the public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2416,12 +2493,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2445,7 +2523,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_and_author_of_private_org(self):
         """Organization Populate Newsletter. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the Author of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the "
+               "Author of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2466,12 +2545,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2495,7 +2575,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
         """Organization Populate Newsletter. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the Staff Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the "
+               "Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2524,12 +2605,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2553,7 +2635,8 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
 
     def test_user_logged_in_and_group_member_of_private_org(self):
         """Organization Populate Newsletter. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the Group Member of the private Organization...", "cyan")
+        cprint("[---  INFO   ---] Test Organization Populate Newsletter. User logged in, and the "
+               "Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2584,12 +2667,13 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP   ---] CONTEXT          : {response.context["organizations"]}", "yellow")
-        cprint(f"[---  DUMP   ---] REQUEST          : {response.request}", "yellow")
-        cprint(f"[---  DUMP   ---] STATUS           : {response.status_code}", "yellow")
-        cprint(f"[---  DUMP   ---] TEMPLATES        : {response.templates}", "yellow")
-        cprint(f"[---  DUMP   ---] CONTENT          : {response.content}", "yellow")
-        cprint(f"[---  DUMP   ---] REDIRECT CHAIN   : {response.redirect_chain}", "yellow")
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2607,40 +2691,32 @@ class OrganizationPopulateNewsletterViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ AJAX
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === AJAX
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ TEMPLATES
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === TEMPLATES
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ FORMS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === FORMS
+# ===
+# =============================================================================
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ UTILS
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# === UTILS
+# ===
+# =============================================================================
 
 
 """

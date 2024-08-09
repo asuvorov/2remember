@@ -44,11 +44,9 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
-# from events.models import (
-#     EventStatus,
-#     Participation,
-#     ParticipationStatus
-#     )
+from events.models import (
+    Participation,
+    ParticipationStatus)
 from events.utils import get_event_list
 # from organizations.models import OrganizationStaff
 
@@ -1003,8 +1001,7 @@ def profile_participations(request, user_id):
             reverse("my-profile-view"))
 
     # -------------------------------------------------------------------------
-    # --- Get QuerySet of Events (Participations) with
-    #     the Organization Privacy Settings:
+    # --- Get QuerySet of Events (Participations) with the Organization Privacy Settings:
     #     1. Organization is not set;
     #     2. Organization is set to Public;
     #     3. Organization is set to Private, and:
