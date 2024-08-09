@@ -51,8 +51,8 @@
                     {% endblocktrans %}
                     </div>
 
-                    {% get_tweets for "2remember" as tweets exclude "replies, retweets" limit 10 %}
-                    {# get_tweets for "2remember" as tweets limit 10 #}
+                    {% get_tweets for "2rememberlive" as tweets exclude "replies, retweets" limit 10 %}
+                    {# get_tweets for "2rememberlive" as tweets limit 10 #}
 
                     <ul class="bxslider">
                     {% for tweet in tweets  %}

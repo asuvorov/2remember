@@ -124,7 +124,7 @@ setup(
         # "python-decouple==3.7",
         # "sendgrid-django==4.2.0",
         "sentry-sdk[django]==2.7.1",
-        "social-auth-app-django==5.4.1",
+        "social-auth-app-django==5.4.2",
         "whitenoise==6.6.0",
     ],
     license="",

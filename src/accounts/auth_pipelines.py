@@ -3,6 +3,7 @@
 """
 
 import inspect
+import logging
 import requests
 
 from django.core.files.base import ContentFile
@@ -11,14 +12,32 @@ from requests import HTTPError
 from termcolor import cprint
 
 from ddcore.models import UserLogin
+
+# pylint: disable=import-error
+from app.decorators import log_default
+
 from .models import UserProfile
 
 
+logger = logging.getLogger(__name__)
+
+
+@log_default(my_logger=logger, cls_or_self=False)
 def save_profile(
         strategy, backend, uid, response, details, user, social, request, is_new=False,
         *args, **kwargs):
     """Docstring."""
     avatar_url = ""
+
+    cprint(f"[---  INFO   ---] STRATEGY             : {strategy}", "cyan")
+    cprint(f"                  BACKEND              : {backend}", "cyan")
+    cprint(f"                  UID                  : {uid}", "cyan")
+    cprint(f"                  RESPONSE             : {response}", "cyan")
+    cprint(f"                  DETAILS              : {details}", "cyan")
+    cprint(f"                  USER                 : {user}", "cyan")
+    cprint(f"                  SOCIAL               : {social}", "cyan")
+    cprint(f"                  REQUEST              : {request}", "cyan")
+    cprint(f"                  IS NEW               : {is_new}", "cyan")
 
     try:
         profile = user.profile
@@ -36,7 +55,7 @@ def save_profile(
         # profile.gender = response.get("gender").capitalize()
         profile.fb_profile = response.get("link")
 
-        avatar_url =f"http://graph.facebook.com/{response.get('id')}/picture?type=large"
+        avatar_url = f"http://graph.facebook.com/{response.get('id')}/picture?type=large"
 
     # -------------------------------------------------------------------------
     # --- TWITTER
@@ -55,7 +74,8 @@ def save_profile(
     # -------------------------------------------------------------------------
     if (
             avatar_url and (
-                is_new or not profile.avatar)):
+                is_new or
+                not profile.avatar)):
         try:
             response = requests.get(avatar_url)
             response.raise_for_status()
