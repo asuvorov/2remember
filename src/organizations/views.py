@@ -339,9 +339,9 @@ def organization_details(request, slug=None):
             try:
                 twitter_acc = social_link.url.split("/")[-1] if social_link.url.split("/")[-1] else social_link.url.split("/")[-2]
             except Exception as exc:
-                cprint(f"### EXCEPTION in `{__name__}`:\n"
-                       f"                  {type(exc).__name__}\n"
-                       f"                  {str(exc)}", "red", "on_white")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.

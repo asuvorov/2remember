@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import requests
 
 from django.core.files.base import ContentFile
@@ -22,9 +23,9 @@ def save_profile(
     try:
         profile = user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
         profile = UserProfile.objects.create(user=user)
 

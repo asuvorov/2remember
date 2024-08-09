@@ -509,9 +509,9 @@ def my_profile_view(request):
     try:
         profile = request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
         profile = UserProfile.objects.create(user=request.user)
 
@@ -604,9 +604,9 @@ def my_profile_invitations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
         UserProfile.objects.create(user=request.user)
 
@@ -624,9 +624,9 @@ def my_profile_participations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
         UserProfile.objects.create(user=request.user)
 
@@ -781,9 +781,9 @@ def my_profile_privacy(request):
         privacy_members, created = UserPrivacyMembers.objects.get_or_create(user=request.user)
         privacy_admins, created = UserPrivacyAdmins.objects.get_or_create(user=request.user)
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
         # ---------------------------------------------------------------------
         # --- Save the Log.

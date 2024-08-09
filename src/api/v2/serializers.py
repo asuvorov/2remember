@@ -77,9 +77,9 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
         try:
             return f"{obj.full_name} | {obj.address.short_address}"
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             return obj.full_name
 
@@ -88,9 +88,9 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
         try:
             return f"{obj.full_name} | {obj.address.short_address}"
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             return obj.full_name
 

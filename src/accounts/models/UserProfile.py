@@ -363,9 +363,9 @@ class UserProfile(
         except Exception as exc:
             # -----------------------------------------------------------------
             # --- Logging.
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
@@ -403,9 +403,9 @@ class UserProfile(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

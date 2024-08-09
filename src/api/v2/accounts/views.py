@@ -90,9 +90,9 @@ class EmailUpdateViewSet(APIView):
             # --- Send Email Notification(s)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             # -----------------------------------------------------------------
             # --- Failed to update the Email
@@ -166,9 +166,9 @@ class ForgotPasswordNotifyViewSet(APIView):
                 email=email)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             return Response({
                 "message":      _("Failed to send the Password Renewal Link."),
@@ -201,9 +201,9 @@ class ForgotPasswordNotifyViewSet(APIView):
                 url=confirmation_link)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             # -----------------------------------------------------------------
             # --- Save the Log

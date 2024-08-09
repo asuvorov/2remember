@@ -419,9 +419,9 @@ class Organization(
         try:
             ping_google()
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -459,9 +459,9 @@ class Organization(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -476,9 +476,9 @@ class Organization(
             related_invites.delete()
 
         except Exception as exc:
-            cprint(f"### EXCEPTION in `{__name__}`:\n"
-                   f"                  {type(exc).__name__}\n"
-                   f"                  {str(exc)}", "red", "on_white")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
     def post_delete(self, **kwargs):
         """Docstring."""

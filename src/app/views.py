@@ -82,9 +82,9 @@ def handler500(request, exception=None):
         # --- Save the Log
 
     except Exception as exc:
-        cprint(f"### EXCEPTION in `{__name__}`:\n"
-               f"                  {type(exc).__name__}\n"
-               f"                  {str(exc)}", "red", "on_white")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
     return render(request, "error-pages/500.html", status=500)
 
@@ -142,9 +142,9 @@ def remove_upload(request):
             try:
                 instance.file.delete()
             except Exception as exc:
-                cprint(f"### EXCEPTION in `{__name__}`:\n"
-                       f"                  {type(exc).__name__}\n"
-                       f"                  {str(exc)}", "red", "on_white")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
             instance.delete()
             found = True
