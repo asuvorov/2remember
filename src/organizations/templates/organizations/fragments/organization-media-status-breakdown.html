@@ -3,6 +3,10 @@
 {% comment %}
     Input Parameters:
         :<request> - Request
+
+        :<organization>
+        :[is_subscribed]
+        :[show_complain_form]
 {% endcomment %}
 
 {% if organization.author == request.user %}
@@ -26,3 +30,10 @@
         <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
     {% endif %}
 {% endif %}
+
+<hr>
+
+<p>
+{% if organization.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+</p>

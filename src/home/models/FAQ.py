@@ -8,6 +8,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.fields import RichTextUploadingField
+from termcolor import cprint
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import BaseModel
@@ -95,7 +96,9 @@ class FAQ(BaseModel):
         try:
             ping_google()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

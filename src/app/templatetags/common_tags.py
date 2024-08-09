@@ -14,6 +14,8 @@ from django.template.base import Variable
 from django.utils.encoding import smart_str
 from django.utils.safestring import mark_safe
 
+from termcolor import cprint
+
 
 register = template.Library()
 
@@ -53,7 +55,9 @@ def textbreaker(text, action, breaker="<!-- break -->", more_symbols=" ..."):
         try:
             pos = text.index(breaker)
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             return mark_safe(text)
 

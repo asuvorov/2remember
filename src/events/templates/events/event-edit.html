@@ -113,13 +113,23 @@
                             <label for="id_category" class="form-label">{{ form.category.label }}{% if form.category.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.category.errors %}{% for error in form.category.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
+                        <div class="form-floating col-md-4 {% if form.visibility.errors %}has-error{% endif %}">
+                            {{ form.visibility }}
+                            <label for="id_visibility" class="form-label">{{ form.visibility.label }}{% if form.visibility.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.visibility.errors %}{% for error in form.visibility.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.organization.errors %}has-error{% endif %}">
+                            {{ form.organization }}
+                            <label for="id_organization" class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
 
-                        <div class="form-floating col-md-4 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
                             <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                        <div class="form-floating col-md-4 {% if form.hashtag.errors %}has-error{% endif %}">
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
                             {{ form.hashtag }}
                             <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>

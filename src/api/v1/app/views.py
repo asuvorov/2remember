@@ -58,7 +58,7 @@ from app.decorators import log_default
 from blog.models import Post
 from events.models import (
     Event,
-    EventStatus,
+    # EventStatus,
     # Participation,
     # ParticipationStatus
     )

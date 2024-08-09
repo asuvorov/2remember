@@ -19,6 +19,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from annoying.functions import get_object_or_None
+from termcolor import cprint
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -89,7 +90,9 @@ class EmailUpdateViewSet(APIView):
             # --- Send Email Notification(s)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             # -----------------------------------------------------------------
             # --- Failed to update the Email
@@ -163,7 +166,9 @@ class ForgotPasswordNotifyViewSet(APIView):
                 email=email)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             return Response({
                 "message":      _("Failed to send the Password Renewal Link."),
@@ -196,7 +201,9 @@ class ForgotPasswordNotifyViewSet(APIView):
                 url=confirmation_link)
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             # -----------------------------------------------------------------
             # --- Save the Log

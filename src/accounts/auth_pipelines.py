@@ -7,6 +7,7 @@ import requests
 from django.core.files.base import ContentFile
 
 from requests import HTTPError
+from termcolor import cprint
 
 from ddcore.models import UserLogin
 from .models import UserProfile
@@ -21,7 +22,9 @@ def save_profile(
     try:
         profile = user.profile
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION in `{__name__}`:\n"
+               f"                  {type(exc).__name__}\n"
+               f"                  {str(exc)}", "red", "on_white")
 
         profile = UserProfile.objects.create(user=user)
 

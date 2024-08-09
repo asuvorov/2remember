@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate
 from django.utils.translation import gettext as _
 
 from rest_framework import serializers
+from termcolor import cprint
 
 from ddcore.models.Address import Address
 from ddcore.models.Phone import Phone
@@ -75,7 +76,9 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
         try:
             return f"{obj.full_name} | {obj.address.short_address}"
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             return obj.full_name
 
@@ -84,7 +87,9 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
         try:
             return f"{obj.full_name} | {obj.address.short_address}"
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION in `{__name__}`:\n"
+                   f"                  {type(exc).__name__}\n"
+                   f"                  {str(exc)}", "red", "on_white")
 
             return obj.full_name
 
