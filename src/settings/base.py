@@ -21,7 +21,7 @@ PRODUCT_NAME = "2Remember"
 VERSION_API = "v1"
 VERSION_MAJOR = 0
 VERSION_MINOR = 3
-VERSION_PATCH = 1
+VERSION_PATCH = 2
 
 PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC4 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>, <a href='https://github.com/asuvorov/2remember/pull/197/'>feat: upload files api</a>)"
 
