@@ -3,9 +3,7 @@
 """
 
 import datetime
-import inspect
 import logging
-import mimetypes
 
 from django.conf import settings
 from django.contrib.auth.decorators import (
@@ -876,21 +874,23 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Move temporary Files to real Event Images/Documents.
-            cprint("[---  INFO   ---] FILES          : %s" % form.cleaned_data["tmp_files"], "cyan")
-
+            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
             for tmp_file in form.cleaned_data["tmp_files"]:
-                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
+                file_ext = tmp_file.file.name.split(".")[-1]
 
-                cprint("[---  INFO   ---] TMP  FILE      : %s" % tmp_file, "cyan")
-                cprint("[---  INFO   ---] MIME TYPE      : %s" % mime_type, "cyan")
+                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
+                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
 
-                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
+                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
+                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
+
+                if file_ext in settings.SUPPORTED_IMAGES:
                     AttachedImage.objects.create(
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
                         object_id=event.id)
-                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
+                elif file_ext in settings.SUPPORTED_DOCUMENTS:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
@@ -901,7 +901,7 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save URLs and Video URLs and pull their Titles.
-            cprint("[---  INFO   ---] LINKS          : %s" % request.POST["tmp_links"], "cyan")
+            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
             for link in request.POST["tmp_links"].split():
                 url = validate_url(link)
 

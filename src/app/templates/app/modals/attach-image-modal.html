@@ -13,13 +13,13 @@
                     {% csrf_token %}
 
                     <div class="btn btn-success btn-lg btn-block fileinput-button">
-                        <input id="fileupload-images" type="file" name="file" multiple>
+                        <input id="fileupload-images" type="file" name="file" multiple accept="{{ images_str_ext }}">
                         <i class="glyphicon glyphicon-plus"></i>
                         {% trans "Select Files..." %}
                         <small>{% trans "or drag Files here to upload them" %}</small>
                     </div>
 
-                    <p class="my-2">{% trans "Only Images (jpg, png) are supported." %}</p>
+                    <p class="my-2">{% blocktrans %}Only Images ({{ images_str }}) are supported.{% endblocktrans %}</p>
 
                     <div id="progress" class="progress" style="display:none;">
                         <div class="progress-bar progress-bar-success progress-striped active"></div>

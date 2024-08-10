@@ -80,12 +80,12 @@
                                     <div class="row g-2">
                                         <div class="col-12">
                                             <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
-                                            <input id="id_avatar" name="avatar" class="form-control" type="file" accept="image/*">
+                                            <input id="id_avatar" name="avatar" class="form-control" type="file" accept="{{ images_str_ext }}">
                                             <span class="help-block">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                         <div class="col-12">
                                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
                                             <span class="help-block">{% if pform.cover.errors %}{% for error in pform.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                     </div>

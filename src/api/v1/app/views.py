@@ -2,14 +2,13 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import datetime
 import inspect
-import json
 import logging
+import mimetypes
 
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.db.models import Q
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
@@ -20,9 +19,6 @@ from rest_framework import (
     parsers,
     renderers,
     mixins)
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import (
     AllowAny,
     IsAdminUser,
@@ -30,31 +26,34 @@ from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
-from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-
-# import papertrail
 
 from annoying.functions import get_object_or_None
 from termcolor import cprint
 
 from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
     Comment,
     Complaint,
-    Rating)
+    Rating,
+    TemporaryFile)
 
+# pylint: disable=import-error
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
 # from api.v1.api_events.utils import (
 #     event_access_check_required,
-#     event_org_staff_member_required,
-#     )
+#     event_org_staff_member_required)
 # from api.v1.api_organizations.utils import (
 #     organization_access_check_required,
-#     organization_staff_member_required,
-#     )
+#     organization_staff_member_required)
+from app import logconst
 from app.decorators import log_default
+from app.logformat import Format
 from blog.models import Post
 from events.models import (
     Event,
@@ -62,12 +61,161 @@ from events.models import (
     # Participation,
     # ParticipationStatus
     )
-from organizations.models import (
-    Organization,
-    OrganizationStaff)
+from organizations.models import Organization
 
 
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# ===
+# === ATTACHMENTS
+# ===
+# =============================================================================
+class TmpUploadViewSet(APIView):
+    """Temporary Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    error_1 = (f"Sorry, this Field only supports the following File Types:\n - "
+               f"{settings.SUPPORTED_IMAGES_STR}\n\nYour File was not added.")
+    error_2 = (f"Sorry, this Field only supports the following File Types:\n - "
+               f"{settings.SUPPORTED_DOCUMENTS_STR}\n\nYour File was not added.")
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Upload temporary File."""
+        if not request.FILES:
+            return Response({
+                "message":      _("No Files attached."),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # --- TODO: Verify File Size.
+        # --- TODO: Verify File Type.
+
+        tmp_file = TemporaryFile.objects.create(
+            file=request.FILES["file"],
+            name=request.FILES["file"].name)
+
+        result = {
+            "tmp_file_id":      tmp_file.id,
+            "tmp_file_name":    tmp_file.file.name,
+            "tmp_file_size":    tmp_file.file.size,
+            "tmp_file_type":    mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
+        }
+
+        # ---------------------------------------------------------------------
+        # --- Logging.
+        # ---------------------------------------------------------------------
+        logger.info("REQUEST", extra=Format.api_detailed_info(
+            log_type=logconst.LOG_VAL_TYPE_API_REQUEST,
+            request_id=request.request_id,
+            log_extra=result.copy()))
+
+        return Response({
+            "files":    [result],
+        }, status=status.HTTP_200_OK)
+
+
+tmp_upload = TmpUploadViewSet.as_view()
+
+
+class RemoveUploadViewSet(APIView):
+    """Remove Upload View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Remove uploaded File."""
+        found = False
+
+        upload_type = request.data.get("type")
+        upload_id = request.data.get("id")
+
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}", "yellow")
+        cprint(f"                  UPLOAD   ID : {upload_id}", "yellow")
+
+        if upload_type and upload_id:
+            if upload_type == "document":
+                instance = get_object_or_None(AttachedDocument, id=upload_id)
+            elif upload_type == "image":
+                instance = get_object_or_None(AttachedImage, id=upload_id)
+            elif upload_type == "temp":
+                instance = get_object_or_None(TemporaryFile, id=upload_id)
+
+            if instance:
+                try:
+                    instance.file.delete()
+                except Exception as exc:
+                    cprint(f"###" * 27, "white", "on_red")
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
+                           f"{type(exc).__name__} : {str(exc)}",
+                           "white", "on_red")
+
+                    # ---------------------------------------------------------
+                    # --- Logging.
+                    # ---------------------------------------------------------
+                    logger.exception("", extra=Format.exception(
+                        exc=exc,
+                        request_id=request.request_id,
+                        log_extra={}))
+
+                instance.delete()
+                found = True
+
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
+
+
+remove_upload = RemoveUploadViewSet.as_view()
+
+
+class RemoveLinkViewSet(APIView):
+    """Remove Link View Set."""
+
+    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = CommentSerializer
+    # model = Comment
+
+    @log_default(my_logger=logger)
+    def post(self, request):
+        """Remove Link."""
+        found = False
+
+        upload_type = request.data.get("type")
+        upload_id = request.data.get("id")
+
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}", "yellow")
+        cprint(f"                  UPLOAD   ID : {upload_id}", "yellow")
+
+        if upload_type and upload_id:
+            if upload_type == "regular":
+                instance = get_object_or_None(AttachedUrl, id=upload_id)
+            elif upload_type == "video":
+                instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
+
+            if instance:
+                instance.delete()
+                found = True
+
+        return Response({
+            "deleted":  found,
+        }, status=status.HTTP_200_OK)
+
+
+remove_link = RemoveLinkViewSet.as_view()
 
 
 # =============================================================================
@@ -174,6 +322,7 @@ class CommentListViewSet(APIView):
                 return Response({
                     "message":      _("Account not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
+
             cprint("[---  INFO   ---] FOUND ACCOUNT (PROFILE) : %s" % obj, "cyan")
 
         # ---------------------------------------------------------------------
@@ -198,6 +347,7 @@ class CommentListViewSet(APIView):
                 return Response({
                     "message":      _("Event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
+
             cprint("[---  INFO   ---] FOUND EVENT : %s" % obj, "cyan")
 
         # ---------------------------------------------------------------------
@@ -222,6 +372,7 @@ class CommentListViewSet(APIView):
                 return Response({
                     "message":      _("Organization not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
+
             cprint("[---  INFO   ---] FOUND ORGANIZATION : %s" % obj, "cyan")
 
         # ---------------------------------------------------------------------
@@ -413,11 +564,7 @@ class ComplaintListViewSet(APIView):
         # --- Retrieve the Account
         # ---------------------------------------------------------------------
         if account_id:
-            account = get_object_or_None(
-                User,
-                id=account_id,
-            )
-
+            account = get_object_or_None(User, id=account_id)
             if not account:
                 return Response({
                     "message":      _("Member not found."),
@@ -425,8 +572,7 @@ class ComplaintListViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Check, if the User has already complained to the Account
-            is_complained = account.profile.is_complained_by_user(
-                request.user)
+            is_complained = account.profile.is_complained_by_user(request.user)
 
             if is_complained:
                 return Response({
@@ -448,11 +594,7 @@ class ComplaintListViewSet(APIView):
         # --- Retrieve the event
         # ---------------------------------------------------------------------
         if event_id:
-            event = get_object_or_None(
-                event,
-                id=event_id,
-            )
-
+            event = get_object_or_None(Event, id=event_id)
             if not event:
                 return Response({
                     "message":      _("event not found."),
@@ -460,8 +602,7 @@ class ComplaintListViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Check, if the User has already complained to the Account
-            is_complained = event.is_complained_by_user(
-                request.user)
+            is_complained = event.is_complained_by_user(request.user)
 
             if is_complained:
                 return Response({
@@ -473,8 +614,7 @@ class ComplaintListViewSet(APIView):
             participation = get_object_or_None(
                 Participation,
                 user=request.user,
-                event=event,
-            )
+                event=event)
 
             if not participation:
                 return Response({
@@ -496,11 +636,7 @@ class ComplaintListViewSet(APIView):
         # --- Retrieve the Organization
         # ---------------------------------------------------------------------
         if organization_id:
-            organization = get_object_or_None(
-                Organization,
-                id=organization_id,
-            )
-
+            organization = get_object_or_None(Organization, id=organization_id)
             if not organization:
                 return Response({
                     "message":      _("Organization not found."),
@@ -508,8 +644,7 @@ class ComplaintListViewSet(APIView):
 
             # -----------------------------------------------------------------
             # --- Check, if the User has already complained to the Organization.
-            is_complained = organization.is_complained_by_user(
-                request.user)
+            is_complained = organization.is_complained_by_user(request.user)
 
             if is_complained:
                 return Response({
@@ -521,12 +656,9 @@ class ComplaintListViewSet(APIView):
             #     events.
             completed_events = event.objects.filter(
                 organization=organization,
-                status=EventStatus.COMPLETE,
-            )
+                status=EventStatus.COMPLETE)
 
-            event_ids = completed_events.values_list(
-                "pk", flat=True
-            )
+            event_ids = completed_events.values_list("pk", flat=True)
 
             try:
                 participation = Participation.objects.filter(
@@ -561,8 +693,7 @@ class ComplaintListViewSet(APIView):
             user=request.user,
             text=complaint_text,
             content_type=content_type,
-            object_id=object_id,
-        )
+            object_id=object_id)
         complaint.save()
 
         # ---------------------------------------------------------------------
