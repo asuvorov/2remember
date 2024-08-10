@@ -531,6 +531,10 @@ class Event(
 
         return url
 
+    def is_author(self, request):
+        """Docstring."""
+        return self.author == request.user
+
     def email_notify_admin_event_drafted(self, request=None):
         """Send Notification to the Event Admin."""
         # ---------------------------------------------------------------------

@@ -22,7 +22,7 @@ logger = logging.getLogger()
 
 
 def log_default(
-        _func=None, *, my_logger: logging.Logger = None, cls_or_self = True):
+        _func=None, *, my_logger: logging.Logger = None, cls_or_self=True):
     """Default logging Decorator.
 
     Parameters
@@ -93,7 +93,7 @@ def log_default(
                 res = func(*args, **kwargs)
                 return res
             except Exception as exc:
-                cprint(f"### EXCEPTION in `{func_name}`:\n",
+                cprint(f"### EXCEPTION in `{func_name}`:\n"
                        f"                  {type(exc).__name__}\n"
                        f"                  {str(exc)}", "red", "on_white")
 

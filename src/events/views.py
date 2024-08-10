@@ -12,6 +12,9 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import (
+    BadRequest,
+    PermissionDenied)
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
@@ -20,6 +23,7 @@ from django.core.paginator import (
     Paginator)
 from django.http import (
     Http404,
+    HttpResponseForbidden,
     HttpResponseRedirect)
 from django.shortcuts import (
     get_object_or_404,
@@ -804,6 +808,8 @@ def event_edit(request, slug):
     # --- Initials.
     # -------------------------------------------------------------------------
     event = get_object_or_404(Event, slug=slug)
+    if not event.is_author(request):
+        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Completed or closed (deleted) Events cannot be modified.
