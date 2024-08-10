@@ -11,10 +11,15 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import (
+    BadRequest,
+    PermissionDenied)
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 # from django.db.models import Q
-from django.http import HttpResponseRedirect
+from django.http import (
+    HttpResponseForbidden,
+    HttpResponseRedirect)
 from django.shortcuts import (
     get_object_or_404,
     render)
@@ -420,7 +425,7 @@ def organization_details(request, slug=None):
         })
 
 
-@organization_access_check_required
+# @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
     """Organization Staff."""
@@ -447,7 +452,7 @@ def organization_staff(request, slug=None):
         })
 
 
-@organization_access_check_required
+# @organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
     """Organization Groups."""
@@ -485,6 +490,8 @@ def organization_groups(request, slug=None):
 def organization_edit(request, slug=None):
     """Edit Organization."""
     organization = get_object_or_404(Organization, slug=slug)
+    if not organization.is_author(request):
+        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -495,18 +502,21 @@ def organization_edit(request, slug=None):
         user=request.user,
         instance=organization)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
@@ -621,6 +631,8 @@ def organization_populate_newsletter(request, slug=None):
     # --- Initials.
     # -------------------------------------------------------------------------
     organization = get_object_or_404(Organization, slug=slug)
+    if not organization.is_author(request):
+        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

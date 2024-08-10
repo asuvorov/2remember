@@ -55,25 +55,25 @@ def resource_access_handler(request, resource):
 # -----------------------------------------------------------------------------
 @log_default(my_logger=logger, cls_or_self=False)
 def handler400(request, exception=None):
-    """400 Handler."""
-    return render(request, "error-pages/400.html", status=404)
+    """400 Handler (Bad Request)."""
+    return render(request, "error-pages/400.html", status=400)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler403(request, exception=None):
-    """403 Handler."""
-    return render(request, "error-pages/403.html", status=404)
+    """403 Handler (Forbidden / Permission Denied)."""
+    return render(request, "error-pages/403.html", status=403)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler404(request, exception=None):
-    """404 Handler."""
+    """404 Handler (Not Found)."""
     return render(request, "error-pages/404.html", status=404)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler500(request, exception=None):
-    """500 Handler."""
+    """500 Handler (Internal Server Error)."""
     try:
         clear_cache.Command().handle()
 
