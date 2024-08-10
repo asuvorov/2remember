@@ -1,5 +1,7 @@
 # X.Y.Z (YYYY-MM-DD)
 
+# 0.4.0 (2024-08-10)
+
 ### New
 
 - Added Profanity Check to the Instances' Forms.
