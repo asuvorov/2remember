@@ -17,6 +17,7 @@ from django.utils.translation import gettext_lazy as _
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 
 from ddcore.Decorators import autoconnect
@@ -30,7 +31,7 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.uuids import get_unique_filename
 
-from app.utils import update_seo_model_instance_metadata
+# pylint: disable=import-error
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
@@ -87,7 +88,7 @@ def organization_cover_directory_path(instance, filename):
 
 @autoconnect
 class Organization(
-        TitleSlugDescriptionBaseModel,
+        ModelMeta, TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
     """Organization Model."""
 
@@ -226,6 +227,46 @@ class Organization(
         return f"{self.title}"
 
     # -------------------------------------------------------------------------
+    # --- Metadata.
+    # -------------------------------------------------------------------------
+    _metadata = {
+        "description":  "description",
+        # "extra_custom_props"
+        # "extra_props"
+        # "facebook_app_id"
+        "image":        "get_meta_image",
+        # "image_height"
+        # "image_object"
+        # "image_width"
+        "keywords":     "get_keywords",
+        # "locale"
+        # "object_type"
+        # "og_title"
+        # "schemaorg_title"
+        "site_name":    "2Remember",
+        "title":        "title",
+        # "twitter_creator"
+        # "twitter_site"
+        # "twitter_title"
+        # "twitter_type"
+        "url":          "get_absolute_url",
+        # "use_facebook"
+        # "use_og"
+        # "use_schemaorg"
+        # "use_title_tag"
+        # "use_twitter"
+    }
+
+    def get_meta_image(self):
+        """Docstring."""
+        if self.preview:
+            return self.preview.url
+
+    def get_keywords(self):
+        """Docstring."""
+        return ", ".join(self.tags.names())
+
+    # -------------------------------------------------------------------------
     # --- Organization direct URL
     def public_url(self, request=None):
         """Docstring."""
@@ -250,6 +291,10 @@ class Organization(
             })
 
         return url
+
+    def is_author(self, request):
+        """Docstring."""
+        return self.author == request.user
 
     def get_hours_received(self):
         """Docstring."""
@@ -360,17 +405,6 @@ class Organization(
             ping_google()
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-        # ---------------------------------------------------------------------
-        # --- FIXME: Update/insert SEO Model Instance Metadata
-        # update_seo_model_instance_metadata(
-        #     title=self.title,
-        #     description=self.description,
-        #     keywords=", ".join(self.tags.names()),
-        #     heading=self.title,
-        #     path=self.get_absolute_url(),
-        #     object_id=self.id,
-        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:

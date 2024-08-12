@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import logging
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import (
     Http404,
@@ -11,7 +13,9 @@ from django.shortcuts import (
     redirect,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
+
+# pylint: disable=import-error
+from app.decorators import log_default
 
 from .forms import CreateEditPostForm
 from .models import (
@@ -20,7 +24,10 @@ from .models import (
 from .utils import get_post_list
 
 
-@cache_page(60 * 1)
+logger = logging.getLogger(__name__)
+
+
+@log_default(my_logger=logger, cls_or_self=False)
 def post_list(request):
     """List of the all Blog Posts."""
     # -------------------------------------------------------------------------
@@ -40,6 +47,7 @@ def post_list(request):
 
 
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def post_create(request):
     """Create the Post."""
     # -------------------------------------------------------------------------
@@ -62,7 +70,7 @@ def post_create(request):
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
             else:
-                post.status = PostStatus.VISIBLE
+                post.status = PostStatus.PUBLISHED
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
 
@@ -83,7 +91,7 @@ def post_create(request):
         })
 
 
-@cache_page(60 * 1)
+@log_default(my_logger=logger, cls_or_self=False)
 def post_details(request, slug):
     """Post Details."""
     # -------------------------------------------------------------------------
@@ -104,10 +112,12 @@ def post_details(request, slug):
     return render(
         request, "blog/post-details.html", {
             "post":     post,
+            "meta":     post.as_meta(request),
         })
 
 
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def post_edit(request, slug):
     """Edit the Post."""
     # -------------------------------------------------------------------------

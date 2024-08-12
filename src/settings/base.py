@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
+from . import __version__
+
 
 ###############################################################################
 ### PRODUCT VERSIONS                                                        ###
@@ -19,11 +21,11 @@ PRODUCT_NAME = "2Remember"
 #     <major>.<minor>.<patch>
 
 VERSION_API = "v1"
-VERSION_MAJOR = 0
-VERSION_MINOR = 2
-VERSION_PATCH = 0
+# VERSION_MAJOR = 0
+# VERSION_MINOR = 3
+# VERSION_PATCH = 2
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}"
+PRODUCT_VERSION_NUM = f"v.{__version__}"
 
 
 ###############################################################################
@@ -36,9 +38,9 @@ DEBUG_TOOLBAR = True
 PROJECT_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), "..",))
 
 # We have 6 Types of Environments: "local", "dev", "test", "int", "staging", and "prod".
-ENVIRONMENT = os.environ.get("ENVIRONMENT", "dev")
+ENVIRONMENT = config("ENVIRONMENT", default="dev")
 
-DJANGO_SETTINGS_MODULE = os.environ.get("DJANGO_SETTINGS_MODULE", "settings.dev")
+DJANGO_SETTINGS_MODULE = config("DJANGO_SETTINGS_MODULE", default="settings.dev")
 
 ADMINS = (
     ("Artem Suvorov", "artem.suvorov@gmail.com"),
@@ -140,8 +142,9 @@ TEMPLATES = [
                 "events.context_processors.pb_participation_choices",
 
                 "app.context_processors.pb_settings",
-                "app.context_processors.pb_social_links",
                 "app.context_processors.pb_social_link_choices",
+                "app.context_processors.pb_social_links",
+                "app.context_processors.pb_supported_media",
             ],
         },
     },
@@ -159,7 +162,9 @@ MIDDLEWARE = (
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
@@ -186,15 +191,14 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     # --- 3rd Party Apps
-    "corsheaders",
-    "ddcore",
-
     "adminsortable2",
     # "bootstrap3_datetime",
-    # "djangosecure",
+    "corsheaders",
+    "ddcore",
     # "django_countries",
-    # "jquery",
     "djangoformsetjs",
+    # "djangosecure",
+    # "jquery",
     # "papertrail",
     "rangefilter",
     # "sslserver",
@@ -226,7 +230,61 @@ CACHES = {
     "default": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
-    "some-other-cache": {
+    "memcached": {
+        "BACKEND":  "django.core.cache.backends.memcached.PyMemcacheCache",
+        # "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "unix:/tmp/memcached.sock",
+        "OPTIONS": {
+            "MAX_ENTRIES":      1000,
+            "no_delay":         True,
+            "ignore_exc":       True,
+            "max_pool_size":    4,
+            "use_pooling":      True,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "redis": {
+        "BACKEND":  "django.core.cache.backends.redis.RedisCache",
+        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+            "db":           "10",
+            "parser_class": "redis.connection.PythonParser",
+            "pool_class":   "redis.BlockingConnectionPool",
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "db": {
+        "BACKEND":  "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "filebased": {
+        "BACKEND":  "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "locmem": {
+        "BACKEND":  "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "dummy": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
 }
@@ -240,62 +298,84 @@ LOGGING = {
     "disable_existing_loggers":     False,
     "filters": {
         "require_debug_false": {
-            "()":                   "django.utils.log.RequireDebugFalse",
+            "()":           "django.utils.log.RequireDebugFalse",
         },
         "require_debug_true": {
-            "()":                   "django.utils.log.RequireDebugTrue",
+            "()":           "django.utils.log.RequireDebugTrue",
         },
     },
     "formatters": {
         "simple": {
-            "format":               "[%(asctime)s] %(levelname)s %(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
         },
         "verbose": {
-            "format":               "[%(asctime)s] %(levelname)s "
-                                    "[%(name)s.%(funcName)s:%(lineno)d] "
-                                    "%(message)s",
-            "datefmt":              "%Y-%m-%d %H:%M:%S",
+            "format":       "[{asctime}] {levelname} [{name}.{funcName}:{lineno}] {message}",
+            "datefmt":      "%Y-%m-%d %H:%M:%S",
+            "style":        "{",
+        },
+        "json": {
+            "()":           "app.logformat.VerboseJSONFormatter",
         },
     },
     "handlers": {
         "console": {
-            "level":                "INFO",
+            "level":        "INFO",
             "filters": [
                 "require_debug_true",
             ],
-            "class":                "logging.StreamHandler",
-            "formatter":            "simple",
+            "class":        "logging.StreamHandler",
+            "formatter":    "simple",
+        },
+        "json_file": {
+            "level":        "DEBUG",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/json.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "json",
+        },
+        "plain_file": {
+            "level":        "INFO",
+            "class":        "logging.handlers.TimedRotatingFileHandler",
+            "filename":     "logs/plain.log",
+            "when":         "midnight",
+            "interval":     1,
+            "backupCount":  7,
+            "formatter":    "verbose",
         },
         "null": {
-            "class":                "logging.NullHandler",
+            "class":        "logging.NullHandler",
         },
         "mail_admins": {
-            "level":                "ERROR",
+            "level":        "ERROR",
             "filters": [
                 "require_debug_false",
             ],
-            "class":                "django.utils.log.AdminEmailHandler",
-            "formatter":            "verbose",
+            "class":        "django.utils.log.AdminEmailHandler",
+            "formatter":    "verbose",
         },
     },
     "loggers": {
+        "": {
+            "level":        "INFO",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
+        },
         "django": {
-            "handlers": [
-                "console",
-            ],
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file"],
+            "propagate":    True,
         },
         "django.request": {
-            "handlers": [
-                "mail_admins",
-            ],
-            "level":                "ERROR",
-            "propagate":            False,
+            "level":        "ERROR",
+            "handlers":     ["console", "json_file", "plain_file", "mail_admins"],
+            "propagate":    True,
         },
         "py.warnings": {
-            "handlers": [
-                "console",
-            ],
+            "handlers":     ["console", "json_file", "plain_file"],
         },
     },
 }
@@ -588,7 +668,7 @@ MIDDLEWARE += (
     "geoip2_extras.middleware.GeoIP2Middleware",
 )
 GEOIP_PATH = os.path.join(PROJECT_PATH, "geoip/")
-GEOIP2_EXTRAS_CACHE_NAME = "some-other-cache"
+GEOIP2_EXTRAS_CACHE_NAME = "dummy"  # TODO: Explore effective caching Options.
 GEOIP2_EXTRAS_CACHE_TIMEOUT = 3600
 GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 
@@ -635,6 +715,63 @@ IMAGEKIT_DEFAULT_CACHEFILE_BACKEND = "imagekit.cachefiles.backends.Simple"
 IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = "imagekit.cachefiles.strategies.JustInTime"
 IMAGEKIT_CACHEFILE_NAMER = "imagekit.cachefiles.namers.hash"
 IMAGEKIT_SPEC_CACHEFILE_NAMER = "imagekit.cachefiles.namers.source_name_as_path"
+
+
+###############################################################################
+### DJANGO META                                                             ###
+###############################################################################
+INSTALLED_APPS += (
+    "meta",
+)
+
+META_SITE_PROTOCOL = "https"
+# META_SITE_DOMAIN = None
+# META_SITE_TYPE = "og:type"
+# META_SITE_NAME = None
+# META_INCLUDE_KEYWORDS = []
+# META_DEFAULT_KEYWORDS = []
+# META_IMAGE_URL =
+META_USE_OG_PROPERTIES = True
+# META_USE_TWITTER_PROPERTIES = False
+# META_USE_SCHEMAORG_PROPERTIES = False
+# META_USE_TITLE_TAG = True
+META_USE_SITES = True
+# META_OG_NAMESPACES =
+# META_OG_SECURE_URL_ITEMS=
+
+#                         # description
+#                         # extra_custom_props
+#                         # extra_props
+#                         # facebook_app_id
+# META_FB_PAGES           # fb_pages              (default: blank)
+# META_DEFAULT_IMAGE      # image                 (must be an absolute URL, ignores META_IMAGE_URL)
+#                         # image_height
+#                         # image_object
+#                         # image_width
+#                         # keywords
+#                         # locale
+#                         # use_facebook
+#                         # use_og
+#                         # use_schemaorg
+#                         # use_title_tag
+#                         # use_twitter
+# META_FB_APPID           # og_app_id             (default: blank)
+# META_FB_AUTHOR_URL      # og_author_url         (default: blank)
+# META_FB_PROFILE_ID      # og_profile_id         (default: blank)
+# META_FB_PUBLISHER       # og_publisher          (default: blank)
+#                         # og_title
+# META_FB_TYPE            # og_type               (default: first META_FB_TYPES)
+# META_SITE_TYPE          # object_type           (default: first META_OBJECT_TYPES)
+#                         # schemaorg_title
+# META_SCHEMAORG_TYPE     # schemaorg_type        (default: first META_SCHEMAORG_TYPE)
+#                         # site_name
+#                         # title
+# META_TWITTER_AUTHOR     # twitter_author        (default: blank)
+#                         # twitter_creator
+# META_TWITTER_SITE       # twitter_site          (default: blank)
+#                         # twitter_title
+# META_TWITTER_TYPE       # twitter_type          (default: first META_TWITTER_TYPES)
+#                         # url
 
 
 ###############################################################################
@@ -685,7 +822,7 @@ PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit 
     "LETTERS":  1,              # Either uppercase or lowercase Letters
     "DIGITS":   1,              # Digits
     "SPECIAL":  1,              # Not alphanumeric, Space or punctuation Character
-    "WORDS":    0               # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
+    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
 }
 
 
@@ -765,14 +902,6 @@ ROSETTA_ACCESS_CONTROL_FUNCTION = None
 ROSETTA_LANGUAGE_GROUPS = False
 
 ROSETTA_AUTO_COMPILE = True
-
-
-###############################################################################
-### DJANGO SEO                                                              ###
-###############################################################################
-# INSTALLED_APPS += (
-#     "djangoseo",
-# )
 
 
 ###############################################################################
@@ -964,90 +1093,123 @@ PB_SOCIAL_LINKS = {
 ###############################################################################
 UPLOADER_SETTINGS = {
     "default": {
-        "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
-            "doc", "docx", "txt", "rtf",
-        ],
-        "CONTENT_TYPES": [
-            "image/gif",
-            "image/jpeg",
-            "image/pjpeg",
-            "image/png",
-            "application/pdf",
-            "application/msword",
-            "text/plain",
-            "text/rtf",
-        ],
+        "MIME_TYPES_MAP": {
+            "csv":  "text/csv",
+            "doc":  "application/msword",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "odt":  "application/vnd.oasis.opendocument.text",
+            "pdf":  "application/pdf",
+            "rtf":  "application/rtf",
+            "txt":  "text/plain",
+            "bmp":  "image/bmp",
+            "gif":  "image/gif",
+            "jpg":  "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png":  "image/png",
+            "tif":  "image/tiff",
+            "tiff": "image/tiff",
+            "webp": "image/webp",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "documents": {
-        "FILE_TYPES": [
-            "doc", "docx", "txt", "rtf",
-        ],
-        "CONTENT_TYPES": [
-            "application/pdf",
-            "application/msword",
-            "text/plain",
-            "text/rtf",
-            ],
+        "MIME_TYPES_MAP": {
+            "csv":  "text/csv",
+            "doc":  "application/msword",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "odt":  "application/vnd.oasis.opendocument.text",
+            "pdf":  "application/pdf",
+            "rtf":  "application/rtf",
+            "txt":  "text/plain",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "images": {
-        "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
-        ],
-        "CONTENT_TYPES": [
-            "image/gif",
-            "image/jpeg",
-            "image/pjpeg",
-            "image/png",
-            ],
+        "MIME_TYPES_MAP": {
+            "bmp":  "image/bmp",
+            "gif":  "image/gif",
+            "jpg":  "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png":  "image/png",
+            "tif":  "image/tiff",
+            "tiff": "image/tiff",
+            "webp": "image/webp",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "video": {
-        "FILE_TYPES": [
-            "flv", "mpg", "mpeg", "mp4",
-            "avi", "mkv", "ogg",
-            "wmv", "mov", "webm",
-        ],
-        "CONTENT_TYPES": [
-            "video/mpeg",
-            "video/mp4",
-            "video/ogg",
-            "video/quicktime",
-            "video/webm",
-            "video/x-ms-wmv",
-            "video/x-flv",
-            ],
+        "MIME_TYPES_MAP": {
+            "avi":  "video/x-msvideo",
+            "mp4":  "video/mp4",
+            "mpg":  "video/mpeg",
+            "mpeg": "video/mpeg",
+            "ogv":  "video/ogg",
+            "webm": "video/webm",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "audio": {
-        "FILE_TYPES": [
-            "mp3", "mp4", "ogg", "wma", "wax", "wav", "webm",
-        ],
-        "CONTENT_TYPES": [
-            "audio/basic",
-            "audio/L24",
-            "audio/mp4",
-            "audio/mpeg",
-            "audio/ogg",
-            "audio/vorbis",
-            "audio/x-ms-wma",
-            "audio/x-ms-wax",
-            "audio/vnd.rn-realaudio",
-            "audio/vnd.wave",
-            "audio/webm",
-            ],
+        "MIME_TYPES_MAP": {
+            "aac":  "audio/aac",
+            "mid":  "audio/midi",
+            "midi": "audio/midi",
+            "mp3":  "audio/mpeg",
+            "ogv":  "audio/ogg",
+            "wav":  "audio/wav",
+            "weba": "audio/webm",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":  True,
+        "AUTO_UPLOAD":      True,
     }
 }
+
+SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
+SUPPORTED_DEFAULTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DEFAULTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+
+SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
+SUPPORTED_DOCUMENTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DOCUMENTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+
+SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
+SUPPORTED_IMAGES_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+
+
+###############################################################################
+### DJANGO SENTRY                                                           ###
+###############################################################################
+# settings.py
+import sentry_sdk
+
+sentry_sdk.init(
+    dsn=config("SENTRY_DSN", default="https://b22808000322340efd7e59c981cbddd0@o4507562439802880.ingest.us.sentry.io/4507562447208448"),
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=1.0,
+)
+
+
+###############################################################################
+### DJANGO LOGGING                                                          ###
+###############################################################################
+MIDDLEWARE += (
+    "app.middleware.DjangoRequestIDMiddleware",
+    "app.middleware.DjangoLoggingMiddleware",
+)

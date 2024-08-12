@@ -3,22 +3,26 @@
 """
 
 import inspect
-import mimetypes
+import logging
 
 from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import (
+    BadRequest,
+    PermissionDenied)
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
-from django.db.models import Q
-from django.http import HttpResponseRedirect
+# from django.db.models import Q
+from django.http import (
+    HttpResponseForbidden,
+    HttpResponseRedirect)
 from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
 
 from termcolor import cprint
 
@@ -37,6 +41,7 @@ from ddcore.Utilities import (
 
 # pylint: disable=import-error
 from accounts.utils import is_profile_complete
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
@@ -49,9 +54,9 @@ from events.models import (
     # ParticipationStatus
     )
 
-from .decorators import (
-    organization_access_check_required,
-    organization_staff_member_required)
+# from .decorators import (
+#     organization_access_check_required,
+#     organization_staff_member_required)
 from .forms import CreateEditOrganizationForm
 from .models import (
     Organization,
@@ -59,12 +64,15 @@ from .models import (
 from .utils import get_organization_list
 
 
+logger = logging.getLogger(__name__)
+
+
 # =============================================================================
 # ===
 # === ORGANIZATION LIST
 # ===
 # =============================================================================
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
     # -------------------------------------------------------------------------
@@ -115,7 +123,7 @@ def organization_list(request):
         })
 
 
-@cache_page(60)
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
@@ -171,6 +179,7 @@ def organization_directory(request):
 # =============================================================================
 @login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
     cprint("***" * 27, "green")
@@ -186,18 +195,23 @@ def organization_create(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
-        country_code="US")  # FIXME: request.geo_data["country_code"])
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
+        country_code=request.geo_data["country_code"])
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.none())
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.none())
 
     if request.method == "POST":
@@ -275,8 +289,8 @@ def organization_create(request):
 # === ORGANIZATION DETAILS
 # ===
 # =============================================================================
-@cache_page(60 * 1)
 # @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_details(request, slug=None):
     """Organization Details."""
     # -------------------------------------------------------------------------
@@ -290,9 +304,7 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -399,6 +411,7 @@ def organization_details(request, slug=None):
     return render(
         request, "organizations/organization-details-info.html", {
             "organization":             organization,
+            "meta":                     organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
             "phone_numbers":            phone_numbers,
@@ -411,8 +424,8 @@ def organization_details(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
-@organization_access_check_required
+# @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
     """Organization Staff."""
     # -------------------------------------------------------------------------
@@ -423,9 +436,7 @@ def organization_staff(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -440,8 +451,8 @@ def organization_staff(request, slug=None):
         })
 
 
-@cache_page(60 * 1)
-@organization_access_check_required
+# @organization_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
     """Organization Groups."""
     # -------------------------------------------------------------------------
@@ -452,9 +463,7 @@ def organization_groups(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Retrieve the Organization.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -476,30 +485,37 @@ def organization_groups(request, slug=None):
 # =============================================================================
 @login_required
 # @organization_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_edit(request, slug=None):
     """Edit Organization."""
-    organization = get_object_or_404(
-        Organization,
-        slug=slug)
+    organization = get_object_or_404(Organization, slug=slug)
+    if not organization.is_author(request):
+        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditOrganizationForm(
-        request.POST or None, request.FILES or None,
-        user=request.user, instance=organization)
+        request.POST or None,
+        request.FILES or None,
+        user=request.user,
+        instance=organization)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
     formset_social = SocialLinkFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
@@ -538,16 +554,23 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Move temporary Files to real Organization Images/Documents.
+            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
             for tmp_file in form.cleaned_data["tmp_files"]:
-                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
+                file_ext = tmp_file.file.name.split(".")[-1]
 
-                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
+                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
+                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
+
+                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
+                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
+
+                if file_ext in settings.SUPPORTED_IMAGES:
                     AttachedImage.objects.create(
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(organization),
                         object_id=organization.id)
-                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
+                elif file_ext in settings.SUPPORTED_DOCUMENTS:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
@@ -558,6 +581,7 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Save URLs and Video URLs and pull their Titles.
+            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
             for link in request.POST["tmp_links"].split():
                 url = validate_url(link)
 
@@ -607,12 +631,15 @@ def organization_edit(request, slug=None):
 # =============================================================================
 @login_required
 # @organization_staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def organization_populate_newsletter(request, slug=None):
     """Organization, populate Newsletter."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
     organization = get_object_or_404(Organization, slug=slug)
+    if not organization.is_author(request):
+        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -650,45 +677,4 @@ def organization_populate_newsletter(request, slug=None):
         request, "organizations/organization-populate-newsletter.html", {
             "form":             form,
             "organization":     organization,
-        })
-
-
-# =============================================================================
-# ===
-# === ORGANIZATION IFRAMES
-# ===
-# =============================================================================
-@cache_page(60)
-def organization_iframe_upcoming(request, organization_id):
-    """Organization iFrame for upcoming Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_upcoming = Event.objects.filter(
-        status=EventStatus.UPCOMING,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-upcoming.html", {
-            "organization":         organization,
-            "events_upcoming":  events_upcoming,
-        })
-
-
-@cache_page(60)
-def organization_iframe_complete(request, organization_id):
-    """Organization iFrame for completed Events."""
-    organization = get_object_or_404(
-        Organization,
-        pk=organization_id)
-    events_completed = Event.objects.filter(
-        status=EventStatus.COMPLETE,
-        organization=organization,
-    ).order_by("created")
-
-    return render(
-        request, "organizations/fragments/organization-iframe-complete.html", {
-            "organization":             organization,
-            "events_completed":     events_completed,
         })

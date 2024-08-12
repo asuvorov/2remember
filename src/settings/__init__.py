@@ -2,6 +2,9 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+__version__ = "0.4.2"
+
+
 import django
 
 from django.utils.encoding import smart_str

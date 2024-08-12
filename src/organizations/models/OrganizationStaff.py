@@ -8,15 +8,10 @@ from django.utils.translation import gettext_lazy as _
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
-    Address,
     AttachmentMixin,
     BaseModel,
     CommentMixin,
-    ComplaintMixin,
-    Phone,
     RatingMixin,
-    TitleDescriptionBaseModel,
-    TitleSlugDescriptionBaseModel,
     ViewMixin)
 
 from .Organization import Organization
@@ -137,7 +132,6 @@ class OrganizationStaffMixin:
             ).values_list(
                 "organization_id", flat=True
             ),
-            is_deleted=False,
-        )
+            is_deleted=False)
 
         return organizations

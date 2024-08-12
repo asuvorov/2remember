@@ -2,13 +2,14 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import json
+import logging
 import mimetypes
 
 from django.contrib.auth.decorators import login_required
 from django.http import (
     HttpResponse,
-    HttpResponseBadRequest)
+    HttpResponseBadRequest,
+    JsonResponse)
 from django.shortcuts import render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
@@ -22,7 +23,11 @@ from ddcore.models.Attachment import (
     AttachedVideoUrl,
     TemporaryFile)
 
+from .decorators import log_default
 from .management.commands import clear_cache
+
+
+logger = logging.getLogger(__name__)
 
 
 def permission_denied_handler(request):
@@ -48,23 +53,27 @@ def resource_access_handler(request, resource):
 # -----------------------------------------------------------------------------
 # --- HANDLERS
 # -----------------------------------------------------------------------------
+@log_default(my_logger=logger, cls_or_self=False)
 def handler400(request, exception=None):
-    """400 Handler."""
-    return render(request, "error-pages/400.html", status=404)
+    """400 Handler (Bad Request)."""
+    return render(request, "error-pages/400.html", status=400)
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def handler403(request, exception=None):
-    """403 Handler."""
-    return render(request, "error-pages/403.html", status=404)
+    """403 Handler (Forbidden / Permission Denied)."""
+    return render(request, "error-pages/403.html", status=403)
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def handler404(request, exception=None):
-    """404 Handler."""
+    """404 Handler (Not Found)."""
     return render(request, "error-pages/404.html", status=404)
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def handler500(request, exception=None):
-    """500 Handler."""
+    """500 Handler (Internal Server Error)."""
     try:
         clear_cache.Command().handle()
 
@@ -82,6 +91,7 @@ def handler500(request, exception=None):
 # -----------------------------------------------------------------------------
 @login_required
 @require_http_methods(["POST", ])
+@log_default(my_logger=logger, cls_or_self=False)
 def tmp_upload(request):
     """Upload temporary File."""
     if not request.FILES:
@@ -99,16 +109,14 @@ def tmp_upload(request):
         "tmp_file_id":  tmp_file.id
     }
 
-    return HttpResponse(
-        json.dumps({
-            "files":    [result]
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "files":    [result]
+    })
 
 
 @login_required
 @require_http_methods(["POST", ])
+@log_default(my_logger=logger, cls_or_self=False)
 def remove_upload(request):
     """Remove uploaded File."""
     found = False
@@ -133,16 +141,14 @@ def remove_upload(request):
             instance.delete()
             found = True
 
-    return HttpResponse(
-        json.dumps({
-            "deleted":  found,
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "deleted":  found,
+    })
 
 
 @login_required
 @require_http_methods(["POST", ])
+@log_default(my_logger=logger, cls_or_self=False)
 def remove_link(request):
     """Remove Link."""
     found = False
@@ -160,9 +166,6 @@ def remove_link(request):
             instance.delete()
             found = True
 
-    return HttpResponse(
-        json.dumps({
-            "deleted":  found,
-        }),
-        content_type="application/json"
-    )
+    return JsonResponse({
+        "deleted":  found,
+    })

@@ -3,7 +3,6 @@
 """
 
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
@@ -14,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from meta.models import ModelMeta
 from taggit.managers import TaggableManager
 
 from ddcore import enum
@@ -24,8 +24,6 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.Decorators import autoconnect
 from ddcore.uuids import get_unique_filename
-
-from app.utils import update_seo_model_instance_metadata
 
 
 # =============================================================================
@@ -88,7 +86,7 @@ def blog_cover_directory_path(instance, filename):
 
 @autoconnect
 class Post(
-        TitleSlugDescriptionBaseModel,
+        ModelMeta, TitleSlugDescriptionBaseModel,
         CommentMixin, RatingMixin, ViewMixin):
     """Post Model."""
 
@@ -164,6 +162,46 @@ class Post(
         """Docstring."""
         return self.__repr__()
 
+    # -------------------------------------------------------------------------
+    # --- Metadata.
+    # -------------------------------------------------------------------------
+    _metadata = {
+        "description":  "description",
+        # "extra_custom_props"
+        # "extra_props"
+        # "facebook_app_id"
+        "image":        "get_meta_image",
+        # "image_height"
+        # "image_object"
+        # "image_width"
+        "keywords":     "get_keywords",
+        # "locale"
+        # "object_type"
+        # "og_title"
+        # "schemaorg_title"
+        "site_name":    "2Remember",
+        "title":        "title",
+        # "twitter_creator"
+        # "twitter_site"
+        # "twitter_title"
+        # "twitter_type"
+        "url":          "get_absolute_url",
+        # "use_facebook"
+        # "use_og"
+        # "use_schemaorg"
+        # "use_title_tag"
+        # "use_twitter"
+    }
+
+    def get_meta_image(self):
+        """Docstring."""
+        if self.preview:
+            return self.preview.url
+
+    def get_keywords(self):
+        """Docstring."""
+        return ", ".join(self.tags.names())
+
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
 
@@ -226,17 +264,6 @@ class Post(
             ping_google()
         except Exception as exc:
             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-
-        # ---------------------------------------------------------------------
-        # --- FIXME: Update/insert SEO Model Instance Metadata
-        # update_seo_model_instance_metadata(
-        #     title=self.title,
-        #     description=self.content,
-        #     keywords=", ".join(self.tags.names()),
-        #     heading=self.title,
-        #     path=self.get_absolute_url(),
-        #     object_id=self.id,
-        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:

@@ -2,30 +2,19 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-from itertools import chain
-from operator import attrgetter
-
-import geoip2
+import logging
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
-from django.contrib.gis.geoip2 import GeoIP2
 from django.http import HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
-from django.views.decorators.cache import cache_page
-
-from ddcore.Utilities import get_client_ip
 
 # pylint: disable=import-error
-from accounts.models import (
-    Team,
-    TeamMember)
-from blog.models import Post
-from events.models import Event
-from organizations.models import Organization
+from accounts.models import Team
+from app.decorators import log_default
 
 from .forms import (
     ContactUsForm,
@@ -36,33 +25,18 @@ from .models import (
     FAQ)
 
 
-# -----------------------------------------------------------------------------
-# --- Index
-# -----------------------------------------------------------------------------
-@cache_page(60 * 60)
+logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# ===
+# === Index
+# ===
+# =============================================================================
+@log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
-    try:
-        geo = GeoIP2()
-        ip_addr = get_client_ip(request)
-        # ip_addr = "108.162.209.69"
-        country = geo.country(ip_addr)
-        city = geo.city(ip_addr)
-
-    except geoip2.errors.AddressNotFoundError:
-        pass
-
     timeline_qs = []
-    # timeline_qs = sorted(
-    #     chain(
-    #         Post.objects.all(),
-    #         Event.objects.get_upcoming(),
-    #         Organization.objects.filter(
-    #             is_hidden=False,
-    #             is_deleted=False,
-    #         )
-    #     ),
-    #     key=attrgetter("created"))[:10]
 
     return render(
         request, "home/index.html", {
@@ -70,28 +44,28 @@ def index(request):
         })
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def open_to_hire(request):
     """Docstring."""
     return render(
         request, "home/resume.html", {})
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def privacy_policy(request):
     """Docstring."""
     return render(
         request, "home/privacy-policy.html", {})
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def user_agreement(request):
     """Docstring."""
     return render(
         request, "home/user-agreement.html", {})
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def our_team(request):
     """Docstring."""
     teams = Team.objects.all()
@@ -102,7 +76,7 @@ def our_team(request):
         })
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def our_partners(request):
     """Docstring."""
     partners = Partner.objects.all()
@@ -113,13 +87,14 @@ def our_partners(request):
         })
 
 
-@cache_page(60 * 60 * 24)
+@log_default(my_logger=logger, cls_or_self=False)
 def about_us(request):
     """Docstring."""
     return render(
         request, "home/about-us.html", {})
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def contact_us(request):
     """Docstring."""
     # -------------------------------------------------------------------------
@@ -127,7 +102,8 @@ def contact_us(request):
     # -------------------------------------------------------------------------
     # --- Form is being sent via POST Request.
     form = ContactUsForm(
-        request.POST or None, request.FILES or None)
+        request.POST or None,
+        request.FILES or None)
 
     return render(
         request, "home/contact-us.html", {
@@ -135,10 +111,12 @@ def contact_us(request):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- FAQ
-# -----------------------------------------------------------------------------
-@cache_page(60 * 5)
+# =============================================================================
+# ===
+# === FAQ
+# ===
+# =============================================================================
+@log_default(my_logger=logger, cls_or_self=False)
 def faq(request):
     """List of FAQs."""
     # -------------------------------------------------------------------------
@@ -154,13 +132,15 @@ def faq(request):
 
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def faq_create(request):
     """Create FAQ."""
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
 
     if request.method == "POST":
@@ -178,11 +158,11 @@ def faq_create(request):
 
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def faq_edit(request, faq_id):
     """Edit FAQ."""
     # -------------------------------------------------------------------------
     # --- Retrieve FAQ
-    # -------------------------------------------------------------------------
     # -------------------------------------------------------------------------
     faq = get_object_or_404(
         FAQ,
@@ -192,7 +172,8 @@ def faq_edit(request, faq_id):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=faq)
 
@@ -210,11 +191,14 @@ def faq_edit(request, faq_id):
         })
 
 
-# -----------------------------------------------------------------------------
-# --- Feature Test
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Feature Test
+# ===
+# =============================================================================
 @login_required
 @staff_member_required
+@log_default(my_logger=logger, cls_or_self=False)
 def feature(request):
     """Docstring."""
     return render(

@@ -217,9 +217,9 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "user",
                 ("avatar", "avatar_image_tag"),
                 ("cover", "cover_image_tag"),
-                "nickname",
+                ("nickname", "gender", "birth_day"),
                 "bio",
-                ("gender", "birth_day",),
+                "custom_data",
             ),
         }),
         ("Location", {
@@ -238,11 +238,19 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("allow_comments", "receive_newsletters", "is_newly_created"),
             ),
         }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                ("created_by", "created"),
+                ("modified_by", "modified"),
+            ),
+        }),
     )
 
     list_display = [
-        "id",
-        "user", "avatar_image_tag", "cover_image_tag",
+        "id", "user", "avatar_image_tag", "cover_image_tag",
         "allow_comments", "receive_newsletters", "is_newly_created",
         "created_by", "created", "modified_by", "modified",
     ]
@@ -257,8 +265,8 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "user",
     ]
     readonly_fields = [
-        "avatar_image_tag",
-        "cover_image_tag",
+        "avatar_image_tag", "cover_image_tag",
+        "created", "modified",
     ]
     inlines = [
         # AddressInline,
@@ -384,10 +392,28 @@ admin.site.register(UserProfile, UserProfileAdmin)
 class UserLoginAdmin(admin.ModelAdmin):
     """User Login Admin."""
 
+    fieldsets = (
+        ("", {
+            "classes":  (""),
+            "fields":   (
+                ("user", "ip"),
+                "user_agent",
+                "provider",
+                "geo_data",
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                ("created", "modified"),
+            ),
+        }),
+    )
+
     list_display = [
-        "id",
-        "user", "ip", "provider", "geo_data",
-        # "created_by", "created", "modified_by", "modified",
+        "id", "user", "ip", "provider", "geo_data",
         "created", "modified",
     ]
     list_display_links = [
@@ -400,6 +426,9 @@ class UserLoginAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "user", "ip", "provider", "geo_data",
+    ]
+    readonly_fields = [
+        "created", "modified",
     ]
 
     papertrail_type_filters = {
@@ -431,8 +460,16 @@ class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
     inline_classes = [
         "grp-collapse grp-closed",
     ]
+    fields = [
+        "user", "position", "order",
+        "created_by", "created", "modified_by", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
 
     model = TeamMember
+    extra = 1
 
 
 # -----------------------------------------------------------------------------
@@ -441,21 +478,42 @@ class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
 class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Team Admin."""
 
+    fieldsets = (
+        ("", {
+            "classes":  (""),
+            "fields":   (
+                "name",
+                "custom_data",
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                ("created_by", "created"),
+                ("modified_by", "modified"),
+            ),
+        }),
+    )
+
     list_display = [
-        "id",
-        "name", "order",
-        "created", "modified",
+        "id", "name", "order",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "name",
     ]
     list_filter = [
-        "name", "order",
+        "name",
         ("created", DateRangeFilter),
         ("modified", DateRangeFilter),
     ]
     search_fields = [
         "name",
+    ]
+    readonly_fields = [
+        "created", "modified",
     ]
     inlines = [
         TeamMemberInline,
@@ -476,25 +534,31 @@ admin.site.register(Team, TeamAdmin)
 # -----------------------------------------------------------------------------
 # --- Team Member Admin.
 # -----------------------------------------------------------------------------
-class TeamMemberAdmin(admin.ModelAdmin, ImagesAdminMixin):
+class TeamMemberAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Team Member Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
-                ("user", "avatar_image_tag",),
-                "team",
-                "position",
-                "order",
+                ("user", "position", "team"),
+                "custom_data",
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                ("created_by", "created"),
+                ("modified_by", "modified"),
             ),
         }),
     )
 
     list_display = [
-        "id",
-        "user", "avatar_image_tag", "position", "order", "team",
-        "created", "modified",
+        "id", "user", "position", "order", "team",
+        "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
         "user",
@@ -508,7 +572,7 @@ class TeamMemberAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "user", "position", "team",
     ]
     readonly_fields = [
-        "avatar_image_tag",
+        "created", "modified",
     ]
 
     def formfield_for_dbfield(self, db_field, **kwargs):

@@ -4,6 +4,7 @@
 
 import datetime
 import inspect
+import logging
 
 from django.apps import apps
 from django.conf import settings
@@ -14,10 +15,6 @@ from django.contrib.auth import (
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.contenttypes.models import ContentType
-from django.core.paginator import (
-    EmptyPage,
-    PageNotAnInteger,
-    Paginator)
 from django.db.models import Q
 from django.http import (
     HttpResponse,
@@ -27,10 +24,9 @@ from django.shortcuts import (
     render)
 from django.urls import reverse
 from django.utils.translation import gettext as _
-from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
-from termcolor import colored, cprint
+from termcolor import cprint
 
 from ddcore.models import (
     Phone,
@@ -42,6 +38,7 @@ from ddcore.Utilities import (
 )
 
 # pylint: disable=import-error
+from app.decorators import log_default
 from app.forms import (
     AddressForm,
     PhoneForm,
@@ -77,6 +74,8 @@ from .utils import (
     is_profile_complete)
 
 
+logger = logging.getLogger(__name__)
+
 app_label, model_name = settings.AUTH_USER_MODEL.split(".")
 user_model = apps.get_model(app_label, model_name)
 
@@ -86,13 +85,9 @@ user_model = apps.get_model(app_label, model_name)
 # === ACCOUNT REGISTRATION
 # ===
 # =============================================================================
+@log_default(my_logger=logger, cls_or_self=False)
 def account_signup(request):
     """Sign up."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -170,15 +165,9 @@ def account_signup(request):
         })
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def account_signup_confirm(request, uidb36=None, token=None):
     """Sign up confirm."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] UIDB36           : %s" % uidb36, "yellow")
-    cprint("[---  DUMP   ---] TOKEN            : %s" % token, "yellow")
-
     assert uidb36 is not None and token is not None
 
     try:
@@ -225,6 +214,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
 
 
 @csrf_exempt
+@log_default(my_logger=logger, cls_or_self=False)
 def account_signin(request):
     """Sign in."""
     # g = GeoIP()
@@ -284,6 +274,7 @@ def account_signin(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def account_signout(request, next_page):
     """Sign out."""
     logout(request)
@@ -296,13 +287,9 @@ def account_signout(request, next_page):
 # === PASSWORD
 # ===
 # =============================================================================
+@log_default(my_logger=logger, cls_or_self=False)
 def password_forgot(request):
     """Forgot Password."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -348,6 +335,7 @@ def password_forgot(request):
         })
 
 
+@log_default(my_logger=logger, cls_or_self=False)
 def password_renew(request, uidb36=None, token=None):
     """Renew Password."""
     assert uidb36 is not None and token is not None
@@ -377,6 +365,7 @@ def password_renew(request, uidb36=None, token=None):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def password_reset(request):
     """Reset Password."""
     # -------------------------------------------------------------------------
@@ -418,13 +407,80 @@ def password_reset(request):
 # === ACCOUNT LIST
 # ===
 # =============================================================================
-@cache_page(60 * 1)
+@log_default(my_logger=logger, cls_or_self=False)
 def account_list(request):
     """List of the Members."""
     # -------------------------------------------------------------------------
     # --- Retrieve Account List.
     # -------------------------------------------------------------------------
     accounts, page_total, page_number = get_account_list_with_privacy(request)
+
+    # -------------------------------------------------------------------------
+    # --- Members near.
+    #     According to the last log-in Location.
+    # -------------------------------------------------------------------------
+    # members_logins = UserLogin.objects.filter(user__is_active=True)
+
+    # if request.geo_data["country_code"]:
+    #     members_logins = members_logins.filter(
+    #         city__icontains=make_json_cond(
+    #             "country_code", request.geo_data["country_code"]))
+
+    # if request.geo_data["region"]:
+    #     members_logins = members_logins.filter(
+    #         city__icontains=make_json_cond(
+    #             "region", request.geo_data["region"]))
+
+    # if request.geo_data["area_code"]:
+    #     members_logins = members_logins.filter(
+    #         city__icontains=make_json_cond(
+    #             "area_code", request.geo_data["area_code"]))
+
+    # members_user_ids = list(set(
+    #     members_logins.values_list(
+    #         "user__id", flat=True
+    #     ).distinct()))
+    # members_near = accounts.filter(id__in=members_user_ids)
+
+    # -------------------------------------------------------------------------
+    # --- Members might know.
+    #     According to the Location, specified in the User Profile.
+    # -------------------------------------------------------------------------
+    # members_might_know = accounts.filter()
+
+    # if request.user.is_authenticated and request.user.profile.address:
+    #     # ---------------------------------------------------------------------
+    #     # --- Filter by Country and City.
+    #     if (
+    #             request.user.profile.address.country and
+    #             request.user.profile.address.city):
+    #         members_might_know = members_might_know.filter(
+    #             profile__address__country=request.user.profile.address.country,
+    #             profile__address__city=request.user.profile.address.city)
+    #     # ---------------------------------------------------------------------
+    #     # --- Filter by Province and Zip Code.
+    #     elif (
+    #             request.user.profile.address.province and
+    #             request.user.profile.address.zip_code):
+    #         members_might_know = members_might_know.filter(
+    #             profile__address__province=request.user.profile.address.province,
+    #             profile__address__zip_code=request.user.profile.address.zip_code)
+    #     else:
+    #         members_might_know = []
+
+    # -------------------------------------------------------------------------
+    # --- New Members.
+    #     Date joined is less than 1 Day ago.
+    # -------------------------------------------------------------------------
+    # time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
+    # members_new = accounts.filter(date_joined__gte=time_threshold)
+
+    # -------------------------------------------------------------------------
+    # --- Members on-line.
+    #     Last login was less than 1 Hour ago.
+    # -------------------------------------------------------------------------
+    # time_threshold = datetime.datetime.now() - datetime.timedelta(hours=1)
+    # members_online = accounts.filter(last_login__gte=time_threshold)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -438,232 +494,15 @@ def account_list(request):
         })
 
 
-@cache_page(60 * 1)
-def account_near_you_list(request):
-    """List of the Members."""
-    # geo = GeoIP()
-    # ip_addr = get_client_ip(request)
-    # # ip = "108.162.209.69"
-    # country = geo.country(ip_addr)
-    # city = geo.city(ip_addr)
-
-    accounts = _retrieve_account_list_with_privacy(request)
-
-    # -------------------------------------------------------------------------
-    # --- Members near.
-    #     According to the last log-in Location.
-    # -------------------------------------------------------------------------
-    members_logins = UserLogin.objects.filter(user__is_active=True)
-
-    if request.geo_data["country_code"]:
-        members_logins = members_logins.filter(
-            city__icontains=make_json_cond(
-                "country_code", request.geo_data["country_code"]))
-
-    if request.geo_data["region"]:
-        members_logins = members_logins.filter(
-            city__icontains=make_json_cond(
-                "region", request.geo_data["region"]))
-
-    if request.geo_data["area_code"]:
-        members_logins = members_logins.filter(
-            city__icontains=make_json_cond(
-                "area_code", request.geo_data["area_code"]))
-
-    members_user_ids = list(set(
-        members_logins.values_list(
-            "user__id", flat=True
-        ).distinct()))
-    members_near = accounts.filter(id__in=members_user_ids)
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        members_near,
-        settings.MAX_MEMBERS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        members_near = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        members_near = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        members_near = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "accounts/account-list.html", {
-            "accounts":     members_near,
-            "page_title":   _("Members near you"),
-            "page_total":   paginator.num_pages,
-            "page_number":  members_near.number,
-        })
-
-
-@cache_page(60 * 1)
-def account_might_know_list(request):
-    """List of the Members."""
-    accounts = _retrieve_account_list_with_privacy(request)
-
-    # -------------------------------------------------------------------------
-    # --- Members might know.
-    #     According to the Location, specified in the User Profile.
-    # -------------------------------------------------------------------------
-    members_might_know = accounts.filter()
-
-    if request.user.is_authenticated and request.user.profile.address:
-        # ---------------------------------------------------------------------
-        # --- Filter by Country and City.
-        if (
-                request.user.profile.address.country and
-                request.user.profile.address.city):
-            members_might_know = members_might_know.filter(
-                profile__address__country=request.user.profile.address.country,
-                profile__address__city=request.user.profile.address.city)
-        # ---------------------------------------------------------------------
-        # --- Filter by Province and Zip Code.
-        elif (
-                request.user.profile.address.province and
-                request.user.profile.address.zip_code):
-            members_might_know = members_might_know.filter(
-                profile__address__province=request.user.profile.address.province,
-                profile__address__zip_code=request.user.profile.address.zip_code)
-        else:
-            members_might_know = []
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        members_might_know,
-        settings.MAX_MEMBERS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        members_might_know = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        members_might_know = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        members_might_know = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "accounts/account-list.html", {
-            "accounts":     members_might_know,
-            "page_title":   _("Members you might know"),
-            "page_total":   paginator.num_pages,
-            "page_number":  members_might_know.number,
-        })
-
-
-@cache_page(60 * 1)
-def account_new_list(request):
-    """List of the Members."""
-    accounts = _retrieve_account_list_with_privacy(request)
-
-    # -------------------------------------------------------------------------
-    # --- New Members.
-    #     Date joined is less than 1 Day ago.
-    # -------------------------------------------------------------------------
-    time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
-    members_new = accounts.filter(date_joined__gte=time_threshold)
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        members_new,
-        settings.MAX_MEMBERS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        members_new = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        members_new = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        members_new = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "accounts/account-list.html", {
-            "accounts":     members_new,
-            "page_title":   _("New Members"),
-            "page_total":   paginator.num_pages,
-            "page_number":  members_new.number,
-        })
-
-
-@cache_page(60 * 1)
-def account_online_list(request):
-    """List of the Members."""
-    accounts = _retrieve_account_list_with_privacy(request)
-
-    # -------------------------------------------------------------------------
-    # --- Members on-line.
-    #     Last login was less than 1 Hour ago.
-    # -------------------------------------------------------------------------
-    time_threshold = datetime.datetime.now() - datetime.timedelta(hours=1)
-    members_online = accounts.filter(last_login__gte=time_threshold)
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(
-        members_online,
-        settings.MAX_MEMBERS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        members_online = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        members_online = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        members_online = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "accounts/account-list.html", {
-            "accounts":     members_online,
-            "page_title":   _("Members online"),
-            "page_total":   paginator.num_pages,
-            "page_number":  members_online.number,
-        })
-
-
 # =============================================================================
 # ===
 # === MY PROFILE
 # ===
 # =============================================================================
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_view(request):
-    """My Profile Details."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-
+    """My Profile."""
     # -------------------------------------------------------------------------
     # --- Get or create User's Profile.
     # -------------------------------------------------------------------------
@@ -677,14 +516,14 @@ def my_profile_view(request):
     # -------------------------------------------------------------------------
     # --- Get or create User's Privacy Settings.
     # -------------------------------------------------------------------------
-    try:
-        privacy_general, created = UserPrivacyGeneral.objects.get_or_create(user=request.user)
-        privacy_members, created = UserPrivacyMembers.objects.get_or_create(user=request.user)
-        privacy_admins, created = UserPrivacyAdmins.objects.get_or_create(user=request.user)
-    except Exception as exc:
-        # ---------------------------------------------------------------------
-        # --- Save the Log.
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+    # try:
+    #     privacy_general, created = UserPrivacyGeneral.objects.get_or_create(user=request.user)
+    #     privacy_members, created = UserPrivacyMembers.objects.get_or_create(user=request.user)
+    #     privacy_admins, created = UserPrivacyAdmins.objects.get_or_create(user=request.user)
+    # except Exception as exc:
+    #     # ---------------------------------------------------------------------
+    #     # --- Save the Log.
+    #     print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Phone Numbers.
@@ -734,6 +573,7 @@ def my_profile_view(request):
 
     response = HttpResponse(render(
         request, "accounts/my-profile-info.html", {
+            "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
             "show_no_email_popup_modal":    show_no_email_popup_modal,
@@ -753,6 +593,7 @@ def my_profile_view(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_invitations(request):
     """My Profile Invitations."""
     # -------------------------------------------------------------------------
@@ -770,6 +611,7 @@ def my_profile_invitations(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_participations(request):
     """My Profile Participations."""
     # -------------------------------------------------------------------------
@@ -787,6 +629,7 @@ def my_profile_participations(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_events(request):
     """My Profile Events."""
     # -------------------------------------------------------------------------
@@ -810,18 +653,9 @@ def my_profile_events(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_edit(request):
     """Edit Profile."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST USER     : %s" % request.user, "yellow")
-    cprint("[---  DUMP   ---] REQUEST PROFILE  : %s" % request.user.profile, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -913,6 +747,7 @@ def my_profile_edit(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_delete(request):
     """Delete Profile."""
     if request.method == "POST":
@@ -929,6 +764,7 @@ def my_profile_delete(request):
 
 
 @login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_privacy(request):
     """Profile Privacy Settings."""
     # -------------------------------------------------------------------------
@@ -993,7 +829,7 @@ def my_profile_privacy(request):
 # === FOREIGN PROFILE
 # ===
 # =============================================================================
-@cache_page(60 * 1)
+@log_default(my_logger=logger, cls_or_self=False)
 def profile_view(request, user_id):
     """Foreign Profile Info."""
     # -------------------------------------------------------------------------
@@ -1006,10 +842,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
-
+    account = get_object_or_404(user_model, pk=user_id)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -1134,6 +967,7 @@ def profile_view(request, user_id):
     return render(
         request, "accounts/foreign-profile-info.html", {
             "account":                  account,
+            "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
             "related_organizations":    related_organizations,
             "phone_numbers":            phone_numbers,
@@ -1142,7 +976,7 @@ def profile_view(request, user_id):
         })
 
 
-@cache_page(60 * 1)
+@log_default(my_logger=logger, cls_or_self=False)
 def profile_participations(request, user_id):
     """Foreign Profile Participations."""
     # -------------------------------------------------------------------------
@@ -1261,11 +1095,15 @@ def profile_participations(request, user_id):
         })
 
 
-@cache_page(60 * 1)
+@log_default(my_logger=logger, cls_or_self=False)
 def profile_events(request, user_id):
     """Foreign Profile Events."""
     # -------------------------------------------------------------------------
     # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
     account = get_object_or_404(
         user_model,

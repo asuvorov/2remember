@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load taggit_templatetags2_tags %}
@@ -13,6 +14,8 @@
         :<formset_roles>  - Roles Formset
         :<formset_social> - Social Links Formset
 {% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{% trans "Events List" %} - {{ block.super }}{% endblock %}
 
@@ -111,6 +114,7 @@
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Tag Cloud -->
             <section id="tag-cloud">
+            {% cache 60 tag-cloud-event LANGUAGE_CODE %}
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "events.event" %}
                 {% get_tagcloud as tagcloud for "events.event" %}
@@ -124,6 +128,7 @@
                     </a>
                 {% endfor %}
                 </div>
+            {% endcache %}
             </section>
 
             <!-- Sponsored Links -->

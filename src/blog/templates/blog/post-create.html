@@ -48,12 +48,12 @@
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*" required>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}" required>
                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="col-md-6">
                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*" required>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}" required>
                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
                             <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
-                            {{ form.description }}
+                            {{ form.description }}<br/>
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
@@ -98,7 +98,7 @@
                     <h3>{% trans "Content" %}</h3>
                     <div class="row g-3">
                         <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
-                            {{ form.content }}
+                            {{ form.content }}<br/>
                             <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                     </div>

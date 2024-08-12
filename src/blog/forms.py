@@ -6,14 +6,17 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
 
 from .models import Post
 
 
-# -----------------------------------------------------------------------------
-# --- BLOG POST CREATE/EDIT FORM
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === BLOG POST CREATE/EDIT FORM
+# ===
+# =============================================================================
 class CreateEditPostForm(forms.ModelForm):
     """Create/edit Post Form."""
 
@@ -25,6 +28,17 @@ class CreateEditPostForm(forms.ModelForm):
 
         if self.instance and self.instance.id:
             pass
+
+        # ---------------------------------------------------------------------
+        self.fields["title"].required = True
+        self.fields["content"].required = True
+
+        # ---------------------------------------------------------------------
+        self.fields["title"].validators = [validate_is_profane]
+        self.fields["description"].validators = [validate_is_profane]
+        self.fields["content"].validators = [validate_is_profane]
+        self.fields["tags"].validators = [validate_is_profane]
+        self.fields["hashtag"].validators = [validate_is_profane]
 
     class Meta:
         model = Post
