@@ -49,12 +49,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME":     config("DB_NAME", default="sqlite.db"),
-        "USER":     config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST":     config("DB_HOST", default=""),
-        "PORT":     config("DB_PORT", default=""),
+        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3", cast=str),
+        "NAME":     config("DB_NAME", default="sqlite.db", cast=str),
+        "USER":     config("DB_USER", default="", cast=str),
+        "PASSWORD": config("DB_PASSWORD", default="", cast=str),
+        "HOST":     config("DB_HOST", default="", cast=str),
+        "PORT":     config("DB_PORT", default="", cast=str),
         "OPTIONS": {
             # "autocommit": True,
         }
@@ -104,6 +104,8 @@ STATICFILES_FINDERS = (
 
 SECRET_KEY = config("SECRET_KEY", default="@zew8t_wcz!qn9=8+hheltx@&b#!x@i6ores96lhbnobr3jp*c")
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
+
+print(f">>> {SECURE_SSL_REDIRECT=}")
 
 TEMPLATES = [
     {
@@ -1056,10 +1058,28 @@ WHITENOISE_MAX_AGE = 31536000
 
 
 ###############################################################################
-### MAILING                                                                 ###
+### EMAILING                                                                 ###
 ###############################################################################
 EMAIL_SENDER = "no-reply@2remember.live"
 EMAIL_SUPPORT = "support@2remember.live"
+
+
+EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"
+                                                                                                # "django.core.mail.backends.filebased.EmailBackend"
+                                                                                                # "django.core.mail.backends.locmem.EmailBackend"
+                                                                                                # "django.core.mail.backends.dummy.EmailBackend"
+EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)  # e.g. "/tmp/app-messages"
+EMAIL_HOST = config("EMAIL_HOST", default="localhost")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=25)
+EMAIL_SUBJECT_PREFIX = config("EMAIL_SUBJECT_PREFIX", default="[Django] ")
+EMAIL_USE_LOCALTIME = config("EMAIL_USE_LOCALTIME", default=False)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
+EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
+EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
