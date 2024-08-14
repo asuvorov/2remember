@@ -4,7 +4,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-*.bak
+# *.bak
 
 # =============================================================================
 # === C-Extensions.
@@ -78,6 +78,7 @@ coverage.xml
 src/components/
 src/logs/
 src/media/
+src/settings/settings.ini
 src/staticserve/
 src/django_wsgi.py
 *.*~

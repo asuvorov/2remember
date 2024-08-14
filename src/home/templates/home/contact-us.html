@@ -127,6 +127,8 @@
         var subject = $("#contact-us-form").find("input[name='subject']").val();
         var message = $("#contact-us-form").find("textarea[name='message']").val();
 
+        $("#spinner").fadeIn("slow");
+
         $.post("{% url 'api-contact-us' %}", {
             "name":                 name,
             "email":                email,
@@ -157,6 +159,8 @@
                 }).show();
             };
         });
+
+        $("#spinner").fadeOut("slow");
 
         return true;
     }

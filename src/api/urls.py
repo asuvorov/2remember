@@ -18,5 +18,4 @@ urlpatterns = [
         name="api-version"),
 
     re_path(r"^v1/", include("api.v1.urls")),
-    re_path(r"^v2/", include("api.v2.urls")),
 ]
