@@ -308,6 +308,10 @@ class Organization(
 
         return url
 
+    def is_author(self, request):
+        """Docstring."""
+        return self.author == request.user
+
     def get_hours_received(self):
         """Docstring."""
 

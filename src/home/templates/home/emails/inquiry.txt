@@ -2,11 +2,11 @@
     THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
 *******************************************************************************
 
-Client: {{ from_name }}
+Client: {{ from_name|safe }}
 
-Subject: {{ from_subject }}
+Subject: {{ from_subject|safe }}
 
-Message: {{ from_message }}
+Message: {{ from_message|safe }}
 
 Reply to: {{ from_email }}
 

@@ -9,6 +9,8 @@ from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
+from . import __version__
+
 
 ###############################################################################
 ### PRODUCT VERSIONS                                                        ###
@@ -19,11 +21,11 @@ PRODUCT_NAME = "2Remember"
 #     <major>.<minor>.<patch>
 
 VERSION_API = "v1"
-VERSION_MAJOR = 0
-VERSION_MINOR = 3
-VERSION_PATCH = 1
+# VERSION_MAJOR = 0
+# VERSION_MINOR = 3
+# VERSION_PATCH = 2
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC3 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>)"
+PRODUCT_VERSION_NUM = f"v.{__version__}"
 
 
 ###############################################################################
@@ -47,12 +49,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
-        "NAME":     config("DB_NAME", default="sqlite.db"),
-        "USER":     config("DB_USER", default=""),
-        "PASSWORD": config("DB_PASSWORD", default=""),
-        "HOST":     config("DB_HOST", default=""),
-        "PORT":     config("DB_PORT", default=""),
+        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3", cast=str),
+        "NAME":     config("DB_NAME", default="sqlite.db", cast=str),
+        "USER":     config("DB_USER", default="", cast=str),
+        "PASSWORD": config("DB_PASSWORD", default="", cast=str),
+        "HOST":     config("DB_HOST", default="", cast=str),
+        "PORT":     config("DB_PORT", default="", cast=str),
         "OPTIONS": {
             # "autocommit": True,
         }
@@ -103,6 +105,8 @@ STATICFILES_FINDERS = (
 SECRET_KEY = config("SECRET_KEY", default="@zew8t_wcz!qn9=8+hheltx@&b#!x@i6ores96lhbnobr3jp*c")
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 
+print(f">>> {SECURE_SSL_REDIRECT=}")
+
 TEMPLATES = [
     {
         "BACKEND":  "django.template.backends.django.DjangoTemplates",
@@ -140,8 +144,9 @@ TEMPLATES = [
                 "events.context_processors.pb_participation_choices",
 
                 "app.context_processors.pb_settings",
-                "app.context_processors.pb_social_links",
                 "app.context_processors.pb_social_link_choices",
+                "app.context_processors.pb_social_links",
+                "app.context_processors.pb_supported_media",
             ],
         },
     },
@@ -820,7 +825,7 @@ PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit 
     "LETTERS":  1,              # Either uppercase or lowercase Letters
     "DIGITS":   1,              # Digits
     "SPECIAL":  1,              # Not alphanumeric, Space or punctuation Character
-    "WORDS":    0               # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
+    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
 }
 
 
@@ -1093,10 +1098,28 @@ WHITENOISE_MAX_AGE = 31536000
 
 
 ###############################################################################
-### MAILING                                                                 ###
+### EMAILING                                                                 ###
 ###############################################################################
 EMAIL_SENDER = "no-reply@2remember.live"
 EMAIL_SUPPORT = "support@2remember.live"
+
+
+EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"
+                                                                                                # "django.core.mail.backends.filebased.EmailBackend"
+                                                                                                # "django.core.mail.backends.locmem.EmailBackend"
+                                                                                                # "django.core.mail.backends.dummy.EmailBackend"
+EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)  # e.g. "/tmp/app-messages"
+EMAIL_HOST = config("EMAIL_HOST", default="localhost")
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+EMAIL_PORT = config("EMAIL_PORT", default=25)
+EMAIL_SUBJECT_PREFIX = config("EMAIL_SUBJECT_PREFIX", default="[Django] ")
+EMAIL_USE_LOCALTIME = config("EMAIL_USE_LOCALTIME", default=False)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
+EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
+EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
@@ -1127,93 +1150,99 @@ PB_SOCIAL_LINKS = {
 ###############################################################################
 UPLOADER_SETTINGS = {
     "default": {
-        "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
-            "doc", "docx", "txt", "rtf",
-        ],
-        "CONTENT_TYPES": [
-            "image/gif",
-            "image/jpeg",
-            "image/pjpeg",
-            "image/png",
-            "application/pdf",
-            "application/msword",
-            "text/plain",
-            "text/rtf",
-        ],
+        "MIME_TYPES_MAP": {
+            "csv":  "text/csv",
+            "doc":  "application/msword",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "odt":  "application/vnd.oasis.opendocument.text",
+            "pdf":  "application/pdf",
+            "rtf":  "application/rtf",
+            "txt":  "text/plain",
+            "bmp":  "image/bmp",
+            "gif":  "image/gif",
+            "jpg":  "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png":  "image/png",
+            "tif":  "image/tiff",
+            "tiff": "image/tiff",
+            "webp": "image/webp",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "documents": {
-        "FILE_TYPES": [
-            "doc", "docx", "txt", "rtf",
-        ],
-        "CONTENT_TYPES": [
-            "application/pdf",
-            "application/msword",
-            "text/plain",
-            "text/rtf",
-            ],
+        "MIME_TYPES_MAP": {
+            "csv":  "text/csv",
+            "doc":  "application/msword",
+            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+            "odt":  "application/vnd.oasis.opendocument.text",
+            "pdf":  "application/pdf",
+            "rtf":  "application/rtf",
+            "txt":  "text/plain",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "images": {
-        "FILE_TYPES": [
-            "gif", "jpg", "jpeg", "png",
-        ],
-        "CONTENT_TYPES": [
-            "image/gif",
-            "image/jpeg",
-            "image/pjpeg",
-            "image/png",
-            ],
+        "MIME_TYPES_MAP": {
+            "bmp":  "image/bmp",
+            "gif":  "image/gif",
+            "jpg":  "image/jpeg",
+            "jpeg": "image/jpeg",
+            "png":  "image/png",
+            "tif":  "image/tiff",
+            "tiff": "image/tiff",
+            "webp": "image/webp",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "video": {
-        "FILE_TYPES": [
-            "flv", "mpg", "mpeg", "mp4",
-            "avi", "mkv", "ogg",
-            "wmv", "mov", "webm",
-        ],
-        "CONTENT_TYPES": [
-            "video/mpeg",
-            "video/mp4",
-            "video/ogg",
-            "video/quicktime",
-            "video/webm",
-            "video/x-ms-wmv",
-            "video/x-flv",
-            ],
+        "MIME_TYPES_MAP": {
+            "avi":  "video/x-msvideo",
+            "mp4":  "video/mp4",
+            "mpg":  "video/mpeg",
+            "mpeg": "video/mpeg",
+            "ogv":  "video/ogg",
+            "webm": "video/webm",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "audio": {
-        "FILE_TYPES": [
-            "mp3", "mp4", "ogg", "wma", "wax", "wav", "webm",
-        ],
-        "CONTENT_TYPES": [
-            "audio/basic",
-            "audio/L24",
-            "audio/mp4",
-            "audio/mpeg",
-            "audio/ogg",
-            "audio/vorbis",
-            "audio/x-ms-wma",
-            "audio/x-ms-wax",
-            "audio/vnd.rn-realaudio",
-            "audio/vnd.wave",
-            "audio/webm",
-            ],
+        "MIME_TYPES_MAP": {
+            "aac":  "audio/aac",
+            "mid":  "audio/midi",
+            "midi": "audio/midi",
+            "mp3":  "audio/mpeg",
+            "ogv":  "audio/ogg",
+            "wav":  "audio/wav",
+            "weba": "audio/webm",
+        },
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":  True,
+        "AUTO_UPLOAD":      True,
     }
 }
+
+SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
+SUPPORTED_DEFAULTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DEFAULTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+
+SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
+SUPPORTED_DOCUMENTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DOCUMENTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+
+SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
+SUPPORTED_IMAGES_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
 
 
 ###############################################################################

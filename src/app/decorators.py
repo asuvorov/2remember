@@ -11,7 +11,7 @@ from time import perf_counter
 
 from django.http import HttpRequest
 
-from termcolor import cprint, colored
+from termcolor import cprint
 
 from . import logconst
 from .logformat import Format
@@ -22,7 +22,7 @@ logger = logging.getLogger()
 
 
 def log_default(
-        _func=None, *, my_logger: logging.Logger = None, cls_or_self = True):
+        _func=None, *, my_logger: logging.Logger = None, cls_or_self=True):
     """Default logging Decorator.
 
     Parameters
@@ -45,9 +45,11 @@ def log_default(
             # --- Initials.
             # -----------------------------------------------------------------
             # --- Manage `self` or `cls`.
+            _args = list(args)
             _self = None
+
             if cls_or_self:
-                _self = args[0]
+                _self = _args.pop(0)
 
             func_name = f"{_self.__class__.__name__}.{func.__name__}" if _self else func.__name__
 
@@ -60,7 +62,7 @@ def log_default(
             log_type = logconst.LOG_VAL_TYPE_FUNC_CALL
             log_extra = {
                 "func_name":                func_name,
-                "func_args":                args,
+                "func_args":                _args,
                 "func_kwargs":              kwargs,
                 "logger":                   logger,
                 logconst.LOG_KEY_STATUS:    logconst.LOG_VAL_STATUS_SUCCESS,
@@ -69,7 +71,7 @@ def log_default(
             # -----------------------------------------------------------------
             # --- Manage Request and Response.
             request_id = None
-            for a in args:
+            for a in _args:
                 if isinstance(a, HttpRequest):
                     log_type = logconst.LOG_VAL_TYPE_FRONT_END_REQUEST
                     request_id = a.request_id
@@ -81,7 +83,7 @@ def log_default(
             cprint(f"***" * 27, "green")
             cprint(f"*** INSIDE  `{func_name}`", "green")
 
-            args_repr = "\n                        ".join([repr(a) for a in args])
+            args_repr = "\n                        ".join([repr(a) for a in _args])
             kwargs_repr = "\n                        ".join([f"{k}={v!r}" for k, v in kwargs.items()])
 
             cprint(f"    [--- DUMP ---]   ARGS : {args_repr}", "yellow")
@@ -93,7 +95,7 @@ def log_default(
                 res = func(*args, **kwargs)
                 return res
             except Exception as exc:
-                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                cprint(f"### EXCEPTION @ `{func_name}`:\n"
                        f"                 {type(exc).__name__}\n"
                        f"                 {str(exc)}", "white", "on_red")
 

@@ -76,12 +76,12 @@
                                     <div class="row g-2">
                                         <div class="col-12">
                                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
                                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                         <div class="col-12">
                                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
                                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                     </div>
@@ -254,15 +254,15 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal" style="margin-right:15px;">
                         <i class="bi bi-camera"></i>
                         <span id="total_images" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal" style="margin-right:15px;">
                         <i class="bi bi-paperclip"></i>
                         <span id="total_documents" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal" style="margin-right:15px;">
                         <i class="bi bi-link"></i>
                         <span id="total_links" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
@@ -453,16 +453,16 @@
         /*********************************************************************/
         /*** Slider                                                        ***/
         /*********************************************************************/
-        var mySlider = $("input.slider");
+        // var mySlider = $("input.slider");
 
-        mySlider.bootstrapSlider("setValue", {{ event.duration }});
-        mySlider.on("slide", function (event) {
-            $("#currentSliderValue").text(event.value);
-        });
+        // mySlider.bootstrapSlider("setValue", {{ event.duration }});
+        // mySlider.on("slide", function (event) {
+        //     $("#currentSliderValue").text(event.value);
+        // });
 
-        $("#currentSliderValue").text(
-            mySlider.bootstrapSlider("getValue")
-        );
+        // $("#currentSliderValue").text(
+        //     mySlider.bootstrapSlider("getValue")
+        // );
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/
