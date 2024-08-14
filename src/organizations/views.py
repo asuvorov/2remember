@@ -49,7 +49,7 @@ from app.forms import (
     SocialLinkFormSet)
 from events.models import (
     Event,
-    EventStatus,
+    # EventStatus,
     # Participation,
     # ParticipationStatus
     )
@@ -227,7 +227,7 @@ def organization_create(request):
                 formset_social.is_valid()):
             organization = form.save(commit=False)
             organization.address = aform.save(commit=True)
-            organization.save()
+            organization.save(request=request)
 
             form.save_m2m()
 
@@ -343,7 +343,9 @@ def organization_details(request, slug=None):
             try:
                 twitter_acc = social_link.url.split("/")[-1] if social_link.url.split("/")[-1] else social_link.url.split("/")[-2]
             except Exception as exc:
-                print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.
@@ -388,7 +390,7 @@ def organization_details(request, slug=None):
         is_newly_created = True
 
         organization.is_newly_created = False
-        organization.save()
+        organization.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- FIXME: Check, if authenticated User already subscribed to the Organization
@@ -530,7 +532,7 @@ def organization_edit(request, slug=None):
             form.save_m2m()
 
             organization.address = aform.save(commit=True)
-            organization.save()
+            organization.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Save Phones.

@@ -54,21 +54,16 @@ from app.forms import (
     AddressForm,
     SocialLinkFormSet)
 
-from .decorators import (
-    event_access_check_required,
-    event_org_staff_member_required)
+from .decorators import event_access_check_required
 from .forms import (
     CreateEditEventForm,
-    AddEventMaterialsForm,
-    # RoleFormSet,
     FilterEventForm)
 from .models import (
     Category,
     Event,
-    EventStatus,
+    # EventStatus,
     # Participation,
     # ParticipationStatus,
-    # Role
     )
 from .utils import get_event_list
 
@@ -96,6 +91,53 @@ def event_list(request):
     events, page_total, page_number = get_event_list(request)
 
     # -------------------------------------------------------------------------
+    # --- Events near.
+    #     According to the Location, specified in the User Profile.
+    # -------------------------------------------------------------------------
+    # if (
+    #         request.user.is_authenticated and
+    #         request.user.profile.address):
+    #     # ---------------------------------------------------------------------
+    #     # --- Filter by Country and City.
+    #     if (
+    #             request.user.profile.address.country and
+    #             request.user.profile.address.city):
+    #         events = events.filter(
+    #             address__country=request.user.profile.address.country,
+    #             address__city__icontains=request.user.profile.address.city)
+    #     # ---------------------------------------------------------------------
+    #     # --- Filter by Province and Zip Code
+    #     elif (
+    #             request.user.profile.address.province and
+    #             request.user.profile.address.zip_code):
+    #         events = events.filter(
+    #             address__province__icontains=request.user.profile.address.province,
+    #             address__zip_code=request.user.profile.address.zip_code)
+    #     else:
+    #         events = []
+    # elif request.geo_data:
+    #     # ---------------------------------------------------------------------
+    #     # --- Filter by Country and City.
+    #     if request.geo_data["country_code"]:
+    #         events = events.filter(address__country=request.geo_data["country_code"])
+
+    #     if request.geo_data["city"]:
+    #         events = events.filter(address__city__icontains=request.geo_data["city"])
+    # else:
+    #     events = []
+
+    # -------------------------------------------------------------------------
+    # --- New Events.
+    #     Date created is less than 1 Day ago.
+    # -------------------------------------------------------------------------
+    # time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
+
+    # events = get_event_list(request).filter(
+    #     status=EventStatus.UPCOMING,
+    #     start_date__gte=datetime.date.today(),
+    #     created__gte=time_threshold)
+
+    # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     filter_form = FilterEventForm(
@@ -112,293 +154,6 @@ def event_list(request):
             "page_title":   _("All Events"),
             "page_total":   page_total,
             "page_number":  page_number,
-            "filter_form":  filter_form,
-        })
-
-
-@log_default(my_logger=logger, cls_or_self=False)
-def event_near_you_list(request):
-    """List of the Events, near the User."""
-    # -------------------------------------------------------------------------
-    # --- Retrieve Event List.
-    # -------------------------------------------------------------------------
-    events = get_event_list(request).filter(
-        status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today())
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
-        qs=events)
-
-    # -------------------------------------------------------------------------
-    # --- Events near.
-    #     According to the Location, specified in the User Profile.
-    # -------------------------------------------------------------------------
-    if (
-            request.user.is_authenticated and
-            request.user.profile.address):
-        # ---------------------------------------------------------------------
-        # --- Filter by Country and City.
-        if (
-                request.user.profile.address.country and
-                request.user.profile.address.city):
-            events = events.filter(
-                address__country=request.user.profile.address.country,
-                address__city__icontains=request.user.profile.address.city)
-        # ---------------------------------------------------------------------
-        # --- Filter by Province and Zip Code
-        elif (
-                request.user.profile.address.province and
-                request.user.profile.address.zip_code):
-            events = events.filter(
-                address__province__icontains=request.user.profile.address.province,
-                address__zip_code=request.user.profile.address.zip_code)
-        else:
-            events = []
-    elif request.geo_data:
-        # ---------------------------------------------------------------------
-        # --- Filter by Country and City.
-        if request.geo_data["country_code"]:
-            events = events.filter(address__country=request.geo_data["country_code"])
-
-        if request.geo_data["city"]:
-            events = events.filter(address__city__icontains=request.geo_data["city"])
-    else:
-        events = []
-
-    # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID.
-    # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            events = events.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception:
-            pass
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Event List.
-    # -------------------------------------------------------------------------
-    events = events[:settings.MAX_EVENTS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        events = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the Results.
-        events = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "events/event-list.html", {
-            "events":       events,
-            "page_title":   _("Events near you"),
-            "page_total":   paginator.num_pages,
-            "page_number":  events.number,
-            "filter_form":  filter_form,
-        })
-
-
-@log_default(my_logger=logger, cls_or_self=False)
-def event_new_list(request):
-    """List of the new Events."""
-    # -------------------------------------------------------------------------
-    # --- New Events.
-    #     Date created is less than 1 Day ago.
-    # -------------------------------------------------------------------------
-    time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
-
-    events = get_event_list(request).filter(
-        status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today(),
-        created__gte=time_threshold)
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
-        qs=events)
-
-    # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID.
-    # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            events = events.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception:
-            pass
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Event List.
-    # -------------------------------------------------------------------------
-    events = events[:settings.MAX_EVENTS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        events = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        events = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "events/event-list.html", {
-            "events":       events,
-            "page_title":   _("New Events"),
-            "page_total":   paginator.num_pages,
-            "page_number":  events.number,
-            "filter_form":  filter_form,
-        })
-
-
-@log_default(my_logger=logger, cls_or_self=False)
-def event_dateless_list(request):
-    """List of the dateless Events."""
-    events = get_event_list(request).filter(status=EventStatus.UPCOMING)
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
-        qs=events)
-
-    # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID.
-    # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            events = events.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception:
-            pass
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Event List.
-    # -------------------------------------------------------------------------
-    events = events[:settings.MAX_EVENTS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        events = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        events = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "events/event-dateless-list.html", {
-            "events":       events,
-            "page_title":   _("Dateless Events"),
-            "page_total":   paginator.num_pages,
-            "page_number":  events.number,
-            "filter_form":  filter_form,
-        })
-
-
-@log_default(my_logger=logger, cls_or_self=False)
-def event_featured_list(request):
-    """List of the featured Events."""
-    events = get_event_list(request).filter(
-        status=EventStatus.UPCOMING,
-        start_date__gte=datetime.date.today())
-
-    # -------------------------------------------------------------------------
-    # --- Prepare Form(s).
-    # -------------------------------------------------------------------------
-    filter_form = FilterEventForm(
-        request.GET or None, request.FILES or None,
-        qs=events)
-
-    # -------------------------------------------------------------------------
-    # --- Filter QuerySet by Tag ID.
-    # -------------------------------------------------------------------------
-    tag_id = request.GET.get("tag", None)
-
-    if tag_id:
-        try:
-            events = events.filter(
-                tags__id=tag_id,
-            ).distinct()
-        except Exception:
-            pass
-
-    # -------------------------------------------------------------------------
-    # --- Slice the Event List.
-    # -------------------------------------------------------------------------
-    events = events[:settings.MAX_EVENTS_PER_QUERY]
-
-    # -------------------------------------------------------------------------
-    # --- Paginate QuerySet.
-    # -------------------------------------------------------------------------
-    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
-
-    page = request.GET.get("page")
-
-    try:
-        events = paginator.page(page)
-    except PageNotAnInteger:
-        # ---------------------------------------------------------------------
-        # --- If Page is not an integer, deliver first Page.
-        events = paginator.page(1)
-    except EmptyPage:
-        # ---------------------------------------------------------------------
-        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
-        #     Results.
-        events = paginator.page(paginator.num_pages)
-
-    return render(
-        request, "events/event-list.html", {
-            "events":       events,
-            "page_title":   _("Featured Events"),
-            "page_total":   paginator.num_pages,
-            "page_number":  events.number,
             "filter_form":  filter_form,
         })
 
@@ -460,10 +215,6 @@ def event_create(request):
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
 
-    # formset_roles = RoleFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="roles",
-    #     queryset=Role.objects.none())
     # formset_social = SocialLinkFormSet(
     #     request.POST or None, request.FILES or None,
     #     queryset=SocialLink.objects.none())
@@ -471,26 +222,17 @@ def event_create(request):
     if request.method == "POST":
         cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
         cprint(f"                  {aform.is_valid()=}", "yellow")
-        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
         # cprint(f"                  {formset_social.is_valid()=}", "yellow")
 
         if (
                 form.is_valid() and
                 aform.is_valid()):  # and
-                # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             event = form.save(commit=False)
             event.address = aform.save(commit=True)
-            event.save()
+            event.save(request=request)
 
             form.save_m2m()
-
-            # -----------------------------------------------------------------
-            # --- Save Roles.
-            # roles = formset_roles.save(commit=True)
-            # for role in roles:
-            #     role.event = event
-            #     role.save()
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
@@ -503,7 +245,7 @@ def event_create(request):
 
             # if "chl-draft" in request.POST:
             #     event.status = EventStatus.DRAFT
-            #     event.save()
+            #     event.save(request=request)
 
             #     # -------------------------------------------------------------
             #     # --- Send Email Notification(s).
@@ -531,7 +273,6 @@ def event_create(request):
         request, "events/event-create.html", {
             "form":             form,
             "aform":            aform,
-            # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
         })
 
@@ -661,31 +402,6 @@ def event_details(request, slug):
         #     raise Http404
 
     # -------------------------------------------------------------------------
-    # --- Prepare the Event Roles Breakdown.
-    # -------------------------------------------------------------------------
-    # roles_breakdown = []
-
-    # if event.event_roles.all():
-    #     for role in event.event_roles.all():
-    #         roles_breakdown.append({
-    #             "name":         role.name,
-    #             "required":     role.quantity,
-    #             "applied":      role.role_participations.filter(
-    #                 status__in=[
-    #                     ParticipationStatus.WAITING_FOR_CONFIRMATION,
-    #                     ParticipationStatus.CONFIRMATION_DENIED,
-    #                     ParticipationStatus.CONFIRMED,
-    #                 ],
-    #             ).count(),
-    #             "rejected":     role.role_participations.filter(
-    #                 status=ParticipationStatus.CONFIRMATION_DENIED,
-    #             ).count(),
-    #             "confirmed":    role.role_participations.filter(
-    #                 status=ParticipationStatus.CONFIRMED,
-    #             ).count(),
-    #         })
-
-    # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
@@ -698,7 +414,7 @@ def event_details(request, slug):
     #     is_newly_created = True
 
     #     event.is_newly_created = False
-    #     event.save()
+    #     event.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
@@ -721,74 +437,7 @@ def event_details(request, slug):
             "show_rate_form":               show_rate_form,
             "show_complain_form":           show_complain_form,
             # "is_newly_created":             is_newly_created,
-            # "roles_breakdown":              roles_breakdown,
             # "social_links":                 social_links,
-        })
-
-
-@event_access_check_required
-@log_default(my_logger=logger, cls_or_self=False)
-def event_confirm(request, slug):
-    """Event Details."""
-    # -------------------------------------------------------------------------
-    # --- Initials.
-    # -------------------------------------------------------------------------
-    is_admin = False
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
-    # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
-
-    # -------------------------------------------------------------------------
-    # --- Only authenticated Users may sign up to the Event.
-    # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        # ---------------------------------------------------------------------
-        # --- Check, if the User is a Event Admin.
-        is_admin = is_event_admin(
-            request.user,
-            event)
-
-    return render(
-        request, "events/event-details-confirm.html", {
-            "event":    event,
-            "is_admin":     is_admin,
-        })
-
-
-@event_access_check_required
-@log_default(my_logger=logger, cls_or_self=False)
-def event_acknowledge(request, slug):
-    """Event Details."""
-    # -------------------------------------------------------------------------
-    # --- Initials.
-    # -------------------------------------------------------------------------
-    is_admin = False
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
-    # -------------------------------------------------------------------------
-    event = get_object_or_404(
-        Event,
-        slug=slug)
-
-    # -------------------------------------------------------------------------
-    # --- Only authenticated Users may sign up to the Event.
-    # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
-        # ---------------------------------------------------------------------
-        # --- Check, if the User is a Event Admin.
-        is_admin = is_event_admin(
-            request.user,
-            event)
-
-    return render(
-        request, "events/event-details-acknowledge.html", {
-            "event":    event,
-            "is_admin":     is_admin,
         })
 
 
@@ -798,7 +447,6 @@ def event_acknowledge(request, slug):
 # ===
 # =============================================================================
 @login_required
-# @event_org_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug):
     """Edit Event."""
@@ -829,10 +477,6 @@ def event_edit(request, slug):
         required=not request.POST.get("addressless", False),
         instance=event.address)
 
-    # formset_roles = RoleFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="roles",
-    #     queryset=Role.objects.filter(event=event))
     # formset_social = SocialLinkFormSet(
     #     request.POST or None, request.FILES or None,
     #     prefix="socials",
@@ -843,26 +487,17 @@ def event_edit(request, slug):
     if request.method == "POST":
         cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
         cprint(f"                  {aform.is_valid()=}", "yellow")
-        # cprint(f"                  {formset_roles.is_valid()=}", "yellow")
         # cprint(f"                  {formset_social.is_valid()=}", "yellow")
 
         if (
                 form.is_valid() and
                 aform.is_valid()):
-                # formset_roles.is_valid() and
                 # formset_social.is_valid()):
             form.save()
             form.save_m2m()
 
             event.address = aform.save(commit=True)
-            event.save()
-
-            # -----------------------------------------------------------------
-            # --- Save Roles.
-            # roles = formset_roles.save(commit=True)
-            # for role in roles:
-            #     role.event = event
-            #     role.save()
+            event.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
@@ -969,7 +604,6 @@ def event_edit(request, slug):
         request, "events/event-edit.html", {
             "form":             form,
             "aform":            aform,
-            # "formset_roles":    formset_roles,
             # "formset_social":   formset_social,
             "event":            event,
         })

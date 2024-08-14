@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
+
 from django import forms
 from django.conf import settings
 from django.forms import BaseModelFormSet
@@ -14,14 +16,16 @@ from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
 from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
+from termcolor import cprint
 
 from ddcore.models.Attachment import TemporaryFile
 
 from .models import (
     Event,
     Role,
-    month_choices,
-    day_of_month_choices)
+    # month_choices,
+    # day_of_month_choices
+    )
 
 
 # =============================================================================
@@ -135,7 +139,8 @@ class CreateEditEventForm(forms.ModelForm):
     class Meta:
         model = Event
         fields = [
-            "preview", "cover", "title", "description", "category", "tags", "hashtag",
+            "preview", "cover", "title", "description", "category", "visibility",
+            "tags", "hashtag",
             # "duration",
             "addressless",
             # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
@@ -159,6 +164,10 @@ class CreateEditEventForm(forms.ModelForm):
                     "maxlength":    1000,
                 }),
             "category": forms.Select(
+                attrs={
+                    "class":        "form-control form-select",
+                }),
+            "visibility": forms.Select(
                 attrs={
                     "class":        "form-control form-select",
                 }),
@@ -295,52 +304,6 @@ class CreateEditEventForm(forms.ModelForm):
         return instance
 
 
-class AddEventMaterialsForm(forms.ModelForm):
-    """Add the Event reporting Materials Form."""
-
-    def __init__(self, *args, **kwargs):
-        """Docstring."""
-        super().__init__(*args, **kwargs)
-
-        if self.instance and self.instance.id:
-            pass
-
-    tmp_files = forms.ModelMultipleChoiceField(
-        widget=forms.widgets.MultipleHiddenInput,
-        queryset=TemporaryFile.objects.all(),
-        required=False)
-    tmp_links = forms.CharField(
-        label=_("Related Links"),
-        widget=forms.TextInput(
-            attrs={
-                "placeholder": _("Separate your Links with a Space"),
-            }),
-        required=False,
-    )
-
-    class Meta:
-        model = Event
-        fields = [
-            # "achievements",
-        ]
-        widgets = {
-            # "achievements": CKEditorUploadingWidget(),
-        }
-
-    def clean(self):
-        """Clean."""
-        return self.cleaned_data
-
-    def save(self, commit=True):
-        """Docstring."""
-        instance = super().save(commit=False)
-
-        if commit:
-            instance.save()
-
-        return instance
-
-
 # =============================================================================
 # ===
 # === ROLE FORM & FORMSET
@@ -468,7 +431,9 @@ class FilterEventForm(forms.Form):
             self.fields["day"].choices = day_of_month_choices[:-1]
 
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
             del self.fields["year"]
             del self.fields["month"]

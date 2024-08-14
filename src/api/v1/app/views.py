@@ -57,7 +57,7 @@ from app.logformat import Format
 from blog.models import Post
 from events.models import (
     Event,
-    EventStatus,
+    # EventStatus,
     # Participation,
     # ParticipationStatus
     )

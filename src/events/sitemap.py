@@ -2,15 +2,11 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import datetime
-
 from django.contrib.sitemaps import Sitemap
-from django.db.models import Q
 
 from .models import (
     Event,
-    Visibility,
-    EventStatus)
+    Visibility)
 
 
 class EventSitemap(Sitemap):

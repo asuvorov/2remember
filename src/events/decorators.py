@@ -12,63 +12,6 @@ from organizations.models import OrganizationStaff
 from .models import Event
 
 
-def event_org_staff_member_required(func):
-    """Restrict the Manipulations with the Event.
-
-    Only for the Event Organization Staff Members.
-    """
-    def _check(request, *args, **kwargs):
-        # ---------------------------------------------------------------------
-        # --- Retrieve the Event.
-        #     Only Event Author, and the Organization (if set)
-        #     Staff Members are allowed to modify the Event.
-        slug = kwargs.get("slug", "")
-        event_id = request.POST.get("event_id", "")
-
-        if slug:
-            event = get_object_or_404(
-                Event,
-                Q(
-                    Q(organization=None) &
-                    Q(author=request.user),
-                ) |
-                Q(
-                    Q(organization__pk__in=OrganizationStaff
-                        .objects.filter(
-                            member=request.user,
-                        ).values_list(
-                            "organization_id", flat=True
-                        )),
-                ),
-                slug=slug,
-            )
-        elif event_id:
-            event = get_object_or_404(
-                Event,
-                Q(
-                    Q(organization=None) &
-                    Q(author=request.user),
-                ) |
-                Q(
-                    Q(organization__pk__in=OrganizationStaff
-                        .objects.filter(
-                            member=request.user,
-                        ).values_list(
-                            "organization_id", flat=True
-                        )),
-                ),
-                id=event_id,
-            )
-        else:
-            raise Http404
-
-        # ---------------------------------------------------------------------
-        # --- Return from the Decorator.
-        return func(request, *args, **kwargs)
-
-    return _check
-
-
 def event_access_check_required(func):
     """Restrict Access to the Event Details."""
     def _check(request, *args, **kwargs):

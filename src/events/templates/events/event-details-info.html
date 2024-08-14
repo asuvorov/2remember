@@ -20,7 +20,7 @@
         <div class="col-md-9">
             <!-- START EVENT CARD -->
             <section id="event-card">
-                <div class="card mb-3 shadow bg-body rounded">
+                <div class="card {% if event.is_private %}card-private{% endif %} mb-3 shadow bg-body rounded">
                     <div class="row g-0">
                         <div class="col-md-3">
                         {% if event.preview %}

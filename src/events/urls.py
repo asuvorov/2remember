@@ -14,18 +14,6 @@ urlpatterns = [
     re_path(r"^$",
         views.event_list,
         name="event-list"),
-    # re_path(r"^near-you/$",
-    #     views.event_near_you_list,
-    #     name="event-near-you-list"),
-    # re_path(r"^new/$",
-    #     views.event_new_list,
-    #     name="event-new-list"),
-    # re_path(r"^dateless/$",
-    #     views.event_dateless_list,
-    #     name="event-dateless-list"),
-    # re_path(r"^featured/$",
-    #     views.event_featured_list,
-    #     name="event-featured-list"),
 
     # -------------------------------------------------------------------------
     # --- Event Category.

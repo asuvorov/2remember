@@ -35,6 +35,19 @@
     {% endif %}
 {% endif %}
 
+<hr>
+
+<p>
+{% if event.is_private %}
+    <span class="badge text-bg-warning">{% trans "Private" %}</span>
+{% else %}
+    <span class="badge text-bg-success">{% trans "Public" %}</span>
+{% endif %}<br/>
+
+{% if event.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+</p>
+
 {% comment %}
 {% if event.is_complete %}
     <p><span class="label label-success">{% trans "This Event is complete" %}</span></p>

@@ -198,6 +198,8 @@ INSTALLED_APPS = (
     "corsheaders",
     "ddcore",
     # "django_countries",
+    "django_static_fontawesome",
+    "django_static_ionicons",
     "djangoformsetjs",
     # "djangosecure",
     # "jquery",
@@ -417,7 +419,6 @@ STATICFILES_FINDERS += (
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
 # BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
-    # "awesome-bootstrap-checkbox",
     "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
@@ -928,16 +929,20 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### PYTHON/DJANGO SOCIAL AUTH                                               ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "social_django",
-# )
+INSTALLED_APPS += (
+    "social_django",
+)
 
-# AUTHENTICATION_BACKENDS += (
-#     "social_core.backends.facebook.FacebookAppOAuth2",
-#     "social_core.backends.facebook.FacebookOAuth2",
-#     "social_core.backends.twitter.TwitterOAuth",
-#     "social_core.backends.linkedin.LinkedinOAuth2",
-# )
+AUTHENTICATION_BACKENDS += (
+    "social_core.backends.open_id.OpenIdAuth",
+    # "social_core.backends.google.GoogleOpenId",
+    # "social_core.backends.google.GoogleOAuth2",
+    # "social_core.backends.google.GoogleOAuth",
+    # "social_core.backends.facebook.FacebookAppOAuth2",
+    # "social_core.backends.facebook.FacebookOAuth2",
+    # "social_core.backends.linkedin.LinkedinOAuth2",
+    # "social_core.backends.twitter.TwitterOAuth",
+)
 
 # SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
@@ -946,18 +951,18 @@ LOGIN_URL = "/accounts/signin/"
 LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # LOGIN_ERROR_URL = "/login-error/"
 
-# #SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
-# #SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
-# #SOCIAL_AUTH_LOGIN_URL = "/login-url/"
-# #SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
-# #SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
-# #SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
-# #SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
+# SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
+# SOCIAL_AUTH_LOGIN_URL = "/login-url/"
+# SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
+# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
+# SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
+# SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
 
-# #SOCIAL_AUTH_USER_MODEL = "foo.bar.User"
+SOCIAL_AUTH_USER_MODEL = "ddcore.User"
 
 # SOCIAL_AUTH_UUID_LENGTH = 16
-# SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # SOCIAL_AUTH_SLUGIFY_USERNAMES = False
 # SOCIAL_AUTH_CLEAN_USERNAMES = True
 
@@ -969,69 +974,104 @@ LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # ])
 # SOCIAL_AUTH_CREATE_USERS = True
 
-# SOCIAL_AUTH_PIPELINE = (
-#     "social_core.pipeline.social_auth.social_details",
-#     "social_core.pipeline.social_auth.social_uid",
-#     "social_core.pipeline.social_auth.auth_allowed",
-#     "social_core.pipeline.social_auth.social_user",
-#     "social_core.pipeline.user.get_username",
-#     "social_core.pipeline.mail.mail_validation",
-#     "social_core.pipeline.social_auth.associate_by_email",
-#     "social_core.pipeline.user.create_user",
-#     "social_core.pipeline.social_auth.associate_user",
-#     "social_core.pipeline.debug.debug",
-#     "social_core.pipeline.social_auth.load_extra_data",
-#     "social_core.pipeline.user.user_details",
+SOCIAL_AUTH_PIPELINE = (
+    # Get the Information about the User, and return it in a simple Format to
+    # create the User Instance later.
+    "social_core.pipeline.social_auth.social_details",
 
-#     "accounts.auth_pipelines.save_profile",
-# )
+    # Get the social UID of the given User in the Provider.
+    "social_core.pipeline.social_auth.social_uid",
+
+    # Verify, that the current Auth Process is valid within the current Project.
+    # This is where Emails and Domains Whitelists are applied (if defined).
+    "social_core.pipeline.social_auth.auth_allowed",
+
+    # Check, if the current social Account is already associated in the Site.
+    "social_core.pipeline.social_auth.social_user",
+
+    # Make up a Username for the User, and append a random String at the End,
+    # if there’s any Collision.
+    "social_core.pipeline.user.get_username",
+
+    "social_core.pipeline.mail.mail_validation",
+
+    # Associate current Auth with a User with the same Email Address in the DB.
+    "social_core.pipeline.social_auth.associate_by_email",
+
+    # Create a User Account, if haven’t been found one yet.
+    "social_core.pipeline.user.create_user",
+
+    # Create the Record, that associated the social Account with this User.
+    "social_core.pipeline.social_auth.associate_user",
+
+    "social_core.pipeline.debug.debug",
+
+    # Populate the `extra_data` Field in the social Record with the Values,
+    # specified by Settings (and the default ones, like `access_token`, etc).
+    "social_core.pipeline.social_auth.load_extra_data",
+
+    # Update the User Record with any changed Info from the Auth Service.
+    "social_core.pipeline.user.user_details",
+
+    "accounts.auth_pipelines.save_profile",
+)
+
+# -----------------------------------------------------------------------------
+# --- GOOGLE
+# -----------------------------------------------------------------------------
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ""
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ""
 
 # -----------------------------------------------------------------------------
 # --- FACEBOOK
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
-SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
-SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    "fields":   "id,name,email",
-}
+# SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
+# SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+#     "fields":   "id,name,email",
+# }
 
 # -----------------------------------------------------------------------------
 # --- TWITTER
 # -----------------------------------------------------------------------------
-TWITTER_OAUTH_TOKEN = config("TWITTER_OAUTH_TOKEN", default="")
-TWITTER_OAUTH_SECRET = config("TWITTER_OAUTH_SECRET", default="")
-TWITTER_CONSUMER_KEY = config("TWITTER_CONSUMER_KEY", default="")
-TWITTER_CONSUMER_SECRET = config("TWITTER_CONSUMER_SECRET", default="")
+TWITTER_CONSUMER_KEY = config("X_TWITTER_CONSUMER_KEY", default="")
+TWITTER_CONSUMER_SECRET = config("X_TWITTER_CONSUMER_SECRET", default="")
+TWITTER_OAUTH_TOKEN = config("X_TWITTER_ACCESS_KEY", default="")
+TWITTER_OAUTH_SECRET = config("X_TWITTER_ACCESS_SECRET", default="")
 
-SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
-SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
+# SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
+# SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
 
 # -----------------------------------------------------------------------------
 # --- LINKEDIN
 # -----------------------------------------------------------------------------
-LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
-LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
-LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
-LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
-LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
-LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
+# LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
+# LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
+# LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
+# LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
+# LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
+# LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
 
 # -----------------------------------------------------------------------------
 # --- OAuth1 Settings.
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
-SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
-SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
-SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+# SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
+# SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
+# SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
+# SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
 
 # -----------------------------------------------------------------------------
 # --- OAuth2 Settings.
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
-SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+
+# -----------------------------------------------------------------------------
+# --- GITHUB
+# -----------------------------------------------------------------------------
 
 
 ###############################################################################
@@ -1095,14 +1135,11 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 ### 2REMEMBER SOCIAL LINKS                                                  ###
 ###############################################################################
 PB_SOCIAL_LINKS = {
-    # --- On behalf of "artem.suvorov@gamil.com" / S1
     "PB_FACEBOOK":  "#",
-    # --- On behalf of "support@2remember.live"    / S1
-    "PB_TWITTER":   "https://x.com/2rememberlive",
+    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live"    / S1
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
-    # --- On behalf of "support@2remember.live"    / S1
     "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }

@@ -38,12 +38,13 @@
         {% endblocktrans %}
         </div>
 
-        <ul class="list-unstyled d-flex justify-content-center">
+<!--         <ul class="list-unstyled d-flex justify-content-center">
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='google-oauth2' %}';" class="btn btn-google-plus"><i class="bi bi-google"></i></button></li>
             <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';" class="btn btn-facebook"><i class="bi bi-facebook"></i></button></li>
             <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';" class="btn btn-twitter"><i class="bi bi-twitter"></i></button></li>
             <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';" class="btn btn-linkedin"><i class="bi bi-linkedin"></i></button></li>
             <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='github' %}';" class="btn btn-github"><i class="bi bi-github"></i></button></li>
-        </ul>
+        </ul> -->
 
         <form id="signin-form" role="form" action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}

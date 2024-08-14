@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import logging
 import mimetypes
 
@@ -15,6 +16,7 @@ from django.utils.translation import gettext as _
 from django.views.decorators.http import require_http_methods
 
 from annoying.functions import get_object_or_None
+from termcolor import cprint
 
 from ddcore.models.Attachment import (
     AttachedDocument,
@@ -81,7 +83,9 @@ def handler500(request, exception=None):
         # --- Save the Log
 
     except Exception as exc:
-        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
     return render(request, "error-pages/500.html", status=500)
 
@@ -136,7 +140,9 @@ def remove_upload(request):
             try:
                 instance.file.delete()
             except Exception as exc:
-                print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
             instance.delete()
             found = True

@@ -26,10 +26,10 @@ from api.auth import CsrfExemptSessionAuthentication
 from app.decorators import log_default
 from events.models import (
     Event,
-    EventMode,
-    EventStatus,
-    # Participation,
-    # ParticipationStatus,
+    # EventMode,
+    # EventStatus,
+    Participation,
+    ParticipationStatus,
     # Role
     )
 
@@ -1217,7 +1217,7 @@ class SelfreflectionAcceptViewSet(APIView):
 
             Receive:
 
-                event_id            :uint:
+                event_id                :uint:
                 participation_id        :uint:
                 acknowledgement_text    :str:
                 participant_rating      :int:
