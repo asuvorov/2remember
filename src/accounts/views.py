@@ -68,7 +68,6 @@ from .models import (
 from .utils import (
     get_account_list_with_privacy,
     get_admin_events,
-    get_participations_intersection,
     is_profile_complete)
 
 
@@ -674,7 +673,8 @@ def my_profile_edit(request):
         instance=request.user.profile.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(request.user.profile),
             object_id=request.user.profile.id))
@@ -883,8 +883,6 @@ def profile_view(request, user_id):
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
             #     Event(s), as the Account.
-            # if len(get_participations_intersection(request.user, account)) > 0:
-            #     show_complain_form = True
             show_complain_form = True
 
     # -------------------------------------------------------------------------
@@ -992,9 +990,7 @@ def profile_participations(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
+    account = get_object_or_404(user_model, pk=user_id)
 
     if account == request.user:
         return HttpResponseRedirect(
@@ -1110,9 +1106,7 @@ def profile_events(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
+    account = get_object_or_404(user_model, pk=user_id)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))

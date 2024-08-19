@@ -276,7 +276,6 @@ class Organization(
     # --- Properties.
     # -------------------------------------------------------------------------
 
-
     # -------------------------------------------------------------------------
     # --- Methods.
     # -------------------------------------------------------------------------
@@ -286,18 +285,13 @@ class Organization(
 
     def public_url(self, request=None):
         """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
 
         url = reverse(
             "organization-details", kwargs={
                 "slug":     self.slug,
             })
-        organization_link = f"http://{domain_name}{url}"
-
-        return organization_link
+        return f"http://{domain_name}{url}"
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""
@@ -311,36 +305,6 @@ class Organization(
     def is_author(self, request):
         """Docstring."""
         return self.author == request.user
-
-    def get_hours_received(self):
-        """Docstring."""
-
-        # pylint: disable=import-error,import-outside-toplevel
-        from events.models import (
-            Event,
-            EventStatus)
-
-        hours_worked = Event.objects.filter(
-            status=EventStatus.COMPLETE,
-            organization=self,
-        ).aggregate(Sum("duration"))
-
-        return hours_worked["duration__sum"]
-
-    def get_upcoming_events(self):
-        """Docstring."""
-
-        # pylint: disable=import-error,import-outside-toplevel
-        from events.models import (
-            Event,
-            EventStatus)
-
-        upcoming_events = Event.objects.filter(
-            organization=self,
-            status=EventStatus.UPCOMING,
-            start_date__gte=datetime.date.today())
-
-        return upcoming_events
 
     def email_notify_admin_org_created(self, request=None):
         """Send Notification to the Organization Admin."""

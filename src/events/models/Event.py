@@ -426,27 +426,20 @@ class Event(
 
     def public_url(self, request=None):
         """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
 
         url = reverse(
             "event-details", kwargs={
                 "slug":     self.slug,
             })
-        event_link = f"http://{domain_name}{url}"
-
-        return event_link
+        return f"http://{domain_name}{url}"
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""
-        url = reverse(
+        return reverse(
             "event-details", kwargs={
                 "slug":     self.slug,
             })
-
-        return url
 
     def is_author(self, request):
         """Docstring."""
@@ -476,7 +469,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_draft.txt",
                 "context":  {
-                    "user":             self.author,
+                    "user":         self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -519,7 +512,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_created.txt",
                 "context":  {
-                    "user":             self.author,
+                    "user":         self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -663,7 +656,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_modified_adm.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -709,7 +702,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_modified_alt.txt",
                 "context":  {
-                    "user":             self.alt_person_fullname,
+                    "user":         self.alt_person_fullname,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -753,7 +746,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_complete.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -931,12 +924,9 @@ class Event(
         # ---------------------------------------------------------------------
         # --- Remove related Invites, if any.
         try:
-            content_type = ContentType.objects.get_for_model(self)
-
             related_invites = Invite.objects.filter(
-                content_type=content_type,
+                content_type=ContentType.objects.get_for_model(self),
                 object_id=self.id)
-
             related_invites.delete()
 
         except Exception as exc:
@@ -965,59 +955,3 @@ class EventMixin:
             Q(author=self.user))
 
         return admin_events
-
-    @property
-    def get_admin_events_action_required(self):
-        """Return List of the Events which require Action."""
-        from .Participation import (
-            Participation,
-            ParticipationStatus)
-
-        admin_events = self.get_admin_events().order_by("start_date")
-
-        admin_events_action_required = admin_events.filter(
-            Q(
-                pk__in=Participation.objects.filter(
-                    status__in=[
-                        ParticipationStatus.WAITING_FOR_CONFIRMATION,
-                        ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                    ]
-                ).values_list(
-                    "event_id", flat=True
-                )
-            ) |
-            Q(
-                start_date__lt=datetime.date.today(),
-                status=EventStatus.UPCOMING,
-            )
-        )
-
-        return admin_events_action_required
-
-    @property
-    def get_admin_events_upcoming(self):
-        """Return List of upcoming Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
-
-        admin_events_upcoming = admin_events.filter(
-            Q(start_date__gte=datetime.date.today()) |
-            Q(recurrence=Recurrence.DATELESS),
-            status=EventStatus.UPCOMING)
-
-        return admin_events_upcoming
-
-    @property
-    def get_admin_events_completed(self):
-        """Return List of completed Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
-        admin_events_completed = admin_events.filter(status=EventStatus.COMPLETE)
-
-        return admin_events_completed
-
-    @property
-    def get_admin_events_draft(self):
-        """Return List of draft Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
-        admin_events_draft = admin_events.filter(status=EventStatus.DRAFT)
-
-        return admin_events_draft

@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
+
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models

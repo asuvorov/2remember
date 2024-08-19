@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
+
 from django.conf import settings
 from django.contrib.sitemaps import ping_google
 from django.core.files import File
