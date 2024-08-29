@@ -1,0 +1,504 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<event>          - Event
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_phone>  - Phone  Numbers Formset
+        :<formset_social> - Social Links   Formset
+{% endcomment %}
+
+{% block title %}{% trans "Edit Event" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'event-list' %}">{% trans "Events" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'event-details' event.slug %}">{{ event.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="event-edit" class="bg-body-tertiary p-3">
+{% comment %}
+    <div class="row">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "You can edit your Event here. After you save Changes, all applied Members will receive appropriate Notifications." %}
+            </div>
+        </div>
+    </div>
+{% endcomment %}
+
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="edit-event-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- START EVENT APPEARENCE -->
+                <section id="event-appearance">
+                    <div class="card mb-3 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <div id="prerunner">
+                                {% if event.preview %}
+                                    {% generateimage "common:medium_fill" source=event.preview -- alt=event.preview.title class='img-fluid rounded-start' %}
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h3>{% trans "Appearance" %}</h3>
+
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  EVENT APPEARENCE -->
+
+                <!-- START EVENT DESCRIPTION -->
+                <section id="event-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}
+                            <label for="id_description" class="form-label">{{ form.description.label }}{% if form.description.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-4 {% if form.category.errors %}has-error{% endif %}">
+                            {{ form.category }}
+                            <label for="id_category" class="form-label">{{ form.category.label }}{% if form.category.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.category.errors %}{% for error in form.category.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.visibility.errors %}has-error{% endif %}">
+                            {{ form.visibility }}
+                            <label for="id_visibility" class="form-label">{{ form.visibility.label }}{% if form.visibility.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.visibility.errors %}{% for error in form.visibility.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.organization.errors %}has-error{% endif %}">
+                            {{ form.organization }}
+                            <label for="id_organization" class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                    {% comment %}
+                        <div class="form-group {% if form.duration.errors %}has-error{% endif %}">
+                            <label class="form-label">{{ form.duration.label }}{% if form.duration.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div>
+                                {{ form.duration }}
+                                <span id="currentSliderValue"></span> hours
+                            </div>
+
+                            <span class="help-block">{% if form.duration.errors %}{% for error in form.duration.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                    {% if not form.organization.is_hidden %}
+                        <div class="form-group {% if form.organization.errors %}has-error{% endif %}">
+                            <label class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div class="input-group">
+                                {{ form.organization }}
+                                <div class="input-group-addon"><i class="bi bi-university"></i></div>
+                            </div>
+
+                            <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    {% endif %}
+                    {% endcomment %}
+                    </div>
+                </section>
+                <!--  END  EVENT DESCRIPTION -->
+
+                <hr>
+
+                <!-- START EVENT ROLES -->
+                {% comment %}
+                <section id="event-roles">
+                    <h3>{% trans "Roles" %}</h3>
+                </section>
+                {% endcomment %}
+                <!--  END  EVENT ROLES -->
+
+                <!-- START EVENT LOCATION -->
+                <section id="event-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  EVENT LOCATION -->
+
+                <hr>
+
+                <!-- START EVENT TIME AND PLACE -->
+                <section id="event-time-and-place">
+                    <h3>{% trans "Date" %}</h3>
+
+                    <div class="row g-2">
+                    {% comment %}
+                        <div class="form-floating col-md-4 {% if form.start_tz.errors %}has-error{% endif %}">
+                            {{ form.start_tz }}
+                            <label for="id_start_tz" class="form-label">{{ form.start_tz.label }}{% if form.start_tz.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.start_tz.errors %}{% for error in form.start_tz.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    {% endcomment %}
+                        <div class="form-floating col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
+                            {{ form.start_date }}
+                            <label for="id_start_date" class="form-label">{{ form.start_date.label }}{% if form.start_date.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.start_date.errors %}{% for error in form.start_date.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    {% comment %}
+                        <div class="form-floating col-md-4 {% if form.start_time.errors %}has-error{% endif %}">
+                            {{ form.start_time }}
+                            <label for="id_start_time" class="form-label">{{ form.start_time.label }}{% if form.start_time.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.start_time.errors %}{% for error in form.start_time.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    {% endcomment %}
+                    </div>
+                </section>
+                <!--  END  EVENT TIME AND PLACE -->
+
+                <!-- START EVENT APPLICATION -->
+                {% comment %}
+                <section id="event-application">
+                    <h3>{% trans "Application" %}</h3>
+                </section>
+                {% endcomment %}
+                <!--  END  EVENT APPLICATION -->
+
+                <!-- START EVENT CONTACT PERSON -->
+                {% comment %}
+                <section id="event-contact-person">
+                    <h3>{% trans "Contact Person" %}</h3>
+                </section>
+                {% endcomment %}
+                <!--  END  EVENT CONTACT PERSON -->
+
+                <!-- START EVENT SOCIAL LINKS -->
+                {% comment %}
+                <section id="event-social-links">
+                    <h3>{% trans "Social Links" %}</h3>
+                </section>
+                {% endcomment %}
+                <!--  END  EVENT SOCIAL LINKS -->
+
+                <hr>
+
+                <!-- START EVENT ATTACHMENTS -->
+                <section id="event-attachments">
+                    <h3>
+                        {% trans "Attachments" %}
+                        <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
+                    </h3>
+
+                    <div style="display:none;">
+                        <div id="tmp_files">
+                            {{ form.tmp_files }}
+                        </div>
+                        <div id="tmp_images_path">
+                            {{ form.tmp_images_path }}
+                        </div>
+                        <div id="tmp_links">
+                            {{ form.tmp_links }}
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-camera"></i>
+                        <span id="total_images" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-paperclip"></i>
+                        <span id="total_documents" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-link"></i>
+                        <span id="total_links" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+
+                    <div id="collapse-attachments" class="collapse">
+                        <hr>
+                        <h4>{% trans "Images" %}</h4>
+                        <div class="gallery">
+                        {% for img in event.get_image_list.all %}
+                            <div class="gallery-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
+                                <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Documents" %}</h4>
+                        <div class="gallery">
+                        {% for doc in event.get_document_list.all %}
+                            <div class="documents-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
+                                <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Links" %}</h4>
+                        <div class="gallery">
+                        {% for url in event.get_url_list.all %}
+                            <div class="links-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
+                                <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Video Links" %}</h4>
+                        <div class="gallery">
+                        {% for video_url in event.get_video_url_list.all %}
+                            <div class="video-links-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
+                                <a href="{{ video_url.url }}">{{ video_url.url }}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </section>
+                <!--  END  EVENT ATTACHMENTS -->
+
+                <hr>
+
+                <!-- START EVENT COMPLETE -->
+                <section id="event-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="submit" class="event-edit">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Save Changes" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  EVENT COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+            <a class="btn btn-primary w-100 mb-2" name="submit"><i class="bi bi-check-square"></i>&nbsp;{% trans "Save Changes" %}</a>
+            <a class="btn btn-danger  w-100 mb-2" name="submit"><i class="bi bi-radioactive"></i>&nbsp;{% trans "Delete Event" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Injects -->
+
+{% include "app/injects/upload.html" %}
+
+<!-- Modals -->
+
+{% include "app/modals/attach-image-modal.html" %}
+{% include "app/modals/attach-doc-modal.html" %}
+{% include "app/modals/attach-url-modal.html" %}
+
+<!-- Script -->
+
+<script>
+    /*************************************************************************/
+    /*** Submit Form                                                       ***/
+    /*************************************************************************/
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+
+        /*** DATE FORMAT *****************************************************/
+        var $input = $("input[name='start_date']");
+        var val = $input.val();
+
+        if (val) {
+            var valMoment = moment(val);
+            var isMoment = moment.isMoment(valMoment);
+
+            if (isMoment) {
+                $input.attr("type", "text");
+                $input.val(valMoment.format("MM/DD/YYYY"));
+            }
+        }
+        /*********************************************************************/
+
+        $("form#edit-event-form").submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in aform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in nform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for form in formset_roles.forms %}
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        new Noty({
+                            text: "Role : {{ field.label }}: {{ error }}"
+                        }).show();
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for form in formset_social.forms %}
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        new Noty({
+                            text: "Social Link : {{ field.label }}: {{ error }}"
+                        }).show();
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        /*********************************************************************/
+        /*** Slider                                                        ***/
+        /*********************************************************************/
+        // var mySlider = $("input.slider");
+
+        // mySlider.bootstrapSlider("setValue", {{ event.duration }});
+        // mySlider.on("slide", function (event) {
+        //     $("#currentSliderValue").text(event.value);
+        // });
+
+        // $("#currentSliderValue").text(
+        //     mySlider.bootstrapSlider("getValue")
+        // );
+
+        /*********************************************************************/
+        /*** Contact Person UX                                             ***/
+        /*********************************************************************/
+        $("#alt_person_creds").hide();
+
+        var selected = $("input[type='radio']:checked");
+
+        if (selected.val() == "he") {
+            $("#alt_person_creds").show("slow");
+        }
+
+        $("#id_contact_0").click(function () {
+            $("#alt_person_creds").hide("slow");
+        });
+
+        $("#id_contact_1").click(function () {
+            $("#alt_person_creds").show("slow");
+        })
+
+        /*********************************************************************/
+        /*** Automatically accept Experience Reports UX                    ***/
+        /*********************************************************************/
+        $("#id_acceptance_text_div").hide();
+
+        if ($("#id_accept_automatically").prop("checked")) {
+            $("#id_acceptance_text_div").show("slow");
+        }
+
+        $("#id_accept_automatically").click(function () {
+            $("#id_acceptance_text_div").toggle("slow");
+        });
+    });
+</script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=event %}
+{% endblock %}

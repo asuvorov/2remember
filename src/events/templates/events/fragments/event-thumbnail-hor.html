@@ -1,0 +1,236 @@
+{% load tz %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<event>
+        :[participation]
+        :[show_org]
+        :[event_admin]
+{% endcomment %}
+
+
+<div class="card mb-3 shadow bg-body rounded">
+    <div class="row g-0">
+        <div class="col-md-3">
+            <a href="{% url 'event-details' event.slug %}">
+            {% if event.preview %}
+                {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid rounded-start' %}
+            {% else %}
+            {% endif %}
+            <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
+            </a>
+        </div>
+
+        <div class="col-md-9">
+            <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+
+                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+            </div>
+
+            <div class="card-footer bg-transparent border-success">
+                Footer
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+<div class="event-thumb-container" category="{{ event.category|default:'' }}">
+    <div class="event-thumb-hor" style="{% if event.organization.is_hidden %}background-color:#FBEFEF;{% endif %}">
+        <div class="row">
+            <div class="hidden-xs col-sm-8 col-md-6 col-lg-6">
+                <div class="thumbnail">
+                    <a href="{% url 'event-details' event.slug %}">
+                    {% if event.avatar %}
+                        {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.title %}
+                    {% else %}
+                    {% endif %}
+
+                    {% if event.is_confirmation_required %}
+                        <label class="label label-warning label-confirmation-required">{% trans "Confirmation required" %}</label>
+                    {% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-xs-24 col-sm-16 col-md-18 col-lg-18">
+                <div class="event-name">
+                    <a href="{% url 'event-details' event.slug %}">
+                        <h4>
+                            <div class="category-item">
+                                <i class="{{ event.stat_category_icon }}" title="{{ event.stat_category_name }}" category="{{ event.category }}" style="background-color:{{ event.stat_category_color }};"></i>
+                            </div>
+
+                            {{ event.title|truncatechars:50 }}
+
+                        {% if event.get_rating_avg > 0 %}
+                            <div class="" style="color:orange;">
+                                <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
+                            </div>
+                        {% endif %}
+                        </h4>
+                    </a>
+                </div>
+
+                <div class="event-author">
+                {% if event.organization and not event.organization.is_deleted and show_org %}
+                    <p>
+                    {% if event.organization.avatar %}
+                        {% generateimage "header:thumbnail" source=event.organization.avatar -- alt=event.organization.name %}
+                    {% endif %}
+                        <strong>{% trans "by" %}</strong>
+                        <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                    </p>
+                {% else %}
+                    <p>
+                    {% if event.author.profile.avatar %}
+                        {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+                    {% endif %}
+                        <strong>{% trans "by" %}</strong>
+                        <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                    </p>
+                {% endif %}
+                </div>
+
+                <div class="event-description">
+                    <p>{{ event.description|striptags|truncatechars:200 }}</p>
+                </div>
+
+                <hr class="hidden-xs">
+
+                <div class="hidden-sm hidden-md hidden-lg thumbnail" style="position:relative;">
+                    <a href="{% url 'event-details' event.slug %}">
+                    {% if event.avatar %}
+                        {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.title %}
+                    {% else %}
+                    {% endif %}
+
+                    {% if event.is_confirmation_required %}
+                        <label class="label label-warning label-confirmation-required">{% trans "Confirmation required" %}</label>
+                    {% endif %}
+                    </a>
+                </div>
+
+                <div class="event-details">
+                    <p>
+                        <i class="bi bi-map-marker"></i>
+                    {% if event.addressless %}
+                        <span class="label label-warning">{% trans "Location is not provided" %}</span>
+                    {% else %}
+                        {{ event.address.short_address }}
+                    {% endif %}
+
+                        <span class="hidden-xs vert-delimiter">|</span>
+                        <br class="hidden-sm hidden-md hidden-lg" />
+
+                    {% if event.is_dateless %}
+                        <i class="bi bi-calendar-date"></i>
+                        <span class="label label-warning">{% trans "Dateless" %}</span>
+                    {% else %}
+                        <i class="bi bi-calendar-date"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"M j, Y" }}
+                        <span class="vert-delimiter">|</span>
+                        <i class="bi bi-clock-o"></i>{{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"G:i"|default:"0:00" }} ({{ event.get_start_date_time_tz|timezone:event.start_tz.zone|date:"f a"|default:"12 a.m." }})
+                    {% endif %}
+                    </p>
+                </div>
+
+                <div class="event-roles">
+                {% if event.event_roles.all %}
+                    <p>
+                        <i class="bi bi-group"></i>
+                    {% for role in event.event_roles.all %}
+                        <span class="label label-default">{{ role.name }} ({{ role.quantity }})</span>
+                    {% endfor %}
+                    </p>
+                {% endif %}
+                </div>
+
+                <div class="event-tags">
+                {% if event.tags.all and event.hashtag %}
+                    <p>
+                        <i class="bi bi-tags"></i>
+                    {% for tag in event.tags.all %}
+                        <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+
+                        <span class="vert-delimiter">|</span>
+
+                        <i class="bi bi-hashtag"></i>{{ event.hashtag }}
+                    </p>
+                {% elif event.tags.all %}
+                    <p>
+                        <i class="bi bi-tags"></i>
+                    {% for tag in event.tags.all %}
+                        <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                        {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+                {% elif event.hashtag %}
+                    <p>
+                        <i class="bi bi-hashtag"></i>{{ event.hashtag }}
+                    </p>
+                {% endif %}
+                </div>
+
+                <div class="event-counts">
+                    <p>
+                        <i class="bi bi-comment"></i> {{ event.get_comments_count }}
+                        <span class="vert-delimiter">|</span>
+                        <i class="bi bi-eye"></i> {{ event.get_views_count }}
+                    </p>
+                </div>
+
+                <div class="clear-fix">
+                </div>
+
+                <div class="event-status">
+                {% if participation %}
+                    {% if participation.status == PARTICIPATION_STATUS.CONFIRMED %}
+                        <p><span class="label label-success">{% trans "Confirmed" %}</span></p>
+                    {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_CONFIRMATION %}
+                        <p><span class="label label-warning">{% trans "Waiting for Confirmation" %}</span></p>
+                    {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_SELFREFLECTION %}
+                        <p><span class="label label-warning">{% trans "Waiting for Selfreflection" %}</span></p>
+                    {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_ACKNOWLEDGEMENT %}
+                        <p><span class="label label-warning">{% trans "Waiting for Acknowledgement" %}</span></p>
+                    {% elif participation.status == PARTICIPATION_STATUS.ACKNOWLEDGED %}
+                        <p><span class="label label-success">{% trans "Acknowledged" %}</span></p>
+                    {% endif %}
+                {% endif %}
+
+                {% if event_admin %}
+                    {% if event.get_confirmed_count > 0 %}
+                        <p><span class="label label-success">{{ event.get_confirmed_count }} {% trans "Confirmed Application(s)" %}</span></p>
+                    {% endif %}
+
+                    {% if event.has_waiting_for_confirmation %}
+                        <p><span class="label label-warning">{{ event.get_waiting_for_confirmation_count }} {% trans "Pending Application(s)" %}</span></p>
+                    {% endif %}
+
+                    {% if event.has_waiting_for_acknowledgement %}
+                        <p><span class="label label-warning">{{ event.get_waiting_for_acknowledgement_count }} {% trans "Pending Experience Reports" %}</span></p>
+                    {% endif %}
+
+                    {% if event.is_overdue and not event.is_complete %}
+                        <p><span class="label label-danger">{% trans "Mark as completed" %}</span></p>
+                    {% endif %}
+                {% endif %}
+                </div>
+
+                <div class="learn-more">
+                    <a class="btn btn-warning" href="{% url 'event-details' event.slug %}" style="width:auto;">{% trans "LEARN MORE" %} <i class="bi bi-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

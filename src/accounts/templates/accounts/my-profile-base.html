@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "My Profile" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "My Profile" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block header %}
+{% comment %}
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'my-profile-view' %}" class="nav-link active" aria-current="page">
+                    {% trans "Information" %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-invitations' %}" class="nav-link">
+                {% if request.user.invitee.get_new.all.count > 0 %}
+                    <span id="received-invitations-count" class="badge" style="background-color:#f0ad4e;">{{ request.user.invitee.get_new.all.count }}</span>&nbsp;
+                {% endif %}
+                    {% trans "Invitations" %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-participations' %}" class="nav-link">
+                {% if request.user.profile.get_upcoming_participations.all.count > 0 %}
+                    <span class="badge" style="background-color:#f0ad4e;">{{ request.user.profile.get_upcoming_participations.all.count }}</span>&nbsp;
+                {% endif %}
+                    {% trans "Participations" %}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'my-profile-events' %}" class="nav-link">
+                {% if request.user.profile.get_admin_events_action_required.all.count > 0 %}
+                    <span class="badge" style="background-color:#d9534f;">{{ request.user.profile.get_admin_events_action_required.all.count }}</span>&nbsp;
+                {% endif %}
+                {% if request.user.profile.get_admin_events_upcoming.all.count > 0 %}
+                    <span class="badge" style="background-color:#f0ad4e;">{{ request.user.profile.get_admin_events_upcoming.all.count }}</span>&nbsp;
+                {% endif %}
+                {% if request.user.profile.get_admin_events_draft.all.count > 0 %}
+                    <span class="badge" style="background-color:#5bc0de;">{{ request.user.profile.get_admin_events_draft.all.count }}</span>&nbsp;
+                {% endif %}
+                    {% trans "Events I responsible for" %}
+                </a>
+            </li>
+        </ul>
+    </header>
+</div>
+{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=request.user.profile %}
+{% endblock %}

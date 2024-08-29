@@ -1,0 +1,97 @@
+{% load i18n %}
+
+<div class="modal fade" id="eventSelfreflectionSubmitPopupModal" tabindex="-1" role="dialog" aria-labelledby="eventSelfreflectionSubmitPopupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="eventSelfreflectionSubmitPopupModalLabel">{% trans "Submit Experience Report" %}</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="event-selfreflection-submit-modal-form" action="" method="POST">
+                    {% csrf_token %}
+
+                    <input type="hidden" name="event_id" value="">
+
+                    <p><strong>{% trans "Thank you for participating! Please take a minute to write about your Experience." %}</strong></p>
+
+                    <div class="form-group">
+                        <label for="id_selfreflection_activity_text">{% trans "What did you do during this Event?" %}</label>
+                        <textarea id="id_selfreflection_activity_text" class="form-control" name="selfreflection_activity_text" maxlength="1000" placeholder="Enter text here..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="id_selfreflection_learning_text">{% trans "What did you learn? What Skills could you practice?" %}</label>
+                        <textarea id="id_selfreflection_learning_text" class="form-control" name="selfreflection_learning_text" maxlength="1000" placeholder="Enter text here..."></textarea>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" onclick="event_selfreflection_submit();">{% trans "Submit" %}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /*************************************************************************/
+    /*** Submit Event Experience Report                                ***/
+    /*************************************************************************/
+    function event_selfreflection_submit() {
+        var event_id = $("#event-selfreflection-submit-modal-form").find("input[name='event_id']").val();
+        var selfreflection_activity_text = $("#event-selfreflection-submit-modal-form").find("textarea[name='selfreflection_activity_text']").val();
+        var selfreflection_learning_text = $("#event-selfreflection-submit-modal-form").find("textarea[name='selfreflection_learning_text']").val();
+
+        $.post("{% url 'api-event-selfreflection-submit' 0 %}".replace("0", event_id), {
+            "selfreflection_activity_text": selfreflection_activity_text,
+            "selfreflection_learning_text": selfreflection_learning_text,
+            "csrfmiddlewaretoken":          $("#event-selfreflection-submit-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $("#eventSelfreflectionSubmitPopupModal").modal("hide");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+
+            // ----------------------------------------------------------------
+            // --- Related to the `Accounts: My Profile Page: Completed Events Tab`
+            $(".action-" + event_id).find(".sr-submit").hide("slow");
+            $(".action-" + event_id).find(".not-participated").hide("slow");
+
+            $(".status-" + event_id).html("<span class='label label-info'>Waiting for Acknowledgment</span>");
+
+            // ----------------------------------------------------------------
+            // --- Related to the `Events: Details Page: Info Tab`
+            $(element).parent().parent().find("#div-sr-submit").hide("slow");
+            $(element).parent().parent().find("#div-not-participated").hide("slow");
+
+            $(".status").html("<span class='label label-info'>Waiting for Acknowledgment</span>");
+
+            //location.reload(true);
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to submit the Experience Report."
+                }).show();
+            };
+        });
+
+        return true;
+    }
+</script>

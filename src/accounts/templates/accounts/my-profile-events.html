@@ -1,0 +1,159 @@
+{% extends "accounts/my-profile-base.html" %}
+
+{% load i18n %}
+{% load cache %}
+{% load imagekit %}
+{% load taggit_templatetags2_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<events> - Events List
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "Events List" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Events" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="my-profile-events" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START CONTROLLERS -->
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <!--  END  FILTER FORM -->
+
+            <!-- START EVENTS -->
+            <section id="event-list-grouper" class="position-relative">
+                {% include "events/fragments/event-list-grouper.html" %}
+            </section>
+            <!--  END  EVENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+
+            <!-- Tag Cloud -->
+            <section id="tag-cloud">
+            {% cache 60 tag-cloud-events LANGUAGE_CODE %}
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% get_taglist as taglist for "events.event" %}
+                {% get_tagcloud as tagcloud for "events.event" %}
+
+                <div class="tag-cloud">
+                {% for tag in tagcloud %}
+                    <a href="?tag={{ tag.id }}">
+                        <font size="{{ tag.weight|floatformat:0 }}">
+                            {{ tag.name }} ({{ tag.num_times }})
+                        </font>
+                    </a>
+                {% endfor %}
+                </div>
+            {% endcache %}
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+{% comment %}
+<div class="container">
+    <div id="my-profile-events">
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <h4>
+                    <span class="hidden-xs">{% trans "Events required Action" %}</span>
+                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Action required" %}</span>
+                </h4>
+
+                <div id="events-action-required-section">
+                    {% include "accounts/tabs/my-profile/admin-events-action-required-tab.html" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <h4>
+                    <span class="hidden-xs">{% trans "Upcoming Events" %}</span>
+                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Upcoming" %}</span>
+                </h4>
+
+                <div id="events-upcoming-section">
+                    {% include "accounts/tabs/my-profile/admin-events-upcoming-tab.html" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <h4>
+                    <span class="hidden-xs">{% trans "Completed Events" %}</span>
+                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Complete" %}</span>
+                </h4>
+
+                <div id="events-complete-section">
+                    {% include "accounts/tabs/my-profile/admin-events-complete-tab.html" %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <h4>
+                    <span class="hidden-xs">{% trans "Draft Events" %}</span>
+                    <span class="hidden-sm hidden-md hidden-lg">{% trans "Drafts" %}</span>
+                </h4>
+
+                <div id="events-draft-section">
+                    {% include "accounts/tabs/my-profile/admin-events-draft-tab.html" %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+{% if request.user.is_authenticated %}
+    {% include "events/modals/event-participation-reject-modal.html" %}
+    {% include "events/modals/event-selfreflection-accept-modal.html" %}
+    {% include "events/modals/event-selfreflection-reject-modal.html" %}
+{% endif %}
+{% endcomment %}
+
+<!-- Scripts -->
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+</script>
+{% endblock %}

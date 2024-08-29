@@ -1,0 +1,170 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<event>
+        :[participation]
+        :[show_org]
+        :[event_admin]
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 event-thumbnail event.slug LANGUAGE_CODE %}
+<div class="event-thumbnail-vert card {% if event.is_private %}card-private{% endif %} mb-3 shadow bg-body rounded" category="{{ event.category|default:'' }}">
+    <a href="{% url 'event-details' event.slug %}">
+    {% if event.preview %}
+        {% generateimage "common:medium_fill_wide" source=event.preview -- alt=event.title class='img-fluid' %}
+    {% else %}
+    {% endif %}
+    <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
+    {% if event.is_private %}
+        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">Private</span>
+    {% endif %}
+        <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"><i class="bi bi-camera">0</i><br/><i class="bi bi-camera">0</i></span>
+    </a>
+
+    <div class="card-body">
+        <a href="{% url 'event-details' event.slug %}">
+            <h5 class="card-title">
+                <div class="category-item">
+                    <i class="{{ event.stat_category_icon }}" title="{{ event.stat_category_name }}" category="{{ event.category }}" style="background-color:{{ event.stat_category_color }};"></i>
+                </div>
+
+                {{ event.title|truncatechars:50 }}
+
+            {% if event.get_rating_avg > 0 %}
+                <div class="" style="color:orange;">
+                    <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
+                </div>
+            {% endif %}
+            </h5>
+        </a>
+
+        <p class="card-text"><small class="text-muted">{{ event.description|striptags|truncatechars:200 }}</small></p>
+    {% if event.organization and not event.organization.is_deleted and show_org %}
+        <p class="card-text">
+        {% if event.organization.avatar %}
+            {% generateimage "header:thumbnail" source=event.organization.avatar -- alt=event.organization.title %}
+        {% endif %}
+            <strong>{% trans "by" %}</strong>
+            <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.title }}</a> {{ event.created|timesince }} {% trans "ago" %}
+        </p>
+    {% endif %}
+        <p class="card-text">
+            <i class="bi bi-pin-map"></i>{% if event.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ event.address.short_address }}{% endif %}<br/>
+            <i class="bi bi-calendar-date"></i>{% if event.is_dateless %}<span class="badge text-bg-warning">{% trans "Dateless" %}</span>{% else %}{{ event.start_date|date:"M j, Y" }}{% endif %}<br/>
+
+        {% if event.tags.all and event.hashtag %}
+            <i class="bi bi-tags"></i>{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+            <span class="vert-delimiter">|</span>
+            <i class="bi bi-hash"></i>{{ event.hashtag }}
+        {% elif event.tags.all %}
+            <i class="bi bi-tags"></i>{% for tag in event.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        {% elif event.hashtag %}
+            <i class="bi bi-hash"></i>{{ event.hashtag }}>
+        {% endif %}
+        </p>
+
+        <p class="card-text">
+        {% if event.author.profile.avatar %}
+            {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+        {% else %}
+            <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+        {% endif %}
+            <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+        </p>
+    </div>
+
+    <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <small class="text-muted">
+                <i class="bi bi-feather"></i>{{ event.get_comments_count }}
+                <span class="vert-delimiter">|</span>
+                <i class="bi bi-eye"></i>{{ event.get_views_count }}
+
+                <br/>
+
+                {% trans "Last updated" %} {{ event.modified|timesince }} {% trans "ago" %}
+            </small>
+        </p>
+    </div>
+</div>
+{% endcache %}
+
+
+{% comment %}
+<div class="event-thumb-container" category="{{ event.category|default:'' }}">
+    <div class="event-thumb-vert" style="{% if event.organization.is_hidden %}background-color:#FBEFEF;{% endif %}">
+        <div class="event-tags">
+        {% if event.tags.all and event.hashtag %}
+            <p>
+                <i class="bi bi-tags"></i>
+            {% for tag in event.tags.all %}
+                <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+
+                <span class="vert-delimiter">|</span>
+
+                <i class="bi bi-hashtag"></i>{{ event.hashtag }}
+            </p>
+        {% elif event.tags.all %}
+            <p>
+                <i class="bi bi-tags"></i>
+            {% for tag in event.tags.all %}
+                <a href="?tag={{ tag.id }}">{{ tag.name }}</a>
+                {% if not forloop.last %}, {% endif %}
+            {% endfor %}
+            </p>
+        {% elif event.hashtag %}
+            <p>
+                <i class="bi bi-hashtag"></i>{{ event.hashtag }}
+            </p>
+        {% endif %}
+        </div>
+
+        <div class="event-status">
+        {% if participation %}
+            {% if participation.status == PARTICIPATION_STATUS.CONFIRMED %}
+                <p><span class="label label-success">{% trans "Confirmed" %}</span></p>
+            {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_CONFIRMATION %}
+                <p><span class="label label-warning">{% trans "Waiting for Confirmation" %}</span></p>
+            {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_SELFREFLECTION %}
+                <p><span class="label label-warning">{% trans "Waiting for Selfreflection" %}</span></p>
+            {% elif participation.status == PARTICIPATION_STATUS.WAITING_FOR_ACKNOWLEDGEMENT %}
+                <p><span class="label label-warning">{% trans "Waiting for Acknowledgement" %}</span></p>
+            {% elif participation.status == PARTICIPATION_STATUS.ACKNOWLEDGED %}
+                <p><span class="label label-success">{% trans "Acknowledged" %}</span></p>
+            {% endif %}
+        {% endif %}
+
+        {% if event_admin %}
+            {% if event.get_confirmed_count > 0 %}
+                <p><span class="label label-success">{{ event.get_confirmed_count }} {% trans "Confirmed Application(s)" %}</span></p>
+            {% endif %}
+
+            {% if event.has_waiting_for_confirmation %}
+                <p><span class="label label-warning">{{ event.get_waiting_for_confirmation_count }} {% trans "Pending Application(s)" %}</span></p>
+            {% endif %}
+
+            {% if event.has_waiting_for_acknowledgement %}
+                <p><span class="label label-warning">{{ event.get_waiting_for_acknowledgement_count }} {% trans "Pending Experience Reports" %}</span></p>
+            {% endif %}
+
+            {% if event.is_overdue and not event.is_complete %}
+                <p><span class="label label-danger">{% trans "Mark as completed" %}</span></p>
+            {% endif %}
+        {% endif %}
+        </div>
+
+        <div class="learn-more">
+            <a class="btn btn-warning" href="{% url 'event-details' event.slug %}" style="width:auto;">{% trans "LEARN MORE" %} <i class="bi bi-chevron-right"></i></a>
+        </div>
+    </div>
+</div>
+{% endcomment %}

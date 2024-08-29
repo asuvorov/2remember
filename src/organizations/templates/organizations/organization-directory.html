@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+{% load taggit_templatetags2_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organizations> - List of Organizations
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "Organizations Directory" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Directory" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="organization-directory" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+        {% regroup organizations|dictsort:"title" by title.0 as organizations_by_letter %}
+        {% for organizations in organizations_by_letter %}
+            <h2>{{ organizations.grouper }}</h2>
+            {% for organization in organizations.list %}
+                <a href="{% url 'organization-details' slug=organization.slug %}">
+                    {{ organization.title }}
+                </a>{% if not forloop.last %}, {% endif %}
+            {% empty %}
+            {% endfor %}
+
+            {% if not forloop.last %}
+                <hr>
+            {% endif %}
+        {% empty %}
+        {% endfor %}
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Tag Cloud -->
+            <section id="tag-cloud">
+            {% cache 60 tag-cloud-organization LANGUAGE_CODE %}
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% get_taglist as taglist for "organizations.organization" %}
+                {% get_tagcloud as tagcloud for "organizations.organization" %}
+
+                <div class="tag-cloud">
+                {% for tag in tagcloud %}
+                    <a href="?tag={{ tag.id }}">
+                        <font size="{{ tag.weight|floatformat:0 }}">
+                            {{ tag.name }} ({{ tag.num_times }})
+                        </font>
+                    </a>
+                {% endfor %}
+                </div>
+            {% endcache %}
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

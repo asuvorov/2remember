@@ -1,0 +1,79 @@
+{% load i18n %}
+{% load meta %}
+{% load static %}
+
+<!DOCTYPE HTML>
+<html>
+    <head {% meta_namespaces %}>
+        {% include "meta/meta.html" %}
+
+        <title>{% block title %}2Remember Platform - Collect And Share Your Memories Hassle-Free.{% endblock %}</title>
+
+    {% block meta %}
+        {% include "fragments/head-meta.html" %}
+    {% endblock %}
+
+    {% block extras %}
+        {% include "fragments/head-extras.html" %}
+    {% endblock %}
+
+    {% block blockbots %}
+        <meta name="robots" content="index,follow" />
+    {% endblock %}
+
+    {% block extra_meta %}{% endblock %}
+    {% block extra_style %}{% endblock %}
+    {% block extra_script %}{% endblock %}
+    {% block extra_head %}{% endblock %}
+    </head>
+
+    <body>
+        <div id="spinner">
+            <img src="{{ STATIC_URL }}img/ajax-loader.gif" alt="Loading..."/>
+        </div>
+
+        <div class="bg-image">
+            <header data-bs-theme="dark">
+            {% block navbar %}
+                {% include "fragments/navbar.html" %}
+            {% endblock %}
+
+            {% block important_message %}
+            {% endblock %}
+
+            {% block breadcrumbs %}
+            {% endblock %}
+
+            {% block header %}
+            {% endblock %}
+
+            {% block carousel %}
+            {% endblock %}
+            </header>
+
+            <main class="container">
+            {% block content %}
+            {% endblock %}
+
+            {% block extra_content %}
+            {% endblock %}
+
+            {% block footer %}
+                {% include "fragments/footer.html" %}
+            {% endblock %}
+            </main>
+
+            <!-- Modals -->
+        {% if not request.user.is_authenticated %}
+            {% include "accounts/modals/forgot-password-popup-modal.html" %}
+        {% endif %}
+
+            {% include "home/modals/privacy-policy-popup-modal.html" %}
+            {% include "home/modals/user-agreement-popup-modal.html" %}
+
+        {% block script %}
+            {% include "fragments/body-script.html" %}
+        {% endblock %}
+        </div>
+    </body>
+</html>

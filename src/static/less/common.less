@@ -1,0 +1,143 @@
+// ----------------------------------------------------------------------------
+// --- Add Attachment/Comment Button
+// ----------------------------------------------------------------------------
+a.add-attachment,
+a.add-comment {
+    font-size:              @font-size-base;
+    margin-top:             -10px !important;
+}
+a.delete-comment {
+    color:                  @brand-danger;
+}
+
+// ----------------------------------------------------------------------------
+// --- Comment Thumbnail
+// ----------------------------------------------------------------------------
+.comment-thumbnail-hor {
+    background-color:       #eef !important;
+    border-top:             3px solid @brand-primary;
+
+    p.card-text {
+        font-size:          0.85rem;
+        line-height:        1.25;
+        margin-top:         0;
+        margin-bottom:      0.5rem;
+    }
+
+    .card-header {
+        border-bottom:      3px solid @brand-primary;
+        padding:            .5rem;
+
+        h5 {
+            font-weight:    bold;
+            text-transform: uppercase;
+            padding:        5px;
+            margin:         0px;
+        }
+    }
+    .card-body {
+        padding:            .5rem;
+
+        i {
+            margin-right:   10px;
+        }
+    }
+    .card-footer {
+        padding:            .5rem;
+
+        i {
+            margin-right:   10px;
+        }
+        .learn-more a {
+            width:          auto !important;
+            float:          right;
+        }
+    }
+}
+
+// ----------------------------------------------------------------------------
+// --- Right Sidebar
+// ----------------------------------------------------------------------------
+div.right-sidebar {
+    ul {
+        //padding-left:       20px;
+    }
+
+    .tag-cloud {
+        //padding:            10px;
+        //margin:             10px 0;
+    }
+    .link-to-page {
+        background-color:   @white;
+        width:              100%;
+    }
+}
+
+// ----------------------------------------------------------------------------
+// --- Pop-up Overlay
+// ----------------------------------------------------------------------------
+.popup-overlay-heading {
+    border-bottom:          1px solid @gray-light;
+    margin:                 0 0 20px 0;
+
+    h4 {
+        font-weight:        bold;
+        text-transform:     uppercase;
+        margin:             0;
+        padding:            0 0 10px 0 !important;
+    }
+}
+.popup-overlay-info {
+    margin:                 20px 0 0 0;
+}
+.popup-overlay-footer {
+    border-top:             1px solid @gray-light;
+    margin:                 20px 0 0 0;
+    padding:                10px 0 0 0;
+    //float:                  right;
+}
+
+// ----------------------------------------------------------------------------
+// --- Twitter Feed
+// ----------------------------------------------------------------------------
+.twitter-feed {
+    h4 {
+        margin:             40px 0 20px 0;
+        text-transform:     uppercase;
+    }
+
+    .twitt {
+        .pb-twitter-feed(
+            @font-size:     @font-size-small
+        );
+    }
+    .divider {
+        background-color:   @gray-lightest;
+        height:             1px;
+        margin:             9px 0;
+        overflow:           hidden;
+    }
+}
+
+// ----------------------------------------------------------------------------
+// --- Miscellaneous
+// ----------------------------------------------------------------------------
+blockquote.readmore {
+    animation-duration: 1000ms;
+    padding:            0px;
+    margin-bottom:      16px;
+    overflow:           hidden;
+}
+section {
+    padding-bottom: 10px;
+}
+
+.hidden {
+    display:    none;
+}
+.accept {
+    color:      @brand-success;
+}
+.reject {
+    color:      @brand-danger;
+}

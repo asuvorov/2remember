@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "FAQ" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "FAQ" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="faq-list" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+        {% if request.user.is_staff %}
+            <div class="controllers">
+                <a class="btn btn-primary" href="{% url 'faq-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Add" %}</a>
+            </div>
+        {% endif %}
+
+        {% for section in sections %}
+            <section>
+            {% include "home/fragments/faq-section.html" with section=section %}
+            </section>
+        {% empty %}
+        {% endfor %}
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+{% if request.user.is_staff %}
+    {% include "home/modals/faq-remove-popup-modal.html" %}
+{% endif %}
+
+<!-- Scripts -->
+
+<script>
+    /*************************************************************************/
+    /*** Delete FAQ                                                        ***/
+    /*************************************************************************/
+    $(".faq-remove").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var faq_id = $(this).attr("faq-id");
+
+        $.ajax({
+            url:    "{% url 'api-faq-details' 0 %}".replace("0", faq_id),
+            type:   "DELETE"
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).parent().parent().parent().hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to delete the FAQ."
+                }).show();
+            };
+        });
+
+        return true;
+    })
+</script>
+{% endblock %}

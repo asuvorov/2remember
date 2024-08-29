@@ -1,0 +1,18 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request>
+{% endcomment %}
+
+{% if request.user.is_staff %}
+    <a class="btn btn-warning w-100 mb-2" name="edit" href="{% url 'post-edit' post.slug %}"><i class="bi bi-braces-asterisk"></i> {% trans "Edit Post" %}</a>
+    {% if post.is_draft %}
+        <div class="alert alert-warning mb-md-3" role="alert">
+            <p class="mb-0"><i class="bi bi-exclamation-triangle flex-shrink-0 me-2"></i>{% trans "This is a Draft." %}</p>
+            <strong>{% trans "Publish this Post when you are ready, so other Members can see it." %}</strong>
+        </div>
+
+        <a class="btn btn-success w-100" name="post" data-bs-toggle="modal" data-bs-target="#postPublishPopupModal"><i class="bi bi-check-square"></i> {% trans "Publish Post" %}</a>
+    {% endif %}
+{% endif %}

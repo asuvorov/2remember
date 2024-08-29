@@ -1,0 +1,258 @@
+<!--
+TAB
+My Profile - Completed Events.
+-->
+{% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
+
+{% if request.user.profile.get_completed_participations.count > 0 %}
+    <!--
+        Mobile View
+    -->
+    <div class="hidden-sm hidden-md hidden-lg">
+    {% for participation in request.user.profile.get_completed_participations %}
+        <table class="table table-condensed">
+            <thead>
+                <tr class="active">
+                    <th colspan="2">
+                        {% trans "Event" %} <a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a>
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                {% if participation.selfreflection_activity_text %}
+                    <td><strong>{% trans "What I did" %}</strong></td>
+                    <td>
+                        <span class="desc">{{ participation.selfreflection_activity_text }}</span>
+                    </td>
+                {% endif%}
+                </tr>
+                <tr>
+                {% if participation.selfreflection_learning_text %}
+                    <td><strong>{% trans "What I learned" %}</strong></td>
+                    <td>
+                        <span class="desc">{{ participation.selfreflection_learning_text }}</span>
+                    </td>
+                {% endif %}
+                </tr>
+                <tr>
+                    <td><strong>{% trans "Admin replied" %}</strong></td>
+                    <td>
+                    {% if participation.is_selfreflection_rejected %}
+                        <span class="desc">{{ participation.selfreflection_rejection_text|default:"N/A" }}</span>
+                    {% else %}
+                        <span class="desc">{{ participation.acknowledgement_text|default:"N/A" }}</span>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>{% trans "Status" %}<strong></td>
+                    <td class="status-{{ participation.event_id }}">
+                    {% if participation.is_selfreflection_rejected %}
+                        <span class="label label-danger">{% trans "Experience Report rejected" %}</span>
+                    {% elif participation.is_waiting_for_selfreflection %}
+                        <span class="label label-info">{% trans "Waiting for Experience Report" %}</span>
+                    {% elif participation.is_waiting_for_acknowledgement %}
+                        <span class="label label-info">{% trans "Waiting for Acknowledgment" %}</span>
+                    {% elif participation.is_acknowledged %}
+                        <span class="label label-success">{% trans "Acknowledged" %}</span>
+                    {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><strong>{% trans "Action" %}</strong></td>
+                    <td class="action-{{ participation.event_id }}">
+                    {% is_rated_event_tag participation.event request.user as is_rated %}
+                    {% is_complained_event_tag participation.event request.user as is_complained %}
+
+                    {% if participation.is_waiting_for_selfreflection or participation.is_selfreflection_rejected %}
+                        <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-check" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
+                    {% endif %}
+
+                    {% if participation.is_waiting_for_selfreflection %}
+                        <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-times" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
+                    {% endif %}
+
+                    {% if not is_rated %}
+                        {% if participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
+                            <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="bi bi-star" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
+                        {% endif %}
+                    {% endif %}
+
+                    {% if not is_complained %}
+                        {% if participation.is_waiting_for_selfreflection or participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
+                            <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-info-circle" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
+                        {% endif %}
+                    {% endif %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endfor %}
+    </div>
+
+    <!--
+        Tablet/Desktop View
+    -->
+    <table class="table table-condensed hidden-xs">
+        <thead>
+            <tr>
+                <th></th>
+                <th>{% trans "Event Name" %}</th>
+                <th>{% trans "What I did" %}</th>
+                <th>{% trans "What I learned" %}</th>
+                <th>{% trans "Admin replied" %}</th>
+                <th>{% trans "Status" %}</th>
+                <th>{% trans "Actions" %}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+        {% for participation in request.user.profile.get_completed_participations %}
+            <tr>
+                <td>
+                    <a href="{% url 'event-details' participation.event.slug %}">
+                    {% if participation.event.avatar %}
+                        {% generateimage "common:thumbnail_wide" source=participation.event.avatar -- alt=participation.event.title %}
+                    {% endif %}
+                    </a>
+                </td>
+                <td><a href="{% url 'event-details' participation.event.slug %}">{{ participation.event.title }}</a></td>
+                <td>
+                    <span class="desc">{{ participation.selfreflection_activity_text|default:"N/A" }}</span>
+                </td>
+                <td>
+                    <span class="desc">{{ participation.selfreflection_learning_text|default:"N/A" }}</span>
+                </td>
+                <td>
+                {% if participation.is_selfreflection_rejected %}
+                    <span class="desc">{{ participation.selfreflection_rejection_text|default:"N/A" }}</span>
+                {% else %}
+                    <span class="desc">{{ participation.acknowledgement_text|default:"N/A" }}</span>
+                {% endif %}
+                </td>
+                <td class="status-{{ participation.event_id }}">
+                {% if participation.is_selfreflection_rejected %}
+                    <span class="label label-danger">{% trans "Experience Report rejected" %}</span>
+                {% elif participation.is_waiting_for_selfreflection %}
+                    <span class="label label-info">{% trans "Waiting for Experience Report" %}</span>
+                {% elif participation.is_waiting_for_acknowledgement %}
+                    <span class="label label-info">{% trans "Waiting for Acknowledgment" %}</span>
+                {% elif participation.is_acknowledged %}
+                    <span class="label label-success">{% trans "Acknowledged" %}</span>
+                {% endif %}
+                </td>
+                <td class="action-{{ participation.event_id }}">
+                {% is_rated_event_tag participation.event request.user as is_rated %}
+                {% is_complained_event_tag participation.event request.user as is_complained %}
+
+                {% if participation.is_waiting_for_selfreflection or participation.is_selfreflection_rejected %}
+                    <a class="sr-submit txt-success" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-check" data-toggle="tooltip" data-placement="top" title="Submit my Experience"></i></a>
+                {% endif %}
+
+                {% if participation.is_waiting_for_selfreflection %}
+                    <a class="not-participated txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-times" data-toggle="tooltip" data-placement="top" title="I didn't participate"></i></a>
+                {% endif %}
+
+                {% if not is_rated %}
+                    {% if participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
+                        <a class="add-rating txt-warning" event-id="{{ participation.event_id }}" organization-id="{% if participation.event.organization %}{{ participation.event.organization_id }}{% endif %}" organizer-id="{{ participation.event.author_id }}" href="#"><i class="bi bi-star" data-toggle="tooltip" data-placement="top" title="Rate the Event"></i></a>
+                    {% endif %}
+                {% endif %}
+
+                {% if not is_complained %}
+                    {% if participation.is_waiting_for_selfreflection or participation.is_waiting_for_acknowledgement or participation.is_acknowledged %}
+                        <a class="add-complaint txt-danger" event-id="{{ participation.event_id }}" href="#"><i class="bi bi-info-circle" data-toggle="tooltip" data-placement="top" title="Complain to the Event"></i></a>
+                    {% endif %}
+                {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <p>
+        <span class="label label-info">{% trans "There are no completed Participations at the moment." %}</span>
+    </p>
+{% endif %}
+
+<script>
+    /*************************************************************************/
+    /*** Submit Experience Report                                          ***/
+    /*************************************************************************/
+    $(".sr-submit").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = $(this).attr("event-id");
+
+        $("#event-selfreflection-submit-modal-form").find("input[name='event_id']").val(event_id);
+        $("#eventSelfreflectionSubmitPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Did not participate                                               ***/
+    /*************************************************************************/
+    $(".not-participated").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = $(this).attr("event-id");
+
+        $("#event-not-participated-modal-form").find("input[name='event_id']").val(event_id);
+        $("#eventDidNotParticipateSubmitPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Rate the Event                                                    ***/
+    /*************************************************************************/
+    $(".add-rating").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = $(this).attr("event-id");
+        var organization_id = $(this).attr("organization-id");
+        var organizer_id = $(this).attr("organizer-id");
+
+        $("#event-rate-modal-form").find("input[name='event_id']").val(event_id);
+        $("#event-rate-modal-form").find("input[name='organization_id']").val(organization_id);
+        $("#event-rate-modal-form").find("input[name='organizer_id']").val(organizer_id);
+
+        $("#eventRatePopupModal").modal("show");
+        $("#eventRatePopupModal").on("shown.bs.modal", function (event) {
+            if (organization_id) {
+                $("#event-rate-modal-form").find("#organization-form-group").show();
+            } else {
+                $("#event-rate-modal-form").find("#organization-form-group").hide();
+            }
+        })
+    })
+
+    /*************************************************************************/
+    /*** Complain the Event                                                ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+
+        event.preventDefault();
+
+        var event_id = $(this).attr("event-id");
+
+        $("#complaint-add-modal-form").find("input[name='event_id']").val(event_id);
+        $("#complaintAddPopupModal").modal("show");
+    })
+</script>

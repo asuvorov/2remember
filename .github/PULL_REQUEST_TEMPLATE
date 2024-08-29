@@ -1,0 +1,17 @@
+# Description
+
+# QA
+
+# Resolves
+
+# Self-Check
+
+- [ ] Added caching, where needed.
+- [ ] Added Unit Tests, where needed.
+- [ ] Added Django Client Tests, where needed.
+- [ ] Added Integration Tests, where needed.
+- [ ] Tests ran successfully.
+- [ ] Updated CHANGELOG __(optional)__.
+- [ ] Bumped Version in `setup.py`, `.bumpversion.cfg`, `src.__init__`, `src.settings.base` __(optional)__.
+
+# See also

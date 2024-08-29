@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load imagekit %}
+{% load taggit_templatetags2_tags %}
+
+{% block title %}{% trans "Event Categories List" %} - {{ block.super }}{% endblock %}
+
+{% block content %}
+<div class="nav-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-24 col-sm-24 col-md-24">
+                <div class="breadcrumbs pull-right">
+                    <a href="{{ request.path }}">{% trans "Event Categories" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="event-category-list" class="container">
+    <div class="row">
+        <div class="col-xs-0 col-sm-0 col-md-6 col-lg-6">
+        </div>
+
+        <div class="col-xs-24 col-sm-18 col-md-12 col-lg-12">
+            <div class="controllers">
+            </div>
+
+        {% for event_category in categories %}
+            <div class="category-list-item thumbnail">
+                <a href="{% url 'event-list' %}?cat={{ event_category.slug }}" title="{{ event_category.name }}" category="{{ event_category.category }}">
+                    {% generateimage "common:giant_fill_wide" source=event_category.avatar -- alt=event_category.name %}
+
+                    <span>{{ event_category.name }}</span>
+                </a>
+            </div>
+        {% endfor %}
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+
+<script>
+</script>
+{% endblock %}

@@ -1,0 +1,322 @@
+{% extends "accounts/my-profile-base.html" %}
+
+{% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :[phone_numbers] - Phone Numbers
+        :[social_links]  - Social Links.
+{% endcomment %}
+
+{% block content %}
+<div id="my-profile-info" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START PROFILE CARD -->
+            <section id="profile-card">
+                <div class="card mb-3 shadow bg-body rounded">
+                    <div class="row g-0">
+                        <div class="col-md-3">
+                        {% if request.user.profile.avatar %}
+                            {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid' %}
+                        {% else %}
+                            <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                        {% endif %}
+                            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ request.user.profile.completeness_total }}" style="width:100%; border-radius:0;">
+                                <div class="progress-bar overflow-visible bg-{% if request.user.profile.completeness_total > 75 %}success{% elif request.user.profile.completeness_total > 50 %}info{% elif request.user.profile.completeness_total > 25 %}warning{% else %}danger{% endif %} progress-bar-striped active" role="progressbar" style="width:{{ request.user.profile.completeness_total }}%">{{ request.user.profile.completeness_total }}% {% trans "Complete" %}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-9">
+                            <div class="card-header bg-transparent">
+                                <h5 class="card-title mb-0">
+                                    {{ request.user.profile.full_name }}
+
+                                {% if request.user.profile.get_rating_avg > 0 %}
+                                    {% include "app/fragments/rating-bs.html" with instance=request.user.profile %}
+                                {% endif %}
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+                                <blockquote class="readmore"><small class="text-muted">{{ request.user.profile.bio|striptags|default:"N/A" }}</small></blockquote>
+
+                                <hr>
+
+                                <h5>{% trans "Contact Information" %}</h5>
+                                <!-- <span class="badge text-bg-warning">{% trans "This Information can only be seen by the Organizers of the Events you participate in." %}</span> -->
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if request.user.profile.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ request.user.profile.address.full_address|default:"N/A" }}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+                                    {% if request.user.profile.address.notes %}
+                                        <p class="card-text"><small class="text-muted">{{ request.user.profile.addressnotes }}</small></p>
+                                    {% endif %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <!-- PHONE NUMBERS -->
+                                {% if phone_numbers %}
+                                    {% for phone_number in phone_numbers %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                    {% if not forloop.last %}
+                                        <span class="vert-delimiter">|</span>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                    <br/>
+                                {% endif %}
+
+                                    <i class="bi bi-envelope"></i>{% if request.user.email %}<a href="mailto:{{ request.user.email }}">{{ request.user.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}<br/>
+                                    <i class="bi bi-calendar-date"></i>{% if request.user.profile.birth_day %}{{ request.user.profile.birth_day }}{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                </p>
+{% comment %}
+                                <p>
+                                    <span class="label label-success">{% trans "My Organizations" %}</span><br/>
+                                {% for organization in created_organizations %}
+                                    <a href="{% url 'organization-details' organization.slug %}">{{ organization.name }}</a>{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    {% trans "There are no Organizations yet." %}<br/>
+
+                                    {% if request.user.profile.is_completed %}
+                                        <a href="{% url 'organization-create' %}"><i class="bi bi-plus"></i> {% blocktrans %}Create</a> new Organization.{% endblocktrans %}
+                                    {% endif %}
+                                {% endfor %}
+                                </p>
+
+                                <p>
+                                    <span class="label label-info">{% trans "Related Organizations" %}</span><br/>
+                                {% for organization in related_organizations %}
+                                    <a href="{% url 'organization-details' organization.slug %}">{{ organization.name }}</a>
+                                    {% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    {% trans "There are no related Organizations yet." %}
+                                {% endfor %}
+                                </p>
+{% endcomment %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                                    <small class="text-muted">
+                                        <i class="bi bi-feather"></i>{{ request.user.profile.get_comments_count }}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-eye"></i>{{ request.user.profile.get_views_count }}
+
+                                        <br/>
+
+                                        {% trans "Last updated" %} {{ request.user.profile.modified|timesince }} {% trans "ago" %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  END  PROFILE CARD -->
+
+            <!-- START PROFILE EVENTS -->
+            <section id="profile-events">
+                <h3>{% trans "Events" %}</h3>
+                {% include "accounts/fragments/my-profile-event-list.html" %}
+            </section>
+            <!--  END  PROFILE EVENTS -->
+
+            <hr>
+
+            <!-- START PROFILE COMMENTS -->
+            <section id="profile-comments">
+                {% include "app/fragments/instance-comments.html" with instance=request.user.profile %}
+            </section>
+            <!--  END  PROFILE COMMENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+            <section>
+                {% include "accounts/fragments/my-profile-media-status-breakdown.html" %}
+            </section>
+
+            <!-- Social Links -->
+        {% if social_links %}
+            <section>
+                <h4>{% trans "Social Links" %}</h4>
+                {% include "app/fragments/social-links.html" %}
+            </section>
+        {% endif %}
+
+            <section>
+                <h4>{% trans "Spotlight" %}</h4>
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=request.user.profile %}
+
+{% if request.user.is_authenticated %}
+    {% include "accounts/modals/no-email-provided-popup-modal.html" %}
+{% endif %}
+
+<!-- Scripts -->
+
+<script>
+    $(document).ready( function() {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% if request.user.invitee.get_new.all.count > 0 %}
+            new Noty({
+                type:   "warning",
+                text:   "You have {{ request.user.invitee.get_new.all.count }} Invite(s)"
+            }).show();
+        {% endif %}
+
+        {% if request.user.profile.get_upcoming_participations.all.count > 0 %}
+            new Noty({
+                type:   "warning",
+                text:   "You have {{ request.user.profile.get_upcoming_participations.all.count }} upcoming Event(s), were you participate"
+            }).show();
+        {% endif %}
+
+        {% if request.user.profile.get_admin_events_action_required.all.count > 0 %}
+            new Noty({
+                type:   "error",
+                text:   "You have {{ request.user.profile.get_admin_events_action_required.all.count }} Event(s), that require your Action"
+            }).show();
+        {% endif %}
+
+        {% if request.user.profile.get_admin_events_upcoming.all.count > 0 %}
+            new Noty({
+                type:   "warning",
+                text:   "You have {{ request.user.profile.get_admin_events_upcoming.all.count }} upcoming Event(s), organized by you"
+            }).show();
+        {% endif %}
+
+        {% if request.user.profile.get_admin_events_draft.all.count > 0 %}
+            new Noty({
+                type:   "info",
+                text:   "You have {{ request.user.profile.get_admin_events_draft.all.count }} draft Event(s)"
+            }).show();
+        {% endif %}
+
+        /*********************************************************************/
+        /*** Show `no_email_provided` pop-up Modal, if User's Email        ***/
+        /*** is not set                                                    ***/
+        /*********************************************************************/
+        {% if show_no_email_popup_modal %}
+            console.log(">>> NO EMAIL PROVIDED");
+
+            $("#noEmailProvidedPopupModal").modal("show");
+        {% endif %}
+    })
+</script>
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+</script>
+
+<!-- Pop-up Overlays -->
+
+{% if request.user.profile.completeness_total < 80 %}
+<div id="profile-completeness-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
+    <div class="popup-overlay-heading">
+        <h4>{% trans "Welcome" %}, {{ request.user.profile.auth_name }}</h4>
+    </div>
+
+    <div class="popup-overlay-info">
+        <div class="alert alert-info">
+        {% blocktrans %}
+            <p>
+                Make sure to get your Profile to 80% complete.
+            </p>
+
+            <p>
+                This is a Requirement:<br/>
+                (1) to show up in Search Results;<br/>
+                (2) to create Events, Places and Organizations;<br/>
+                (3) to invite and to be invited to Events and Organizations.
+            </p>
+        {% endblocktrans %}
+        </div>
+
+    {% if request.user.profile.grace_period_days_left > 0 %}
+        <div class="alert alert-warning">
+        {% blocktrans with days_left=request.user.profile.grace_period_days_left %}
+            <p>
+                You have {{ days_left }} Days of the <strong>GRACE PERIOD</strong> left.
+            </p>
+        {% endblocktrans %}
+        </div>
+    {% endif %}
+    </div>
+
+    <!-- Add an optional Button to close the Pop-up -->
+    <div class="popup-overlay-footer">
+        <button class="btn btn-primary profile-completeness-popup-overlay_close">{% trans "Let's go" %}</button>
+    </div>
+</div>
+
+<!-- Scripts -->
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** jQuery pop-up Overlay                                         ***/
+        /*********************************************************************/
+        /***
+         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
+        ***/
+        var options = {
+            type:               "overlay",      // "tooltip"
+            autoopen:           true,           // def. false
+            scrolllock:         true,           // def. false
+            background:         true,
+            backgroundactive:   false,
+            color:              "#000",
+            opacity:            0.5,
+            horizontal:         "center",
+            vertical:           "center",
+            offsettop:          0,
+            offsetleft:         0,
+            escape:             true,
+            blur:               true,
+            setzindex:          true,
+            autozindex:         false,
+            keepfocus:          true,
+            focusdelay:         50,
+            outline:            false,
+            detach:             false,
+            // openelement:        ".{popup_id}_open",
+            // closeelement:       ".{popup_id}_close",
+            transition:         "all 0.5s"
+        };
+
+        $("#profile-completeness-popup-overlay").popup(options);
+    });
+</script>
+{% endif %}
+{% endblock %}

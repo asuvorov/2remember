@@ -1,0 +1,87 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organization>
+{% endcomment %}
+
+{% cache 60 organization-thumbnail organization.slug %}
+<div class="organization-thumbnail-hor card mb-3 shadow bg-body rounded">
+    <div class="row g-0">
+        <div class="col-md-4 col-lg-3">
+            <a href="{% url 'organization-details' organization.slug %}">
+            {% if organization.preview %}
+                {% generateimage "common:medium_fill_wide" source=organization.preview -- alt=organization.title class='img-fluid' %}
+            {% else %}
+            {% endif %}
+            </a>
+        </div>
+
+        <div class="col-md-8 col-lg-9">
+            <div class="card-header bg-transparent">
+                <h5 class="card-title mb-0">
+                    {{ organization.title|truncatechars:50 }}
+
+                {% if organization.get_rating_avg > 0 %}
+                    <div class="" style="color:orange;">
+                        <input id="id_organization_rating" name="organization_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ organization.get_rating_avg }}" />
+                    </div>
+                {% endif %}
+                </h5>
+            </div>
+
+            <div class="card-body">
+                <p class="card-text"><small class="text-muted">{{ organization.description|striptags|truncatechars:200 }}</small></p>
+                <p class="card-text">
+                    <i class="bi bi-pin-map"></i>{% if organization.addressless %}<span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>{% else %}{{ organization.address.short_address }}{% endif %}<br/>
+
+                {% if organization.tags.all and organization.hashtag %}
+                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                    <span class="vert-delimiter">|</span>
+                    <i class="bi bi-hash"></i>{{ organization.hashtag }}
+                {% elif organization.tags.all %}
+                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                {% elif organization.hashtag %}
+                    <i class="bi bi-hash"></i>{{ organization.hashtag }}>
+                {% endif %}
+                </p>
+
+                <p class="card-text">
+                {% if organization.author.profile.avatar %}
+                    {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                {% else %}
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                {% endif %}
+                    <a href="{% url 'profile-view' organization.author_id %}"> {{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-0">
+        <div class="col-12">
+            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                    <small class="text-muted">
+                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
+                        <span class="vert-delimiter">|</span>
+                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}
+
+                        <br/>
+
+                        {% trans "Last updated" %} {{ organization.modified|timesince }} {% trans "ago" %}
+                    </small>
+                </p>
+
+                <div class="learn-more text-end">
+                    <a class="btn btn-warning" href="{% url 'organization-details' organization.slug %}">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endcache %}

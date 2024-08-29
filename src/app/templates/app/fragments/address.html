@@ -1,0 +1,76 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>  - Entity Form
+        :<aform> - Address Form
+{% endcomment %}
+
+<div class="checkbox checkbox-primary">
+    {{ form.addressless }}
+    {{ form.addressless.label_tag }}
+</div>
+
+<address>
+    <div class="row g-2">
+        <div class="form-floating col-md-6 {% if aform.address_1.errors %}has-error{% endif %}">
+            {{ aform.address_1 }}
+            <label for="id_address_1" class="form-label">{{ aform.address_1.label }}{% if aform.address_1.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.address_1.errors %}{% for error in aform.address_1.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+        <div class="form-floating col-md-6 {% if aform.address_2.errors %}has-error{% endif %}">
+            {{ aform.address_2 }}
+            <label for="id_address_2" class="form-label">{{ aform.address_2.label }}{% if aform.address_2.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.address_2.errors %}{% for error in aform.address_2.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+
+        <div class="form-floating col-md-4 {% if aform.city.errors %}has-error{% endif %}">
+            {{ aform.city }}
+            <label for="id_city" class="form-label">{{ aform.city.label }}{% if aform.city.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.city.errors %}{% for error in aform.city.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+        <div class="form-floating col-md-4 {% if aform.province.errors %}has-error{% endif %}">
+            {{ aform.province }}
+            <label for="id_province" class="form-label">{{ aform.province.label }}{% if aform.province.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.province.errors %}{% for error in aform.province.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+        <div class="form-floating col-md-4 {% if aform.zip_code.errors %}has-error{% endif %}">
+            {{ aform.zip_code }}
+            <label for="id_zip_code" class="form-label">{{ aform.zip_code.label }}{% if aform.zip_code.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.zip_code.errors %}{% for error in aform.zip_code.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+
+        <div class="form-floating col-12 {% if aform.country.errors %}has-error{% endif %}">
+            {{ aform.country }}
+            <label for="id_country" class="form-label">{{ aform.country.label }}{% if aform.country.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.country.errors %}{% for error in aform.country.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+        </div>
+
+        <!-- REMINDER: Keep the Address Notes Field outside the <address> Tag, so, for Example, in Case of the addressless Entity (Address is collapsed) the Admin will be able to provide some Notes, e.g., why the Entity's Location is not specified, some Directions, etc. -->
+        <div class="form-floating col-12 {% if aform.notes.errors %}has-error{% endif %}">
+            {{ aform.notes }}
+            <label for="id_notes" class="form-label">{{ aform.notes.label }}{% if aform.notes.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+            <span class="help-block">{% if aform.notes.errors %}{% for error in aform.notes.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+            <p class="help">{{ aform.notes.help_text|safe }}</p>
+        </div>
+    </div>
+</address>
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Entity has Address?                                           ***/
+        /*********************************************************************/
+        $("address").show();
+
+        if ($("#id_addressless").prop("checked")) {
+            $("address").hide();
+        }
+
+        $("#id_addressless").click(function () {
+            $("address").toggle("slow");
+        });
+    });
+</script>

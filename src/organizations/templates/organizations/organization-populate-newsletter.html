@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Newsletter Form
+{% endcomment %}
+
+{% block title %}{% trans "Populate Newsletter" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-details' slug=organization.slug %}">{{ organization.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Newsletter" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="organization-newsletter-create" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="create-organization-newsletter-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.media }}
+
+                <!-- START NEWSLETTER DESCRIPTION -->
+                <section id="newsletter-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  NEWSLETTER DESCRIPTION -->
+
+                <hr>
+
+                <!-- START NEWSLETTER CONTENT -->
+                <section id="newsletter-content">
+                    <h3>{% trans "Content" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="orm-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                            {{ form.content }}
+                            <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  NEWSLETTER CONTENT -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+            <a class="btn btn-success w-100 mb-2" name="submit"><i class="bi bi-send"></i>&nbsp;{% trans "Populate Newsletter" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+
+<script>
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+        $("form#create-organization-newsletter-form").submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+    });
+</script>
+{% endblock %}

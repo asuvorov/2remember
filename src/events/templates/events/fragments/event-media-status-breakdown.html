@@ -1,0 +1,245 @@
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<event>
+        :[participation]
+        :[show_signup_form]
+        :[show_withdraw_form]
+        :[show_selfreflection_form]
+        :[show_not_participated_form]
+        :[show_rate_form]
+        :[show_complain_form]
+{% endcomment %}
+
+{% if event.author == request.user %}
+    <a class="btn btn-warning w-100 mb-2" href="{% url 'event-edit' event.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Event" %}</a>
+{% else %}
+    {% if not is_subscribed %}
+        <a class="btn btn-primary w-100 mb-2 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
+    {% endif %}
+
+    <!-- Add Complaint -->
+    {% if show_complain_form %}
+        <div class="alert alert-danger mb-2" role="alert">
+            <strong">{% trans "Disclaimer" %}</strong><br/>
+        {% blocktrans %}
+            Let us know, if there's something to complain about it.
+        {% endblocktrans %}
+        </div>
+
+        <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
+    {% endif %}
+{% endif %}
+
+<hr>
+
+<p>
+{% if event.is_private %}
+    <span class="badge text-bg-warning">{% trans "Private" %}</span>
+{% else %}
+    <span class="badge text-bg-success">{% trans "Public" %}</span>
+{% endif %}<br/>
+
+{% if event.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+</p>
+
+{% comment %}
+{% if event.is_complete %}
+    <p><span class="label label-success">{% trans "This Event is complete" %}</span></p>
+{% elif event.is_closed %}
+    <p><span class="label label-danger">{% trans "This Event is closed" %}</span></p>
+{% elif event.is_overdue %}
+    <p><span class="label label-danger">{% trans "This Event already happened" %}</span></p>
+{% elif event.is_confirmation_required %}
+    {% if not participation or not participation.is_confirmed_full %}
+        <div class="alert alert-warning" role="alert">
+            <strong>{% trans "Confirmation required" %}</strong><br/>
+        {% if not is_admin %}
+            <p>
+                {% trans "You need to write an Application to participate in this Event. The Event Organizer will use your Application Text and your History on 2Remember to decide whether you are a good fit for this Event." %}
+            </p>
+        {% endif %}
+        </div>
+    {% endif%}
+{% endif %}
+
+{% if request.user.is_authenticated %}
+    {% if is_admin %}
+        {% if event.is_complete %}
+            <p><strong>
+            {% blocktrans %}
+                Notification was sent to all Participants.<br/>
+                Please, allow 3 - 7 Days to submit their Experience Reports, and come back to accept or reject them.
+            {% endblocktrans %}
+            </strong></p>
+
+            <div class="alert alert-warning" role="alert">
+                <strong>{% trans "Reporting Materials" %}</strong><br/>
+                <p>{% trans "You can add reporting Materials, manage current Attachments, and describe Achievements." %}</p>
+            </div>
+
+            <a class="btn btn-primary" href="{% url 'event-reporting-materials' event.slug %}"><i class="bi bi-folder-o"></i> {% trans "Reporting Materials" %}</a>
+        {% elif event.is_closed %}
+            <p><strong>{% trans "There is nothing to do here." %}</strong></p>
+        {% else %}
+            {% if event.is_overdue %}
+                <div class="alert alert-warning" role="alert">
+                    <strong>
+                        {% trans "Please, mark this Event as completed, if it:" %}
+                        <ul>
+                            <li>{% trans "has taken Place as planned;" %}</li>
+                            <li>{% trans "has NOT taken Place, but you would like to all of the Participants to keep the Hours 'worked'." %}</li>
+                        </ul>
+                    </strong>
+                    <p>{% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}</p>
+                </div>
+
+                <a class="btn btn-success" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCompletePopupModal" tabindex="-1"><i class="bi bi-check-square"></i> {% trans "Complete" %}</a>
+
+                <div class="alert alert-warning" role="alert">
+                    <strong>
+                    {% blocktrans %}
+                        You can also clone the Event, if it hasn't taken Place, but you would like to re-schedule it.<br/>
+                        All the Participants will be automatically assigned to the cloned Event.
+                    {% endblocktrans %}
+                    </strong>
+                </div>
+
+                <a class="btn btn-primary" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClonePopupModal" tabindex="-1"><i class="bi bi-clone"></i> {% trans "Clone Event" %}</a>
+            {% else %}
+                <a class="btn btn-primary" href="{% url 'event-edit' event.slug %}"><i class="bi bi-edit"></i> {% trans "Edit Event" %}</a>
+
+                {% if event.is_draft %}
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "This is a Draft." %}</strong><br/>
+                        <p>{% trans "Post this Event when you are ready, so other Members can see it." %}</p>
+                    </div>
+
+                    <a class="btn btn-primary" name="post" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCreatePopupModal" tabindex="-1"><i class="bi bi-check"></i> {% trans "Post Event" %}</a>
+                {% elif event.is_dateless %}
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Dateless." %}</strong><br/>
+                        <p>
+                            {% trans "Unless the Event is intentionally dateless, please, don't forget to provide its starting Date & Time." %}<br/>
+                            {% trans "You can mark this Event as completed, if it:" %}
+                            <ul>
+                                <li>{% trans "has taken Place as planned;" %}</li>
+                                <li>{% trans "has NOT taken Place, but you would like to all of the Participants to keep the Hours 'worked'." %}</li>
+                            </ul>
+                            {% trans "Remember to remove from the Event all the Participants, who did not show up, so the Event will not appear on their Profiles." %}
+                        </p>
+                    </div>
+
+                    <a class="btn btn-success" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventCompletePopupModal" tabindex="-1"><i class="bi bi-check-square"></i> {% trans "Complete" %}</a>
+                {% endif %}
+            {% endif %}
+
+            <a class="btn btn-danger" name="close" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventClosePopupModal" tabindex="-1"><i class="bi bi-times"></i> {% trans "Close Event" %}</a>
+        {% endif %}
+    {% else %}
+        {% if participation %}
+            <p class="status note">
+            {% if participation.is_waiting_for_confirmation %}
+                <span class="label label-info">{{ participation.stat_participation_status_name }}</span><br/>
+                {% trans "You have submitted an Application to this Event. You must now wait for the Organizer to decide whether they want to accept your Offer to help." %}
+            {% elif participation.is_confirmation_denied %}
+                <span class="label label-danger">{{ participation.stat_participation_status_name }}</span>
+            {% elif participation.is_confirmed %}
+                <span class="label label-success">{{ participation.stat_participation_status_name }}</span><br/>
+                {% trans "You are signed up for this Event. The Organizer is expecting you to be there and do your best." %}
+            {% elif participation.is_cancelled_by_admin %}
+                <span class="label label-danger">{{ participation.stat_participation_status_name }}</span>
+            {% elif participation.is_cancelled_by_user %}
+                <span class="label label-warning">{{ participation.stat_participation_status_name }}</span>
+            {% elif participation.is_waiting_for_selfreflection %}
+                <span class="label label-info">{{ participation.stat_participation_status_name }}</span>
+            {% elif participation.is_waiting_for_acknowledgement %}
+                <span class="label label-info">{{ participation.stat_participation_status_name }}</span>
+            {% elif participation.is_acknowledged %}
+                <span class="label label-success">{{ participation.stat_participation_status_name }}</span>
+            {% endif %}
+            </p>
+        {% endif %}
+
+        {% if not event.is_complete %}
+            {% if show_signup_form %}
+                {% if event.event_roles.all %}
+                    <div class="alert alert-default" role="alert">
+                        <strong>{% trans "Event with Roles" %}</strong><br/>
+                        <p>
+                        {% blocktrans %}
+                            Event Author is looking for the differently skilled Volunteers / Participants.<br/>
+                            You will be offered to choose, which Role you want to take, on signing up to the Event / Event.
+                        {% endblocktrans %}
+                        </p>
+                    </div>
+                {% endif %}
+
+                <a class="btn btn-primary {% if not request.user.profile.is_completed %}disabled{% endif %}" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationPostPopupModal" tabindex="-1"><i class="bi bi-arrow-up"></i> {% trans "Participate" %}</a>
+            {% endif %}
+
+            {% if show_withdraw_form %}
+                <div class="alert alert-warning" role="alert">
+                {% if not event.allow_reenter %}
+                    <strong>{% trans "Application Warning" %}</strong><br/>
+                    <p>{% trans "Please, be advised, that it's not allowed to apply again to the Event after withdrawing Application." %}</p>
+                {% endif %}
+                </div>
+
+                <a class="btn btn-danger" title="" data-original-title="" data-content="" data-placement="bottom" data-container="body" data-trigger="hover" data-toggle="modal" href="#eventParticipationWithdrawPopupModal" tabindex="-1"><i class="bi bi-times"></i> {% trans "Withdraw Application" %}</a>
+            {% endif %}
+        {% else %}
+            {% if show_selfreflection_form %}
+                <div id="div-sr-submit">
+                {% if participation.is_selfreflection_rejected %}
+                    <p>{% trans "Your Experience Report was returned to you with the following Note:" %}</p>
+                    <blockquote>{{ participation.selfreflection_rejection_text }}</blockquote>
+                    <p>{% trans "Please revise your Experience Report and submit it again." %}</p>
+                {% endif %}
+
+                    <a class="btn btn-primary sr-submit" href="#" tabindex="-1"><i class="bi bi-check-square"></i> {% trans "Submit my Experience" %}</a>
+                </div>
+            {% endif %}
+
+            {% if show_not_participated_form %}
+                <div id="div-not-participated">
+                    <a class="btn btn-warning not-participated" href="#"><i class="bi bi-times"></i> {% trans "I did not participate" %}</a>
+                </div>
+            {% endif %}
+
+            {% if show_rate_form %}
+                <div id="div-add-rating">
+                    <a class="btn btn-warning add-rating" href="#"><i class="bi bi-thumbs-o-up"></i> {% trans "Rate the Event" %}</a>
+                </div>
+            {% endif %}
+
+            <!-- Add Complaint -->
+            {% if show_complain_form %}
+                <div id="div-add-complaint">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>{% trans "Disclaimer" %}</strong><br/>
+                        <p>
+                        {% blocktrans %}
+                            You see this Message, because you participated in this Event.<br/>
+                            Let us know, if there's something to complain about it.
+                        {% endblocktrans %}
+                        </p>
+                    </div>
+
+                    <a class="btn btn-danger add-complaint" href="#"><i class="bi bi-info-circle"></i> {% trans "Complain" %}</a>
+                </div>
+            {% endif %}
+        {% endif %}
+    {% endif %}
+{% else %}
+    <div>
+        <span class="label label-warning">{% trans "Login required" %}</span><br/>
+        {% trans "You must have a User Account to participate in this Event." %}
+    </div>
+{% endif %}
+{% endcomment %}

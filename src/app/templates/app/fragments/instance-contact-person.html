@@ -1,0 +1,71 @@
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<instance>
+{% endcomment %}
+
+<div class="alert alert-warning mb-md-3" role="alert">
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
+</div>
+
+{% if request.user.is_authenticated %}
+    {% if not instance.is_alt_person %}
+        <div align="center">
+            <a href="{% url 'profile-view' instance.author_id %}">
+            {% if instance.author.profile.avatar %}
+                {% generateimage "common:thumbnail" source=instance.author.profile.avatar -- alt=instance.author.profile.auth_name %}
+            {% else %}
+                <img src="{{ STATIC_URL }}img/no-avatar.png" height="100" width="100" alt="Contact Person - 2Remember Platform." />
+            {% endif %}
+
+                <h5>
+                    {{ instance.author.get_full_name }}
+
+                {% if instance.author.profile.get_rating_avg > 0 %}
+                    <div class="" style="color:orange;">
+                        <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ instance.author.profile.get_rating_avg }}" />
+                    </div>
+                {% endif %}
+                </h5>
+            </a>
+        </div>
+
+        <div>
+            <a href="mailto:{{ instance.author.email}}">{{ instance.author.email }}</a><br/>
+            {% if instance.author.profile.phone_number.phone_number or instance.author.profile.phone_number.mobile_phone_number %}
+                {% if instance.author.profile.phone_number.phone_number %}
+                    <i class="bi bi-phone"></i>
+                    {{ instance.author.profile.phone_number.phone_number }}
+                    {% if instance.author.profile.phone_number.phone_number_ext %} ({% trans "ext." %} {{ instance.author.profile.phone_number.phone_number_ext }}){% endif %}
+                    <br/>
+                {% endif %}
+
+                {% if instance.author.profile.phone_number.mobile_phone_number %}
+                    <i class="bi bi-mobile-phone"></i>
+                    {{ instance.author.profile.phone_number.mobile_phone_number }}
+                    {% if instance.author.profile.phone_number.mobile_phone_number_ext %} ({% trans "ext." %} {{ instance.author.profile.phone_number.mobile_phone_number_ext }}){% endif %}
+                    <br/>
+                {% endif %}
+            {% endif %}
+        </div>
+    {% else %}
+        <div>
+            <strong>{{ instance.alt_person_fullname }}</strong><br/>
+            <a href="mailto:{{ instance.alt_person_email }}">{{ instance.alt_person_email }}</a><br/>
+        {% if instance.alt_person_phone %}
+            <i class="bi bi-phone"></i>
+            {{ instance.alt_person_phone }}
+            <br/>
+        {% endif %}
+        </div>
+    {% endif %}
+{% else %}
+    <div class="alert alert-warning" role="alert">
+        <strong>{% trans "Information hidden" %}</strong><br/>
+        <p>{% trans "Log in to see the Phone # and Email Address of the Contact Person." %}</p>
+    </div>
+{% endif %}

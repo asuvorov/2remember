@@ -1,0 +1,271 @@
+{% extends "organizations/organization-details-base.html" %}
+
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organization>
+{% endcomment %}
+
+{% block extra_meta %}
+{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-details' organization.slug %}">{{ organization.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Staff" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-warning mb-md-3" role="alert">
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Page is under Construction." %}</p>
+</div>
+
+<div id="organization-staff" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-12">
+            <h4 class="hidden-xs">{% trans "Organization's Staff Members" %}</h4>
+
+           <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "Staff Members can create Events on behalf of this Organization." %}
+            </div>
+
+        {% if is_staff_member %}
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "You can use the Search Form below to find and invite 2Remember Members to become the Staff Members of the Organization." %}
+            </div>
+
+            <form id="invite-org-staff-form" action="" method="POST">
+                {% csrf_token %}
+
+                <input id="hidden-invitee-id" type="hidden" />
+
+                <div class="form-inline">
+                    <label for="invite-staff-members-list">{% trans "Find and invite" %}: </label>
+                    <input id="invite-staff-members-list" class="form-control autocomplete" placeholder="Start typing a Name..." type="text" onclick="$(this).select();">
+                    <button class="btn btn-primary invite-org-staff"><i class="bi bi-plus-circle"></i>&nbsp;{% trans "Invite" %}</button>
+                </div>
+            </form>
+        {% endif %}
+
+        {% if organization.organization_staff_members.count > 0 %}
+            <table id="sortable" class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>{% trans "Avatar" %}</th>
+                        <th>{% trans "Info" %}</th>
+                        <th>{% trans "Actions" %}</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                {% for instance in organization.organization_staff_members.all %}
+                    <tr>
+                        <td>
+                            <i class="bi bi-justify drag" member-id="{{ instance.id }}"></i>
+                        </td>
+
+                        <td>
+                        {% with instance.member.profile as profile %}
+                            <a href="{% url 'profile-view' instance.member.id %}">
+                            {% if profile.avatar %}
+                                {% generateimage "common:thumbnail" source=profile.avatar -- alt=profile.auth_name %}
+                            {% else %}
+                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="100" width="100" alt="" />
+                            {% endif %}
+                            </a>
+                        {% endwith %}
+                        </td>
+
+                        <td>
+                            <h4>
+                                <a href="{% url 'profile-view' instance.member.id %}">{{ instance.member.get_full_name }}</a>
+                            </h4>
+                            <strong id="position">{{ instance.position|default:"N/A" }}</strong>
+                            <blockquote>
+                                <p id="bio">{{ instance.bio|default:"N/A" }}</p>
+                            </blockquote>
+                        </td>
+
+                        <td>
+                            <a class="edit txt-warning" member-id="{{ instance.id }}" href="#" title="Edit"><i class="bi bi-pen" ></i></a>
+                        {% if instance.member != request.user %}
+                            <a class="remove txt-danger" member-id="{{ instance.id }}" href="#" title="Remove"><i class="bi bi-dash-circle"></i></a>
+                        {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>
+                <span class="label label-info">{% trans "This Organization has no Staff Members at the Moment." %}</span>
+            </p>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+{% if is_staff_member %}
+    {% include "invites/modals/invite-to-organization-staff-popup-modal.html" %}
+
+    {% include "organizations/modals/organization-staff-member-edit-modal.html" %}
+    {% include "organizations/modals/organization-staff-member-remove-modal.html" %}
+{% endif %}
+
+<!-- Scripts -->
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+
+    /*************************************************************************/
+    /*** Autocomplete                                                      ***/
+    /*************************************************************************/
+    $(function () {
+        $("#invite-staff-members-list").autocomplete({
+            source:     "{% url 'autocomplete-member-list' %}",
+            minLength:  3,
+            delay:      500,
+            select:     function (event, ui) {
+                console.log(">>> ID    :", ui.item.id);
+                console.log(">>> UUID  :", ui.item.uuid);
+                console.log(">>> LABEL :", ui.item.label);
+                console.log(">>> VALUE :", ui.item.value);
+
+                $("#hidden-invitee-id").val(ui.item.uuid);
+            }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a><img src='" + item.avatar + "' width='30' height='30' /> " + item.label + "<br></a>")
+                .appendTo(ul);
+        };
+    });
+
+    /*************************************************************************/
+    /*** Invite to Organization Staff                                      ***/
+    /*************************************************************************/
+    $(".invite-org-staff").click(function () {
+        var organization_id = {{ organization.id }};
+        var invitee_id = $("#hidden-invitee-id").val();
+
+        $("#invite-to-organization-staff-modal-form").find("input[name='organization_id']").val(organization_id);
+        $("#invite-to-organization-staff-modal-form").find("input[name='invitee_id']").val(invitee_id);
+        $("#inviteToOrganizationStaffPopupModal").modal("show");
+
+        return false;
+    })
+
+    /*************************************************************************/
+    /*** Edit Organization Staff Member                                    ***/
+    /*************************************************************************/
+    $(".edit").click(function () {
+        // --------------------------------------------------------------------
+        // --- `element` is global Variable, don't redefine it with `var`.
+        element = $(this);
+
+        var member_id = $(this).attr("member-id");
+
+        $("#organization-staff-member-edit-modal-form").find("input[name='organization_id']").val({{ organization.id }});
+        $("#organization-staff-member-edit-modal-form").find("input[name='member_id']").val(member_id);
+        $("#organization-staff-member-edit-modal-form").find("input[name='position']").val($(element).parent().parent().find("#position").text());
+        $("#organization-staff-member-edit-modal-form").find("textarea[name='bio']").val($(element).parent().parent().find("#bio").text());
+        $("#organizationStaffMemberEditPopupModal").modal("show");
+    })
+
+    /*************************************************************************/
+    /*** Remove Organization Staff Member                                  ***/
+    /*************************************************************************/
+    $(".remove").click(function () {
+        // --------------------------------------------------------------------
+        // --- `element` is global Variable, don't redefine it with `var`.
+        element = $(this);
+
+        var member_id = $(this).attr("member-id");
+
+        $("#organization-staff-member-remove-modal-form").find("input[name='organization_id']").val({{ organization.id }});
+        $("#organization-staff-member-remove-modal-form").find("input[name='member_id']").val(member_id);
+        $("#organizationStaffMemberRemovePopupModal").modal("show");
+    })
+
+    $(document).ready(function() {
+        /*********************************************************************/
+        /*** Sortable Staff Member's List                                  ***/
+        /*********************************************************************/
+        $("#sortable").sortable({
+            handle:         $(this).find("tbody .drag"),
+            items:          "tbody tr",
+            axis:           "y",
+            scroll:         true,
+            cursor:         "ns-resize",
+            containment:    $(this).find("tbody"),
+            update: function(event, ui) {
+                console.log("INSIDE: `update`");
+
+                var order = [];
+
+                $("#sortable i.drag").each(function(index) {
+                    console.log(">>> INDEX ", index);
+
+                    order.push({
+                        "member_id":    $(this).attr("member-id"),
+                        "order":        index,
+                    })
+                });
+
+                console.log(">>> ORDER >>> ", order);
+
+                $.post("{% url 'api-organization-staff-member-order' organization.id %}", {
+                    "staff_member_order":       JSON.stringify(order),
+                }).done(function (data) {
+                    console.log("Success");
+                    console.log("Data :", data);
+
+                    new Noty({
+                        type:   "info",
+                        text:   data.message
+                    }).show();
+                }).fail(function (data) {
+                    console.log("Fail");
+                    console.log("Data :", data);
+
+                    try {
+                        new Noty({
+                            type:   "error",
+                            text:   data.responseJSON.message
+                        }).show();
+                    } catch (err) {
+                        new Noty({
+                            type:   "error",
+                            text:   "Failed to change the Order."
+                        }).show();
+                    };
+                });
+            }
+        })
+    })
+</script>
+{% endblock %}

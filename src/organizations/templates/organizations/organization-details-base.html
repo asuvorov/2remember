@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "Organization" %} "{{ organization.name }}" - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}
+{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ organization.title }}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block header %}
+{% comment %}
+<div class="container">
+    <header class="d-flex justify-content-center pb-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'organization-details' organization.slug %}" class="nav-link active" aria-current="page">{% trans "Information" %}</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'organization-staff' organization.slug %}" class="nav-link">
+                    {% trans "Staff" %}
+                    {#<span><i class="bi bi-info-circle txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Staff Members can create Events on behalf of this Organization." %}'></i></span>#}
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'organization-groups' organization.slug %}" class="nav-link">
+                    {% trans "Groups" %}
+                    {#<span><i class="bi bi-info-circle txt-info pull-right hidden-sm hidden-md hidden-lg" data-toggle="tooltip" data-placement="top" title='{% trans "Here you can create the Organization Groups and invite 2Remember Members to them." %}'></i></span>#}
+                </a>
+            </li>
+        </ul>
+    </header>
+</div>
+{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=organization %}
+{% endblock %}

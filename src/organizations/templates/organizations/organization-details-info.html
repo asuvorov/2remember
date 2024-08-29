@@ -1,0 +1,276 @@
+{% extends "organizations/organization-details-base.html" %}
+
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organization>
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block content %}
+{% cache 60 organization-info organization.slug LANGUAGE_CODE %}
+<div id="organization-info" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START ORGANIZATION CARD -->
+            <section id="organization-card">
+                <div class="card mb-3 shadow bg-body rounded">
+                    <div class="row g-0">
+                        <div class="col-md-4 col-lg-3">
+                        {% if organization.preview %}
+                            {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.title class='img-fluid' %}
+                        {% else %}
+                        {% endif %}
+
+                        {% if organization.get_rating_avg > 0 %}
+                            {% include "common/fragments/rating-card-hor.html" with instance=organization %}
+                        {% endif %}
+                        </div>
+
+                        <div class="col-md-8 col-lg-9">
+                            <div class="card-header bg-transparent">
+                                <h5 class="card-title mb-0">
+                                    {{ organization.title }}
+
+                                {% if organization.get_rating_avg > 0 %}
+                                    <div class="" style="color:orange;">
+                                        <input id="id_organization_rating" name="organization_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ organization.get_rating_avg }}" />
+                                    </div>
+                                {% endif %}
+                                </h5>
+                            </div>
+
+                            <div class="card-body">
+                                <blockquote class="readmore"><small class="text-muted">{{ organization.description|striptags|escape|default:"N/A"  }}</small></blockquote>
+
+                                <hr>
+
+                                <p class="card-text">
+                                    <i class="bi bi-pin-map"></i>
+                                {% if organization.addressless %}
+                                    <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+                                {% else %}
+                                    {{ organization.address.full_address|default:"N/A" }}
+                                    <a href="#" data-bs-toggle="modal" data-bs-target="#instanceViewOnMapPopupModal" tabindex="-1">({% trans "View on Map" %})</a>
+                                    {% if organization.address.notes %}
+                                        <p class="card-text"><small class="text-muted">{{ organization.addressnotes|striptags|escape }}</small></p>
+                                    {% endif %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <!-- PHONE NUMBERS -->
+                                {% if phone_numbers %}
+                                    {% for phone_number in phone_numbers %}
+                                        <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
+                                    {% if not forloop.last %}
+                                        <span class="vert-delimiter">|</span>
+                                    {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+
+                                    <br/>
+
+                                    <i class="bi bi-envelope"></i>{% if organization.email %}<a href="mailto:{{ organization.email }}">{{ organization.email }}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <span class="vert-delimiter">|</span>
+                                    <i class="bi bi-link"></i>{% if organization.website %}<a href="{{ organization.website }}">{% trans "Website" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+                                    <span class="vert-delimiter">|</span>
+                                    <i class="bi bi-film"></i>{% if organization.video %}<a href="{{ organization.video }}">{% trans "Video" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
+
+                                    <br/>
+
+                                {% if organization.tags.all and organization.hashtag %}
+                                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                                    <span class="vert-delimiter">|</span>
+                                    <i class="bi bi-hash"></i>{{ organization.hashtag }}
+                                {% elif organization.tags.all %}
+                                    <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                                {% elif organization.hashtag %}
+                                    <i class="bi bi-hash"></i>{{ organization.hashtag }}>
+                                {% endif %}
+                                </p>
+
+                            {% if organization.author.profile.avatar %}
+                                {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                            {% else %}
+                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                            {% endif %}
+                                <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
+                                {{ organization.created|timesince }} {% trans "ago" %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-0">
+                        <div class="col-12">
+                            <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                                <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                                    <small class="text-muted">
+                                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
+                                        <span class="vert-delimiter">|</span>
+                                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}<br/>
+                                        {% trans "Last updated" %} {{ organization.modified|timesince }} {% trans "ago" %}
+                                    </small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!--  END  ORGANIZATION CARD -->
+
+            <!-- START ORGANIZATION ATTACHMENTS -->
+            <section id="organization-attachments">
+                {% include "app/fragments/instance-attachments.html" with instance=organization %}
+            </section>
+            <!--  END  ORGANIZATION ATTACHMENTS -->
+
+            <!-- START ORGANIZATION COMMENTS -->
+            <section id="organization-comments">
+                {% include "app/fragments/instance-comments.html" with instance=organization %}
+            </section>
+            <!--  END  ORGANIZATION COMMENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+        {% if request.user.is_authenticated %}
+            <section>
+                {% include "organizations/fragments/organization-media-status-breakdown.html" %}
+            </section>
+        {% endif %}
+
+            <!-- Link to Page -->
+            <section>
+                <h4>{% trans "Link to this Page" %}</h4>
+                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+            </section>
+
+            <!-- Social Links -->
+        {# if social_links #}
+            <section>
+                <h4>{% trans "Social Links" %}</h4>
+                {% include "app/fragments/social-links.html" %}
+            </section>
+        {# endif #}
+
+            <!-- Share Links -->
+            <section>
+                <h4>{% trans "Share" %}</h4>
+                {% include "app/fragments/share-on-social.html" %}
+            </section>
+
+            <!-- Twitter Feed -->
+        {# if twitter_acc #}
+            <section>
+                <h4>{% trans "Twitter Feed" %}</h4>
+                {% include "app/fragments/instance-twitter-feed.html" %}
+            </section>
+        {# endif #}
+
+            <!-- Contact Person -->
+        {% comment %}
+            <section>
+                <h4>{% trans "Contact Person" %}</h4>
+                {% include "app/fragments/instance-contact-person.html" with instance=organization%}
+            </section>
+        {% endcomment %}
+
+            <!-- Subscribers -->
+            <section>
+                <h4>{% trans "Subscribers" %}</h4>
+                {% include "app/fragments/instance-subscribers.html" with instance=organization %}
+            </section>
+
+            <!-- Widgets -->
+            <section>
+                <h4>{% trans "Widgets" %}</h4>
+                {% include "app/fragments/instance-widgets.html" with instance=organization %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endcache %}
+
+<!-- Modals -->
+
+{% include "app/modals/instance-view-on-map-modal.html" with instance=organization %}
+
+{% if request.user.is_authenticated %}
+    {% include "app/modals/comment-add-modal.html" %}
+    {% include "app/modals/complaint-add-modal.html" %}
+{% endif %}
+
+<!-- Scripts -->
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+
+    /*************************************************************************/
+    /*** Subscribe                                                         ***/
+    /*************************************************************************/
+    $(".subscribe").click(function (event) {
+        element = $(this);
+
+        var organization_id = "{{ organization.id }}";
+        var event = window.event || event;
+        event.preventDefault();
+
+        $.post("{% url 'api-organization-subscribe' 0 %}".replace("0", organization_id), {
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $(element).hide("slow");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+        }).fail(function (data) {
+            console.log("Fail");
+            console.log("Data :", data);
+
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to subscribe to the Organization."
+                }).show();
+            };
+        });
+
+        return true;
+    });
+
+    /*************************************************************************/
+    /*** Add Complaint                                                     ***/
+    /*************************************************************************/
+    $(".add-complaint").click(function (event) {
+        element = $(this);
+
+        var event = window.event || event;
+        event.preventDefault();
+
+        $("#complaintAddPopupModal").modal("show");
+    })
+
+    $(document).ready(function () {
+        $("#comment-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+        $("#complaint-add-modal-form").find("input[name='organization_id']").val("{{ organization.id }}");
+    });
+</script>
+{% endblock %}

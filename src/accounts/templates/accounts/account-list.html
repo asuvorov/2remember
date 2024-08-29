@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<accounts> - List of Accounts
+{% endcomment %}
+
+{% block title %}{% trans "Members List" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Members" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="organization-list" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <h3>{{ page_title }}</h3>
+
+            <!-- START CONTROLLERS -->
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <!--  END  FILTER FORM -->
+
+            <!-- START EVENTS -->
+            <section class="position-relative">
+                {% include "accounts/fragments/account-list.html" %}
+            </section>
+            <!--  END  EVENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Spotlight -->
+            <section id="spotlight">
+                <h4>{% trans "Spotlight" %}</h4>
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+{% endblock %}

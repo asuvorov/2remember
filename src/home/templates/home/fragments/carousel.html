@@ -1,0 +1,59 @@
+{% load cache %}
+{% load i18n %}
+{% load static %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 3600 carousel LANGUAGE_CODE %}
+<div id="my-carousel" class="carousel carousel-fade slide mb-6" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+
+    <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="5000">
+            <img src="{{ STATIC_URL }}img/DSC02177.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1>{% trans "Share With Ease" %}</h1>
+                    <p class="lead">{% trans "Join and share your Memories Hassle-Free" %}</p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'signup' %}">{% trans "Sign up Today" %}</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="{{ STATIC_URL }}img/DSC02160.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
+            <div class="container">
+                <div class="carousel-caption">
+                    <h1>{% trans "Open To Hire" %}</h1>
+                    <p class="lead">{% trans "Meet the Engineer behind this Platform, and help him to help you to sky-rocket your Business" %}</p>
+                    <p><a class="btn btn-lg btn-primary" href="#index-developer-hero">{% trans "Learn more" %}</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item" data-bs-interval="5000">
+            <img src="{{ STATIC_URL }}img/DSC02173.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
+            <div class="container">
+                <div class="carousel-caption text-end">
+                    <h1>{% trans "Like what you see?" %}</h1>
+                    <p class="lead">{% trans "Find out more about the magical Place, called Zzyzx Road" %}</p>
+                    <p><a class="btn btn-lg btn-primary" href="{% url 'event-details' 'zzyzx-road' %}">{% trans "Browse Gallery" %}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <button class="carousel-control-prev" type="button" data-bs-target="#my-carousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">{% trans "Previous" %}</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#my-carousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">{% trans "Next" %}</span>
+    </button>
+</div>
+{% endcache %}

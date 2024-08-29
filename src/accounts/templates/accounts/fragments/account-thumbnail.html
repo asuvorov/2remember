@@ -1,0 +1,64 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+{% load accounttags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<account>
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
+{% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
+
+{% sum_of_hours_spent_tag account as sum_of_hours_spent %}
+
+{% cache 60 account-thumbnail account.user.id LANGUAGE_CODE %}
+<div class="account-thumbnail card mb-3 shadow bg-body rounded" >
+{% with account.profile as profile %}
+    <a href="{% url 'profile-view' account.id %}">
+    {% if profile.avatar %}
+        {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid' %}
+    {% else %}
+        <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+    {% endif %}
+    </a>
+
+    <div class="card-body">
+        <a href="{% url 'profile-view' account.id %}">
+            <h5 class="card-title">
+                {{ profile.auth_name }}
+
+            {% if profile.get_rating_avg > 0 %}
+                <div class="pull-right" style="color:orange; position:absolute; top:0; left:0;">
+                    <input id="id_profile_rating" name="profile_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ profile.get_rating_avg }}" />
+                </div>
+            {% endif %}
+            </h5>
+        </a>
+
+        <p class="card-text">
+            <i class="bi bi-pin-map"></i>
+        {% if profile.addressless %}
+            <span class="badge text-bg-warning">{% trans "Location is not provided" %}</span>
+        {% else %}
+            {{ profile.address.short_address }}
+        {% endif %}
+        </p>
+    </div>
+
+    <div class="card-footer bg-transparent">
+        <p class="card-text">
+            <small class="text-muted">
+                <i class="bi bi-eye"></i>{{ profile.get_views_count }}<br/>
+                {% trans "Last updated" %} {{ profile.modified|timesince }} {% trans "ago" %}
+            </small>
+        </p>
+    </div>
+{% endwith %}
+</div>
+{% endcache %}

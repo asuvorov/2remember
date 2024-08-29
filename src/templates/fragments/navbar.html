@@ -1,0 +1,107 @@
+{% load i18n %}
+{% load static %}
+{% load imagekit %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark bg-body-tertiary">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="{% url 'index' %}">2Remember</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <!-- START HEADER NAVIGATION -->
+            <ul class="nav navbar-nav me-auto col-12 col-lg-auto me-lg-auto mb-2 mb-md-0 justify-content-center">
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'10' == '/accounts/' %} active{% endif %}" href="{% url 'account-list' %}">{% trans "Members" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'12' == '/events/' %} active{% endif %}" href="{% url 'event-list' %}">{% trans "Events" %}</a>
+                </li>
+                <li class="nav-item {% if request.path|slice:'15' == '/places/' %} active {% endif %}">
+                    <a class="nav-link disabled" href="#" aria-disabled="true">{% trans "Places" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'15' == '/organizations/' %} active{% endif %}" href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'15' == '/blog/' %} active{% endif %}" href="{% url 'post-list' %}">{% trans "Blog" %}</a>
+                </li>
+
+            {% comment %}
+                <form id="locale" class="d-flex" action="{% url 'set_language' %}" method="POST">
+                    {% csrf_token %}
+
+                    <select name="language" class="form-select form-select-sm" onchange="document.forms['locale'].submit();">
+                    {% for lang in LANGUAGES %}
+                        {% if lang.0 == LANGUAGE_CODE %}
+                            <option value="{{ lang.0 }}" selected>{{ lang.1 }}</option>
+                        {% else %}
+                            <option value="{{ lang.0 }}">{{ lang.1 }}</option>
+                        {% endif %}
+                    {% endfor %}
+                    </select>
+                    <input type="submit" class="btn-primary" value="change" style="display:none;" />
+                </form>
+            {% endcomment %}
+
+                <li>
+                    <form action="https://www.paypal.com/donate" method="post" target="_top">
+                        <input type="hidden" name="business" value="LGZD2EA4KZYAG" />
+                        <input type="hidden" name="no_recurring" value="0" />
+                        <input type="hidden" name="item_name" value="Thank you for your Support. Your Donation makes a Difference!" />
+                        <input type="hidden" name="currency_code" value="USD" />
+                        <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+                        <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+                    </form>
+                </li>
+            </ul>
+            <!--  END  HEADER NAVIGATION -->
+
+            <!-- START TOP SEARCH -->
+            <form action="/search/" method="GET" class="d-flex col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+
+                    <input type="hidden" name="models" value="blog.post" id="id_models_0">
+                    <input type="hidden" name="models" value="events.event" id="id_models_1">
+                    <input type="hidden" name="models" value="home.faq" id="id_models_5">
+                    <input type="hidden" name="models" value="organizations.organization" id="id_models_6">
+                    <input type="hidden" name="models" value="accounts.userprofile" id="id_models_7">
+
+                    <input name="q" type="text" class="form-control" placeholder="Search">
+
+                    <span class="input-group-text close-search"><i class="bi bi-x-lg"></i></span>
+                </div>
+            </form>
+            <!--  END TOP SEARCH -->
+
+            <!-- START AUTHENTICATION -->
+            <div class="btn-group text-end">
+            {% if user.is_authenticated %}
+                <a class="nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                {% if request.user.profile.avatar %}
+                    {% generateimage "header:thumbnail" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='rounded-circle' %}
+                {% else %}
+                    <img class="rounded-circle" src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                {% endif %}
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-view' %}"><i class="bi bi-person-circle"></i> {{ request.user.profile.auth_name }}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signout' %}"><i class="bi bi-door-open"></i> {% trans "Sign out" %}</a></li>
+                </ul>
+            {% else %}
+                <a class="nav-link d-block link-body-emphasis text-decoration-none dropdown-toggle" href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false">
+                    <img class="rounded-circle" src="{{ STATIC_URL }}img/default.png" height="30" width="30" alt="" />
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signup' %}"><i class="bi bi-person-plus"></i> {% trans "Sign up" %}</a></li>
+                    <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'signin' %}"><i class="bi bi-unlock"></i> {% trans "Log in" %}</a></li>
+                </ul>
+            {% endif %}
+            </div>
+            <!--  END  AUTHENTICATION -->
+        </div>
+    </div>
+</nav>

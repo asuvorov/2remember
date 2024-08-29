@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user }}!
+
+The Event "{{ event.title }}", was successfully created, and you were added as contact Person to it.
+
+Link to the Event Details Page: {{ event_link }}
+
+Also, you can find Link to this Event on your Profile Page.
+
+Thank you, 2Remember Team.

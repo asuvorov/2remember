@@ -1,0 +1,35 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+<div class="btn-group w-100 mb-2" role="group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        {% trans "Profile Settings" %}
+    </button>
+    <ul class="dropdown-menu">
+        <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-edit' %}"><i class="bi bi-pen"></i> {% trans "Edit Profile" %}</a></li>
+        <!-- <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'my-profile-privacy' %}"><i class="bi bi-key"></i> {% trans "Privacy Settings" %}</a></li> -->
+        <li><a class="dropdown-item d-flex gap-2 align-items-center" href="{% url 'password-reset' %}"><i class="bi bi-lock"></i> {% trans "Change Password" %}</a></li>
+        <li><hr class="dropdown-divider"></li>
+        <li><a class="dropdown-item dropdown-item-danger d-flex gap-2 align-items-center" href="{% url 'my-profile-delete' %}"><i class="bi bi-trash"></i> {% trans "Delete Profile" %}</a></li>
+    </ul>
+</div>
+
+<a class="btn btn-primary w-100 mb-2 {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="bi bi-wrench"></i> {% trans "Create Event" %}</a>
+<a class="btn btn-primary w-100 {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="bi bi-building-o"></i> {% trans "Create Organization" %}</a>
+
+<hr>
+
+<p>
+{% if request.user.is_staff %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Staff
+    <br/>
+{% if request.user.profile.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+    <br/>
+{% if request.user.profile.receive_newsletters %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Receive Newsletters
+</p>

@@ -1,0 +1,391 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Organization Form
+        :<aform>          - Address Form
+        :<formset_phone>  - Phone Numbers Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "Edit Organization" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-details' slug=organization.slug %}">{{ organization.title }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="organization-edit" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="edit-organization-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- START ORGANIZATION APPEARENCE -->
+                <section id="organization-appearance">
+                    <div class="card mb-3 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <div id="prerunner">
+                                {% if organization.preview %}
+                                    {% generateimage "common:medium_fill" source=organization.preview -- alt=organization.preview.title class='img-fluid rounded-start' %}
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h3>{% trans "Appearance" %}</h3>
+
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION APPEARENCE -->
+
+                <!-- START ORGANIZATION DESCRIPTION -->
+                <section id="organization-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label class="control-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}
+                            <label class="control-label">{{ form.description.label }}{% if form.description.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <label class="control-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label class="control-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-4 {% if form.website.errors %}has-error{% endif %}">
+                            {{ form.website }}
+                            <label class="control-label">{{ form.website.label }}{% if form.website.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.website.errors %}{% for error in form.website.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.video.errors %}has-error{% endif %}">
+                            {{ form.video }}
+                            <label class="control-label">{{ form.video.label }}{% if form.video.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.video.errors %}{% for error in form.video.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.email.errors %}has-error{% endif %}">
+                            {{ form.email }}
+                            <label class="control-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                    {% comment %}
+                        <div class="checkbox checkbox-primary">
+                            {{ form.is_hidden }}
+                            {{ form.is_hidden.label_tag }}
+                        {% if form.is_hidden.help_text %}
+                            <p class="help">{{ form.is_hidden.help_text|safe }}</p>
+                        {% endif %}
+                        </div>
+                    {% endcomment %}
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION DESCRIPTION -->
+
+                <hr>
+
+                <!-- START ORGANIZATION LOCATION -->
+                <section id="organization-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  ORGANIZATION LOCATION -->
+
+                <hr>
+
+                <!-- START ORGANIZATION PHONE NUMBERS -->
+                <section id="organization-phones">
+                    <h3>{% trans "Phone Numbers" %}</h3>
+                    {% include "app/fragments/formset-phone.html" %}
+                </section>
+                <!--  END  ORGANIZATION PHONE NUMBERS -->
+
+                <hr>
+
+                <!-- START ORGANIZATION CONTACT PERSON -->
+            {% comment %}
+                <section id="organization-contact-person">
+                    <h3>{% trans "Contact Person" %}</h3>
+                    {% include "app/fragments/contact-person.html" %}
+                </section>
+                <!--  END  ORGANIZATION CONTACT PERSON -->
+
+                <hr>
+            {% endcomment %}
+
+                <!-- START ORGANIZATION SOCIAL LINKS -->
+                <section id="organization-social-links">
+                    <h3>{% trans "Social Links" %}</h3>
+                    {% include "app/fragments/formset-social.html" %}
+                </section>
+                <!--  END  ORGANIZATION SOCIAL LINKS -->
+
+                <hr>
+
+                <!-- START ORGANIZATION ATTACHMENTS -->
+                <section id="organization-attachments">
+                    <h3>
+                        {% trans "Attachments" %}
+                        <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
+                    </h3>
+
+                    <div style="display:none;">
+                        <div id="tmp_files">
+                            {{ form.tmp_files }}
+                        </div>
+                        <div id="tmp_images_path">
+                            {{ form.tmp_images_path }}
+                        </div>
+                        <div id="tmp_links">
+                            {{ form.tmp_links }}
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-camera"></i>
+                        <span id="total_images" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-paperclip"></i>
+                        <span id="total_documents" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal" style="margin-right:15px;">
+                        <i class="bi bi-link"></i>
+                        <span id="total_links" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+                    </button>
+
+                    <div id="collapse-attachments" class="collapse">
+                        <hr>
+                        <h4>{% trans "Images" %}</h4>
+                        <div class="gallery">
+                        {% for img in organization.get_image_list.all %}
+                            <div class="gallery-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
+                                <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Documents" %}</h4>
+                        <div class="gallery">
+                        {% for doc in organization.get_document_list.all %}
+                            <div class="documents-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
+                                <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Links" %}</h4>
+                        <div class="gallery">
+                        {% for url in organization.get_url_list.all %}
+                            <div class="links-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
+                                <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+
+                        <hr>
+                        <h4>{% trans "Video Links" %}</h4>
+                        <div class="gallery">
+                        {% for video_url in organization.get_video_url_list.all %}
+                            <div class="video-links-container">
+                                <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
+                                <a href="{{ video_url.url }}">{{ video_url.url }}</a>
+                                {% if not forloop.last %}<br />{% endif %}
+                            </div>
+                        {% empty %}
+                        {% endfor %}
+                        </div>
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION ATTACHMENTS -->
+
+                <hr>
+
+                <!-- START ORGANIZATION COMPLETE -->
+                <section id="organization-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+                    <p>{% trans "You have successfully completed all Steps." %}</p>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="submit" class="organization-edit">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Save Changes" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+            <a class="btn btn-primary w-100 mb-2" name="submit"><i class="bi bi-check-square"></i>&nbsp;{% trans "Save Changes" %}</a>
+            <a class="btn btn-danger  w-100 mb-2" name="submit"><i class="bi bi-radioactive"></i>&nbsp;{% trans "Delete Organization" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Injects -->
+
+{% include "app/injects/upload.html" %}
+
+<!-- Modals -->
+
+{% include "app/modals/attach-image-modal.html" %}
+{% include "app/modals/attach-doc-modal.html" %}
+{% include "app/modals/attach-url-modal.html" %}
+
+<!-- Script -->
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+        $("form#edit-organization-form").submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in aform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in nform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for form in formset_social.forms %}
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        new Noty({
+                            text: "Social Link : {{ field.label }}: {{ error }}"
+                        }).show();
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        /*********************************************************************/
+        /*** Contact Person UX                                             ***/
+        /*********************************************************************/
+        $("#alt_person_creds").hide();
+
+        selected = $("input[type='radio']:checked");
+
+        if (selected.val() == "he") {
+            $("#alt_person_creds").show("slow");
+        }
+
+        $("#id_contact_0").click(function () {
+            $("#alt_person_creds").hide("slow");
+        });
+
+        $("#id_contact_1").click(function () {
+            $("#alt_person_creds").show("slow");
+        })
+    });
+</script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=organization %}
+{% endblock %}
