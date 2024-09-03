@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% load cache %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "Open to Hire" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Open to Hire" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+{% cache 3600 resume LANGUAGE_CODE %}
+<div id="resume" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-12">
+            <div class="alert alert-info mb-md-3" role="alert">
+                <figure class="text-center">
+                    <blockquote class="blockquote">
+                        <p>
+                        {% blocktrans %}
+                            The General, who advances without coveting Fame, and retreats without fearing Disgrace;<br/>
+                            whose only Thought is to protect his Country, and do good Service for his Sovereign -<br/>
+                            - is the Jewel of the Kingdom.
+                        {% endblocktrans %}
+                        </p>
+                    </blockquote>
+                    <figcaption class="blockquote-footer">
+                        Sun Tzu <cite title="The Art Of War">"The Art Of War"</cite>
+                    </figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            {% include 'home/fragments/resume-fragment.html' %}
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <h4>{% trans "Contacts" %}</h4>
+
+            <p>
+                <i class="bi bi-phone"></i> +1 (562) 606-6760<br/>
+                <i class="bi bi-mailbox"></i> <a href="mailto:artem.suvorov@gmail.com">artem.suvorov@gmail.com</a>
+            </p>
+
+            <hr>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="https://github.com/asuvorov" class="btn btn-github d-flex gap-2 align-items-center w-50"><i class="bi bi-github"></i> GitHub</a>
+                <a href="https://www.linkedin.com/in/artem-suvorov-810bbb40" class="btn btn-linkedin d-flex gap-2 align-items-center w-50"><i class="bi bi-linkedin"></i> LinkedIn</a>
+            </div>
+
+            <hr>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                <a href="{{ STATIC_URL }}docs/CV_Artem_Suvorov.pdf" target="_blank" class="btn btn-google-plus d-flex gap-2 align-items-center w-100"><i class="bi bi-file-pdf"></i> {% trans "Download as PDF" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endcache %}
+{% endblock %}

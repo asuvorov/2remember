@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Client: {{ from_name|safe }}
+
+Subject: {{ from_subject|safe }}
+
+Message: {{ from_message|safe }}
+
+Reply to: {{ from_email }}
+
+2Remember Automated System.

@@ -1,0 +1,39 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organization>
+        :[is_subscribed]
+        :[show_complain_form]
+{% endcomment %}
+
+{% if organization.author == request.user %}
+    <a class="btn btn-warning w-100 mb-2" href="{% url 'organization-edit' organization.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Organization" %}</a>
+    <a class="btn btn-success w-100 mb-2" href="{% url 'organization-populate-newsletter' organization.slug %}"><i class="bi bi-send"></i>&nbsp;{% trans "Populate Newsletter" %}</a>
+    <a class="btn btn-primary w-100" href="{% url 'event-create' %}?organization={{ organization.id }}"><i class="bi bi-wrench-adjustable-circle"></i>&nbsp;{% trans "Create Event" %}</a>
+{% else %}
+    {% if not is_subscribed %}
+        <a class="btn btn-primary w-100 mb-2 subscribe" href="#"><i class="bi bi-send"></i>&nbsp;{% trans "Subscribe" %}</a>
+    {% endif %}
+
+    <!-- Add Complaint -->
+    {% if show_complain_form %}
+        <div class="alert alert-danger mb-2" role="alert">
+            <strong>{% trans "Disclaimer" %}</strong><br/>
+        {% blocktrans %}
+            Let us know, if there's something to complain about it.
+        {% endblocktrans %}
+        </div>
+
+        <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
+    {% endif %}
+{% endif %}
+
+<hr>
+
+<p>
+{% if organization.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+</p>

@@ -1,0 +1,61 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<event>
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 event-thumbnail-search event.slug LANGUAGE_CODE %}
+<div class="col-xs-24 col-sm-24 col-md-24 col-lg-24" style="margin-bottom:10px;">
+    <div class="event-thumb-search">
+        <div class="row">
+            <div class="hidden-xs col-sm-6 col-md-6 col-lg-6">
+                <div class="thumbnail">
+                    <a href="{% url 'event-details' event.slug %}">
+                    {% if event.avatar %}
+                        {% generateimage "common:medium_fill_wide" source=event.avatar -- alt=event.title %}
+                    {% else %}
+                    {% endif %}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-xs-24 col-sm-18 col-md-18 col-lg-18">
+                <strong>
+                    <p>
+                        Event <a href="{% url 'event-details' event.slug %}">{{ event.title|truncatechars:50 }}</a>
+
+                    {% if event.get_rating_avg > 0 %}
+                        <div style="color:orange;">
+                            <input id="id_event_rating" name="event_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ event.get_rating_avg }}" />
+                        </div>
+                    {% endif %}
+                    </p>
+                </strong>
+
+            {% if event.organization and not event.organization.is_deleted %}
+                <p>
+                    {% trans "posted by" %} <a href="{% url 'organization-details' event.organization.slug %}"> {{ event.organization.name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                </p>
+            {% else %}
+                <p>
+                    {% trans "posted by" %} <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                </p>
+            {% endif %}
+
+                <blockquote>
+                    <p>{{ event.description|striptags|truncatechars:300|default:"N/A" }}</p>
+                </blockquote>
+
+                <div class="learn-more">
+                    <a class="btn btn-warning pull-right" href="{% url 'event-details' event.slug %}" style="width:auto;">{% trans "LEARN MORE" %} <i class="bi bi-chevron-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endcomment %}

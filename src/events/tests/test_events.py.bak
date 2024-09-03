@@ -1,0 +1,3801 @@
+"""
+(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+"""
+
+import datetime
+import json
+import unittest
+import urllib.parse
+
+from django.conf import settings
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.test import (
+    Client,
+    TestCase,
+    LiveServerTestCase)
+from django.urls import reverse
+
+import mock
+import requests as request
+
+from lxml import html
+from rest_framework import status
+from rest_framework.authtoken.models import Token
+from rest_framework.test import (
+    APIRequestFactory,
+    APIClient,
+    APITestCase)
+from termcolor import colored, cprint
+
+from events.choices import (
+    EVENT_STATUS, event_status_choices,
+    EVENT_MODE, application_choices,
+    EVENT_CATEGORY, event_category_choices,
+    EVENT_CATEGORY_COLORS, event_category_colors,
+    EVENT_CATEGORY_ICONS, event_category_icons,
+    PARTICIPATION_REMOVE_MODE,
+    PARTICIPATION_STATUS, participation_status_choices,
+    RECURRENCE, recurrence_choices,
+    MONTH, month_choices,
+    DAY_OF_WEEK, day_of_week_choices,
+    day_of_month_choices)
+from events.forms import (
+    CreateEditEventForm,
+    RoleForm,
+    RoleFormSet)
+from events.models import (
+    Event,
+    Role,
+    Participation)
+from organizations.models import (
+    Organization,
+    OrganizationStaff,
+    OrganizationGroup)
+
+
+api_factory = APIRequestFactory()
+api_client = APIClient()
+client = Client(
+    HTTP_USER_AGENT="Mozilla/5.0",
+    enforce_csrf_checks=True)
+
+
+# =============================================================================
+# ===
+# === MOCKS
+# ===
+# =============================================================================
+
+
+# =============================================================================
+# ===
+# === MODELS
+# ===
+# =============================================================================
+class EventCreateModelTestCase(TestCase):
+
+    """Event create Test Case.
+
+        COVERS:
+                Create Event    (default)
+                                    without Author
+                                    without Name
+                                    without Avatar
+                                    with    Organization
+    """
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_core_addr_acc.json",
+        "test_core_addr_org.json",
+        "test_organizations_private.json",
+        "test_organizations_public.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > MODELS > CREATE", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+
+        # --- Users
+        self.test_user_1 = User.objects.get(id=1)
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_3 = User.objects.get(id=3)
+        self.test_user_4 = User.objects.get(id=4)
+
+        # --- Organizations
+        self.test_private_org_1 = Organization.objects.get(id=31)
+        self.test_private_org_3 = Organization.objects.get(id=33)
+
+        self.test_public_org_2 = Organization.objects.get(id=32)
+        self.test_public_org_4 = Organization.objects.get(id=34)
+
+    def test_event_defaults(self):
+        """Event create. Defaults."""
+        cprint("[---  INFO   ---] Event create. Defaults...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        event = Event.objects.create(
+            author=self.test_user_1,
+            # avatar=,
+            name="Event #1",
+            # description="Description of the Event #1",
+            # slug=,
+            # tags=,
+            # hashtag=,
+            # category=,
+            # status=,
+            # application=,
+            # addressless=,
+            # address=,
+            # duration=,
+            # recurrence=,
+            # month=,
+            # day_of_week=,
+            # day_of_month=,
+            # start_date=,
+            # start_time=,
+            # start_tz=,
+            # start_date_time_tz=,
+            # is_alt_person=,
+            # alt_person_fullname=,
+            # alt_person_email=,
+            # alt_person_phone=,
+            # organization=,
+            # closed_reason=,
+            # is_newly_created=,
+            # allow_reenter=,
+            # accept_automatically=,
+            # acceptance_text=,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            event.author,
+            self.test_user_1,
+            colored("[---  ERROR  ---] Wrong Author", "white", "on_red"))
+
+        self.assertIsNotNone(
+            event.name,
+            colored("[---  ERROR  ---] Wrong Name", "white", "on_red"))
+        self.assertIsNone(
+            event.description,
+            colored("[---  ERROR  ---] Wrong default Value of Description", "white", "on_red"))
+        self.assertIsNotNone(
+            event.slug,
+            colored("[---  ERROR  ---] Wrong Slug", "white", "on_red"))
+
+        """
+        self.assertIsNone(
+            event.tags,
+            colored("[---  ERROR  ---] Wrong default Value of Tags", "white", "on_red"))
+        """
+        self.assertIsNone(
+            event.hashtag,
+            colored("[---  ERROR  ---] Wrong default Value of Hashtag", "white", "on_red"))
+        self.assertIsNone(
+            event.category,
+            colored("[---  ERROR  ---] Wrong default Value of Category", "white", "on_red"))
+
+        self.assertEqual(
+            event.status,
+            EVENT_STATUS.UPCOMING,
+            colored("[---  ERROR  ---] Wrong default Value of Status", "white", "on_red"))
+        self.assertEqual(
+            event.application,
+            EVENT_MODE.FREE_FOR_ALL,
+            colored("[---  ERROR  ---] Wrong default Value of Application", "white", "on_red"))
+
+        self.assertFalse(
+            event.addressless,
+            colored("[---  ERROR  ---] Wrong default Value of Addressless", "white", "on_red"))
+        self.assertIsNone(
+            event.address,
+            colored("[---  ERROR  ---] Wrong default Value of Address", "white", "on_red"))
+
+        self.assertEqual(
+            event.duration,
+            1,
+            colored("[---  ERROR  ---] Wrong default Value of Duration", "white", "on_red"))
+
+        self.assertEqual(
+            event.recurrence,
+            RECURRENCE.ONCE,
+            colored("[---  ERROR  ---] Wrong default Value of Recurrence", "white", "on_red"))
+        self.assertIsNone(
+            event.month,
+            colored("[---  ERROR  ---] Wrong default Value of Month", "white", "on_red"))
+        self.assertIsNone(
+            event.day_of_week,
+            colored("[---  ERROR  ---] Wrong default Value of Day of Week", "white", "on_red"))
+        self.assertIsNone(
+            event.day_of_month,
+            colored("[---  ERROR  ---] Wrong default Value of Day of Month", "white", "on_red"))
+
+        """
+        self.assertIsNone(
+            event.start_date,
+            colored("[---  ERROR  ---] Wrong default Value of Start Date", "white", "on_red"))
+        self.assertIsNone(
+            event.start_time,
+            colored("[---  ERROR  ---] Wrong default Value of Start Time", "white", "on_red"))
+        self.assertEqual(
+            event.start_tz,
+            settings.TIME_ZONE,
+            colored("[---  ERROR  ---] Wrong default Value of Start TZ", "white", "on_red"))
+        self.assertIsNone(
+            event.start_date_time_tz,
+            colored("[---  ERROR  ---] Wrong default Value of Start Date/Time with TZ", "white", "on_red"))
+        """
+
+        self.assertFalse(
+            event.is_alt_person,
+            colored("[---  ERROR  ---] Wrong default Value of Alt Person", "white", "on_red"))
+        self.assertIsNone(
+            event.alt_person_fullname,
+            colored("[---  ERROR  ---] Wrong default Value of Alt Person full Name",
+                    "white", "on_red"))
+        self.assertIsNone(
+            event.alt_person_email,
+            colored("[---  ERROR  ---] Wrong default Value of Alt Person Email", "white", "on_red"))
+        self.assertIsNone(
+            event.alt_person_phone,
+            colored("[---  ERROR  ---] Wrong default Value of Alt Person Phone", "white", "on_red"))
+
+        self.assertIsNone(
+            event.organization,
+            colored("[---  ERROR  ---] Wrong default Value of Organization", "white", "on_red"))
+
+        self.assertIsNone(
+            event.closed_reason,
+            colored("[---  ERROR  ---] Wrong default Value of closed Reason", "white", "on_red"))
+
+        self.assertTrue(
+            event.is_newly_created,
+            colored("[---  ERROR  ---] Wrong default Value of newly created", "white", "on_red"))
+
+        self.assertTrue(
+            event.allow_reenter,
+            colored("[---  ERROR  ---] Wrong default Value of allow Reenter", "white", "on_red"))
+
+        self.assertFalse(
+            event.accept_automatically,
+            colored("[---  ERROR  ---] Wrong default Value of accept automatically",
+                    "white", "on_red"))
+        self.assertIsNone(
+            event.acceptance_text,
+            colored("[---  ERROR  ---] Wrong default Value of Acceptance Text", "white", "on_red"))
+
+    def test_event_wo_author(self):
+        """Event create. Without Author."""
+        cprint("[---  INFO   ---] Event create. Without Author...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        with self.assertRaises(IntegrityError):
+            Event.objects.create(
+                # author=self.test_user_1,
+                # avatar=,
+                name="Event #1",
+                )
+
+    @unittest.skip("Skip the Test")
+    def test_event_wo_name(self):
+        """Event create. Without Name."""
+        cprint("[---  INFO   ---] Event create. Without Name...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        with self.assertRaises(IntegrityError):
+            Event.objects.create(
+                author=self.test_user_1,
+                # avatar=,
+                # name="Event #1",
+                )
+
+    @unittest.skip("Skip the Test")
+    def test_event_wo_avatar(self):
+        """Event create. Without Avatar."""
+        cprint("[---  INFO   ---] Event create. Without Avatar...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        with self.assertRaises(IntegrityError):
+            Event.objects.create(
+                author=self.test_user_1,
+                # avatar=,
+                name="Event #1",
+                )
+
+    def test_event_w_organization(self):
+        """Event create. With Organization."""
+        cprint("[---  INFO   ---] Event create. With Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        event = Event.objects.create(
+            author=self.test_user_1,
+            # avatar=,
+            name="Event #1",
+            organization=self.test_private_org_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            event.organization,
+            self.test_private_org_1,
+            colored("[---  ERROR  ---] Wrong Organization", "white", "on_red"))
+
+
+# =============================================================================
+# ===
+# === VIEWS
+# ===
+# =============================================================================
+class EventListViewTestCase(TestCase):
+
+    """Event List Test Case.
+
+        COVERS:
+                USER                        EVENT
+                --------------------------- -----------------------------------
+                NOT logged in
+
+                    Logged in               Upcoming Event of pub Org
+                                            Auth  of Event of prv Org
+                                            Staff Member or prv Org
+                                            Group Member of prv Org
+                                            Auth  of Event &  Staff Member of prv Org
+                                            Auth  of Event &  Group Member of prv Org
+    """
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_events_completed.json",
+        "test_events_dateless.json",
+        "test_events_draft.json",
+        "test_events_pastdue.json",
+        "test_events_upcoming.json",
+        "test_core_addr_acc.json",
+        "test_core_addr_chl.json",
+        "test_core_addr_org.json",
+        "test_organizations_private.json",
+        "test_organizations_public.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > VIEWS > LIST", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+        self.url = reverse("event-list")
+
+        # --- Users
+        self.test_author_1 = User.objects.get(id=1)
+        self.test_author_3 = User.objects.get(id=3)
+
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_4 = User.objects.get(id=4)
+
+        # --- Events
+        self.test_draft_event_11 = Event.objects.get(id=211)
+        self.test_draft_event_21 = Event.objects.get(id=221)
+
+        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+
+        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+
+        self.test_completed_event_13 = Event.objects.get(id=213)
+        self.test_completed_event_23 = Event.objects.get(id=223)
+
+        self.test_pastdue_event_24 = Event.objects.get(id=224)
+        self.test_pastdue_event_44 = Event.objects.get(id=244)
+
+        self.test_dateless_event_15 = Event.objects.get(id=215)
+        self.test_dateless_event_25 = Event.objects.get(id=225)
+
+        # --- Organizations
+        self.test_private_org_1 = Organization.objects.get(id=31)
+        self.test_private_org_3 = Organization.objects.get(id=33)
+
+        self.test_public_org_2 = Organization.objects.get(id=32)
+        self.test_public_org_4 = Organization.objects.get(id=34)
+
+    def test_user_not_logged_in(self):
+        """Event List. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Event List. User NOT logged in...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False),
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+
+        for event in response.context["events"]:
+            if event.organization:
+                self.assertFalse(
+                    event.organization.is_hidden,
+                    colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+
+    def test_user_logged_in(self):
+        """Event List. User logged in. Simple Case."""
+        cprint("[---  INFO   ---] Test Event List. User logged in. Simple Case...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False),
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+
+        for event in response.context["events"]:
+            self.assertFalse(
+                event.organization.is_hidden,
+                colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+
+    def test_user_logged_in_and_author_of_private_org(self):
+        """Event List. User logged in, and the Author of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Author of the private "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_12,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_staff_member_of_private_org(self):
+        """Event List. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Staff Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Staff Member of the private Organization
+        OrganizationStaff.objects.create(
+            author=self.test_author_3,
+            organization=self.test_private_org_3,
+            member=self.test_user_2,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_32,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_group_member_of_private_org(self):
+        """Event List. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Group Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Group Member of the private Organization
+        org_group = OrganizationGroup.objects.create(
+            author=self.test_author_3,
+            name="Test Group",
+            organization=self.test_private_org_3,
+        )
+        org_group.members.add(self.test_user_2)
+        org_group.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_32,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
+        """Event List. User logged in, and Author and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and Author and the Staff "
+               "Member of the private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Staff Member of the private Organization
+        OrganizationStaff.objects.create(
+            author=self.test_author_3,
+            organization=self.test_private_org_3,
+            member=self.test_author_1,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_12,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_32,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_author_and_group_member_of_private_org(self):
+        """Event List. User logged in, and Author the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and Author the Group Member of "
+               "the private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Group Member of the private Organization
+        org_group = OrganizationGroup.objects.create(
+            author=self.test_author_3,
+            name="Test Group",
+            organization=self.test_private_org_3,
+        )
+        org_group.members.add(self.test_author_1)
+        org_group.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+            ).exclude(
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_12,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+        self.assertIn(
+            self.test_upcoming_private_event_32,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+
+class EventDatelessListViewTestCase(TestCase):
+
+    """Event List Test Case.
+
+        COVERS:
+                USER                        EVENT
+                --------------------------- -----------------------------------
+                NOT logged in
+
+                    Logged in               Dateless Event of pub Org
+                                            Auth  of Event of prv Org
+                                            Staff Member or prv Org
+                                            Group Member of prv Org
+                                            Auth  of Event &  Staff Member of prv Org
+                                            Auth  of Event &  Group Member of prv Org
+    """
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_events_completed.json",
+        "test_events_dateless.json",
+        "test_events_draft.json",
+        "test_events_pastdue.json",
+        "test_events_upcoming.json",
+        "test_core_addr_acc.json",
+        "test_core_addr_chl.json",
+        "test_core_addr_org.json",
+        "test_organizations_private.json",
+        "test_organizations_public.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > VIEWS > LIST", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+        self.url = reverse("event-dateless-list")
+
+        # --- Users
+        self.test_author_1 = User.objects.get(id=1)
+        self.test_author_3 = User.objects.get(id=3)
+
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_4 = User.objects.get(id=4)
+
+        # --- Events
+        self.test_draft_event_11 = Event.objects.get(id=211)
+        self.test_draft_event_21 = Event.objects.get(id=221)
+
+        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+
+        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+
+        self.test_completed_event_13 = Event.objects.get(id=213)
+        self.test_completed_event_23 = Event.objects.get(id=223)
+
+        self.test_pastdue_event_24 = Event.objects.get(id=224)
+        self.test_pastdue_event_44 = Event.objects.get(id=244)
+
+        self.test_dateless_event_15 = Event.objects.get(id=215)
+        self.test_dateless_event_25 = Event.objects.get(id=225)
+
+        # --- Organizations
+        self.test_private_org_1 = Organization.objects.get(id=31)
+        self.test_private_org_3 = Organization.objects.get(id=33)
+
+        self.test_public_org_2 = Organization.objects.get(id=32)
+        self.test_public_org_4 = Organization.objects.get(id=34)
+
+    def test_user_not_logged_in(self):
+        """Event List. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Event List. User NOT logged in...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False),
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+
+        for event in response.context["events"]:
+            if event.organization:
+                self.assertFalse(
+                    event.organization.is_hidden,
+                    colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+
+    def test_user_logged_in(self):
+        """Event List. User logged in. Simple Case."""
+        cprint("[---  INFO   ---] Test Event List. User logged in. Simple Case...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False),
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+
+        for event in response.context["events"]:
+            self.assertFalse(
+                event.organization.is_hidden,
+                colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+
+    def test_user_logged_in_and_author_of_private_org(self):
+        """Event List. User logged in, and the Author of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Author of the private "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_15,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_staff_member_of_private_org(self):
+        """Event List. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Staff Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Staff Member of the private Organization
+        OrganizationStaff.objects.create(
+            author=self.test_author_1,
+            organization=self.test_private_org_1,
+            member=self.test_user_2,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_15,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_group_member_of_private_org(self):
+        """Event List. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and the Group Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Group Member of the private Organization
+        org_group = OrganizationGroup.objects.create(
+            author=self.test_author_1,
+            name="Test Group",
+            organization=self.test_private_org_1,
+        )
+        org_group.members.add(self.test_user_2)
+        org_group.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_15,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
+        """Event List. User logged in, and Author and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and Author and the Staff "
+               "Member of the private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Staff Member of the private Organization
+        OrganizationStaff.objects.create(
+            author=self.test_author_3,
+            organization=self.test_private_org_3,
+            member=self.test_author_1,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_15,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_25,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+    def test_user_logged_in_and_author_and_group_member_of_private_org(self):
+        """Event List. User logged in, and Author the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event List. User logged in, and Author the Group Member of "
+               "the private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Group Member of the private Organization
+        org_group = OrganizationGroup.objects.create(
+            author=self.test_author_3,
+            name="Test Group",
+            organization=self.test_private_org_3,
+        )
+        org_group.members.add(self.test_author_1)
+        org_group.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_list.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            len(response.context["events"]),
+            len(Event.objects.filter(
+                Q(organization=None) |
+                Q(organization__is_hidden=False) |
+                Q(
+                    author=self.test_author_1,
+                    organization__is_hidden=True,
+                ) |
+                Q(
+                    author=self.test_author_3,
+                    organization__is_hidden=True,
+                ),
+                status=EVENT_STATUS.UPCOMING,
+                start_date__gte=datetime.date.today(),
+                recurrence=RECURRENCE.DATELESS,
+            )),
+            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_15,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+        self.assertIn(
+            self.test_dateless_event_25,
+            response.context["events"],
+            colored("[---  ERROR  ---] Target Event is not returned in the List",
+                    "white", "on_red"))
+
+
+class EventCreateViewTestCase(TestCase):
+
+    """Event create Test Case.
+
+        COVERS:
+                USER                        EVENT
+                --------------------------- -----------------------------------
+                NOT logged in
+
+                    Logged in
+    """
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_core_addr_acc.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > VIEWS > CREATE", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+        self.url = reverse("event-create")
+        self.login_url = reverse("login")
+
+        # --- Users
+        self.test_user_1 = User.objects.get(id=1)
+        self.test_user_3 = User.objects.get(id=3)
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_4 = User.objects.get(id=4)
+
+    def test_user_not_logged_in(self):
+        """Event create. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Event create. User NOT logged in...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.login_url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "accounts/account_login.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        if response.redirect_chain:
+            # -----------------------------------------------------------------
+            path, status_code = response.redirect_chain[0]
+
+            self.assertTrue(
+                self.url in path,
+                "[---  ERROR  ---] %s NOT in URL Path..." % self.url)
+            self.assertEqual(
+                status_code, 301,
+                "[---  ERROR  ---] Wrong Status Code...")
+
+            # -----------------------------------------------------------------
+            path, status_code = response.redirect_chain[1]
+
+            self.assertTrue(
+                "?next=" in path,
+                "[---  ERROR  ---] '?next=' NOT in URL Path...")
+            self.assertEqual(
+                status_code, 302,
+                "[---  ERROR  ---] Wrong Status Code...")
+
+    def test_user_logged_in(self):
+        """Event create. User logged in."""
+        cprint("[---  INFO   ---] Test Event create. User logged in...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        response = client.get(
+            self.url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            self.url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_create.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+
+class EventDetailsViewTestCase(TestCase):
+
+    """Event Details Test Case.
+
+        COVERS:
+                USER                        EVENT
+                --------------------------- -----------------------------------
+                NOT logged in               Upcoming Event of pub Org
+                                            Upcoming Event of prv Org
+                                            Draft    Event
+                                            Complete Event
+                                            Past due Event
+                                            Dateless Event
+
+                    Logged in               Upcoming Event of pub Org
+                                            Upcoming Event of pub Org, waiting   4  Conf
+                                            Upcoming Event of pub Org, confirmed
+                                            Upcoming Event of pub Org, canceled  by Adm
+                                            Upcoming Event of pub Org, canceled  by Usr,    reenter
+                                            Upcoming Event of pub Org, canceled  by Usr, NO reenter
+                                            Upcoming Event of pub Org, waiting   4  selfreflection
+                                            Upcoming Event of pub Org, waiting   4  acknowledgment
+                                            Upcoming Event of pub Org, acknowledged
+    """
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_accounts_privacy_basic.json",
+        "test_events_completed.json",
+        "test_events_dateless.json",
+        "test_events_draft.json",
+        "test_events_pastdue.json",
+        "test_events_upcoming.json",
+        "test_core_addr_acc.json",
+        "test_core_addr_chl.json",
+        "test_core_addr_org.json",
+        "test_organizations_private.json",
+        "test_organizations_public.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > VIEWS > DETAILS", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+
+        # --- Users
+        self.test_author_1 = User.objects.get(id=1)
+        self.test_author_3 = User.objects.get(id=3)
+
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_4 = User.objects.get(id=4)
+
+        # --- Events
+        self.test_draft_event_11 = Event.objects.get(id=211)
+        self.test_draft_event_21 = Event.objects.get(id=221)
+
+        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+
+        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+
+        self.test_completed_event_13 = Event.objects.get(id=213)
+        self.test_completed_event_23 = Event.objects.get(id=223)
+
+        self.test_pastdue_event_24 = Event.objects.get(id=224)
+        self.test_pastdue_event_44 = Event.objects.get(id=244)
+
+        self.test_dateless_event_15 = Event.objects.get(id=215)
+        self.test_dateless_event_25 = Event.objects.get(id=225)
+
+        # --- Organizations
+        self.test_private_org_1 = Organization.objects.get(id=31)
+        self.test_private_org_3 = Organization.objects.get(id=33)
+
+        self.test_public_org_2 = Organization.objects.get(id=32)
+        self.test_public_org_4 = Organization.objects.get(id=34)
+
+    def test_user_not_logged_in_event_of_public_org(self):
+        """Event Details. User NOT logged in. Event of the public Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event of the public "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_22.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_22,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertIsNone(
+            response.context["participation"],
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_not_logged_in_event_of_private_org(self):
+        """Event Details. User NOT logged in. Event of the private Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event of the private "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_private_event_12.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_draft(self):
+        """Event Details. User NOT logged in. Event Draft."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event Draft...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_draft_event_21.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_completed(self):
+        """Event Details. User NOT logged in. Event completed."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event completed...",
+               "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_completed_event_23.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_pastdue(self):
+        """Event Details. User NOT logged in. Event past due."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event past due...",
+               "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_pastdue_event_24.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_dateless(self):
+        """Event Details. User NOT logged in. Event dateless."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event dateless...",
+               "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_dateless_event_25.slug,
+            })
+        data = {}
+
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_dateless_event_25,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertIsNone(
+            response.context["participation"],
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org(self):
+        """Event Details. User logged in. Event of the public Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_42.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_42,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertIsNone(
+            response.context["participation"],
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_waiting(self):
+        """Event Details. User logged in. Event of the public Organization. Participation waiting for Confirmation."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Participation waiting for Confirmation...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_2,
+            event=self.test_upcoming_public_event_42,
+            # role=,
+            status=PARTICIPATION_STATUS.WAITING_FOR_CONFIRMATION,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_42.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_42,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_confirmed(self):
+        """Event Details. User logged in. Event of the public Organization. Participation confirmed."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Participation confirmed...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_2,
+            event=self.test_upcoming_public_event_42,
+            # role=,
+            status=PARTICIPATION_STATUS.CONFIRMED,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_42.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_42,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_canceled_by_admin(self):
+        """Event Details. User logged in. Event of the public Organization. Participation canceled by Admin."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Participation canceled by Admin...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_2,
+            event=self.test_upcoming_public_event_42,
+            # role=,
+            status=PARTICIPATION_STATUS.CANCELLED_BY_ADMIN,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_42.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_42,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_canceled_by_user_reenter_allowed(self):
+        """Event Details. User logged in. Event of the public Organization. Participation canceled by User. Reenter allowed."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Participation canceled by User. Reenter allowed...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_2,
+            event=self.test_upcoming_public_event_42,
+            # role=,
+            status=PARTICIPATION_STATUS.CANCELLED_BY_USER,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_42.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_42,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_canceled_by_user_reenter_not_allowed(self):
+        """Event Details. User logged in. Event of the public Organization. Participation canceled by User. Reenter NOT allowed."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Participation canceled by User. Reenter NOT allowed...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_4,
+            event=self.test_upcoming_public_event_22,
+            # role=,
+            status=PARTICIPATION_STATUS.CANCELLED_BY_USER,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_22.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_22,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_waiting_for_selfreflection(self):
+        """Event Details. User logged in. Event of the public Organization. Waiting for Selfreflection."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Waiting for Selfreflection...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_4,
+            event=self.test_upcoming_public_event_22,
+            # role=,
+            status=PARTICIPATION_STATUS.WAITING_FOR_SELFREFLECTION,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_22.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_22,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertTrue(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertTrue(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_waiting_for_acknowledgment(self):
+        """Event Details. User logged in. Event of the public Organization. Waiting for Acknowledgment."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Waiting for Acknowledgment...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_4,
+            event=self.test_upcoming_public_event_22,
+            # role=,
+            status=PARTICIPATION_STATUS.WAITING_FOR_ACKNOWLEDGEMENT,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_22.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_22,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertTrue(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_public_org_acknowledged(self):
+        """Event Details. User logged in. Event of the public Organization. Acknowledged."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
+               "Organization. Acknowledged...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Participant of the Event
+        participation = Participation.objects.create(
+            user=self.test_user_4,
+            event=self.test_upcoming_public_event_22,
+            # role=,
+            status=PARTICIPATION_STATUS.ACKNOWLEDGED,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_public_event_22.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_public_event_22,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertEqual(
+            response.context["participation"],
+            participation,
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertTrue(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_event_of_private_org(self):
+        """Event Details. User logged in. Event of the Private Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the Private "
+               "Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_private_event_12.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    # TODO
+
+    def test_user_logged_in_event_draft(self):
+        """Event Details. User logged in. Event Draft."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event Draft...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_draft_event_21.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_logged_in_event_completed(self):
+        """Event Details. User logged in. Event completed."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. Event completed...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_4.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_completed_event_23.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_pastdue(self):
+        """Event Details. User NOT logged in. Event past due."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event past due...",
+               "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_pastdue_event_24.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            404,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "404.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+    def test_user_not_logged_in_event_dateless(self):
+        """Event Details. User NOT logged in. Event dateless."""
+        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event dateless...",
+               "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_dateless_event_25.slug,
+            })
+        data = {}
+
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_dateless_event_25,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertIsNone(
+            response.context["participation"],
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    # TODO
+
+    def test_user_logged_in_and_author_of_upcoming_chl(self):
+        """Event Details. User logged in, and the Author of the upcoming Event."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Author of the "
+               "upcoming Event...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_author_1.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        data = {}
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_upcoming_private_event_12.slug,
+            })
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["event"],
+            self.test_upcoming_private_event_12,
+            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+        self.assertIsNone(
+            response.context["participation"],
+            colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["is_admin"],
+            colored("[---  ERROR  ---] Wrong `is_admin` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_withdraw_form"],
+            colored("[---  ERROR  ---] Wrong `show_withdraw_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_signup_form"],
+            colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["show_selfreflection_form"],
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_not_participated_form"],
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
+                    "white", "on_red"))
+        self.assertFalse(
+            response.context["show_rate_form"],
+            colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
+
+    def test_user_logged_in_and_staff_member_of_private_org(self):
+        """Event Details. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Staff Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Staff Member of the private Organization
+        OrganizationStaff.objects.create(
+            author=self.test_author_3,
+            organization=self.test_private_org_3,
+            member=self.test_user_2,
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_private_org_3.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["organization"],
+            self.test_private_org_3,
+            colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
+
+    def test_user_logged_in_and_group_member_of_private_org(self):
+        """Event Details. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Group Member of the "
+               "private Organization...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Group Member of the private Organization
+        org_group = OrganizationGroup.objects.create(
+            author=self.test_author_3,
+            name="Test Group",
+            organization=self.test_private_org_3,
+        )
+        org_group.members.add(self.test_user_2)
+        org_group.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_private_org_3.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["organization"],
+            self.test_private_org_3,
+            colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
+
+    def test_user_logged_in_not_subscriber(self):
+        """Event Details. User logged in. NOT an Organization Subscriber."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. NOT an Organization "
+               "Subscriber...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_public_org_4.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["organization"],
+            self.test_public_org_4,
+            colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
+        self.assertFalse(
+            response.context["is_subscribed"],
+            colored("[---  ERROR  ---] Wrong subscribed Information returned", "white", "on_red"))
+
+    def test_user_logged_in_subscriber(self):
+        """Event Details. User logged in. An Organization Subscriber."""
+        cprint("[---  INFO   ---] Test Event Details. User logged in. An Organization "
+               "Subscriber...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_2.username,
+            password="test"
+        )
+        # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Make User a Subscribed of the Organization
+        self.test_public_org_4.subscribers.add(self.test_user_2)
+        self.test_public_org_4.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        url = reverse("event-details", kwargs={
+            "slug":     self.test_public_org_4.slug,
+            })
+        data = {}
+        response = client.get(
+            url,
+            data=data,
+            follow=True)
+
+        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
+               f"                REQUEST        : {response.request}\n"
+               f"                STATUS         : {response.status_code}\n"
+               f"                TEMPLATES      : {response.templates}\n"
+               f"                CONTENT        : {response.content}\n"
+               f"                REDIRECT CHAIN : {response.redirect_chain}",
+               "yellow")
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        self.assertEqual(
+            response.request["PATH_INFO"],
+            url,
+            colored("[---  ERROR  ---] Wrong Path", "white", "on_red"))
+        self.assertEqual(
+            response.status_code,
+            200,
+            colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
+        self.assertTemplateUsed(
+            response,
+            "events/event_details.html",
+            colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
+
+        self.assertEqual(
+            response.context["organization"],
+            self.test_public_org_4,
+            colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
+        self.assertTrue(
+            response.context["is_subscribed"],
+            colored("[---  ERROR  ---] Wrong subscribed Information returned", "white", "on_red"))
+
+
+# =============================================================================
+# ===
+# === AJAX
+# ===
+# =============================================================================
+
+
+# =============================================================================
+# ===
+# === TEMPLATES
+# ===
+# =============================================================================
+
+
+# =============================================================================
+# ===
+# === FORMS
+# ===
+# =============================================================================
+class EventCreateFormTestCase(TestCase):
+
+    """Event create Test Case."""
+
+    fixtures = [
+        "test_accounts_users.json",
+        "test_core_addr_acc.json",
+    ]
+
+    def setUp(self):
+        """Set up."""
+        cprint("***" * 27, "green")
+        cprint("*** TEST > EVENTS > FORMS > CREATE", "green")
+
+        # ---------------------------------------------------------------------
+        # --- Fake
+
+        # ---------------------------------------------------------------------
+        # --- Initials
+        self.login_url = reverse("login")
+
+        # --- Users
+        self.test_user_1 = User.objects.get(id=1)
+        self.test_user_3 = User.objects.get(id=3)
+        self.test_user_2 = User.objects.get(id=2)
+        self.test_user_4 = User.objects.get(id=4)
+
+    def test_create_event_success(self):
+        """Event create. Success."""
+        cprint("[---  INFO   ---] Test Event create. Success...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                "start_date":           "2017-12-31",
+                "start_time":           "00:00",
+                "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertTrue(
+            form.is_valid())
+
+        # self.assertEqual(form.clean_id_number(),"0000528989")
+        # self.assertIn(u"Invalid Action",form.errors["__all__"])
+
+    def test_create_event_no_avatar(self):
+        """Event create. No Avatar."""
+        cprint("[---  INFO   ---] Test Event create. No Avatar...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                "start_date":           "2017-12-31",
+                "start_time":           "00:00",
+                "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                # "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertFalse(
+            form.is_valid())
+
+    def test_create_event_no_name_no_description(self):
+        """Event create. No Name, no Description."""
+        cprint("[---  INFO   ---] Test Event create. No Name, no Description...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                # "name":                 "Testing Event #1",
+                # "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                "start_date":           "2017-12-31",
+                "start_time":           "00:00",
+                "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertFalse(
+            form.is_valid())
+        self.assertIn(
+            "name",
+            form.errors.as_json())
+        self.assertNotIn(
+            "description",
+            form.errors.as_json())
+
+    def test_create_event_no_tags(self):
+        """Event create. No Tags."""
+        cprint("[---  INFO   ---] Test Event create. No Tags...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                # "tags":                 "testing,event",
+                # "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                "start_date":           "2017-12-31",
+                "start_time":           "00:00",
+                "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertTrue(
+            form.is_valid())
+        self.assertNotIn(
+            "tags",
+            form.errors.as_json())
+        self.assertNotIn(
+            "hashtag",
+            form.errors.as_json())
+
+    def test_create_event_dateless(self):
+        """Event create. Dateless."""
+        cprint("[---  INFO   ---] Test Event create. Dateless...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Successful
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.DATELESS,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                # "start_date":           "2017-12-31",
+                # "start_time":           "00:00",
+                # "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertTrue(
+            form.is_valid())
+
+        # --- Save Form
+        instance = form.save()
+
+        self.assertEqual(
+            instance.recurrence,
+            RECURRENCE.DATELESS)
+
+        self.assertIn(
+            MONTH.NONE,
+            instance.month)
+        self.assertIn(
+            DAY_OF_WEEK.NONE,
+            instance.day_of_week)
+        self.assertIn(
+            "0",
+            instance.day_of_month)
+
+        self.assertIsNone(instance.start_date)
+        self.assertIsNone(instance.start_time)
+
+        self.assertIsNotNone(instance.start_tz)
+
+    def test_create_event_once(self):
+        """Event create. Once. Success."""
+        cprint("[---  INFO   ---] Test Event create. Once...", "cyan")
+
+        # ---------------------------------------------------------------------
+        # --- Log in
+        result = client.login(
+            username=self.test_user_1.username,
+            password="test"
+        )
+
+        # ---------------------------------------------------------------------
+        # --- Successful
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                "start_date":           "2017-12-31",
+                "start_time":           "00:00",
+                "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertTrue(
+            form.is_valid())
+
+        # --- Save Form
+        instance = form.save()
+
+        self.assertEqual(
+            instance.recurrence,
+            RECURRENCE.ONCE)
+
+        self.assertIn(
+            MONTH.NONE,
+            instance.month)
+        self.assertIn(
+            DAY_OF_WEEK.NONE,
+            instance.day_of_week)
+        self.assertIn(
+            "0",
+            instance.day_of_month)
+
+        self.assertIsNotNone(instance.start_date)
+        self.assertIsNotNone(instance.start_time)
+
+        self.assertIsNotNone(instance.start_tz)
+
+        # ---------------------------------------------------------------------
+        # --- No Date/Time
+        # ---------------------------------------------------------------------
+        # --- Send Request
+        form = CreateEditEventForm(
+            data={
+                "name":                 "Testing Event #1",
+                "description":          "Description for the testing Event #1",
+                "category":             EVENT_CATEGORY.ANIMALS,
+                "tags":                 "testing,event",
+                "hashtag":              "testing-event",
+                "duration":             8,
+                "addressless":          False,
+                "is_alt_person":        False,
+                "contact":              "me",
+                "alt_person_fullname":  "",
+                "alt_person_email":     "",
+                "alt_person_phone":     "",
+                "recurrence":           RECURRENCE.ONCE,
+                "month":                MONTH.NONE,
+                "day_of_week":          DAY_OF_WEEK.NONE,
+                "day_of_month":         "0",
+                # "start_date":           "2017-12-31",
+                # "start_time":           "00:00",
+                # "start_tz":             "America/Los_Angeles",
+                "organization":         None,
+                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "allow_reenter":        True,
+                "accept_automatically": True,
+                "acceptance_text":      "Great Job",
+            },
+            files={
+                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+            },
+            user=self.test_user_1,
+            )
+
+        # ---------------------------------------------------------------------
+        # --- Test Response
+        form.is_valid()
+        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+
+        self.assertFalse(
+            form.is_valid())
+
+# =============================================================================
+# ===
+# === UTILS
+# ===
+# =============================================================================
+
+
+"""
+    self.assertEqual                /               self.assertNotEqual
+    self.assertGreater
+    self.assertGreaterEqual
+    self.assertLess
+    self.assertLessEqual
+    self.assertTrue                 /               self.assertFalse
+    self.assertIs                   /               self.assertIsNot
+    self.assertIsNone               /               self.assertIsNotNone
+    self.assertIn                   /               self.assertNotIn
+    self.assertIsInstance           /               self.assertNotIsInstance
+    self.assertRegexpMatches        /               self.assertNotRegexpMatches
+    self.assertRaises
+    self.assertRaisesRegexp
+
+    self.assertDictContainsSubset
+
+    self.assertContains             /               self.assertNotContains
+    self.assertTemplateUsed         /               self.assertTemplateNotUsed
+    self.assertInHTML
+    self.assertJSONEqual            /               self.assertJSONNotEqual
+"""

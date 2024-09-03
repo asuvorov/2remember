@@ -1,0 +1,53 @@
+#about-us,
+#contact-us,
+#faq-list,
+#our-partners,
+#our-team,
+#resume {
+    // --- Mixin
+    #instance.page-list();
+
+    .faq-section-thumb {
+        h2 {
+            margin:         0;
+            padding:        0;
+        }
+        //background-color:   @white;
+        //padding:            10px;
+        //margin-bottom:      10px;
+    }
+}
+#faq-create,
+#faq-edit {
+    // --- Mixin
+    #instance.page-create-edit();
+}
+
+.faq-thumb-search {
+    background-color:       @white;
+    box-shadow:             1px 1px 3px rgba(0, 0, 0, 0.1);
+    padding:                10px;
+    margin-bottom:          10px;
+}
+
+// ----------------------------------------------------------------------------
+// --- Make Design more responsive
+// ----------------------------------------------------------------------------
+@media (max-width: 575px) {
+    /* XS   <  576px */
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    /* SM   <= 576px <= 767px */
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    /* MD   <= 768px <= 991px */
+}
+@media (min-width: 992px) and (max-width:1199px) {
+    /* LG   <= 992px <= 1199px */
+}
+@media (min-width: 1200px) and (max-width: 1399px) {
+    /* XL   <= 1200px <= 1399px */
+}
+@media (min-width: 1400px) {
+    /* XXL  >= 1400px */
+}

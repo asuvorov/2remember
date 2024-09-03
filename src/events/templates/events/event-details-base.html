@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "Event" %} "{{ event.title }}" - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}
+{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'event-list' %}">{% trans "Events" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ event.title }}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block header %}
+{% comment %}
+<div class="container">
+{% if is_admin and not event.is_draft %}
+    <header class="d-flex justify-content-center pb-3">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a href="{% url 'event-details' event.slug %}" class="nav-link active" aria-current="page">{% trans "Information" %}</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'event-confirm' event.slug %}" class="nav-link">
+                    {% trans "To confirm" %}
+                    <span id="waiting-for-confirmation-count" class="badge" style="background-color:#f0ad4e;">{{ event.event_participations.waiting_for_confirmation.count }}</span>&nbsp;
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'event-acknowledge' event.slug %}" class="nav-link">
+                    {% trans "To acknowledge" %}
+                    <span id="waiting-for-acknowledgment-count" class="badge" style="background-color:#5bc0de;">{{ event.event_participations.waiting_for_acknowledgement.count }}</span>&nbsp;
+                </a>
+            </li>
+        </ul>
+    </header>
+{% endif %}
+</div>
+{% endcomment %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=event %}
+{% endblock %}

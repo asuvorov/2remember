@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Log-in Form
+{% endcomment %}
+
+{% block title %}{% trans "Log in" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign in" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="account-signin" class="p-3">
+    <div class="card mb-3 shadow">
+        <div class="alert alert-warning mb-md-3" role="alert">
+        {% blocktrans %}
+            <h5 class="alert-heading"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>WIP</h5>
+            <p class="mb-0">Currently, the Social Auth is not set up.<br/>Please, stay tuned.</p>
+        {% endblocktrans %}
+        </div>
+
+<!--         <ul class="list-unstyled d-flex justify-content-center">
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='google-oauth2' %}';" class="btn btn-google-plus"><i class="bi bi-google"></i></button></li>
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='facebook' %}';" class="btn btn-facebook"><i class="bi bi-facebook"></i></button></li>
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='twitter' %}';" class="btn btn-twitter"><i class="bi bi-twitter"></i></button></li>
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='linkedin' %}';" class="btn btn-linkedin"><i class="bi bi-linkedin"></i></button></li>
+            <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='github' %}';" class="btn btn-github"><i class="bi bi-github"></i></button></li>
+        </ul> -->
+
+        <form id="signin-form" role="form" action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div class="row g-2">
+                <div class="form-floating col-12 {% if form.username.errors %}has-error{% endif %}">
+                    {{ form.username }}
+                    <label for="id_username" class="form-label">{{ form.username.label }}{% if form.username.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                    <span class="help-block">{% if form.username.errors %}{% for error in form.username.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                </div>
+
+                <div class="form-floating col-12 {% if form.password.errors %}has-error{% endif %}">
+                    {{ form.password }}
+                    <label for="id_password" class="form-label">{{ form.password.label }}{% if form.password.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                    <span class="help-block">{% if form.password.errors %}{% for error in form.password.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                </div>
+
+                <div class="form-floating col-12">
+                {% if form.non_field_errors %}
+                    <div class="form-group has-error">
+                    {% for error in form.non_field_errors %}
+                        <span class="help-block">{{ error }}</span>
+                    {% endfor %}
+                    </div>
+                {% endif %}
+                </div>
+
+                <div class="form-check text-start my-3">
+                    {{ form.remember_me }}
+                    <label for="id_remember_me" class="form-check-label">{{ form.remember_me.label }}</label>
+                </div>
+                <button class="btn btn-lg btn-primary w-100 py-2" type="submit">{% trans "Sign in" %}</button>
+                <input type="hidden" name="next" id="next_page" value="{{ next }}" />
+            </div>
+        </form>
+
+        <hr>
+
+        <p>{% trans "Forgot" %} <a href="{% url 'password-forgot' %}">{% trans "Password" %}</a>?</p>
+        <p>{% trans "Don't have an Account?" %} <a href="{% url 'signup' %}">{% trans "Sign-up now" %}</a>.</p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,97 @@
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<instance>
+{% endcomment %}
+
+<div>
+    <div class="row g-2">
+        <div class="col-12">
+            <div class="gallery">
+            {% for img in instance.get_image_list.all %}
+                <div class="gallery-container">
+                    <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
+                </div>
+            {% empty %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+
+{% comment %}
+    <div class="row g-2">
+        <div class="col-12">
+            <h5>{% trans "Images" %}</h5>
+            <ul class="polaroids">
+            {% for img in instance.get_image_list.all %}
+                <li>
+                    <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
+                </li>
+            {% empty %}
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endcomment %}
+</div>
+
+<h3>
+    {% trans "Attachments" %}
+    <a data-bs-toggle="collapse" data-bs-target="#collapse-attachments" href="#collapse-attachments" aria-expanded="false" aria-controls="collapse-attachments"><i class="bi bi-chevron-bar-contract"></i></a>
+{% if request.user.is_authenticated %}
+    {% if is_admin %}
+        <a class="add-attachment btn btn-primary" href="{% url 'event-edit' event.slug %}#event-attachments"><i class="bi bi-plus-lg"></i></a>
+    {% endif %}
+{% endif %}
+</h3>
+
+<div class="alert alert-warning mb-md-3" role="alert">
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
+</div>
+
+<div id="collapse-attachments" class="collapse">
+    <div class="row g-2">
+        <div class="col-12">
+            <h5>{% trans "Documents" %}</h5>
+            <div class="gallery">
+            {% for doc in instance.get_document_list.all %}
+                <div class="documents-container">
+                    <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank"><i class="bi bi-file-earmark-text"></i>&nbsp;{{ doc.name }}</a>
+                    {% if not forloop.last %}<br />{% endif %}
+                </div>
+            {% empty %}
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <h5>{% trans "Links" %}</h5>
+            <div class="gallery">
+            {% for url in instance.get_url_list.all %}
+                <div class="links-container">
+                    <a href="{{ url.url }}" target="_blank"><i class="bi bi-link"></i>&nbsp;{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
+                    {% if not forloop.last %}<br />{% endif %}
+                </div>
+            {% empty %}
+            {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-12">
+            <h5>{% trans "Video Links" %}</h5>
+            <div class="gallery">
+            {% for video_url in instance.get_video_url_list.all %}
+                <div class="video-links-container">
+                    <a class="gallery-videos" href="{{ video_url.url }}"><i class="bi bi-film"></i>&nbsp;{{ video_url.url }}</a>
+                    {% if not forloop.last %}<br />{% endif %}
+                </div>
+            {% empty %}
+            {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

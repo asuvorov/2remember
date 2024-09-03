@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>{% trans "Completed Events" %}</title>
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <!-- Less CSS -->
+    {% compress css %}
+        <link rel="stylesheet" type="text/less" href="{% static 'less/imports.less' %}">
+    {% endcompress %}
+    {% comment %}
+        <script type="text/javascript" src="{% static 'less/dist/less.min.js' %}"></script>
+    {% endcomment %}
+
+        <!-- jQuery -->
+        <script type="text/javascript" charset="utf-8" src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+
+        <!-- Twitter Bootstrap -->
+        <script type="text/javascript" charset="utf-8" src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    </head>
+
+    <body>
+        <div id="organization-widget">
+            <a href="{% url 'index' %}">
+                <img src="{% static 'favicon/favicon-32x32.png' %}" alt="2Remember Platform - Volunteering and Community Service made easy." />
+            </a>
+            <a href="{% url 'organization-details' organization.slug %}">
+            {% if organization.avatar %}
+                {% generateimage "iframe:thumbnail" source=organization.avatar -- alt=organization.name %}
+            {% else %}
+                <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ organization.name }}. 2Remember Platform - Volunteering and Community Service made easy." />
+            {% endif %}
+            </a>
+
+            <p>{{ organization.name }} {% trans "Completed Events on 2Remember" %}:</p>
+
+            <table class="table condensed-table">
+            {% for event in events_completed %}
+                <tr>
+                    <td>
+                        <a class="" href="{% url 'event-details' event.slug %}">
+                        {% if event.avatar %}
+                            {% generateimage "iframe:thumbnail" source=event.avatar -- alt=event.title %}
+                        {% else %}
+                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.title }}. 2Remember Platform - Volunteering and Community Service made easy." />
+                        {% endif %}
+                        </a>
+                    </td>
+                    <td>
+                        <a class="" href="{% url 'event-details' event.slug %}">{{ event.title }}</a>
+                    </td>
+                    <td>{{ event.start_date }}</td>
+                    <td><span class="label label-info">{# event.duration #}h</span></td>
+                    <td>
+                    {% for participation in event.get_acknowledged_qs %}
+                        <a href="{% url 'profile-view' participation.user_id %}">
+                        {% if event.avatar %}
+                            {% generateimage "iframe:thumbnail" source=participation.user.profile.avatar -- alt=participation.user.profile.auth_name %}
+                        {% else %}
+                            <img src="{% static 'img/default.png' %}" width="32" height="32" alt="{{ event.title }}. 2Remember Platform - Volunteering and Community Service made easy." />
+                        {% endif %}
+                        </a>
+                    {% endfor %}
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <span class="label label-info">{% trans "This Organization has no closed Events at the moment" %}</span>
+                </tr>
+            {% endfor %}
+            </table>
+
+        {% if organization.get_hours_received %}
+            <p><b>{% trans "Total Number of Hours received for the Organization" %}:</b> <span class="label label-success">{{ organization.get_hours_received }}h</span></p>
+        {% endif %}
+        </div>
+    </body>
+</html>

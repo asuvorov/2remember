@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<post> - Post
+        :<form> - Post Form
+{% endcomment %}
+
+{% block title %}{% trans "Edit Post" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="post-edit" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="edit-post-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.media }}
+
+                <!-- START POST APPEARENCE -->
+                <section id="post-appearance">
+                    <div class="card mb-3 shadow">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <div id="prerunner">
+                                {% if post.preview %}
+                                    {% generateimage "common:medium_fill" source=post.preview -- alt=post.preview.title class='img-fluid rounded-start' %}
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                                {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h3>{% trans "Appearance" %}</h3>
+
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST APPEARENCE -->
+
+                <hr>
+
+                <!-- START POST DESCRIPTION -->
+                <section id="post-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST DESCRIPTION -->
+
+                <hr>
+
+                <!-- START POST CONTENT -->
+                <section id="post-content">
+                    <h3>{% trans "Content" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                            {{ form.content }}
+                            <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST CONTENT -->
+
+                <!-- START POST COMPLETE -->
+                <section id="post-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="submit" class="post-edit">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Save Changes" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <a class="btn btn-primary w-100 mb-2" name="submit"><i class="bi bi-check-square"></i>&nbsp;{% trans "Save Changes" %}</a>
+            <a class="btn btn-danger w-100" name="close" data-bs-toggle="modal" data-bs-target="#postClosePopupModal" tabindex="-1"><i class="bi bi-x-circle"></i>&nbsp;{% trans "Close Post" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+{% if request.user.is_staff %}
+    {% include "blog/modals/post-close-modal.html" %}
+{% endif %}
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+        $("form#edit-post-form").submit();
+
+        return true;
+    })
+</script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=post %}
+{% endblock %}

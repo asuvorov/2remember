@@ -1,0 +1,321 @@
+{% load cache %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 3600 resume-gragment LANGUAGE_CODE %}
+<section class="px-3 py-3">
+    <h3 class="text-center">ARTEM SUVOROV</h3>
+    <p class="lead text-center"><em>Senior Software Engineer, Product Engineering</em></p>
+
+    <p>Artem is a seasoned Developer with over 20 Years of Experience.</p>
+    <p>Starting with studying the BASIC programming Language, followed by studying Pascal(Delphi) and C/C++, in 2010 Artem started studying Python with Django Framework, and the Web Development in general.</p>
+    <p>Since then, Artem participated in the various Projects, using a wide Range of the Technologies, Methodologies and Tools – from Design to bringing the Projects into a real Life with extensive Experience in the full Life Cycle of the Project Development.</p>
+
+    <hr>
+
+    <h4 class="text-center">WHAT MAKES ARTEM DIFFERENT</h4>
+    Artem is a happy Father of two Girls, and he loves to spend quality Time with them by going Places, learning new Things, playing musical Instruments, doing Craft, and teaching them to be the good Persons.
+
+    <hr>
+
+    <h4 class="text-center">WHERE ARTEM MAKES AN IMPACT</h4>
+    <p>In a Course of 4.5 Years, as a "ZeniMax Media" Contractor, Artem designed, developed and maintained the User-generated Content (Mods) Service, used by the World-famous Franchises, like "Fallout" and "Skyrim" (TES).</p>
+    <p>Also,during the "Lunch and Learn" Sessions, Artem shared the Knowledge about Mods and other "BNet" Services with the "ZeniMax" Engineers and Leads.</p>
+    <p>Artem and his Wife help local Refugees from Ukraine by providing them with Cloths, Food, Presents from Secret Santa, and Advice, so they can get on their Feet faster.</p>
+    <p>Artem is a quick learner with Zeal to learn and innovate.</p>
+
+    <p><strong>Industries served:</strong></p>
+    <ul>
+        <li>Entertainment;</li>
+        <li>eCommerce;</li>
+        <li>Computer Vision, Facial Recognition;</li>
+        <li>Real Estate;</li>
+        <li>Nuclear Power Engineering.</li>
+    </ul>
+
+    <p><strong>Skills and Specialties:</strong></p>
+    <ul>
+        <li>Amazon Web Services (CloudFormation, CloudFront, CloudWatch (Metrics, Logs, Events), CodeBuild / CodeDeploy / CodePipeline, ElastiCache, ElasticSearch, EC2, ECS / ECR, SQS, S3, RDS, Lambda), Heroku;</li>
+        <li>Full Stack Application Development;</li>
+        <li>Microservices;</li>
+        <li>Websocket Client/Server, RESTful API, gRPC;</li>
+        <li>State Machines;</li>
+        <li>Python, GoLang, JavaScript, C#, PHP;</li>
+        <li>SQL – MySQL, Postgres;</li>
+        <li>NoSQL – MongoDB;</li>
+        <li>React/Redux;</li>
+        <li>Docker.</li>
+    </ul>
+</section>
+
+<hr>
+
+<section>
+    <h4 class="text-center">EDUCATION</h4>
+    <p>Master’s Degree in Nuclear Power Engineering, National Technical University of Ukraine, March 2007.</p>
+</section>
+
+<hr>
+
+<section>
+    <h4 class="text-center">WORK EXPERIENCE</h4>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/west-monroe.png" height="30" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>West Monroe Partners, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    DC-Maryland-Virginia Metro Area<br/>
+                    (Jan 2022 — Apr 2024)
+                </small>
+            </div>
+        </div>
+
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/epicor.png" height="30" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Epicor Software, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    DC-Maryland-Virginia Metro Area<br/>
+                    (Mar 2023 — Dec 2023)
+                </small>
+            </div>
+        </div>
+
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/zenimax-media.png" height="30" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>ZeniMax Media, Inc.</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    DC-Maryland-Virginia Metro Area<br/>
+                    (Jul 2018 — Dec 2022)
+                </small>
+            </div>
+        </div>
+
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/verys.png" height="30" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Verys, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Orange County, CA<br/>
+                    (Jul 2018 — Dec 2021)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Senior Software Engineer</p>
+
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Building and maintaining Backend Services in Python, GoLang; C#, PHP;</li>
+            <li>Migrating Python 2.7 Backend Services to Python 3.7;</li>
+            <li>Extensive Use of Websockets (Client / Server), RESTful, gRPC;</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>AWS;</li>
+            <li>Python, GoLang; C#, PHP;</li>
+            <li>Websockets, RESTful, gRPC;</li>
+            <li>State Machines;</li>
+            <li>MySQL, MSSQL, Redis, Memcached;</li>
+            <li>RabbitMQ, Nginx, Docker, NewRelic, GitHub, GitLab, Confluence, Jira, Contentful.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/gravity-brands.jpg" height="100" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Gravity Brands, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Greater Los Angeles Area, CA<br/>
+                    (Mar 2016 – May 2018)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Fullstack Software Developer</p>
+
+        <p>The Mission of GravityBrands is to create and launch well-loved Brands, and connect the with a vast Audience.</p>
+        <p>The proprietary Flagship Brand, Fragrant Jewels, has over 100 Employees creating engaging Content and leveraging Real-Time Analytics to deliver an awesome User Experience for the Customers.</p>
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Designed/developed:</li>
+                <ul>
+                    <li>eCommerce Platform, using Shopify (as a CMS), and the Payment Processors (e.g. BrainTree, Stripe);</li>
+                    <li>Loyalty Engine for the Rewards Program;</li>
+                    <li>RESTful API for the React/Redux based Front-end;</li>
+                </ul>
+            <li>Created Gateways to the Shopify API, BrainTree API, Spreedly API, Recurly API;</li>
+            <li>Migrated Data (Payment Methods) among Payment Processors;</li>
+            <li>Customized Django Admin for the Product Development Team;</li>
+            <li>and many more…</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>Heroku;</li>
+            <li>Python/Django;</li>
+            <li>jQuery, JavaScript, Riot JS, React/Redux;</li>
+            <li>RESTful API.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/resolution-economics.png" height="60" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Resolution Economics Group, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Greater Los Angeles Area, CA<br/>
+                    (Jan 2015 – Mar 2016)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Software Developer</p>
+
+        <p>The Company provides sophisticated economic, statistical, and financial Analyses, Business Operations Advice, and specialized Software Solutions to leading Law Firms, Fortune 500 Companies, and Government Agencies.</p>
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Developed the Web Application “ResolutionView”, where the Client could create Employees’ Profiles; enroll Employees’ to the Facial Recognition Engine (“Kairos”) Database; add Facilities; review the Analytics; and check the Time-keeping System Punch ins/outs against the Snapshots, taken from the local IP and/or Web Cameras.</li>
+            <li>Developed the Desktop Application, designed to take the Snapshots from the IP and/or Web Cameras Video Stream; to perform preliminary Face Detection; and to send the appropriate Snapshots to the Kairos API for further Facial Recognition. Supported Platforms are Windows, Linux, Mac OS X.</li>
+            <li>Developed the API Gateway to the “Kairos”, the Facial Recognition Engine; and “ResolutionView” interim API Server, used by the Desktop Application.</li>
+            <li>Reviewed Developers Team’s Source Code.</li>
+            <li>Held the technical Meetings with Partners.</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>AWS;</li>
+            <li>Django/Python/Cython;</li>
+            <li>PyQt, OpenCV.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/fuisz-media.png" height="60" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Fuisz Media, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Greater Los Angeles Area, CA<br/>
+                    (Aug 2014- Jan 2015)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Software Engineer</p>
+
+        <p>Fuisz patented a Technology for creating intuitive, interactive Experiences for any Video, new or existing.</p>
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Developed/maintained Web Applications;</li>
+            <li>Worked on interactive Layer, and internal Tools, like SmartSheet + GitHub Integration, Slack + GitHub Integration, etc;</li>
+            <li>Developed automated Process for creating MRAID compliant HTML5 Tags and Google Engagement Ads (GEA Lightbox);</li>
+            <li>Developed Command Line Tool for transferring Projects’ Data between Environments (AWS S3 Buckets and Databases) and invalidating AWS CloudFront Objects;</li>
+            <li>Created native Android App for MRAID Tags testing.</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>AWS</li>
+            <li>JavaScript (Node.js);</li>
+            <li>MongoDB;</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/wikirealty.png" height="40" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>WikiRealty, LLC</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Greater Los Angeles Area, CA<br/>
+                    (Dec 2013 – Fed 2014)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Developer</p>
+
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Totally reworked Website Design;</li>
+            <li>Developed/maintained Web Applications.</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>Django/Python;</li>
+            <li>Twitter Bootstrap, jQuery, LessCSS.</li>
+        </ul>
+    </div>
+
+    <div class="mb-5">
+        <div class="row g-2 pb-2">
+            <div class="col-6 col-md-4">
+                <img src="{{ STATIC_URL }}img/brand-logos/dream-world-partners.jpg" height="100" alt="" />
+            </div>
+            <div class="col-6 col-md-5">
+                <h5>Dream World Partners Inc.</h5>
+            </div>
+            <div class="col-12 col-md-3">
+                <small class="text-muted">
+                    Greater Los Angeles Area, CA<br/>
+                    (Jul 2013 – Dec 2013)
+                </small>
+            </div>
+        </div>
+
+        <p class="lead">Developer</p>
+
+        <p>Responsibilities:</p>
+        <ul>
+            <li>Developed/maintained Web Applications;</li>
+            <li>Fixed Issues with Text/Video Chat, Payment System, mailing;</li>
+            <li>Created/maintained HTML Layout and Design;</li>
+            <li>Created Admin Dashboard with Charts on the Website Usage, average Length and Number of Users in the Video/Text Chat;</li>
+            <li>Implemented in the Project any Wishes of the Project Managers, even the most sophisticated.</li>
+        </ul>
+        <p>Stack:</p>
+        <ul>
+            <li>Django/Python;</li>
+            <li>RESTful API;</li>
+            <li>HTML, CSS, jQuery, JavaScript, node.js;</li>
+            <li>Apache, PostgreSQL.</li>
+        </ul>
+    </div>
+</section>
+{% endcache %}

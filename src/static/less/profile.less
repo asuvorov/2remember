@@ -1,0 +1,157 @@
+/*****************************************************************************/
+/*** VIEW PROFILE                                                          ***/
+/*****************************************************************************/
+#my-profile-info,
+#foreign-profile-info {
+    // --- Mixin
+    #instance.page-details();
+
+    #profile-card .card {
+        background-color:       #eef !important;
+        border-top:             3px solid @brand-primary;
+        margin:                 0px !important;
+
+        .card-header {
+            border-bottom:      3px solid @brand-primary;
+
+            h5 {
+                font-weight:    bold;
+                text-transform: uppercase;
+                padding:        5px;
+                margin:         0px;
+            }
+        }
+        .card-body {
+            i {
+                margin-right:   10px;
+            }
+        }
+        .card-footer {
+            i {
+                margin-right:   10px;
+            }
+        }
+    }
+
+    p {
+        margin-bottom:      5px;
+    }
+    div.btn-group {
+        width:              100%;
+
+        > ul {
+            width:          100%;
+        }
+    }
+    div.right-sidebar ul.dropdown-menu {
+        padding-left:       0px !important;
+        margin-top:         -10px;
+    }
+}
+#my-profile-invitations {
+    // --- Mixin
+    #instance.page-details();
+
+    #invitations-received-section,
+    #invitations-sent-section {
+        background-color:   @white;
+        padding:            10px;
+        margin-bottom:      10px;
+    }
+
+    .inv-received-archive,
+    .inv-sent-archive {
+        margin-top:         -10px !important;
+    }
+}
+#my-profile-participations,
+#foreign-profile-participations {
+    // --- Mixin
+    #instance.page-details();
+
+    //#participations-upcoming-section,
+    #participations-complete-section,
+    #participations-canceled-section,
+    #participations-rejected-section {
+        background-color:   @white;
+        padding:            10px;
+        margin-bottom:      10px;
+    }
+
+    .export-to-pdf {
+        margin-top:         -10px !important;
+    }
+}
+#my-profile-events,
+#foreign-profile-events {
+    // --- Mixin
+    #instance.page-details();
+
+    //#events-action-required-section,
+    //#events-upcoming-section,
+    //#events-complete-section,
+    //#events-draft-section {
+    //    background-color:   @white;
+    //    padding:            10px;
+    //    margin-bottom:      10px;
+    //}
+    #event-confirm-section,
+    #event-acknowledge-section {
+        background-color:   @white;
+        padding:            10px;
+        margin-bottom:      10px;
+    }
+}
+
+/*****************************************************************************/
+/*** EDIT PROFILE                                                          ***/
+/*****************************************************************************/
+#my-profile-edit,
+#my-profile-privacy {
+    // --- Mixin
+    #instance.page-create-edit();
+
+    .card {
+        background-color:   #eef;
+        //padding:            15px;
+    }
+}
+
+/*****************************************************************************/
+/*** DELETE PROFILE                                                        ***/
+/*****************************************************************************/
+#my-profile-delete {
+    // --- Mixin
+    #instance.page-list();
+
+    background-color:       @white;
+    padding:                10px;
+    margin-top:             10px;
+    margin-bottom:          20px;
+
+    .section {
+        margin-bottom:      20px;
+    }
+}
+
+// ----------------------------------------------------------------------------
+// --- Make Design more responsive
+// ----------------------------------------------------------------------------
+@media (max-width: 575px) {
+    /* XS   <  576px */
+}
+@media (min-width: 576px) and (max-width: 767px) {
+    /* SM   <= 576px <= 767px */
+}
+@media (min-width: 768px) and (max-width: 991px) {
+    /* MD   <= 768px <= 991px */
+}
+@media (min-width: 992px) and (max-width:1199px) {
+    /* LG   <= 992px <= 1199px */
+}
+@media (min-width: 1200px) and (max-width: 1399px) {
+    /* XL   <= 1200px <= 1399px */
+}
+@media (min-width: 1400px) {
+    /* XXL  >= 1400px */
+}

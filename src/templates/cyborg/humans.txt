@@ -1,0 +1,51 @@
+/* PROJECT */
+
+    Site Name:      2Remember
+    Site URL:       https://2remember.live/
+    Created:        2014
+    Updated:        2024
+    Standards:      HTML5, CSS3
+    Components:     Twitter Bootstrap, jQuery
+    Software:       AWS, Ubuntu, nGinx, uWSGI, Python, Django, HTML, CSS,
+                    jQuery, JavaScript, MySQL
+    Plugins:        bootpag, bootstrap, bootstrap-maxlength,
+                    bootstrap5-tagsinput,
+                    jquery, jquery-colorbox, jquery-file-upload,
+                    jquery-popup-overlay, jquery-ui,
+                    less.js, moment, noty, readmore-js, underscore
+    Web Design:     Artem Suvorov
+
+/* AUTHOR */
+
+    Name:           Artem Suvorov
+    Nickname:       copycat, ddaemon
+    Title:          CEO, CTO, Lead Developer
+    Location:       Los Angeles, CA, USA
+    About me:       https://www.facebook.com/artem.suvorov/about
+    Blog:
+    Contact:
+    Donation:
+
+/* TEAM */
+
+    Name:           Artem Suvorov
+    Title:          CEO, CTO, Lead Developer
+    Site:
+    Email:          artem.suvorov@gmail.com
+    Location:       Los Angeles, CA, USA
+
+    Name:           Maryna Suvorova
+    Title:          CMO, co-founder
+    Site:
+    Email:          maryna.suvorova@hotmail.com
+    Location:       Los Angeles, CA, USA
+
+    Name:           Werner Minshall
+    Title           Partner
+    Site:           http://www.terrataste.com/
+    Email:          werner@terrataste.com
+    Location:       Los Angeles, CA, USA
+
+/* THANKS */
+
+    To everyone who shares, likes, comments, and contributes!

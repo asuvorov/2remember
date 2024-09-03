@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Organization Form
+        :<aform>          - Address Form
+        :<formset_phone>  - Phone Numbers Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% block title %}{% trans "Create Organization" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Create" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="organization-create" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="create-organization-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- START ORGANIZATION APPEARENCE -->
+                <section id="organization-appearance">
+                    <h3>{% trans "Appearance" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
+                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
+                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION APPEARENCE -->
+
+                <hr>
+
+                <!-- START ORGANIZATION DESCRIPTION -->
+                <section id="organization-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label class="control-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}
+                            <label class="control-label">{{ form.description.label }}{% if form.description.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <label class="control-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label class="control-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-4 {% if form.website.errors %}has-error{% endif %}">
+                            {{ form.website }}
+                            <label class="control-label">{{ form.website.label }}{% if form.website.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.website.errors %}{% for error in form.website.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.video.errors %}has-error{% endif %}">
+                            {{ form.video }}
+                            <label class="control-label">{{ form.video.label }}{% if form.video.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.video.errors %}{% for error in form.video.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4 {% if form.email.errors %}has-error{% endif %}">
+                            {{ form.email }}
+                            <label class="control-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                    {% comment %}
+                        <div class="checkbox checkbox-primary">
+                            {{ form.is_hidden }}
+                            {{ form.is_hidden.label_tag }}
+                        {% if form.is_hidden.help_text %}
+                            <p class="help">{{ form.is_hidden.help_text|safe }}</p>
+                        {% endif %}
+                        </div>
+                    {% endcomment %}
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION DESCRIPTION -->
+
+                <hr>
+
+                <!-- START ORGANIZATION LOCATION -->
+                <section id="organization-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  ORGANIZATION LOCATION -->
+
+                <hr>
+
+                <!-- START ORGANIZATION PHONE NUMBERS -->
+                <section id="organization-phones">
+                    <h3>{% trans "Phone Numbers" %}</h3>
+                    {% include "app/fragments/formset-phone.html" %}
+                </section>
+                <!--  END  ORGANIZATION PHONE NUMBERS -->
+
+                <hr>
+
+                <!-- START ORGANIZATION CONTACT PERSON -->
+            {% comment %}
+                <section id="organization-contact-person">
+                    <h3>{% trans "Contact Person" %}</h3>
+                    {% include "app/fragments/contact-person.html" %}
+                </section>
+                <!--  END  ORGANIZATION CONTACT PERSON -->
+
+                <hr>
+            {% endcomment %}
+
+                <!-- START ORGANIZATION SOCIAL LINKS -->
+                <section id="organization-social-links">
+                    <h3>{% trans "Social Links" %}</h3>
+                    {% include "app/fragments/formset-social.html" %}
+                </section>
+                <!--  END  ORGANIZATION SOCIAL LINKS -->
+
+                <hr>
+
+                <!-- START ORGANIZATION COMPLETE -->
+                <section id="organization-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+                    <p>{% trans "You have successfully completed all Steps." %}</p>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="organization-create" class="organization-create">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Create this Organization" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  ORGANIZATION COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <section>
+                <h4>{% trans "Tips" %}</h4>
+
+                <div class="alert alert-info">
+                {% blocktrans %}
+                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
+                {% endblocktrans %}
+                </div>
+
+                <div class="alert alert-success">
+                    {% trans "After creating the Organization, you will be redirected to the Details Page, where you can attach related Images, Documents and Links." %}
+                </div>
+            </section>
+        </div>
+    </div><!-- /.row -->
+</div><!-- /#organization-create .container -->
+
+<!-- Scripts -->
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='organization-create']").click(function () {
+        // --------------------------------------------------------------------
+        // --- Check, if Preview and Cover Input are NOT empty.
+        // if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
+        //     alert("Please, select the Preview and Cover Images.");
+
+        //     return false;
+        // }
+
+        $("#spinner").fadeIn("slow");
+        $("form#create-organization-form").submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in aform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for form in formset_phone.forms %}
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        new Noty({
+                            text: "Phone : {{ field.label }}: {{ error }}"
+                        }).show();
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        {% for form in formset_social.forms %}
+            {% for field in form %}
+                {% if field.errors %}
+                    {% for error in field.errors %}
+                        new Noty({
+                            text: "Social Link : {{ field.label }}: {{ error }}"
+                        }).show();
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+        /*********************************************************************/
+        /*** Contact Person UX                                             ***/
+        /*********************************************************************/
+        $("#alt_person_creds").hide();
+
+        selected = $("input[type='radio']:checked");
+
+        if (selected.val() == "he") {
+            $("#alt_person_creds").show("slow");
+        }
+
+        $("#id_contact_0").click(function () {
+            $("#alt_person_creds").hide("slow");
+        });
+
+        $("#id_contact_1").click(function () {
+            $("#alt_person_creds").show("slow");
+        })
+    });
+</script>
+{% endblock %}

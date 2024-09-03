@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+{% load taggit_templatetags2_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_roles>  - Roles Formset
+        :<formset_social> - Social Links Formset
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "Events List" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Events" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="event-list" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START CONTROLLERS -->
+            <div class="controllers">
+                <a class="btn btn-secondary" data-toggle="collapse" href="#collapse-event-filter" aria-expanded="false" aria-controls="collapse-event-filter"><i class="bi bi-filter"></i> {% trans "Filter" %}</a>
+                <div style="display:inline;">
+                    <div class="category-item">
+                        <a href="#" title="All" category="">
+                            <i class="bi bi-joystick" style="background-color:#999;"></i>
+                        </a>
+                    </div>
+                {% for event_category_1, event_category_name in event_category_choices %}
+                    {% for event_category_2, event_category_color in event_category_colors %}
+                        {% for event_category_3, event_category_icon in event_category_icons %}
+                            {% if event_category_1 == event_category_2 and event_category_1 == event_category_3 %}
+                                <div class="category-item">
+                                    <a href="?cat={{ event_category_name|slugify }}" title="{{ event_category_name }}" category="{{ event_category_1 }}">
+                                        <i class="{{ event_category_icon }}" style="background-color:{{ event_category_color }};"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    {% endfor %}
+                {% endfor %}
+                </div>
+
+            {% if request.user.is_authenticated %}
+                <a class="btn btn-primary" href="{% url 'event-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+            {% endif %}
+            </div>
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <div id="collapse-event-filter" class="collapse">
+                <div class="row">
+                    <div class="col-xs-24 col-sm-16 col-md-12 col-lg-12">
+                        <form id="filter-event-form" role="form" action="" method="GET">
+                            <div class="form-group {% if filter_form.name.errors %}has-error{% endif %}">
+                                <label class="control-label">{{ filter_form.name.label }}</label>
+
+                                {{ filter_form.name }}
+                            </div>
+
+                            <div class="form-group">
+                                <label class="control-label">{% trans "Start Date" %}:</label>
+
+                                <div class="row">
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-right:5px">
+                                        {{ filter_form.year }}
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="padding-left:5px; padding-right:5px">
+                                        {{ filter_form.month }}
+                                    </div>
+                                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6" style="padding-left:5px;">
+                                        {{ filter_form.day }}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <a class="btn pull-right" name="submit"><i class="bi bi-check-square"></i> {% trans "Apply" %}</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!--  END  FILTER FORM -->
+
+            <!-- START EVENTS -->
+            <section id="event-list-grouper" class="position-relative">
+                {% include "events/fragments/event-list-grouper.html" %}
+            </section>
+            <!--  END  EVENTS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Tag Cloud -->
+            <section id="tag-cloud">
+            {% cache 60 tag-cloud-event LANGUAGE_CODE %}
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% get_taglist as taglist for "events.event" %}
+                {% get_tagcloud as tagcloud for "events.event" %}
+
+                <div class="tag-cloud">
+                {% for tag in tagcloud %}
+                    <a href="?tag={{ tag.id }}">
+                        <font size="{{ tag.weight|floatformat:0 }}">
+                            {{ tag.name }} ({{ tag.num_times }})
+                        </font>
+                    </a>
+                {% endfor %}
+                </div>
+            {% endcache %}
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Script -->
+
+<script>
+    /*************************************************************************/
+    /*** Submit Form                                                       ***/
+    /*************************************************************************/
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+        $("form#filter-event-form").submit();
+
+        return true;
+    })
+
+    /*************************************************************************/
+    /*** Event Category Toggle                                             ***/
+    /*************************************************************************/
+    // $(".category-item").click(function (event) {
+    //     var element = $(this);
+    //     var event = window.event || event;
+    //     event.preventDefault();
+    //     var category_id = $(this).children().attr("category");
+    //     console.log(">>> CATEGORY ID:", category_id);
+    //     if (category_id === "") {
+    //         $(".event-thumb-container").show("slow", function () {
+    //             fixFooter();
+    //         });
+    //     } else {
+    //         $(".event-thumb-container[category!='" + category_id + "']").hide("slow", function () {
+    //             fixFooter();
+    //             $(".event-thumb-container[category='" + category_id + "']").show("slow", function () {
+    //                 fixFooter();
+    //             });
+    //         });
+    //     }
+    // })
+</script>
+{% endblock %}

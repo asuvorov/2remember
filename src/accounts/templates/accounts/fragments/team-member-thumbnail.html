@@ -1,0 +1,32 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<account>
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 team-member-thumbnail account.user.id LANGUAGE_CODE %}
+<div class="team-member-thumbnail card mb-3 shadow bg-body rounded" >
+{% with account.user.profile as profile %}
+    <a href="{% url 'profile-view' account.user.id %}">
+    {% if profile.avatar %}
+        {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid' %}
+    {% else %}
+        <img class="img-fluid" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+    {% endif %}
+    </a>
+
+    <div class="card-body">
+        <a href="{% url 'profile-view' account.user.id %}">
+            <h5 class="card-title">{{ profile.auth_name }}</h5>
+        </a>
+
+        <p class="card-text">{{ account.position }}</p>
+    </div>
+{% endwith %}
+</div>
+{% endcache %}

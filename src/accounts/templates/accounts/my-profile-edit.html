@@ -1,0 +1,351 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form>           - Event Form
+        :<aform>          - Address Form
+        :<formset_phone>  - Phone  Numbers Formset
+        :<formset_social> - Social Links   Formset
+{% endcomment %}
+
+{% block title %}{% trans "Edit Profile" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'my-profile-view' %}">{% trans "My Profile" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="my-profile-edit" class="bg-body-tertiary p-3">
+    <div class="row">
+        <div class="col-12">
+        {% if not request.user.profile.is_completed %}
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+
+            {% blocktrans %}
+                Thank you for signing up to 2Remember.<br/>
+                Before you start creating the Events, we will need some more Information about you.<br/>
+                Please, complete your personal Information in the Form.
+            {% endblocktrans %}
+            </div>
+        {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="my-profile-edit-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- START PROFILE CARD -->
+                <section id="profile-card">
+                    <div class="card mb-3">
+                        <div class="row g-0">
+                            <div class="col-md-3">
+                                <div id="prerunner">
+                                {% if request.user.profile.avatar %}
+                                    {% generateimage "common:medium_fill" source=request.user.profile.avatar -- alt=request.user.profile.auth_name class='img-fluid rounded-start' %}
+                                {% else %}
+                                    <img class="img-fluid rounded-start" src="{{ STATIC_URL }}img/no-avatar.png" height="400" width="400" alt="" />
+                                {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <div class="card-body">
+                                    <h3>{% trans "Appearance" %}</h3>
+
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <label for="id_avatar" class="form-label">{% trans "Add a personal Touch to your Profile. Pictures will automatically resize." %}</label>
+                                            <input id="id_avatar" name="avatar" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <span class="help-block">{% if pform.avatar.errors %}{% for error in pform.avatar.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                        <div class="col-12">
+                                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <span class="help-block">{% if pform.cover.errors %}{% for error in pform.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  PROFILE CARD -->
+
+                <!-- START PROFILE DETAILS -->
+                <section id="profile-details">
+                    <h3>{% trans "Personal Details" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-md-6 {% if pform.first_name.errors %}has-error{% endif %}">
+                            {{ pform.first_name }}
+                            <label for="id_first_name" class="form-label">{{ pform.first_name.label }}{% if pform.first_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div class="invalid-feedback">{% if pform.first_name.errors %}{% for error in pform.first_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                        </div>
+                        <div class="form-floating col-md-6 {% if pform.last_name.errors %}has-error{% endif %}">
+                            {{ pform.last_name }}
+                            <label for="id_last_name" class="form-label">{{ pform.last_name.label }}{% if pform.last_name.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <div class="invalid-feedback">{% if pform.last_name.errors %}{% for error in pform.last_name.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</div>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if pform.nickname.errors %}has-error{% endif %}">
+                            {{ pform.nickname }}
+                            <label for="id_nickname" class="form-label">{{ pform.nickname.label }}{% if pform.nickname.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.nickname.errors %}{% for error in pform.nickname.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if pform.email.errors %}has-error{% endif %}">
+                            {{ pform.email }}
+                            <label for="id_email" class="form-label">{{ pform.email.label }}{% if pform.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.email.errors %}{% for error in pform.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-12 {% if pform.bio.errors %}has-error{% endif %}">
+                            {{ pform.bio }}
+                            <label for="id_bio" class="form-label">{{ pform.bio.label }}{% if pform.bio.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.bio.errors %}{% for error in pform.bio.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if pform.gender.errors %}has-error{% endif %}">
+                             {{ pform.gender }}
+                            <label for="id_gender" class="form-label">{{ pform.gender.label }}{% if pform.gender.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.gender.errors %}{% for error in pform.gender.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if pform.birth_day.errors %}has-error{% endif %}">
+                            {{ pform.birth_day }}
+                            <label for="id_birth_day" class="form-label">{{ pform.birth_day.label }}{% if pform.birth_day.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if pform.birth_day.errors %}{% for error in pform.birth_day.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  PROFILE DETAILS -->
+
+                <hr>
+
+                <!-- START PROFILE LOCATION -->
+                <section id="profile-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  PROFILE LOCATION -->
+
+                <hr>
+
+                <!-- START PROFILE PHONE NUMBERS -->
+                <section id="profile-phone-numbers">
+                    <h3>{% trans "Phone Numbers" %}</h3>
+                    {% include "app/fragments/formset-phone.html" %}
+                </section>
+                <!--  END  PROFILE PHONE NUMBERS -->
+
+                <hr>
+
+                <!-- START PROFILE SOCIAL LINKS -->
+                <section id="profile-social-links">
+                    <h3>{% trans "Social Links" %}</h3>
+                    {% include "app/fragments/formset-social.html" %}
+                </section>
+                <!--  END  PROFILE SOCIAL LINKS -->
+
+                <hr>
+
+                <!-- START PROFILE COMPLETE -->
+                <section id="profile-complete">
+                    <h3>{% trans "Complete" %}</h3>
+
+                    <div class="form-check text-start my-1">
+                        {{ pform.allow_comments }}
+                        {{ pform.allow_comments.label }}
+                    </div>
+
+                    <div class="form-check text-start my-1">
+                        {{ pform.receive_newsletters }}
+                        {{ pform.receive_newsletters.label }}
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="submit" class="profile-edit">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Save Changes" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  PROFILE COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <a class="btn btn-primary w-100" name="submit"><i class="bi bi-check-square"></i> {% trans "Save Changes" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Pop-up Overlays -->
+
+{% if is_newly_created %}
+<div id="edit-profile-popup-overlay" class="bg-body-tertiary p-3" style="display:none;">
+    <div class="popup-overlay-heading">
+        <h4>{% trans "Welcome to 2Remember" %}</h4>
+    </div>
+
+    <div class="popup-overlay-info">
+        <div class="alert alert-success">
+        {% blocktrans %}
+            <p>Thank you for signing up to 2Remember.</p>
+            <p>
+                Before you start creating the Events,<br/>
+                we will need some more Information about you.<br/>
+                Please, complete your personal Information in the Form.
+            </p>
+        {% endblocktrans %}
+        </div>
+    </div>
+
+    <!-- Add an optional Button to close the Pop-up -->
+    <div class="popup-overlay-footer">
+        <button class="btn btn-default edit-profile-popup-overlay_close">{% trans "Close" %}</button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** jQuery pop-up Overlay                                         ***/
+        /*********************************************************************/
+        /***
+         * https://www.jqueryscript.net/demo/Responsive-Accessible-jQuery-Modal-Plugin-Popup-Overlay/
+        ***/
+        var options = {
+            type:               "overlay",      // "tooltip"
+            autoopen:           true,           // def. false
+            scrolllock:         true,           // def. false
+            background:         true,
+            backgroundactive:   false,
+            color:              "#000",
+            opacity:            0.5,
+            horizontal:         "center",
+            vertical:           "center",
+            offsettop:          0,
+            offsetleft:         0,
+            escape:             true,
+            blur:               true,
+            setzindex:          true,
+            autozindex:         false,
+            keepfocus:          true,
+            focusdelay:         50,
+            outline:            false,
+            detach:             false,
+            //openelement:                ".{popup_id}_open",
+            //closeelement:               ".{popup_id}_close",
+            transition:         "all 0.5s"
+        };
+
+        $("#edit-profile-popup-overlay").popup(options);
+    });
+</script>
+{% endif %}
+
+<!-- Scripts -->
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='submit']").click(function () {
+        $("#spinner").fadeIn("slow");
+
+        /*** DATE FORMAT *****************************************************/
+        var $input = $("input[name='birth_day']");
+        var val = $input.val();
+
+        if (val) {
+            var valMoment = moment(val);
+            var isMoment = moment.isMoment(valMoment);
+
+            if (isMoment) {
+                $input.attr("type", "text");
+                $input.val(valMoment.format("MM/DD/YYYY"));
+            }
+        }
+        /*********************************************************************/
+
+        $("form#my-profile-edit-form").submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in uform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in pform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in aform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+
+        {% for field in nform %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=request.user.profile %}
+{% endblock %}

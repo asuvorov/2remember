@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Post Form
+{% endcomment %}
+
+{% block title %}{% trans "Create Post" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Create" %}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block content %}
+<div id="post-create" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="create-post-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                {{ form.media }}
+
+                <!-- START POST APPEARENCE -->
+                <section id="post-appearance">
+                    <h3>{% trans "Appearance" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}" required>
+                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST APPEARENCE -->
+
+                <hr>
+
+                <!-- START POST DESCRIPTION -->
+                <section id="post-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}<br/>
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST DESCRIPTION -->
+
+                <hr>
+
+                <!-- START POST CONTENT -->
+                <section id="post-content">
+                    <h3>{% trans "Content" %}</h3>
+                    <div class="row g-3">
+                        <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
+                            {{ form.content }}<br/>
+                            <span class="help-block">{% if form.content.errors %}{% for error in form.content.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST CONTENT -->
+
+                <!-- START POST COMPLETE -->
+                <section id="post-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+                    <p>{% trans "You have successfully completed all Steps." %}</p>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="post-create" class="post-create">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Create this Post" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  POST COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <a class="btn btn-primary w-100 mb-2" name="post-create"><i class="bi bi-check-square"></i> {% trans "Publish this Post" %}</a>
+            <a class="btn btn-warning w-100" name="post-draft"><i class="bi bi-sticky"></i> {% trans "Save as a Draft" %}</a>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts -->
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='post-create']").click(function () {
+        // --------------------------------------------------------------------
+        // --- Check, if Avatar Input is NOT empty
+        // if ($("#id_avatar").get(0).files.length === 0) {
+        //     alert("Please, select the Avatar Image.");
+
+        //     return false;
+        // }
+
+        var form = $("form#create-post-form");
+
+        $("#spinner").fadeIn("slow");
+
+        form.append("<input type='hidden' name='post-create' value='Create this Event' />");
+        form.submit();
+
+        return true;
+    });
+
+    $("a[name='post-draft']").click(function () {
+        // --------------------------------------------------------------------
+        // --- Check, if Avatar Input is NOT empty
+        // if ($("#id_avatar").get(0).files.length === 0) {
+        //     alert("Please, select the Avatar Image.");
+
+        //     return false;
+        // }
+
+        var form = $("form#create-post-form");
+
+        $("#spinner").fadeIn("slow");
+
+        form.append("<input type='hidden' name='post-draft' value='Save as a Draft' />");
+        form.submit();
+
+        return true;
+    });
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock %}

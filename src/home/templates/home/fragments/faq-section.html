@@ -1,0 +1,47 @@
+{% load cache %}
+{% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% comment %}
+    Input Parameters:
+        :<section>
+{% endcomment %}
+
+{% cache 3600 faq-section-thumb LANGUAGE_CODE %}
+<div class="faq-section-thumb">
+    <h4>{{ section.title }}</h4>
+
+    <div id="accordion-{{ section.id }}" class="accordion">
+    {% for faq in section.related_faqs.all %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{ faq.id }}" aria-expanded="false" aria-controls="collapse-{{ faq.id }}">
+                {% autoescape off %}
+                    {{ faq.question }}
+                {% endautoescape %}
+                </button>
+            </h2>
+
+            <div id="collapse-{{ faq.id }}" class="accordion-collapse collapse" data-bs-parent="#accordion-{{ section.id }}">
+                <div class="accordion-body">
+                {% autoescape off %}
+                    {{ faq.answer }}
+                {% endautoescape %}
+
+                {% if request.user.is_staff %}
+                    <div class="panel-footer">
+                        <p>
+                            <a class="faq-remove" href="" faq-id="{{ faq.id }}"><i class="bi bi-times txt-danger pull-right"></i></a>
+                            <a href="{% url 'faq-edit' faq.id %}"><i class="bi bi-edit txt-warning pull-right"></i></a>
+                        </p>
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+        </div>
+    {% empty %}
+    {% endfor %}
+    </div>
+</div>
+{% endcache %}

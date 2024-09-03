@@ -1,0 +1,92 @@
+{% load i18n %}
+
+<div class="modal fade" id="eventParticipationPostPopupModal" tabindex="-1" role="dialog" aria-labelledby="eventParticipationPostPopupModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="eventParticipationPostPopupModalLabel">{% trans "Participate in Event" %}</h4>
+            </div>
+
+            <div class="modal-body">
+                <form id="event-participation-post-modal-form" action="" method="POST">
+                    {% csrf_token %}
+
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Privacy Information" %}</strong><br/>
+                        {% trans "When you sign up for a Event, the Organizer of the Event can see your personal Information, including Phone Number, Email, and Birth Date." %}
+                    </div>
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "This is important" %}</strong><br/>
+                        <p>{% trans "By clicking 'Participate', you agree to take part in this Event and to do your best." %}</p>
+                    </div>
+
+                {% if event.application == event_MODE.CONFIRMATION_REQUIRED or event.event_roles.all %}
+                    <div class="form-group">
+                        <label for="id_application_text">{% trans "Application Text" %}</label>
+                        <textarea id="id_application_text" class="form-control" name="application_text" maxlength="1000" placeholder="Enter text here..."></textarea>
+                    </div>
+                {% endif %}
+
+                {% if event.event_roles.all %}
+                    <div class="alert alert-warning" role="alert">
+                        <strong>{% trans "Desired Role" %}:</strong>
+                    </div>
+                    <select>
+                    {% for role in event.event_roles.all %}
+                        <option value="{{ role.id }}">{{ role.name }} ( {{ role.quantity }} )</span></option>
+                    {% endfor %}
+                    </select>
+                {% endif %}
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="participation_post();">{% trans "Participate" %}</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    /*************************************************************************/
+    /*** Post Participation                                                ***/
+    /*************************************************************************/
+    function participation_post() {
+        var role_id = $("#event-participation-post-modal-form").find("select > option:selected").val();
+        var application_text = $("#event-participation-post-modal-form").find("textarea[name='application_text']").val();
+
+        $.post("{% url 'api-participation-post' event.id %}", {
+            "role_id":              role_id,
+            "application_text":     application_text,
+            "csrfmiddlewaretoken":  $("#event-participation-post-modal-form").find("input[name='csrfmiddlewaretoken']").val()
+        }).done(function (data) {
+            console.log("Success");
+            console.log("Data :", data);
+
+            $("#eventParticipationPostPopupModal").modal("hide");
+
+            new Noty({
+                type:   "info",
+                text:   data.message
+            }).show();
+
+            location.reload(true);
+        }).fail(function (data) {
+            try {
+                new Noty({
+                    type:   "error",
+                    text:   data.responseJSON.message
+                }).show();
+            } catch (err) {
+                new Noty({
+                    type:   "error",
+                    text:   "Failed to post the Participation Request."
+                }).show();
+            };
+        });
+
+        return true;
+    }
+</script>
