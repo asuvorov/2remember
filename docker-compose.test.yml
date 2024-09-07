@@ -31,7 +31,7 @@ services:
 
   web:
     build:
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-slim
       context: .
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
