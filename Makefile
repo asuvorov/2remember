@@ -17,11 +17,13 @@ ifeq ($(OS), Windows_NT)
 	INIT := python -m venv .env
 	ENV := $(ENVDIR)/Scripts
 	ACTIVATE := . $(ENV)/activate
+	UPIP := $(ENV)/python.exe -m pip install --upgrade pip
 else
 	SHELL := /bin/bash
 	INIT := virtualenv .env
 	ENV := $(ENVDIR)/bin
 	ACTIVATE := . $(ENV)/activate
+	UPIP := $(ENV)/pip install -U  pip
 
 	UNAME_S := $(shell uname -s)
 	ifeq ($(UNAME_S), Linux)
@@ -51,7 +53,7 @@ env: setup ## Activate Virtual Environment.
 
 install: env requirements.txt ## Install Requirements.
 	$(info Installing Requirements)
-	$(ENV)/pip install -U  pip
+	$(UPIP)
 	$(ENV)/pip install -Ur requirements.txt --no-cache-dir
 .PHONY: install
 
@@ -144,12 +146,12 @@ build: login ## Build the Containers/Images, defined in the `docker-compose`.
 	@docker-compose -f docker-compose.yml --compatibility up --no-start
 .PHONY: build
 
-run: login build run-int migrate makemessages compilemessages loaddata collectstatic ## Start the `docker-compose`.
+run: build run-int migrate makemessages compilemessages loaddata collectstatic ## Start the `docker-compose`.
 
 run-int: ## Start the Compose.
 	$(info Starting the Compose)
 	@docker-compose -f docker-compose.yml up -d
-.PHONY: run-local
+.PHONY: run-int
 
 # run-local: prereq-win ## Start the Compose, bypassing Build Steps.
 run-local: ## Start the Compose, bypassing Build Steps.
