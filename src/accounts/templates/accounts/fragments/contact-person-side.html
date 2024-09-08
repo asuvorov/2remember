@@ -9,7 +9,7 @@
 <div class="contact-person">
 {% if not instance.is_alt_person %}
     <div align="center">
-        <a href="{% url 'profile-view' instance.author_id %}">
+        <a href="{% url 'profile-view' instance.author.uid %}">
         {% if instance.author.profile.avatar %}
             {% generateimage "common:thumbnail" source=instance.author.profile.avatar -- alt=instance.author.profile.auth_name %}
         {% else %}
