@@ -1,10 +1,10 @@
-FROM python:3.10-alpine
+FROM python:3.10-slim
 
 WORKDIR /app
 
 COPY ./requirements.txt ./
 
-RUN apk update && apk add --no-cache --virtual python3-dev gcc libc-dev libffi-dev build-base alpine-sdk mariadb-dev postgresql-dev gettext nodejs npm
+RUN apt update && apt install -y python3-dev wget git gcc make g++ libc-dev libffi-dev build-essential default-libmysqlclient-dev pkg-config python3-psycopg2 memcached gettext nodejs npm
 RUN npm install -g bower less recess
 
 RUN pip install --upgrade pip

@@ -8,7 +8,6 @@ import uuid
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models
@@ -105,42 +104,47 @@ class Event(
 
     Attributes
     ----------
-    uid                     : str       UUID.
+    uid                     : str       Event UUID.
 
     author                  : obj       Event Author.
     preview                 : obj       Event Preview Image.
     preview_thumbnail       : obj       Event Preview Image Thumbnail.
     cover                   : obj       Event Cover Image.
 
-    title                   : str       Title Field.
-    slug                    : str       Slug Field, populated from Title Field.
-    description             : str       Description Field.
+    title                   : str       Event Title.
+    slug                    : str       Event Slug, populated from Title Field.
+    description             : str       Event Description.
 
-    tags
-    hashtag
-    category
-    visibility
-    private_url             : str       Private URL.
+    tags                    : obj       Event Tags List.
+    hashtag                 : str       Event Hashtag.
+    category                : str       Event Category.
+    visibility              : str       Event Visibility.
+    private_url             : str       Event Private URL.
 
     addressless             : bool      Is addressless?
-    address                 : obj       Profile Address.
+    address                 : obj       Event Address.
 
     start_date              : datetime  Event Date.
+
+    followers               : obj       Event Followers.
+    subscribers             : obj       Event Subscribers.
+    organization            : obj       Event Organization.
+
     custom_data             : dict      Custom Data JSON Field.
 
-    followers
-    subscribers
-    organization
-
     allow_comments          : bool      Allow Comments?
-    is_hidden               : bool      Is hidden?
     is_newly_created        : bool      Is newly created?
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
 
     created_by              : obj       User, created  the Object.
     modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
 
     created                 : datetime  Timestamp the Object has been created.
     modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
 
     Methods
     -------
@@ -238,23 +242,9 @@ class Event(
         null=True, blank=True,
         verbose_name=_("Date"),
         help_text=_("Event Date"))
-    # start_time = models.TimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Time"),
-    #     help_text=_("Event Start Time"))
-    # start_tz = TimeZoneField(
-    #     default=settings.TIME_ZONE,
-    #     verbose_name=_("Timezone"),
-    #     help_text=_("Event Timezone"))
-    # start_date_time_tz = models.DateTimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Date/Time with TZ"),
-    #     help_text=_("Event Start Date/Time with TZ"))
 
     # -------------------------------------------------------------------------
-    # --- Followers.
+    # --- Followers & Subscribers.
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -262,9 +252,6 @@ class Event(
         related_name="event_followers",
         verbose_name=_("Followers"),
         help_text=_("Event Followers"))
-
-    # -------------------------------------------------------------------------
-    # --- Subscribers.
     subscribers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -272,23 +259,6 @@ class Event(
         related_name="event_subscribers",
         verbose_name=_("Subscribers"),
         help_text=_("Event Subscribers"))
-
-    # -------------------------------------------------------------------------
-    # --- Contact Person. Author by default.
-    # -------------------------------------------------------------------------
-    # is_alt_person = models.BooleanField(default=False)
-    # alt_person_fullname = models.CharField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Full Name"),
-    #     help_text=_("Event Contact Person full Name"))
-    # alt_person_email = models.EmailField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Email"),
-    #     help_text=_("Event Contact Person Email"))
-    # alt_person_phone = PhoneNumberField(
-    #     null=True, blank=True,
-    #     verbose_name=_("Phone Number"),
-    #     help_text=_("Please, use the International Format, e.g. +1-202-555-0114."))
 
     # -------------------------------------------------------------------------
     # --- Related Organization.
@@ -309,7 +279,6 @@ class Event(
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
 
-    is_hidden = models.BooleanField(default=False)
     is_newly_created = models.BooleanField(default=True)
 
     class Meta:
@@ -878,13 +847,7 @@ class Event(
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:

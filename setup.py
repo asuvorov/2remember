@@ -3,44 +3,47 @@
 """
 
 import os
+import re
 
 from os import path
-from setuptools import (
-    find_packages,
-    setup)
+from setuptools import find_packages, setup
 
 
-here = path.abspath(path.dirname(__file__))
+# -----------------------------------------------------------------------------
+# --- Initials.
+# -----------------------------------------------------------------------------
+PROJECT_PATH = path.abspath(path.dirname(__file__))
+VERSION_RE = re.compile(r"""__version__ = [""]([0-9.]+((dev|rc|b)[0-9]+)?)[""]""")
 
 
 # -----------------------------------------------------------------------------
 # --- Get the long Description from the `README` File.
 # -----------------------------------------------------------------------------
-with open(path.join(here, "README.md"), "r") as f:
-    """Docstring."""
-    long_description = f.read()
+with open(path.join(PROJECT_PATH, "README.md"), "r", encoding="utf-8") as readme:
+    long_description = readme.read()
 
 
-def package_files(directory, home_dir):
-    """Docstring."""
-    paths = []
-    # -------------------------------------------------------------------------
-    # --- Iterate over the Directory, passed here.
-    for (p, directories, filenames) in os.walk(directory):
-        files = []
+# -----------------------------------------------------------------------------
+# --- Get the current Version.
+# -----------------------------------------------------------------------------
+def get_version():
+    """Get Version."""
+    init = open(path.join(PROJECT_PATH, "src", "__init__.py"), encoding="utf-8").read()
 
-        for filename in filenames:
-            files.append(os.path.join(p, filename))
+    return VERSION_RE.search(init).group(1)
 
-        paths.append((os.path.join(home_dir, "src", *p.split(os.sep)[1:]), files))
 
-    return paths
+# -----------------------------------------------------------------------------
+# --- Allow `setup.py` to be run from any Path.
+# -----------------------------------------------------------------------------
+os.chdir(path.normpath(path.join(path.abspath(__file__), os.pardir)))
 
 
 setup(
     name="2remember",
-    version="0.4.0",
-    description="",
+    version=get_version(),
+    packages=find_packages(),
+    description="Join and share your Memories Hassle-Free",
     long_description=long_description,
     url="https://github.com/asuvorov/2remember",
     author="",
@@ -67,7 +70,6 @@ setup(
         "Topic :: Software Development :: Version Control :: Git",
         "Topic :: Utilities",
     ],
-    packages=find_packages(),
     install_requires=[
         # "APScheduler==3.9.1",
         "djangorestframework==3.15.1",
@@ -103,8 +105,10 @@ setup(
         "django-url-tools-py3==0.2.1",
         # "elasticsearch==8.6.1",
         "gunicorn==23.0.0",
+        "localstack==3.7.2",
         "lxml==5.2.1",
         "mysqlclient==2.2.4",
+        "newrelic==9.13.0",
         "pymemcache==4.0.0",
         "pytz==2024.1",
         # "sendgrid-django==4.2.0",

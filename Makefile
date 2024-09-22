@@ -92,6 +92,11 @@ lint: install ## Run Linter.
 	$(ENV)/pylint src/ setup.py --reports=y > reports/pylint.report
 .PHONY: lint
 
+migrations: install ## Make Migrations.
+	$(info Make Migrations)
+	@python ./src/manage.py makemigrations accounts blog events home invites organizations places
+.PHONY: migrations
+
 # =============================================================================
 # === Clean-up Targets.
 # =============================================================================

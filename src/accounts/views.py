@@ -118,8 +118,12 @@ def account_signup(request):
             user.set_password(uform.cleaned_data["password"])
             user.save()
 
+            cprint(f">>> {user} : {type(user)}", "white", "on_red")
+
             # -----------------------------------------------------------------
             # --- Create User Profile.
+            request.user = user
+
             profile = pform.save(commit=False)
             profile.user = user
             profile.save(request=request)
@@ -130,7 +134,7 @@ def account_signup(request):
             # UserPrivacyMembers.objects.create(user=user)
             # UserPrivacyAdmins.objects.create(user=user)
 
-            uidb36 = str(user.id)  # int_to_base36(user.id)
+            uidb36 = str(user.uid)  # int_to_base36(user.id)
             token = token_generator.make_token(user)
 
             # domain_name = request.get_host()
@@ -171,7 +175,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
     assert uidb36 is not None and token is not None
 
     try:
-        user = user_model.objects.get(id=uidb36)
+        user = user_model.objects.get(uid=uidb36)
     except (ValueError, user_model.DoesNotExist):
         user = None
 
@@ -207,6 +211,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
 
     # -------------------------------------------------------------------------
     # --- Save the Log.
+    # -------------------------------------------------------------------------
 
     return render(
         request,
@@ -309,7 +314,7 @@ def password_forgot(request):
     if request.method == "POST":
         if form.is_valid():
             user = user_model.objects.get(email=form.cleaned_data["email"])
-            uidb36 = str(user.id)  # int_to_base36(user.id)
+            uidb36 = str(user.uid)  # int_to_base36(user.id)
             token = token_generator.make_token(user)
 
             # domain_name = request.get_host()
@@ -350,7 +355,7 @@ def password_renew(request, uidb36=None, token=None):
 
     try:
         user_id = uidb36  # base36_to_int(uidb36)
-        user = user_model.objects.get(id=user_id)
+        user = user_model.objects.get(uid=user_id)
     except (ValueError, user_model.DoesNotExist):
         user = None
 
@@ -575,7 +580,6 @@ def my_profile_view(request):
     # --- Prepare Response.
     # -------------------------------------------------------------------------
     show_no_email_popup_modal = False
-
     if (
             not request.user.email and
             "show_no_email_popup_modal" not in request.COOKIES):
@@ -684,7 +688,8 @@ def my_profile_edit(request):
         instance=request.user.profile.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(request.user.profile),
             object_id=request.user.profile.id))
@@ -846,7 +851,7 @@ def my_profile_privacy(request):
 # ===
 # =============================================================================
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_view(request, user_id):
+def profile_view(request, uid36):
     """Foreign Profile Info."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -858,7 +863,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(user_model, pk=user_id)
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -993,7 +998,7 @@ def profile_view(request, user_id):
 
 
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_participations(request, user_id):
+def profile_participations(request, uid36):
     """Foreign Profile Participations."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -1002,10 +1007,7 @@ def profile_participations(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
-
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -1036,14 +1038,12 @@ def profile_participations(request, user_id):
                     )),
                 event__organization__is_hidden=True,
             ),
-            user=account,
-        )
+            user=account)
     else:
         participations = Participation.objects.filter(
             Q(event__organization=None) |
             Q(event__organization__is_hidden=False),
-            user=account,
-        )
+            user=account)
 
     # -------------------------------------------------------------------------
     # --- Get QuerySet of upcoming Events (Participations).
@@ -1111,7 +1111,7 @@ def profile_participations(request, user_id):
 
 
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_events(request, user_id):
+def profile_events(request, uid36):
     """Foreign Profile Events."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -1120,9 +1120,7 @@ def profile_events(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))

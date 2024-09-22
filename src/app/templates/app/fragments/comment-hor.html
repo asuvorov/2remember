@@ -23,7 +23,7 @@
                 {% else %}
                     <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                 {% endif %}
-                    <a href="{% url 'profile-view' comment.author_id %}"> {{ comment.author.get_full_name }}</a> {{ comment.created|timesince }} {% trans "ago" %}
+                    <a href="{% url 'profile-view' comment.author.uid %}"> {{ comment.author.get_full_name }}</a> {{ comment.created|timesince }} {% trans "ago" %}
                 </p>
 
                 <div class="text-end">
