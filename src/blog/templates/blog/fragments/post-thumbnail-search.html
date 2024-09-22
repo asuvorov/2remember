@@ -30,7 +30,7 @@
                 </strong>
 
                 <p>
-                    {% trans "posted by" %} <a href="{% url 'profile-view' post.author_id %}"> {{ post.author.first_name }}</a> {{ post.created|timesince }} {% trans "ago" %}
+                    {% trans "posted by" %} <a href="{% url 'profile-view' post.author.uid %}"> {{ post.author.first_name }}</a> {{ post.created|timesince }} {% trans "ago" %}
                 </p>
 
                 <blockquote>

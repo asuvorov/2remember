@@ -43,7 +43,7 @@
                 </p>
             {% else %}
                 <p>
-                    {% trans "posted by" %} <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                    {% trans "posted by" %} <a href="{% url 'profile-view' event.author.uid %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
                 </p>
             {% endif %}
 

@@ -17,6 +17,8 @@ from django.utils.html import format_html
 from django.utils.text import capfirst
 from django.utils.translation import gettext as _
 
+from rangefilter.filters import DateRangeFilter
+
 import papertrail
 
 from papertrail.models import (
@@ -281,7 +283,42 @@ class EntryRelatedObjectInline(admin.StackedInline):
 
 @admin.register(Entry)
 class EntryAdmin(admin.ModelAdmin):
+    """Entry Admin."""
 
-    list_display = ("event_type", "message", "timestamp", )
-    search_fields = ("event_type", )
-    inlines = (EntryRelatedObjectInline, )
+    fieldsets = (
+        ("", {
+            "classes":  (""),
+            "fields":   (
+                "event_type", "message",
+                "data", "custom_data",
+                "external_key",
+            ),
+        }),
+        ("Flags", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("is_hidden", "is_private", "is_deleted"),
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                "timestamp",
+            ),
+        }),
+    )
+
+    list_display = [
+        "event_type", "message", "timestamp"
+    ]
+    list_display_links = ["event_type"]
+    list_filter = [
+        ("timestamp", DateRangeFilter),
+    ]
+    search_fields = ["event_type"]
+    readonly_fields = []
+    inlines = [EntryRelatedObjectInline]

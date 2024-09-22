@@ -61,13 +61,13 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Foreign Profile.
     # -------------------------------------------------------------------------
-    re_path(r"^profile/(?P<user_id>[\w_-]+)/$",
+    re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/$",
         views.profile_view,
         name="profile-view"),
-    # re_path(r"^profile/(?P<user_id>[\w_-]+)/participations/$",
+    # re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/participations/$",
     #     views.profile_participations,
     #     name="profile-participations"),
-    re_path(r"^profile/(?P<user_id>[\w_-]+)/events/$",
+    re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/events/$",
         views.profile_events,
         name="profile-events"),
 

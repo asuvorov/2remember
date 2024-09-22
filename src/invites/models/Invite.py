@@ -79,10 +79,57 @@ class InviteManager(models.Manager):
 # -----------------------------------------------------------------------------
 @autoconnect
 class Invite(BaseModel):
-    """Invite Model."""
+    """Invite Model.
+
+    Attributes
+    ----------
+    inviter                 : obj       Inviter.
+    invitee                 : obj       Invitee.
+
+    status                  : str       Invitation Status.
+
+    content_type            : obj       Content Type.
+    object_id               : int       Object  ID.
+    content_object          : obj       Content Object.
+
+    invitation_text         : str       Invitation Text.
+    rejection_text          : str       Rejection  Text.
+
+    date_accepted           : datetime  Date Invitation accepted.
+    date_rejected           : datetime  Date Invitation rejected.
+    date_revoked            : datetime  Date Invitation revoked.
+
+    custom_data             : dict      Custom Data JSON Field.
+
+    is_archived_for_inviter : bool      Is Invitation archived for Inviter.
+    is_archived_for_invitee : bool      Is Invitation archived for Invitee.
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
+
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
+
+    created                 : datetime  Timestamp the Object has been created.
+    modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
+
+    Methods
+    -------
+    save()
+
+    pre_save()                          `pre_save`    Object Signal.
+    post_save()                         `post_save`   Object Signal.
+    pre_delete()                        `pre_delete`  Object Signal.
+    post_delete()                       `posr_delete` Object Signal.
+    m2m_changed()                       `m2m_changed` Object Signal.
+
+    """
 
     # -------------------------------------------------------------------------
-    # --- Basics
+    # --- Basics.
+    # -------------------------------------------------------------------------
     inviter = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -106,7 +153,8 @@ class Invite(BaseModel):
         help_text=_("Invite Status"))
 
     # -------------------------------------------------------------------------
-    # --- Content Type
+    # --- Content Type.
+    # -------------------------------------------------------------------------
     content_type = models.ForeignKey(
         ContentType,
         on_delete=models.CASCADE,
@@ -117,7 +165,8 @@ class Invite(BaseModel):
         "content_type", "object_id")
 
     # -------------------------------------------------------------------------
-    # --- Significant Texts
+    # --- Significant Texts.
+    # -------------------------------------------------------------------------
     invitation_text = models.TextField(
         null=True, blank=True,
         verbose_name=_("Invitation Text"),
@@ -128,7 +177,8 @@ class Invite(BaseModel):
         help_text=_("Rejection"))
 
     # -------------------------------------------------------------------------
-    # --- Significant Dates
+    # --- Significant Dates.
+    # -------------------------------------------------------------------------
     date_accepted = models.DateField(
         db_index=True,
         null=True, blank=True,
@@ -146,7 +196,8 @@ class Invite(BaseModel):
         help_text=_("Date revoked"))
 
     # -------------------------------------------------------------------------
-    # --- Flags
+    # --- Flags.
+    # -------------------------------------------------------------------------
     is_archived_for_inviter = models.BooleanField(
         default=False,
         verbose_name=_("Archived for Inviter"),

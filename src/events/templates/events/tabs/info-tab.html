@@ -161,7 +161,7 @@ Event Details - Info
                     <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                 {% endif %}
                     {% trans "Posted by" %}
-                    <a href="{% url 'profile-view' event.author_id %}">{{ event.author.first_name }}</a>
+                    <a href="{% url 'profile-view' event.author.uid %}">{{ event.author.first_name }}</a>
                     {{ event.created|timesince }} {% trans "ago" %}
                 </p>
             </div>
