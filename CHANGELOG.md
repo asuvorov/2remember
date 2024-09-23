@@ -1,5 +1,9 @@
 # X.Y.Z (YYYY-MM-DD)
 
+# New
+
+- Added sending Email to the Team from the "Contact Us" Page.
+
 # 0.4.0 (2024-08-10)
 
 ### New

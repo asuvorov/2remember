@@ -9,8 +9,6 @@ Foreign Profile - Info
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
-{% sum_of_hours_spent_tag account.profile.user as sum_of_hours_spent %}
-
 <div class="row">
     <div class="col-xs-24 col-sm-6 col-md-6 profile-picture" align="left">
         <div class="thumbnail avatar">
@@ -39,12 +37,6 @@ Foreign Profile - Info
             <div id="tips" class="col-md-3 right-sidebar">
                 {% include "accounts/fragments/foreign-profile-media-status-breakdown.html" %}
             </div>
-
-        {% if need_to_know_profile_details %}
-            <div>
-                <p><strong>{% trans "Hours spent" %}</strong> <span class="badge pull-right">{{ sum_of_hours_spent }}</span></p>
-            </div>
-        {% endif %}
         </div>
 
         <div class="profile-info-section">

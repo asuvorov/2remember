@@ -2,6 +2,7 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
 import logging
 
 from django.contrib.auth.models import User
@@ -157,10 +158,7 @@ class ForgotPasswordNotifyViewSet(APIView):
         # --- Retrieve the User
         # ---------------------------------------------------------------------
         try:
-            user = get_object_or_None(
-                User,
-                email=email)
-
+            user = get_object_or_None(User, email=email)
         except Exception as exc:
             cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
                    f"                 {type(exc).__name__}\n"

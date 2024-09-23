@@ -324,18 +324,13 @@ class Organization(
 
     def public_url(self, request=None):
         """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
 
         url = reverse(
             "organization-details", kwargs={
                 "slug":     self.slug,
             })
-        organization_link = f"http://{domain_name}{url}"
-
-        return organization_link
+        return f"http://{domain_name}{url}"
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""

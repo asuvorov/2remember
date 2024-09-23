@@ -72,11 +72,11 @@ class FAQDetailsViewSet(APIView):
 
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request
+        # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors
+        # --- Handle Errors.
         # ---------------------------------------------------------------------
         if not faq_id:
             return Response({
@@ -89,10 +89,9 @@ class FAQDetailsViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the FAQ
+        # --- Retrieve the FAQ.
         # ---------------------------------------------------------------------
         faq = get_object_or_None(FAQ, pk=faq_id)
-
         if not faq:
             return Response({
                 "message":      _("FAQ not found."),
@@ -158,7 +157,7 @@ class ContactUsViewSet(APIView):
 
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request
+        # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
         name = request.data.get("name", "")
         email = request.data.get("email", "")
@@ -171,7 +170,7 @@ class ContactUsViewSet(APIView):
                f"                  {message=}", "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors
+        # --- Handle Errors.
         # ---------------------------------------------------------------------
         if (
                 not name or
@@ -183,7 +182,7 @@ class ContactUsViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Send the Message
+        # --- Send the Message.
         # ---------------------------------------------------------------------
         if request.user.is_authenticated:
             from_name = (

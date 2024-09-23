@@ -4,6 +4,8 @@
 
 import logging
 
+from django.http.request import RawPostDataException
+
 from ddcore.Utilities import get_client_ip
 
 # pylint: disable=import-error
@@ -62,6 +64,8 @@ class DjangoLoggingMiddleware:
             log_req.update({
                 "request_length":   len(request.body),
             })
+        except RawPostDataException:
+            pass
         except Exception as exc:
             logger.exception("", extra=Format.exception(
                 exc=exc,

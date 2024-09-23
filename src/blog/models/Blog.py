@@ -231,10 +231,7 @@ class Post(
 
     def public_url(self, request=None):
         """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
 
         url = reverse(
             "post-details", kwargs={
