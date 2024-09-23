@@ -3,10 +3,36 @@
 SHELL := /bin/bash
 WORKDIR := .
 ENVDIR := $(WORKDIR)/.env
-ENV := $(ENVDIR)/bin
-ACTIVATE := . $(ENV)/activate
 
 COMPOSE_SERVICE_NAME := "web"
+
+DOCKER_RUN := "docker-compose exec web python"
+LOCAL_RUN := "python"
+
+# =============================================================================
+# === Detect OS, and set appropriate Environment Variables.
+# =============================================================================
+ifeq ($(OS), Windows_NT)
+	SHELL := /bin/bash
+	INIT := python -m venv .env
+	ENV := $(ENVDIR)/Scripts
+	ACTIVATE := . $(ENV)/activate
+else
+	SHELL := /bin/bash
+	INIT := virtualenv .env
+	ENV := $(ENVDIR)/bin
+	ACTIVATE := . $(ENV)/activate
+
+	UNAME_S := $(shell uname -s)
+	ifeq ($(UNAME_S), Linux)
+		# Do something
+	endif
+	ifeq ($(UNAME_S), Darwin)
+		# Do something
+	endif
+endif
+
+$(info Detected OS: $(OS))
 
 # =============================================================================
 # === Set-up Targets.
@@ -14,7 +40,8 @@ COMPOSE_SERVICE_NAME := "web"
 ##@ Set-up
 setup: ## Initiate Virtual Environment.
 	$(info Initiating Virtual Environment)
-	@virtualenv .env
+	@pip install virtualenv
+	$(INIT)
 .PHONY: setup
 
 env: setup ## Activate Virtual Environment.
@@ -22,41 +49,53 @@ env: setup ## Activate Virtual Environment.
 	$(ACTIVATE)
 .PHONY: env
 
-# =============================================================================
-# === Development Targets.
-# =============================================================================
-##@ Development
 install: env requirements.txt ## Install Requirements.
 	$(info Installing Requirements)
 	$(ENV)/pip install -U  pip
 	$(ENV)/pip install -Ur requirements.txt --no-cache-dir
 .PHONY: install
 
-test: install ## Run Tests.
+# =============================================================================
+# === Development Targets.
+# =============================================================================
+##@ Development
+test: build ## Run Tests.
+	$(info Running Tests)
+	@docker-compose -f docker-compose.test.yml run --rm --user $(UID):`id -g` web coverage run --source="." ./manage.py test --settings=settings.testing && coverage report -m --skip-empty && coverage html --skip-empty
+.PHONY: test
+
+test-local: install ## Run Tests.
 	$(info Running Tests)
 	$(ENV)/coverage run --source="." ./src/manage.py test --settings=settings.testing
 	$(ENV)/coverage report -m --skip-empty
 	$(ENV)/coverage html --skip-empty
-.PHONY: test
-
-test-local: build-local ## Run Tests.
-	$(info Running Tests)
-	@docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm --user $(UID):`id -g` web coverage run --source="." ./manage.py test --settings=settings.testing && coverage report -m --skip-empty && coverage html --skip-empty
-	# @docker-compose -f docker-compose.yml -f docker-compose.test.yml run --rm --user $(UID):`id -g` web python -m pytest --pylint --junitxml=test-output.xml --cov-report term --cov-report xml:cov.xml --cov=bnetcontentcore tests/unit
 .PHONY: test-local
 
-apitest: install ## Run API Tests.
+api-test: install ## Run API Tests.
 	$(info Running API Tests)
-.PHONY: apitest
+.PHONY: api-test
 
-apitest-local: install ## Run API Tests on local.
+api-test-local: install ## Run API Tests on local.
 	$(info Running API Tests)
-.PHONY: apitest-local
+.PHONY: api-test-local
+
+int-test: install ## Run Integration Tests.
+	$(info Running Integration Tests)
+.PHONY: int-test
+
+int-test-local: install ## Run Integration Tests on local.
+	$(info Running Integration Tests)
+.PHONY: int-test-local
 
 lint: install ## Run Linter.
 	$(info Running Linter)
 	$(ENV)/pylint src/ setup.py --reports=y > reports/pylint.report
 .PHONY: lint
+
+migrations: install ## Make Migrations.
+	$(info Make Migrations)
+	@python ./src/manage.py makemigrations accounts blog events home invites organizations places
+.PHONY: migrations
 
 # =============================================================================
 # === Clean-up Targets.
@@ -86,12 +125,15 @@ prune: clean ## Do a System Prune to remove untagged and unused Images/Container
 ##@ Documentation
 swagger-build: ## Build Swagger Image.
 	@cd ./swagger; ./view_or_edit_swagger.sh
+.PHONY: swagger-build
 
 swagger-view: ## Run Swagger in the view Mode.
 	@cd ./swagger; ./view_or_edit_swagger.sh view
+.PHONY: swagger-view
 
 swagger-edit: ## Run Swagger in the edit Mode.
 	cd ./swagger; ./view_or_edit_swagger.sh edit
+.PHONY: swagger-edit
 
 # =============================================================================
 # === CI/CD Targets.
@@ -107,20 +149,35 @@ build: login ## Build the Containers/Images, defined in the `docker-compose`.
 	@docker-compose -f docker-compose.yml --compatibility up --no-start
 .PHONY: build
 
-build-local: login ## Build the Containers/Images, defined in the `docker-compose`, with a local Overrides.
-	$(info Building the Containers/Images with a local Overrides)
-	@docker-compose -f docker-compose.yml -f docker-compose.local.yml build
-	@docker-compose up --no-start
-.PHONY: build-local
+run: login build run-int migrate makemessages compilemessages loaddata collectstatic ## Start the `docker-compose`.
 
-run: login build run-local ## Start the `docker-compose`, that includes local `docker-compose` Overrides.
+run-int: ## Start the Compose.
+	$(info Starting the Compose)
+	@docker-compose -f docker-compose.yml up -d
+.PHONY: run-local
 
+# run-local: prereq-win ## Start the Compose, bypassing Build Steps.
 run-local: ## Start the Compose, bypassing Build Steps.
 	$(info Starting the Compose)
 	@docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d
 	@docker-compose -f docker-compose.yml -f docker-compose.local.yml exec web python manage.py migrate
 # 	@docker-compose -f docker-compose.yml -f docker-compose.local.yml exec web python manage.py loaddata initial_data
 .PHONY: run-local
+
+prereq-win:
+	$(info Installing Prerequisits for Windows Platform)
+	@choco install make nodejs git
+	@npm install -g bower less recess
+	@pip install virtualenv
+	@python -m venv .env
+	$(ACTIVATE_WIN)
+	$(ENV_WIN)/pip install -U pip
+	$(ENV_WIN)/pip install -Ur requirements.txt --no-cache-dir
+.PHONY: prereq-win
+
+prereq-nix:
+	$(info Installing Prerequisits for *nix Platform)
+.PHONY: prereq-nix
 
 down: ## Clean up the Project Folders.
 	$(info Cleaning up Things)
@@ -138,6 +195,39 @@ publish: ## Publish a Package, such as a Python PIP Package.
 push: login ## Push the tagged Images to the respective Repo.
 	$(info Pushing the tagged Images to the respective Repo)
 .PHONY: push
+
+makemigrations:
+	$(info Making Migrations)
+	@docker-compose exec web python manage.py makemigrations
+.PHONY: makemigrations
+
+migrate:
+	$(info Migrating)
+	@docker-compose exec web python manage.py migrate
+.PHONY: migrate
+
+makemessages:
+	$(info Making Messages)
+	@docker-compose exec web python manage.py makemessages -l es
+	@docker-compose exec web python manage.py makemessages -l de
+.PHONY: makemessages
+
+compilemessages:
+	$(info Compiling Messages)
+	@docker-compose exec web python manage.py compilemessages -l es
+	@docker-compose exec web python manage.py compilemessages -l de
+.PHONY: compilemessages
+
+loaddata:
+	$(info Loading Data)
+	@docker-compose exec web python manage.py loaddata admin categories faq faq_sections site teams team_members
+.PHONY: loaddata
+
+collectstatic:
+	$(info Collecting static Files)
+	@docker-compose exec web python manage.py bower install
+	@docker-compose exec web python manage.py collectstatic --clear --no-input
+.PHONY: collectstatic
 
 # =============================================================================
 # === Helpers Targets.

@@ -34,8 +34,8 @@ DEBUG = True
 #     "CacheControl":     "max-age=86400",
 # }
 
-# DEFAULT_FILE_STORAGE = "app.S3.PublicMediaS3BotoStorage"
-# STATICFILES_STORAGE = "app.S3.CachedS3BotoStorage"
+# DEFAULT_FILE_STORAGE = "ddcore.S3Util.PublicMediaS3BotoStorage"
+# STATICFILES_STORAGE = "ddcore.S3Util.CachedS3BotoStorage"
 # STATIC_URL = f"https://{AWS_S3_BUCKET_DOMAIN}/static/"
 # MEDIA_URL = f"https://{AWS_S3_BUCKET_DOMAIN}/media/"
 
@@ -48,10 +48,9 @@ DEBUG = True
 ###############################################################################
 ### DJANGO CACHING                                                          ###
 ###############################################################################
-CACHE_MIDDLEWARE_ALIAS = "db"
-CACHE_MIDDLEWARE_SECONDS = 60
-CACHE_MIDDLEWARE_KEY_PREFIX = "local"
-
+CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="db")
+CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default=60)
+CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="local")
 
 ###############################################################################
 ### DJANGO LOGGING                                                          ###

@@ -47,7 +47,7 @@
     <div class="container">
         <div class="row">
             <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                <a class="btn" href="{% url 'profile-view' account.id %}">
+                <a class="btn" href="{% url 'profile-view' account.uid %}">
                     <i class="bi bi-info-circle"></i>
                     <span class="hidden-xs">{% trans "Information" %}</span>
                 </a>
@@ -65,7 +65,7 @@
 
             {% if need_to_know_affiliated_events %}
             <div class="col-xs-8 col-sm-8 col-md-8 sub-btn">
-                <a class="btn" href="{% url 'profile-events' account.id %}">
+                <a class="btn" href="{% url 'profile-events' account.uid %}">
                     <i class="bi bi-wrench"></i>
                     <span class="hidden-xs">{% trans "Affiliated with" %}</span>
                 </a>

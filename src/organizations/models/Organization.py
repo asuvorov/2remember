@@ -8,7 +8,6 @@ import uuid
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models
@@ -92,10 +91,67 @@ def organization_cover_directory_path(instance, filename):
 class Organization(
         ModelMeta, TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
-    """Organization Model."""
+    """Organization Model.
+
+    Attributes
+    ----------
+    uid                     : str       Organization UUID.
+
+    author                  : obj       Organization Author.
+    preview                 : obj       Organization Preview Image.
+    preview_thumbnail       : obj       Organization Preview Image Thumbnail.
+    cover                   : obj       Organization Cover Image.
+
+    title                   : str       Organization Title.
+    slug                    : str       Organization Slug, populated from Title Field.
+    description             : str       Organization Description.
+
+    tags                    : obj       Organization Tags List.
+    hashtag                 : str       Organization Hashtag.
 
     # -------------------------------------------------------------------------
+    # --- URLs.
+    # -------------------------------------------------------------------------
+    website                 : str       Organization Website.
+    video                   : str       Organization Video Link.
+    email                   : str       Organization Email.
+
+    addressless             : bool      Is addressless?
+    address                 : obj       Organization Address.
+
+    followers               : obj       Organization Followers.
+    subscribers             : obj       Organization Subscribers.
+
+    custom_data             : dict      Custom Data JSON Field.
+
+    allow_comments          : bool      Allow Comments?
+    is_newly_created        : bool      Is newly created?
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
+
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
+
+    created                 : datetime  Timestamp the Object has been created.
+    modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
+
+    Methods
+    -------
+    save()
+
+    pre_save()                          `pre_save`    Object Signal.
+    post_save()                         `post_save`   Object Signal.
+    pre_delete()                        `pre_delete`  Object Signal.
+    post_delete()                       `posr_delete` Object Signal.
+    m2m_changed()                       `m2m_changed` Object Signal.
+
+    """
+    # -------------------------------------------------------------------------
     # --- Basics.
+    # -------------------------------------------------------------------------
     uid = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -127,7 +183,8 @@ class Organization(
         blank=True)
 
     # -------------------------------------------------------------------------
-    # --- Tags
+    # --- Tags.
+    # -------------------------------------------------------------------------
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
@@ -139,21 +196,8 @@ class Organization(
         help_text=_("Hashtag"))
 
     # -------------------------------------------------------------------------
-    # --- Address & Phone Number
-    addressless = models.BooleanField(
-        default=False,
-        verbose_name=_("I will provide the Location later, if any."),
-        help_text=_("I will provide the Location later, if any."))
-    address = models.ForeignKey(
-        Address,
-        db_index=True,
-        on_delete=models.CASCADE,
-        null=True, blank=True,
-        verbose_name=_("Address"),
-        help_text=_("Organization Address"))
-
-    # -------------------------------------------------------------------------
     # --- URLs.
+    # -------------------------------------------------------------------------
     website = models.URLField(
         db_index=True,
         null=True, blank=True,
@@ -171,7 +215,23 @@ class Organization(
         help_text=_("Organization Email"))
 
     # -------------------------------------------------------------------------
-    # --- Followers.
+    # --- Address.
+    # -------------------------------------------------------------------------
+    addressless = models.BooleanField(
+        default=False,
+        verbose_name=_("I will provide the Location later, if any."),
+        help_text=_("I will provide the Location later, if any."))
+    address = models.ForeignKey(
+        Address,
+        db_index=True,
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+        verbose_name=_("Address"),
+        help_text=_("Organization Address"))
+
+    # -------------------------------------------------------------------------
+    # --- Followers & Subscribers.
+    # -------------------------------------------------------------------------
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -179,9 +239,6 @@ class Organization(
         related_name="organization_followers",
         verbose_name=_("Followers"),
         help_text=_("Organization Followers"))
-
-    # -------------------------------------------------------------------------
-    # --- Subscribers.
     subscribers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -191,31 +248,13 @@ class Organization(
         help_text=_("Organization Subscribers"))
 
     # -------------------------------------------------------------------------
-    # --- Contact Person. Author by default.
-    # is_alt_person = models.BooleanField(default=False)
-    # alt_person_fullname = models.CharField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Full Name"),
-    #     help_text=_("Organization Contact Person Full Name"))
-    # alt_person_email = models.EmailField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Email"),
-    #     help_text=_("Organization Contact Person Email"))
-    # alt_person_phone = PhoneNumberField(
-    #     blank=True,
-    #     verbose_name=_("Phone Number"),
-    #     help_text=_("Please, use the International Format, e.g. +1-202-555-0114."))
-
+    # --- Flags.
     # -------------------------------------------------------------------------
-    # --- Flags
     allow_comments = models.BooleanField(
         default=True,
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
-
     is_newly_created = models.BooleanField(default=True)
-    is_hidden = models.BooleanField(default=False)
-    is_deleted = models.BooleanField(default=False)
 
     objects = OrganizationManager()
 
@@ -306,6 +345,34 @@ class Organization(
         """Docstring."""
         return self.author == request.user
 
+    def get_hours_received(self):
+        """Docstring."""
+        # pylint: disable=import-error,import-outside-toplevel
+        from events.models import (
+            Event,
+            EventStatus)
+
+        hours_worked = Event.objects.filter(
+            status=EventStatus.COMPLETE,
+            organization=self,
+        ).aggregate(Sum("duration"))
+
+        return hours_worked["duration__sum"]
+
+    def get_upcoming_events(self):
+        """Docstring."""
+        # pylint: disable=import-error,import-outside-toplevel
+        from events.models import (
+            Event,
+            EventStatus)
+
+        upcoming_events = Event.objects.filter(
+            organization=self,
+            status=EventStatus.UPCOMING,
+            start_date__gte=datetime.date.today())
+
+        return upcoming_events
+
     def email_notify_admin_org_created(self, request=None):
         """Send Notification to the Organization Admin."""
         # ---------------------------------------------------------------------
@@ -385,13 +452,7 @@ class Organization(
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:

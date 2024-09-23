@@ -15,10 +15,10 @@
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
-{% cache 60 account-thumbnail account.user.id LANGUAGE_CODE %}
+{% cache 60 account-thumbnail account.uid LANGUAGE_CODE %}
 <div class="account-thumbnail card mb-3 shadow bg-body rounded" >
 {% with account.profile as profile %}
-    <a href="{% url 'profile-view' account.id %}">
+    <a href="{% url 'profile-view' account.uid %}">
     {% if profile.avatar %}
         {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid' %}
     {% else %}
@@ -27,7 +27,7 @@
     </a>
 
     <div class="card-body">
-        <a href="{% url 'profile-view' account.id %}">
+        <a href="{% url 'profile-view' account.uid %}">
             <h5 class="card-title">
                 {{ profile.auth_name }}
 

@@ -37,7 +37,37 @@ class SectionManager(models.Manager):
 # -----------------------------------------------------------------------------
 @autoconnect
 class Section(BaseModel):
-    """FAQ Section Model."""
+    """FAQ Section Model.
+
+    Attributes
+    ----------
+    author                  : obj       Section Author.
+    title                   : str       Section Title.
+    ordering                : int       Section Order.
+
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
+
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
+
+    created                 : datetime  Timestamp the Object has been created.
+    modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
+
+    Methods
+    -------
+    save()
+
+    pre_save()                          `pre_save`    Object Signal.
+    post_save()                         `post_save`   Object Signal.
+    pre_delete()                        `pre_delete`  Object Signal.
+    post_delete()                       `posr_delete` Object Signal.
+    m2m_changed()                       `m2m_changed` Object Signal.
+
+    """
 
     # -------------------------------------------------------------------------
     # --- Basics

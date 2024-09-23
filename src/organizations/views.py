@@ -192,6 +192,7 @@ def organization_create(request):
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,
+        required=False,
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
 
@@ -492,6 +493,7 @@ def organization_edit(request, slug=None):
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,
+        required=False,
         # required=not request.POST.get("addressless", False),
         instance=organization.address)
 

@@ -30,7 +30,7 @@
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
-            <li class="breadcrumb-item"><a href="{% url 'profile-view' account.id %}">{{ account.profile.auth_name }}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'profile-view' account.uid %}">{{ account.profile.auth_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Events" %}</li>
         </ol>
     </nav>

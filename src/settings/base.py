@@ -203,7 +203,6 @@ INSTALLED_APPS = (
     "djangoformsetjs",
     # "djangosecure",
     # "jquery",
-    # "papertrail",
     "rangefilter",
     # "sslserver",
     "storages",
@@ -220,6 +219,7 @@ INSTALLED_APPS = (
     "home",
     "invites",
     "organizations",
+    "papertrail",
     "places",
     # "tests",
 )
@@ -250,8 +250,8 @@ CACHES = {
     },
     "redis": {
         "BACKEND":  "django.core.cache.backends.redis.RedisCache",
-        # "LOCATION": "redis://127.0.0.1:6379",
-        "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "LOCATION": "redis://127.0.0.1:6379",
+        # "LOCATION": "redis://username:password@127.0.0.1:6379",
         "OPTIONS": {
             "MAX_ENTRIES":  1000,
             "db":           "10",
@@ -364,7 +364,7 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "level":        "DEBUG",
+            "level":        "INFO",
             "handlers":     ["console", "json_file", "plain_file"],
             "propagate":    True,
         },
@@ -1368,6 +1368,6 @@ sentry_sdk.init(
 ### DJANGO LOGGING                                                          ###
 ###############################################################################
 MIDDLEWARE += (
-    "app.middleware.DjangoRequestIDMiddleware",
-    "app.middleware.DjangoLoggingMiddleware",
+    "ddcore.middleware.DjangoRequestIDMiddleware",
+    "ddcore.middleware.DjangoLoggingMiddleware",
 )

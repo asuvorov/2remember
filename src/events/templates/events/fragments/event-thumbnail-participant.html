@@ -17,7 +17,7 @@
     <div class="event-participant-thumb">
         <div class="thumbnail">
         {% with account.profile as profile %}
-            <a href="{% url 'profile-view' account.id %}">
+            <a href="{% url 'profile-view' account.uid %}">
             {% if profile.avatar and need_to_know_profile_details %}
                 {% generateimage "common:thumbnail_bigger" source=profile.avatar -- alt=profile.auth_name %}
             {% else %}
@@ -27,7 +27,7 @@
         </div>
 
         <div class="participant-info">
-            <a href="{% url 'profile-view' account.id %}">
+            <a href="{% url 'profile-view' account.uid %}">
                 <p>
                 {% if need_to_know_profile_details %}
                     {{ profile.user.get_full_name }}

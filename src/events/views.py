@@ -209,6 +209,7 @@ def event_create(request):
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,
+        required=False,
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
 
@@ -473,7 +474,7 @@ def event_edit(request, slug):
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,
-        # required=not request.POST.get("addressless", False),
+        required=not request.POST.get("addressless", False),
         instance=event.address)
 
     # formset_social = SocialLinkFormSet(

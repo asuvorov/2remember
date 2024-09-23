@@ -1,30 +1,24 @@
-version: "3.8"
-
 services:
-  web:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    command: gunicorn --bind :8000 asgi:channel_layer --worker-class uvicorn_worker.Worker --reload
-    depends_on:
-      - redis
-      - db
-    env_file:
-      - ./docker_config/docker-compose/dev.env
+  db:
+    image:    mysql:8.0
+    restart:  always
     volumes:
-      - ./src:/app/src
+      - mysql-db:/var/lib/mysql
+      - ./docker_config/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+    environment:
+      MYSQL_DATABASE:       toremember
+      MYSQL_ROOT_PASSWORD:  root
     ports:
-      - "8000:8000"
-    working_dir: /app/src
+      - 3306:3306
+    expose:
+      - 3306
     healthcheck:
-      test:         ["CMD", "/curl", "127.0.0.1:8000/api/status"]
-      interval:     30s
-      timeout:      2s
-      retries:      3
-      start_period: 1s
+        test:     ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout:  10s
+        retries:  10
 
   redis:
-    image:    arm64v8/redis:alpine
+    image:    redis:alpine
     command:  redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./docker_config/redis.conf:/usr/local/etc/redis/redis.conf
@@ -35,39 +29,6 @@ services:
     environment:
       - ALLOW_EMPTY_PASSWORD=yes
 
-  db:
-    image:    postgres:14.7-alpine
-    # image:    docker.io/bitnami/postgresql:14
-    volumes:
-      - postgres-data:/var/lib/postgresql/data/
-      - ./docker_config/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
-    environment:
-      - POSTGRES_HOST_AUTH_METHOD=trust
-      - POSTGRES_HOST=localhost
-      - POSTGRES_USER=epa
-      - POSTGRES_USERNAME=epa
-      - POSTGRES_PASSWORD=epa
-      - POSTGRES_DB=epa
-      - DATABASE_ADMIN_USERNAME=epa
-      - TWX_DATABASE_USERNAME=epa
-      - TZ=UTC
-      - PGTZ=UTC
-    ports:
-      - 5432:5432
-    healthcheck:
-      test:     ["CMD", "pg_isready", "--username", "epa"]
-      interval: 1s
-      retries:  120
-
-  swagger:
-    image: swaggerapi/swagger-ui
-    environment:
-      SWAGGER_JSON: /swagger/swagger.yml
-    volumes:
-      - ./swagger:/swagger
-    ports:
-      - 8081:8080
-
 volumes:
-  postgres-data:
+  mysql-db:
     driver: local
