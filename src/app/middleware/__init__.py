@@ -4,5 +4,3 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . DjangoLoggingMiddleware import *
-from . DjangoRequestIDMiddleware import *
