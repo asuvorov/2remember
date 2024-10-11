@@ -70,7 +70,6 @@ from .models import (
 from .utils import (
     get_account_list_with_privacy,
     get_admin_events,
-    get_participations_intersection,
     is_profile_complete)
 
 
@@ -117,8 +116,6 @@ def account_signup(request):
             user.save()
             user.set_password(uform.cleaned_data["password"])
             user.save()
-
-            cprint(f">>> {user} : {type(user)}", "white", "on_red")
 
             # -----------------------------------------------------------------
             # --- Create User Profile.
@@ -898,8 +895,6 @@ def profile_view(request, uid36):
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
             #     Event(s), as the Account.
-            # if len(get_participations_intersection(request.user, account)) > 0:
-            #     show_complain_form = True
             show_complain_form = True
 
     # -------------------------------------------------------------------------

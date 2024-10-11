@@ -2,6 +2,8 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
+
 from django.contrib.auth import authenticate
 from django.utils.translation import gettext as _
 
@@ -15,9 +17,11 @@ from ddcore.models.Phone import Phone
 from accounts.models import UserProfile
 
 
-# -----------------------------------------------------------------------------
-# --- Authorization.
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Authorization.
+# ===
+# =============================================================================
 class AuthTokenSerializer(serializers.Serializer):
     """Auth Token Serializer."""
 
@@ -47,9 +51,11 @@ class AuthTokenSerializer(serializers.Serializer):
         raise serializers.ValidationError(_("Must include \"username\" and \"password\""))
 
 
-# -----------------------------------------------------------------------------
-# --- Autocomplete.
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Autocomplete.
+# ===
+# =============================================================================
 class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
     """Autocomplete Member Serializer."""
 
@@ -64,8 +70,7 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
             "uuid",
             "label",
             "value",
-            "avatar",
-        )
+            "avatar")
 
     def get_uuid(self, obj):
         """Get User ID."""
@@ -94,9 +99,11 @@ class AutocompleteMemberSerializer(serializers.HyperlinkedModelSerializer):
             return obj.full_name
 
 
-# -----------------------------------------------------------------------------
-# --- Core
-# -----------------------------------------------------------------------------
+# =============================================================================
+# ===
+# === Core.
+# ===
+# =============================================================================
 class AddressSerializer(serializers.HyperlinkedModelSerializer):
     """Address Serializer."""
 
@@ -108,8 +115,7 @@ class AddressSerializer(serializers.HyperlinkedModelSerializer):
             "city",
             "zip_code",
             "province",
-            "country",
-        )
+            "country")
 
 
 class PhoneSerializer(serializers.HyperlinkedModelSerializer):
@@ -119,5 +125,4 @@ class PhoneSerializer(serializers.HyperlinkedModelSerializer):
         model = Phone
         fields = (
             "phone_number",
-            "mobile_phone_number",
-        )
+            "mobile_phone_number")

@@ -15,8 +15,6 @@
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
-{% sum_of_hours_spent_tag account as sum_of_hours_spent %}
-
 {% cache 60 account-thumbnail account.uid LANGUAGE_CODE %}
 <div class="account-thumbnail card mb-3 shadow bg-body rounded" >
 {% with account.profile as profile %}

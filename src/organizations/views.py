@@ -182,15 +182,6 @@ def organization_directory(request):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -234,7 +225,6 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Phone Numbers.
             phone_numbers = formset_phone.save(commit=True)
-            cprint(f"                  {phone_numbers=}", "yellow")
             for phone_number in phone_numbers:
                 phone_number.content_type = ContentType.objects.get_for_model(organization)
                 phone_number.object_id = organization.id
@@ -243,7 +233,6 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
-            cprint(f"                  {social_links=}", "yellow")
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -337,7 +326,6 @@ def organization_details(request, slug=None):
     social_links = SocialLink.objects.filter(
         content_type=ContentType.objects.get_for_model(organization),
         object_id=organization.id)
-
     for social_link in social_links:
         if social_link.social_app == SocialApp.TWITTER:
             try:

@@ -145,7 +145,7 @@ login: ## Login the Docker Daemon to AWS ECR.
 
 build: login ## Build the Containers/Images, defined in the `docker-compose`.
 	$(info Building the Containers/Images)
-	@docker-compose -f docker-compose.yml build --no-cache --pull $(COMPOSE_SERVICE_NAME)
+	@docker-compose -f docker-compose.yml build --no-cache --force-rm --pull $(COMPOSE_SERVICE_NAME)
 	@docker-compose -f docker-compose.yml --compatibility up --no-start
 .PHONY: build
 
@@ -159,7 +159,9 @@ run-int: ## Start the Compose.
 # run-local: prereq-win ## Start the Compose, bypassing Build Steps.
 run-local: ## Start the Compose, bypassing Build Steps.
 	$(info Starting the Compose)
-	@docker-compose -f docker-compose.local.yml up -d
+	@docker-compose -f docker-compose.yml -f docker-compose.local.yml up -d
+	@docker-compose -f docker-compose.yml -f docker-compose.local.yml exec web python manage.py migrate
+# 	@docker-compose -f docker-compose.yml -f docker-compose.local.yml exec web python manage.py loaddata initial_data
 .PHONY: run-local
 
 prereq-win:
@@ -178,7 +180,7 @@ prereq-nix:
 .PHONY: prereq-nix
 
 down: ## Clean up the Project Folders.
-	$(info Cleaning Things )
+	$(info Cleaning up Things)
 	@docker-compose down
 .PHONY: down
 
