@@ -36,7 +36,7 @@
                 </strong>
 
                 <p>
-                    {% trans "created by" %} <a href="{% url 'profile-view' organization.author_id %}"> {{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
+                    {% trans "created by" %} <a href="{% url 'profile-view' organization.author.uid %}"> {{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
                 </p>
 
                 <blockquote>

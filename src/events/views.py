@@ -198,19 +198,17 @@ def event_create(request):
     # -------------------------------------------------------------------------
     organization_ids = map(int, query_dict.get("organization", []))
 
-    tz_name = request.session.get("django_timezone")
-
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
-        organization_ids=organization_ids,
-        # tz_name=tz_name
-        )
+        organization_ids=organization_ids)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
@@ -469,11 +467,13 @@ def event_edit(request, slug):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=event)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         required=not request.POST.get("addressless", False),
         instance=event.address)
 

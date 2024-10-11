@@ -94,7 +94,10 @@ class InviteListViewSet(APIView):
                 "message":      _("No Invitee ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not event_id and not organization_id and not org_group_id:
+        if (
+                not event_id and
+                not organization_id and
+                not org_group_id):
             return Response({
                 "message":      _("Neither Event, nor Organization, nor Organization Group ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -107,10 +110,7 @@ class InviteListViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Invitee.
         # ---------------------------------------------------------------------
-        invitee = get_object_or_None(
-            User,
-            id=invitee_id)
-
+        invitee = get_object_or_None(User, id=invitee_id)
         if not invitee:
             return Response({
                 "message":      _("Invitee not found."),
@@ -274,8 +274,7 @@ class InviteArchiveViewSet(APIView):
                 status=InviteStatus.NEW,
             )
 
-            invites.update(
-                is_archived_for_invitee=True)
+            invites.update(is_archived_for_invitee=True)
 
         elif kind == "sent":
             invites = Invite.objects.filter(

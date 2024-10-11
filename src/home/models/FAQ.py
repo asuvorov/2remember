@@ -5,7 +5,6 @@
 import inspect
 
 from django.conf import settings
-from django.contrib.sitemaps import ping_google
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -95,12 +94,8 @@ class FAQ(BaseModel):
 
     def post_save(self, created, **kwargs):
         """Docstring."""
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # ---------------------------------------------------------------------
+        # --- FIXME: Ping Google.
 
     def pre_delete(self, **kwargs):
         """Docstring."""

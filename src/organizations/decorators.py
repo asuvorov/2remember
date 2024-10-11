@@ -32,8 +32,7 @@ def organization_staff_member_required(func):
                         "organization_id", flat=True
                     )),
                 slug=slug,
-                is_deleted=False,
-            )
+                is_deleted=False)
         elif organization_id:
             organization = get_object_or_404(
                 Organization,
@@ -44,8 +43,7 @@ def organization_staff_member_required(func):
                         "organization_id", flat=True
                     )),
                 id=organization_id,
-                is_deleted=False,
-            )
+                is_deleted=False)
         else:
             raise Http404
 
@@ -86,8 +84,7 @@ def organization_access_check_required(func):
                         is_hidden=True,
                     ),
                     slug=slug,
-                    is_deleted=False,
-                )
+                    is_deleted=False)
             else:
                 organization = get_object_or_404(
                     Organization,
@@ -114,8 +111,7 @@ def organization_access_check_required(func):
                         is_hidden=True,
                     ),
                     id=organization_id,
-                    is_deleted=False,
-                )
+                    is_deleted=False)
             else:
                 organization = get_object_or_404(
                     Organization,

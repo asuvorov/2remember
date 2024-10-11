@@ -330,7 +330,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "simple",
+            "formatter":    "json",  # "simple",
         },
         "json_file": {
             "level":        "DEBUG",
@@ -393,7 +393,9 @@ AUTH_USER_MODEL = "ddcore.User"
 ###############################################################################
 ### CUSTOM PROJECT SETTINGS                                                 ###
 ###############################################################################
-PAYPAL_SHARE_LINK = "https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&currency_code=USD"
+PAYPAL_SHARE_LINK = ("https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0"
+                     "&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&"
+                     "currency_code=USD")
 
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
@@ -405,6 +407,93 @@ ORGANIZATION_TITLE_RESERVED_WORDS = [
     "directory", "create",
 ]
 
+SUBSCRIPTION_PLANS = {
+    "BASIC": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "images": {
+                "max_width":            1600,
+                "max_height":           900,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+                "quality":              80,
+            },
+            "documents": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "upon_request_only":    False,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "organizations": {
+            "upon_request_only":    True,
+            "max_per_day":          0,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "places": {},
+    },
+    "TIER-1": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "images": {
+                "max_width":            1920,
+                "max_height":           1080,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+                "quality":              90,
+            },
+            "documents": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "upon_request_only":    False,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "organizations": {
+            "upon_request_only":    True,
+            "max_per_day":          0,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "places": {},
+    },
+}
+#  720p – SD (1280 x 720)
+#            (1600 x 900)
+# 1080p – HD (1920 x 1080)
+# 1440p – 2K (2560 x 1440)
+# 2160p – 4K (3840 x 2160)
 
 ###############################################################################
 ### DJANGO BOWER                                                            ###
@@ -497,7 +586,8 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "forms",
 #                 "items": [
-#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button", "ImageButton", "HiddenField",
+#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button",
+#                     "ImageButton", "HiddenField",
 #                 ]
 #             },
 #             "/",
@@ -527,7 +617,8 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "insert",
 #                 "items": [
-#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar", "PageBreak", "Iframe",
+#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar",
+#                     "PageBreak", "Iframe",
 #                 ]
 #             },
 #             "/",
@@ -817,15 +908,18 @@ MAX_ORGANIZATIONS_PER_QUERY = 250
 PASSWORD_MIN_LENGTH = 6         # Defaults to 6
 PASSWORD_MAX_LENGTH = 30        # Defaults to None
 PASSWORD_DICTIONARY = None
-PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly the same.
-PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for default
+PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly
+                                # the same.
+PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for
+                                # default
 PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit for that particular Set
     "UPPER":    1,              # Uppercase
     "LOWER":    1,              # Lowercase
     "LETTERS":  1,              # Either uppercase or lowercase Letters
     "DIGITS":   1,              # Digits
     "SPECIAL":  1,              # Not alphanumeric, Space or punctuation Character
-    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
+    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or
+                                # punctuation character)
 }
 
 
@@ -880,7 +974,8 @@ INSTALLED_APPS += (
 ROSETTA_MESSAGES_PER_PAGE = 20
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
-YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
+YANDEX_TRANSLATE_KEY =\
+    "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
 
 AZURE_CLIENT_ID = None
 AZURE_CLIENT_SECRET = None
@@ -1136,7 +1231,7 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 ###############################################################################
 PB_SOCIAL_LINKS = {
     "PB_FACEBOOK":  "#",
-    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live"    / S1
+    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live" / S1
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
@@ -1231,18 +1326,24 @@ UPLOADER_SETTINGS = {
 
 SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
-SUPPORTED_DEFAULTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DEFAULTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DEFAULTS_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DEFAULTS_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
 
 SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
-SUPPORTED_DOCUMENTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DOCUMENTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DOCUMENTS_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DOCUMENTS_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
 
 SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
-SUPPORTED_IMAGES_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_IMAGES_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
 
 
 ###############################################################################
