@@ -5,6 +5,8 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django_extensions.db.fields
 
+import ddcore
+
 
 class Migration(migrations.Migration):
 
