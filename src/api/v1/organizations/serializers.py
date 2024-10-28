@@ -18,4 +18,5 @@ class OrganizationGroupSerializer(serializers.HyperlinkedModelSerializer):
             "id",
             "organization_id",
             "name",
-            "description")
+            "description",
+        )

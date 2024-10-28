@@ -2,8 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
-
 from django import forms
 from django.forms import BaseModelFormSet
 from django.forms.models import modelformset_factory

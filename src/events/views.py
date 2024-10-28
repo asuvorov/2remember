@@ -3,16 +3,15 @@
 """
 
 import datetime
+import inspect
 import logging
+import mimetypes
 
 from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import (
-    BadRequest,
-    PermissionDenied)
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
@@ -21,7 +20,6 @@ from django.core.paginator import (
     Paginator)
 from django.http import (
     Http404,
-    HttpResponseForbidden,
     HttpResponseRedirect)
 from django.shortcuts import (
     get_object_or_404,
@@ -54,7 +52,9 @@ from app.forms import (
     AddressForm,
     SocialLinkFormSet)
 
-from .decorators import event_access_check_required
+from .decorators import (
+    event_access_check_required,
+    event_org_staff_member_required)
 from .forms import (
     CreateEditEventForm,
     FilterEventForm)
@@ -91,53 +91,6 @@ def event_list(request):
     events, page_total, page_number = get_event_list(request)
 
     # -------------------------------------------------------------------------
-    # --- Events near.
-    #     According to the Location, specified in the User Profile.
-    # -------------------------------------------------------------------------
-    # if (
-    #         request.user.is_authenticated and
-    #         request.user.profile.address):
-    #     # ---------------------------------------------------------------------
-    #     # --- Filter by Country and City.
-    #     if (
-    #             request.user.profile.address.country and
-    #             request.user.profile.address.city):
-    #         events = events.filter(
-    #             address__country=request.user.profile.address.country,
-    #             address__city__icontains=request.user.profile.address.city)
-    #     # ---------------------------------------------------------------------
-    #     # --- Filter by Province and Zip Code
-    #     elif (
-    #             request.user.profile.address.province and
-    #             request.user.profile.address.zip_code):
-    #         events = events.filter(
-    #             address__province__icontains=request.user.profile.address.province,
-    #             address__zip_code=request.user.profile.address.zip_code)
-    #     else:
-    #         events = []
-    # elif request.geo_data:
-    #     # ---------------------------------------------------------------------
-    #     # --- Filter by Country and City.
-    #     if request.geo_data["country_code"]:
-    #         events = events.filter(address__country=request.geo_data["country_code"])
-
-    #     if request.geo_data["city"]:
-    #         events = events.filter(address__city__icontains=request.geo_data["city"])
-    # else:
-    #     events = []
-
-    # -------------------------------------------------------------------------
-    # --- New Events.
-    #     Date created is less than 1 Day ago.
-    # -------------------------------------------------------------------------
-    # time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
-
-    # events = get_event_list(request).filter(
-    #     status=EventStatus.UPCOMING,
-    #     start_date__gte=datetime.date.today(),
-    #     created__gte=time_threshold)
-
-    # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     filter_form = FilterEventForm(
@@ -154,6 +107,293 @@ def event_list(request):
             "page_title":   _("All Events"),
             "page_total":   page_total,
             "page_number":  page_number,
+            "filter_form":  filter_form,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def event_near_you_list(request):
+    """List of the Events, near the User."""
+    # -------------------------------------------------------------------------
+    # --- Retrieve Event List.
+    # -------------------------------------------------------------------------
+    events = get_event_list(request).filter(
+        status=EventStatus.UPCOMING,
+        start_date__gte=datetime.date.today())
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    filter_form = FilterEventForm(
+        request.GET or None, request.FILES or None,
+        qs=events)
+
+    # -------------------------------------------------------------------------
+    # --- Events near.
+    #     According to the Location, specified in the User Profile.
+    # -------------------------------------------------------------------------
+    if (
+            request.user.is_authenticated and
+            request.user.profile.address):
+        # ---------------------------------------------------------------------
+        # --- Filter by Country and City.
+        if (
+                request.user.profile.address.country and
+                request.user.profile.address.city):
+            events = events.filter(
+                address__country=request.user.profile.address.country,
+                address__city__icontains=request.user.profile.address.city)
+        # ---------------------------------------------------------------------
+        # --- Filter by Province and Zip Code
+        elif (
+                request.user.profile.address.province and
+                request.user.profile.address.zip_code):
+            events = events.filter(
+                address__province__icontains=request.user.profile.address.province,
+                address__zip_code=request.user.profile.address.zip_code)
+        else:
+            events = []
+    elif request.geo_data:
+        # ---------------------------------------------------------------------
+        # --- Filter by Country and City.
+        if request.geo_data["country_code"]:
+            events = events.filter(address__country=request.geo_data["country_code"])
+
+        if request.geo_data["city"]:
+            events = events.filter(address__city__icontains=request.geo_data["city"])
+    else:
+        events = []
+
+    # -------------------------------------------------------------------------
+    # --- Filter QuerySet by Tag ID.
+    # -------------------------------------------------------------------------
+    tag_id = request.GET.get("tag", None)
+
+    if tag_id:
+        try:
+            events = events.filter(
+                tags__id=tag_id,
+            ).distinct()
+        except Exception:
+            pass
+
+    # -------------------------------------------------------------------------
+    # --- Slice the Event List.
+    # -------------------------------------------------------------------------
+    events = events[:settings.MAX_EVENTS_PER_QUERY]
+
+    # -------------------------------------------------------------------------
+    # --- Paginate QuerySet.
+    # -------------------------------------------------------------------------
+    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
+
+    page = request.GET.get("page")
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        # ---------------------------------------------------------------------
+        # --- If Page is not an integer, deliver first Page.
+        events = paginator.page(1)
+    except EmptyPage:
+        # ---------------------------------------------------------------------
+        # --- If Page is out of Range (e.g. 9999), deliver last Page of the Results.
+        events = paginator.page(paginator.num_pages)
+
+    return render(
+        request, "events/event-list.html", {
+            "events":       events,
+            "page_title":   _("Events near you"),
+            "page_total":   paginator.num_pages,
+            "page_number":  events.number,
+            "filter_form":  filter_form,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def event_new_list(request):
+    """List of the new Events."""
+    # -------------------------------------------------------------------------
+    # --- New Events.
+    #     Date created is less than 1 Day ago.
+    # -------------------------------------------------------------------------
+    time_threshold = datetime.datetime.now() - datetime.timedelta(days=1)
+
+    events = get_event_list(request).filter(
+        status=EventStatus.UPCOMING,
+        start_date__gte=datetime.date.today(),
+        created__gte=time_threshold)
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    filter_form = FilterEventForm(
+        request.GET or None, request.FILES or None,
+        qs=events)
+
+    # -------------------------------------------------------------------------
+    # --- Filter QuerySet by Tag ID.
+    # -------------------------------------------------------------------------
+    tag_id = request.GET.get("tag", None)
+
+    if tag_id:
+        try:
+            events = events.filter(
+                tags__id=tag_id,
+            ).distinct()
+        except Exception:
+            pass
+
+    # -------------------------------------------------------------------------
+    # --- Slice the Event List.
+    # -------------------------------------------------------------------------
+    events = events[:settings.MAX_EVENTS_PER_QUERY]
+
+    # -------------------------------------------------------------------------
+    # --- Paginate QuerySet.
+    # -------------------------------------------------------------------------
+    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
+
+    page = request.GET.get("page")
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        # ---------------------------------------------------------------------
+        # --- If Page is not an integer, deliver first Page.
+        events = paginator.page(1)
+    except EmptyPage:
+        # ---------------------------------------------------------------------
+        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
+        #     Results.
+        events = paginator.page(paginator.num_pages)
+
+    return render(
+        request, "events/event-list.html", {
+            "events":       events,
+            "page_title":   _("New Events"),
+            "page_total":   paginator.num_pages,
+            "page_number":  events.number,
+            "filter_form":  filter_form,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def event_dateless_list(request):
+    """List of the dateless Events."""
+    events = get_event_list(request).filter(status=EventStatus.UPCOMING)
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    filter_form = FilterEventForm(
+        request.GET or None, request.FILES or None,
+        qs=events)
+
+    # -------------------------------------------------------------------------
+    # --- Filter QuerySet by Tag ID.
+    # -------------------------------------------------------------------------
+    tag_id = request.GET.get("tag", None)
+
+    if tag_id:
+        try:
+            events = events.filter(
+                tags__id=tag_id,
+            ).distinct()
+        except Exception:
+            pass
+
+    # -------------------------------------------------------------------------
+    # --- Slice the Event List.
+    # -------------------------------------------------------------------------
+    events = events[:settings.MAX_EVENTS_PER_QUERY]
+
+    # -------------------------------------------------------------------------
+    # --- Paginate QuerySet.
+    # -------------------------------------------------------------------------
+    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
+
+    page = request.GET.get("page")
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        # ---------------------------------------------------------------------
+        # --- If Page is not an integer, deliver first Page.
+        events = paginator.page(1)
+    except EmptyPage:
+        # ---------------------------------------------------------------------
+        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
+        #     Results.
+        events = paginator.page(paginator.num_pages)
+
+    return render(
+        request, "events/event-dateless-list.html", {
+            "events":       events,
+            "page_title":   _("Dateless Events"),
+            "page_total":   paginator.num_pages,
+            "page_number":  events.number,
+            "filter_form":  filter_form,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def event_featured_list(request):
+    """List of the featured Events."""
+    events = get_event_list(request).filter(
+        status=EventStatus.UPCOMING,
+        start_date__gte=datetime.date.today())
+
+    # -------------------------------------------------------------------------
+    # --- Prepare Form(s).
+    # -------------------------------------------------------------------------
+    filter_form = FilterEventForm(
+        request.GET or None, request.FILES or None,
+        qs=events)
+
+    # -------------------------------------------------------------------------
+    # --- Filter QuerySet by Tag ID.
+    # -------------------------------------------------------------------------
+    tag_id = request.GET.get("tag", None)
+
+    if tag_id:
+        try:
+            events = events.filter(
+                tags__id=tag_id,
+            ).distinct()
+        except Exception:
+            pass
+
+    # -------------------------------------------------------------------------
+    # --- Slice the Event List.
+    # -------------------------------------------------------------------------
+    events = events[:settings.MAX_EVENTS_PER_QUERY]
+
+    # -------------------------------------------------------------------------
+    # --- Paginate QuerySet.
+    # -------------------------------------------------------------------------
+    paginator = Paginator(events, settings.MAX_EVENTS_PER_PAGE)
+
+    page = request.GET.get("page")
+
+    try:
+        events = paginator.page(page)
+    except PageNotAnInteger:
+        # ---------------------------------------------------------------------
+        # --- If Page is not an integer, deliver first Page.
+        events = paginator.page(1)
+    except EmptyPage:
+        # ---------------------------------------------------------------------
+        # --- If Page is out of Range (e.g. 9999), deliver last Page of the
+        #     Results.
+        events = paginator.page(paginator.num_pages)
+
+    return render(
+        request, "events/event-list.html", {
+            "events":       events,
+            "page_title":   _("Featured Events"),
+            "page_total":   paginator.num_pages,
+            "page_number":  events.number,
             "filter_form":  filter_form,
         })
 
@@ -198,17 +438,19 @@ def event_create(request):
     # -------------------------------------------------------------------------
     organization_ids = map(int, query_dict.get("organization", []))
 
+    tz_name = request.session.get("django_timezone")
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         user=request.user,
-        organization_ids=organization_ids)
+        organization_ids=organization_ids,
+        # tz_name=tz_name
+        )
     aform = AddressForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
@@ -439,12 +681,79 @@ def event_details(request, slug):
         })
 
 
+@event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
+def event_confirm(request, slug):
+    """Event Details."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+    is_admin = False
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the Event.
+    # -------------------------------------------------------------------------
+    event = get_object_or_404(
+        Event,
+        slug=slug)
+
+    # -------------------------------------------------------------------------
+    # --- Only authenticated Users may sign up to the Event.
+    # -------------------------------------------------------------------------
+    if request.user.is_authenticated:
+        # ---------------------------------------------------------------------
+        # --- Check, if the User is a Event Admin.
+        is_admin = is_event_admin(
+            request.user,
+            event)
+
+    return render(
+        request, "events/event-details-confirm.html", {
+            "event":    event,
+            "is_admin":     is_admin,
+        })
+
+
+@event_access_check_required
+@log_default(my_logger=logger, cls_or_self=False)
+def event_acknowledge(request, slug):
+    """Event Details."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+    is_admin = False
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the Event.
+    # -------------------------------------------------------------------------
+    event = get_object_or_404(
+        Event,
+        slug=slug)
+
+    # -------------------------------------------------------------------------
+    # --- Only authenticated Users may sign up to the Event.
+    # -------------------------------------------------------------------------
+    if request.user.is_authenticated:
+        # ---------------------------------------------------------------------
+        # --- Check, if the User is a Event Admin.
+        is_admin = is_event_admin(
+            request.user,
+            event)
+
+    return render(
+        request, "events/event-details-acknowledge.html", {
+            "event":    event,
+            "is_admin":     is_admin,
+        })
+
+
 # =============================================================================
 # ===
 # === EVENT EDIT
 # ===
 # =============================================================================
 @login_required
+# @event_org_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug):
     """Edit Event."""
@@ -452,8 +761,6 @@ def event_edit(request, slug):
     # --- Initials.
     # -------------------------------------------------------------------------
     event = get_object_or_404(Event, slug=slug)
-    if not event.is_author(request):
-        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Completed or closed (deleted) Events cannot be modified.
@@ -467,13 +774,11 @@ def event_edit(request, slug):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         user=request.user,
         instance=event)
     aform = AddressForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         required=not request.POST.get("addressless", False),
         instance=event.address)
 
@@ -509,23 +814,21 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Move temporary Files to real Event Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
+            cprint("[---  INFO   ---] FILES          : %s" % form.cleaned_data["tmp_files"], "cyan")
+
             for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1]
+                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
 
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
+                cprint("[---  INFO   ---] TMP  FILE      : %s" % tmp_file, "cyan")
+                cprint("[---  INFO   ---] MIME TYPE      : %s" % mime_type, "cyan")
 
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
+                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
                     AttachedImage.objects.create(
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(event),
                         object_id=event.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
+                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
@@ -536,7 +839,7 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
+            cprint("[---  INFO   ---] LINKS          : %s" % request.POST["tmp_links"], "cyan")
             for link in request.POST["tmp_links"].split():
                 url = validate_url(link)
 

@@ -2,11 +2,10 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
 import logging
 
 from django.conf import settings
-from django.core.mail import send_mail
+from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import status
@@ -16,7 +15,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from annoying.functions import get_object_or_None
-from termcolor import cprint
 
 from ddcore.SendgridUtil import send_templated_email
 
@@ -29,11 +27,13 @@ from home.models import FAQ
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === FAQ
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ FAQ
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class FAQDetailsViewSet(APIView):
     """FAQ Details View Set."""
 
@@ -47,36 +47,26 @@ class FAQDetailsViewSet(APIView):
     def delete(self, request, faq_id):
         """DELETE: FAQ delete.
 
-        Parameters
-        ----------
-        faq_id              :int
+            Receive:
 
-                Example Payload:
+                faq_id                  :uint:
 
-                    {
-                        "faq_id":   100,
-                    }
+            Return:
 
-        Returns
-        -------
-                            :dict
+                status                  200/400/404/500
 
-                Example Payload:
+            Example Payload:
 
-                    {
-                        "message":  "Successfully removed the FAQ.",
-                    }
-
-        Raises
-        ------
-
+                {
+                    "faq_id":           100,
+                }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not faq_id:
             return Response({
@@ -89,9 +79,12 @@ class FAQDetailsViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the FAQ.
+        # --- Retrieve the FAQ
         # ---------------------------------------------------------------------
-        faq = get_object_or_None(FAQ, pk=faq_id)
+        faq = get_object_or_None(
+            FAQ,
+            pk=faq_id)
+
         if not faq:
             return Response({
                 "message":      _("FAQ not found."),
@@ -108,11 +101,13 @@ class FAQDetailsViewSet(APIView):
 faq_details = FAQDetailsViewSet.as_view()
 
 
-# =============================================================================
-# ===
-# === Contact Us
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ Contact Us
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class ContactUsViewSet(APIView):
     """Contact usView Set."""
 
@@ -126,84 +121,54 @@ class ContactUsViewSet(APIView):
     def post(self, request):
         """POST: Send a Message
 
-        Parameters
-        ----------
-        name                :str
-        email               :str
-        subject             :str
-        message             :str
+            Receive:
 
-                Example Payload:
+                name                    :uint:
+                email                   :uint:
+                subject                 :uint:
+                message                 :uint:
 
-                    {
-                        "name":     "Artem Suvorov",
-                        "email":    "artem.suvorov@gmail.com",
-                        "Subject":  "Question",
-                        "Message":  "Some Message",
-                    }
+            Return:
 
-        Returns
-        -------
-                            :dict
+                status                  200/400/404/500
 
-                Example Payload:
+            Example Payload:
 
-                    {
-                        "message":  "Successfully sent the Message.",
-                    }
-
-        Raises
-        ------
-
+                {
+                    "name":             "Artem Suvorov",
+                    "email":            "artem.suvorov@gmail.com",
+                    "Subject":          "Question",
+                    "Message":          "Some Message",
+                }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         name = request.data.get("name", "")
         email = request.data.get("email", "")
         subject = request.data.get("subject", "")
         message = request.data.get("message", "")
 
-        cprint(f"[---  DUMP   ---] {name=}\n"
-               f"                  {email=}\n"
-               f"                  {subject=}\n"
-               f"                  {message=}", "yellow")
-
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
-        if (
-                not name or
-                not email or
-                not subject or
-                not message):
+        if not name or not email or not subject or not message:
             return Response({
                 "message":      _("No Name, Email, Subject or Message provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Send the Message.
+        # --- Send the Message
         # ---------------------------------------------------------------------
         if request.user.is_authenticated:
-            from_name = (
-                f"{name} (registered as {request.user.get_full_name()} <{request.user.email}>")
+            from_name = "{name} (registered as {account_name} <{account_email}>".format(
+                name=name,
+                account_name=request.user.get_full_name(),
+                account_email=request.user.email)
         else:
             from_name = name
 
         # --- Send Email
-        # try:
-        #     send_mail(
-        #         f"{from_name} -- {subject}",
-        #         message,
-        #         settings.EMAIL_SUPPORT,
-        #         [settings.EMAIL_SUPPORT],
-        #         # [email for admin, email in settings.ADMINS].append(settings.EMAIL_SUPPORT),
-        #         fail_silently=False)
-        # except Exception as exc:
-        #     cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-        #            f"                 {type(exc).__name__}\n"
-        #            f"                 {str(exc)}", "white", "on_red")
-
         send_templated_email(
             template_subj={
                 "name":     "home/emails/inquiry_subject.txt",
@@ -212,17 +177,22 @@ class ContactUsViewSet(APIView):
             template_text={
                 "name":     "home/emails/inquiry.txt",
                 "context": {
-                    "from_name":    from_name,
-                    "from_email":   email,
-                    "from_subject": subject,
-                    "from_message": message,
+                    "from_name":        from_name,
+                    "from_email":       email,
+                    "from_subject":     subject,
+                    "from_message":     message,
                 },
             },
             template_html=None,
             from_email=settings.EMAIL_SENDER,
-            to=[settings.EMAIL_SUPPORT],
-            cc=[email for admin, email in settings.ADMINS],
-            headers=None)
+            to=[
+                settings.EMAIL_SUPPORT,
+            ],
+            cc=[
+                email for admin, email in settings.ADMINS
+            ],
+            headers=None,
+        )
 
         return Response({
             "message":      _("Successfully sent the Message."),

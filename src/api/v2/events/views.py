@@ -26,8 +26,8 @@ from api.auth import CsrfExemptSessionAuthentication
 from app.decorators import log_default
 from events.models import (
     Event,
-    EventMode,
-    EventStatus,
+    # EventMode,
+    # EventStatus,
     # Participation,
     # ParticipationStatus,
     # Role

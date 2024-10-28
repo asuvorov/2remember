@@ -2,8 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
-
 from django.conf import settings
 from django.core.paginator import (
     EmptyPage,

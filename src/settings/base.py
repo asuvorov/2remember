@@ -9,8 +9,6 @@ from django.utils.translation import gettext_lazy as _
 
 from decouple import config
 
-from . import __version__
-
 
 ###############################################################################
 ### PRODUCT VERSIONS                                                        ###
@@ -21,11 +19,11 @@ PRODUCT_NAME = "2Remember"
 #     <major>.<minor>.<patch>
 
 VERSION_API = "v1"
-# VERSION_MAJOR = 0
-# VERSION_MINOR = 3
-# VERSION_PATCH = 2
+VERSION_MAJOR = 0
+VERSION_MINOR = 3
+VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{__version__}"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC3 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>)"
 
 
 ###############################################################################
@@ -49,12 +47,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     "default": {
-        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3", cast=str),
-        "NAME":     config("DB_NAME", default="sqlite.db", cast=str),
-        "USER":     config("DB_USER", default="", cast=str),
-        "PASSWORD": config("DB_PASSWORD", default="", cast=str),
-        "HOST":     config("DB_HOST", default="", cast=str),
-        "PORT":     config("DB_PORT", default="", cast=str),
+        "ENGINE":   config("DB_ENGINE", default="django.db.backends.sqlite3"),
+        "NAME":     config("DB_NAME", default="sqlite.db"),
+        "USER":     config("DB_USER", default=""),
+        "PASSWORD": config("DB_PASSWORD", default=""),
+        "HOST":     config("DB_HOST", default=""),
+        "PORT":     config("DB_PORT", default=""),
         "OPTIONS": {
             # "autocommit": True,
         }
@@ -105,8 +103,6 @@ STATICFILES_FINDERS = (
 SECRET_KEY = config("SECRET_KEY", default="@zew8t_wcz!qn9=8+hheltx@&b#!x@i6ores96lhbnobr3jp*c")
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 
-print(f">>> {SECURE_SSL_REDIRECT=}")
-
 TEMPLATES = [
     {
         "BACKEND":  "django.template.backends.django.DjangoTemplates",
@@ -144,9 +140,8 @@ TEMPLATES = [
                 "events.context_processors.pb_participation_choices",
 
                 "app.context_processors.pb_settings",
-                "app.context_processors.pb_social_link_choices",
                 "app.context_processors.pb_social_links",
-                "app.context_processors.pb_supported_media",
+                "app.context_processors.pb_social_link_choices",
             ],
         },
     },
@@ -203,6 +198,7 @@ INSTALLED_APPS = (
     "djangoformsetjs",
     # "djangosecure",
     # "jquery",
+    # "papertrail",
     "rangefilter",
     # "sslserver",
     "storages",
@@ -219,7 +215,6 @@ INSTALLED_APPS = (
     "home",
     "invites",
     "organizations",
-    "papertrail",
     "places",
     # "tests",
 )
@@ -250,8 +245,8 @@ CACHES = {
     },
     "redis": {
         "BACKEND":  "django.core.cache.backends.redis.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
-        # "LOCATION": "redis://username:password@127.0.0.1:6379",
+        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
         "OPTIONS": {
             "MAX_ENTRIES":  1000,
             "db":           "10",
@@ -330,7 +325,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "json",  # "simple",
+            "formatter":    "simple",
         },
         "json_file": {
             "level":        "DEBUG",
@@ -393,9 +388,7 @@ AUTH_USER_MODEL = "ddcore.User"
 ###############################################################################
 ### CUSTOM PROJECT SETTINGS                                                 ###
 ###############################################################################
-PAYPAL_SHARE_LINK = ("https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0"
-                     "&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&"
-                     "currency_code=USD")
+PAYPAL_SHARE_LINK = "https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&currency_code=USD"
 
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
@@ -407,93 +400,6 @@ ORGANIZATION_TITLE_RESERVED_WORDS = [
     "directory", "create",
 ]
 
-SUBSCRIPTION_PLANS = {
-    "BASIC": {
-        "fare": 0,  # Cents.
-        "attachments": {
-            "images": {
-                "max_width":            1600,
-                "max_height":           900,
-                "max_per_event":        25,
-                "max_per_organization": 25,
-                "quality":              80,
-            },
-            "documents": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "video_urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-        },
-        "accounts": {},
-        "events": {
-            "upon_request_only":    False,
-            "max_per_day":          1,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "places": {},
-    },
-    "TIER-1": {
-        "fare": 0,  # Cents.
-        "attachments": {
-            "images": {
-                "max_width":            1920,
-                "max_height":           1080,
-                "max_per_event":        25,
-                "max_per_organization": 25,
-                "quality":              90,
-            },
-            "documents": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "video_urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-        },
-        "accounts": {},
-        "events": {
-            "upon_request_only":    False,
-            "max_per_day":          1,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "places": {},
-    },
-}
-#  720p – SD (1280 x 720)
-#            (1600 x 900)
-# 1080p – HD (1920 x 1080)
-# 1440p – 2K (2560 x 1440)
-# 2160p – 4K (3840 x 2160)
 
 ###############################################################################
 ### DJANGO BOWER                                                            ###
@@ -586,8 +492,7 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "forms",
 #                 "items": [
-#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button",
-#                     "ImageButton", "HiddenField",
+#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button", "ImageButton", "HiddenField",
 #                 ]
 #             },
 #             "/",
@@ -617,8 +522,7 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "insert",
 #                 "items": [
-#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar",
-#                     "PageBreak", "Iframe",
+#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar", "PageBreak", "Iframe",
 #                 ]
 #             },
 #             "/",
@@ -908,18 +812,15 @@ MAX_ORGANIZATIONS_PER_QUERY = 250
 PASSWORD_MIN_LENGTH = 6         # Defaults to 6
 PASSWORD_MAX_LENGTH = 30        # Defaults to None
 PASSWORD_DICTIONARY = None
-PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly
-                                # the same.
-PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for
-                                # default
+PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly the same.
+PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for default
 PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit for that particular Set
     "UPPER":    1,              # Uppercase
     "LOWER":    1,              # Lowercase
     "LETTERS":  1,              # Either uppercase or lowercase Letters
     "DIGITS":   1,              # Digits
     "SPECIAL":  1,              # Not alphanumeric, Space or punctuation Character
-    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or
-                                # punctuation character)
+    "WORDS":    0               # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
 }
 
 
@@ -974,8 +875,7 @@ INSTALLED_APPS += (
 ROSETTA_MESSAGES_PER_PAGE = 20
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
-YANDEX_TRANSLATE_KEY =\
-    "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
+YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
 
 AZURE_CLIENT_ID = None
 AZURE_CLIENT_SECRET = None
@@ -1024,20 +924,16 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### PYTHON/DJANGO SOCIAL AUTH                                               ###
 ###############################################################################
-INSTALLED_APPS += (
-    "social_django",
-)
+# INSTALLED_APPS += (
+#     "social_django",
+# )
 
-AUTHENTICATION_BACKENDS += (
-    "social_core.backends.open_id.OpenIdAuth",
-    # "social_core.backends.google.GoogleOpenId",
-    # "social_core.backends.google.GoogleOAuth2",
-    # "social_core.backends.google.GoogleOAuth",
-    # "social_core.backends.facebook.FacebookAppOAuth2",
-    # "social_core.backends.facebook.FacebookOAuth2",
-    # "social_core.backends.linkedin.LinkedinOAuth2",
-    # "social_core.backends.twitter.TwitterOAuth",
-)
+# AUTHENTICATION_BACKENDS += (
+#     "social_core.backends.facebook.FacebookAppOAuth2",
+#     "social_core.backends.facebook.FacebookOAuth2",
+#     "social_core.backends.twitter.TwitterOAuth",
+#     "social_core.backends.linkedin.LinkedinOAuth2",
+# )
 
 # SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
@@ -1046,18 +942,18 @@ LOGIN_URL = "/accounts/signin/"
 LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # LOGIN_ERROR_URL = "/login-error/"
 
-# SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
-# SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
-# SOCIAL_AUTH_LOGIN_URL = "/login-url/"
-# SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
-# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
-# SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
-# SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
+# #SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
+# #SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
+# #SOCIAL_AUTH_LOGIN_URL = "/login-url/"
+# #SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
+# #SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
+# #SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
+# #SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
 
-SOCIAL_AUTH_USER_MODEL = "ddcore.User"
+# #SOCIAL_AUTH_USER_MODEL = "foo.bar.User"
 
 # SOCIAL_AUTH_UUID_LENGTH = 16
-SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+# SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # SOCIAL_AUTH_SLUGIFY_USERNAMES = False
 # SOCIAL_AUTH_CLEAN_USERNAMES = True
 
@@ -1069,104 +965,69 @@ SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # ])
 # SOCIAL_AUTH_CREATE_USERS = True
 
-SOCIAL_AUTH_PIPELINE = (
-    # Get the Information about the User, and return it in a simple Format to
-    # create the User Instance later.
-    "social_core.pipeline.social_auth.social_details",
+# SOCIAL_AUTH_PIPELINE = (
+#     "social_core.pipeline.social_auth.social_details",
+#     "social_core.pipeline.social_auth.social_uid",
+#     "social_core.pipeline.social_auth.auth_allowed",
+#     "social_core.pipeline.social_auth.social_user",
+#     "social_core.pipeline.user.get_username",
+#     "social_core.pipeline.mail.mail_validation",
+#     "social_core.pipeline.social_auth.associate_by_email",
+#     "social_core.pipeline.user.create_user",
+#     "social_core.pipeline.social_auth.associate_user",
+#     "social_core.pipeline.debug.debug",
+#     "social_core.pipeline.social_auth.load_extra_data",
+#     "social_core.pipeline.user.user_details",
 
-    # Get the social UID of the given User in the Provider.
-    "social_core.pipeline.social_auth.social_uid",
-
-    # Verify, that the current Auth Process is valid within the current Project.
-    # This is where Emails and Domains Whitelists are applied (if defined).
-    "social_core.pipeline.social_auth.auth_allowed",
-
-    # Check, if the current social Account is already associated in the Site.
-    "social_core.pipeline.social_auth.social_user",
-
-    # Make up a Username for the User, and append a random String at the End,
-    # if there’s any Collision.
-    "social_core.pipeline.user.get_username",
-
-    "social_core.pipeline.mail.mail_validation",
-
-    # Associate current Auth with a User with the same Email Address in the DB.
-    "social_core.pipeline.social_auth.associate_by_email",
-
-    # Create a User Account, if haven’t been found one yet.
-    "social_core.pipeline.user.create_user",
-
-    # Create the Record, that associated the social Account with this User.
-    "social_core.pipeline.social_auth.associate_user",
-
-    "social_core.pipeline.debug.debug",
-
-    # Populate the `extra_data` Field in the social Record with the Values,
-    # specified by Settings (and the default ones, like `access_token`, etc).
-    "social_core.pipeline.social_auth.load_extra_data",
-
-    # Update the User Record with any changed Info from the Auth Service.
-    "social_core.pipeline.user.user_details",
-
-    "accounts.auth_pipelines.save_profile",
-)
-
-# -----------------------------------------------------------------------------
-# --- GOOGLE
-# -----------------------------------------------------------------------------
-# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ""
-# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ""
+#     "accounts.auth_pipelines.save_profile",
+# )
 
 # -----------------------------------------------------------------------------
 # --- FACEBOOK
 # -----------------------------------------------------------------------------
-# SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
-# SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
-# SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
-# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-#     "fields":   "id,name,email",
-# }
+SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
+SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
+SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    "fields":   "id,name,email",
+}
 
 # -----------------------------------------------------------------------------
 # --- TWITTER
 # -----------------------------------------------------------------------------
-TWITTER_CONSUMER_KEY = config("X_TWITTER_CONSUMER_KEY", default="")
-TWITTER_CONSUMER_SECRET = config("X_TWITTER_CONSUMER_SECRET", default="")
-TWITTER_OAUTH_TOKEN = config("X_TWITTER_ACCESS_KEY", default="")
-TWITTER_OAUTH_SECRET = config("X_TWITTER_ACCESS_SECRET", default="")
+TWITTER_OAUTH_TOKEN = config("TWITTER_OAUTH_TOKEN", default="")
+TWITTER_OAUTH_SECRET = config("TWITTER_OAUTH_SECRET", default="")
+TWITTER_CONSUMER_KEY = config("TWITTER_CONSUMER_KEY", default="")
+TWITTER_CONSUMER_SECRET = config("TWITTER_CONSUMER_SECRET", default="")
 
-# SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
-# SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
+SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
+SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
 
 # -----------------------------------------------------------------------------
 # --- LINKEDIN
 # -----------------------------------------------------------------------------
-# LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
-# LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
-# LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
-# LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
-# LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
-# LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
+LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
+LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
+LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
+LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
+LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
+LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
 
 # -----------------------------------------------------------------------------
 # --- OAuth1 Settings.
 # -----------------------------------------------------------------------------
-# SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
-# SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
-# SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
-# SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
+SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
+SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
+SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
 
 # -----------------------------------------------------------------------------
 # --- OAuth2 Settings.
 # -----------------------------------------------------------------------------
-# SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
-# SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
-# SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
-# SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
-
-# -----------------------------------------------------------------------------
-# --- GITHUB
-# -----------------------------------------------------------------------------
+SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
+SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
+SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
+SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
 
 
 ###############################################################################
@@ -1193,28 +1054,10 @@ WHITENOISE_MAX_AGE = 31536000
 
 
 ###############################################################################
-### EMAILING                                                                 ###
+### MAILING                                                                 ###
 ###############################################################################
 EMAIL_SENDER = "no-reply@2remember.live"
 EMAIL_SUPPORT = "support@2remember.live"
-
-
-EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"
-                                                                                                # "django.core.mail.backends.filebased.EmailBackend"
-                                                                                                # "django.core.mail.backends.locmem.EmailBackend"
-                                                                                                # "django.core.mail.backends.dummy.EmailBackend"
-EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)  # e.g. "/tmp/app-messages"
-EMAIL_HOST = config("EMAIL_HOST", default="localhost")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_PORT = config("EMAIL_PORT", default=25)
-EMAIL_SUBJECT_PREFIX = config("EMAIL_SUBJECT_PREFIX", default="[Django] ")
-EMAIL_USE_LOCALTIME = config("EMAIL_USE_LOCALTIME", default=False)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
-EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
-EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
-EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
@@ -1230,11 +1073,14 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 ### 2REMEMBER SOCIAL LINKS                                                  ###
 ###############################################################################
 PB_SOCIAL_LINKS = {
+    # --- On behalf of "artem.suvorov@gamil.com" / S1
     "PB_FACEBOOK":  "#",
-    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live" / S1
+    # --- On behalf of "support@2remember.live"    / S1
+    "PB_TWITTER":   "https://x.com/2rememberlive",
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
+    # --- On behalf of "support@2remember.live"    / S1
     "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }
@@ -1245,105 +1091,93 @@ PB_SOCIAL_LINKS = {
 ###############################################################################
 UPLOADER_SETTINGS = {
     "default": {
-        "MIME_TYPES_MAP": {
-            "csv":  "text/csv",
-            "doc":  "application/msword",
-            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "odt":  "application/vnd.oasis.opendocument.text",
-            "pdf":  "application/pdf",
-            "rtf":  "application/rtf",
-            "txt":  "text/plain",
-            "bmp":  "image/bmp",
-            "gif":  "image/gif",
-            "jpg":  "image/jpeg",
-            "jpeg": "image/jpeg",
-            "png":  "image/png",
-            "tif":  "image/tiff",
-            "tiff": "image/tiff",
-            "webp": "image/webp",
-        },
+        "FILE_TYPES": [
+            "gif", "jpg", "jpeg", "png",
+            "doc", "docx", "txt", "rtf",
+        ],
+        "CONTENT_TYPES": [
+            "image/gif",
+            "image/jpeg",
+            "image/pjpeg",
+            "image/png",
+            "application/pdf",
+            "application/msword",
+            "text/plain",
+            "text/rtf",
+        ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "documents": {
-        "MIME_TYPES_MAP": {
-            "csv":  "text/csv",
-            "doc":  "application/msword",
-            "docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-            "odt":  "application/vnd.oasis.opendocument.text",
-            "pdf":  "application/pdf",
-            "rtf":  "application/rtf",
-            "txt":  "text/plain",
-        },
+        "FILE_TYPES": [
+            "doc", "docx", "txt", "rtf",
+        ],
+        "CONTENT_TYPES": [
+            "application/pdf",
+            "application/msword",
+            "text/plain",
+            "text/rtf",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "images": {
-        "MIME_TYPES_MAP": {
-            "bmp":  "image/bmp",
-            "gif":  "image/gif",
-            "jpg":  "image/jpeg",
-            "jpeg": "image/jpeg",
-            "png":  "image/png",
-            "tif":  "image/tiff",
-            "tiff": "image/tiff",
-            "webp": "image/webp",
-        },
+        "FILE_TYPES": [
+            "gif", "jpg", "jpeg", "png",
+        ],
+        "CONTENT_TYPES": [
+            "image/gif",
+            "image/jpeg",
+            "image/pjpeg",
+            "image/png",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "video": {
-        "MIME_TYPES_MAP": {
-            "avi":  "video/x-msvideo",
-            "mp4":  "video/mp4",
-            "mpg":  "video/mpeg",
-            "mpeg": "video/mpeg",
-            "ogv":  "video/ogg",
-            "webm": "video/webm",
-        },
+        "FILE_TYPES": [
+            "flv", "mpg", "mpeg", "mp4",
+            "avi", "mkv", "ogg",
+            "wmv", "mov", "webm",
+        ],
+        "CONTENT_TYPES": [
+            "video/mpeg",
+            "video/mp4",
+            "video/ogg",
+            "video/quicktime",
+            "video/webm",
+            "video/x-ms-wmv",
+            "video/x-flv",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "audio": {
-        "MIME_TYPES_MAP": {
-            "aac":  "audio/aac",
-            "mid":  "audio/midi",
-            "midi": "audio/midi",
-            "mp3":  "audio/mpeg",
-            "ogv":  "audio/ogg",
-            "wav":  "audio/wav",
-            "weba": "audio/webm",
-        },
+        "FILE_TYPES": [
+            "mp3", "mp4", "ogg", "wma", "wax", "wav", "webm",
+        ],
+        "CONTENT_TYPES": [
+            "audio/basic",
+            "audio/L24",
+            "audio/mp4",
+            "audio/mpeg",
+            "audio/ogg",
+            "audio/vorbis",
+            "audio/x-ms-wma",
+            "audio/x-ms-wax",
+            "audio/vnd.rn-realaudio",
+            "audio/vnd.wave",
+            "audio/webm",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
+        "AUTO_UPLOAD":  True,
     }
 }
-
-SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
-SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
-SUPPORTED_DEFAULTS_STR_EXT =\
-    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DEFAULTS_STR_REG =\
-    "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-
-SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
-SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
-SUPPORTED_DOCUMENTS_STR_EXT =\
-    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DOCUMENTS_STR_REG =\
-    "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-
-SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
-SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
-SUPPORTED_IMAGES_STR_EXT =\
-    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_IMAGES_STR_REG =\
-    "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
 
 
 ###############################################################################
@@ -1368,6 +1202,6 @@ sentry_sdk.init(
 ### DJANGO LOGGING                                                          ###
 ###############################################################################
 MIDDLEWARE += (
-    "ddcore.middleware.DjangoRequestIDMiddleware",
-    "ddcore.middleware.DjangoLoggingMiddleware",
+    "app.middleware.DjangoRequestIDMiddleware",
+    "app.middleware.DjangoLoggingMiddleware",
 )

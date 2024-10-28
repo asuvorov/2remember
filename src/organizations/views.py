@@ -4,21 +4,17 @@
 
 import inspect
 import logging
+import mimetypes
 
 from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
-from django.core.exceptions import (
-    BadRequest,
-    PermissionDenied)
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
-# from django.db.models import Q
-from django.http import (
-    HttpResponseForbidden,
-    HttpResponseRedirect)
+from django.db.models import Q
+from django.http import HttpResponseRedirect
 from django.shortcuts import (
     get_object_or_404,
     render)
@@ -54,9 +50,9 @@ from events.models import (
     # ParticipationStatus
     )
 
-# from .decorators import (
-#     organization_access_check_required,
-#     organization_staff_member_required)
+from .decorators import (
+    organization_access_check_required,
+    organization_staff_member_required)
 from .forms import CreateEditOrganizationForm
 from .models import (
     Organization,
@@ -182,6 +178,15 @@ def organization_directory(request):
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
+    cprint("***" * 27, "green")
+    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
+    cprint("***" * 27, "green")
+    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
+    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
+    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
+    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
+    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -225,6 +230,7 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Phone Numbers.
             phone_numbers = formset_phone.save(commit=True)
+            cprint(f"                  {phone_numbers=}", "yellow")
             for phone_number in phone_numbers:
                 phone_number.content_type = ContentType.objects.get_for_model(organization)
                 phone_number.object_id = organization.id
@@ -233,6 +239,7 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
+            cprint(f"                  {social_links=}", "yellow")
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -326,6 +333,7 @@ def organization_details(request, slug=None):
     social_links = SocialLink.objects.filter(
         content_type=ContentType.objects.get_for_model(organization),
         object_id=organization.id)
+
     for social_link in social_links:
         if social_link.social_app == SocialApp.TWITTER:
             try:
@@ -414,7 +422,7 @@ def organization_details(request, slug=None):
         })
 
 
-# @organization_access_check_required
+@organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_staff(request, slug=None):
     """Organization Staff."""
@@ -441,7 +449,7 @@ def organization_staff(request, slug=None):
         })
 
 
-# @organization_access_check_required
+@organization_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_groups(request, slug=None):
     """Organization Groups."""
@@ -479,8 +487,6 @@ def organization_groups(request, slug=None):
 def organization_edit(request, slug=None):
     """Edit Organization."""
     organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -491,21 +497,18 @@ def organization_edit(request, slug=None):
         user=request.user,
         instance=organization)
     aform = AddressForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
         instance=organization.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
     formset_social = SocialLinkFormSet(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         queryset=SocialLink.objects.filter(
             content_type=ContentType.objects.get_for_model(organization),
             object_id=organization.id))
@@ -544,23 +547,16 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Move temporary Files to real Organization Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
             for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1]
+                mime_type = mimetypes.guess_type(tmp_file.file.name)[0]
 
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
-
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
+                if mime_type in settings.UPLOADER_SETTINGS["images"]["CONTENT_TYPES"]:
                     AttachedImage.objects.create(
                         name=tmp_file.name,
                         image=File(storage.open(tmp_file.file.name, "rb")),
                         content_type=ContentType.objects.get_for_model(organization),
                         object_id=organization.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
+                elif mime_type in settings.UPLOADER_SETTINGS["documents"]["CONTENT_TYPES"]:
                     AttachedDocument.objects.create(
                         name=tmp_file.name,
                         document=File(storage.open(tmp_file.file.name, "rb")),
@@ -571,7 +567,6 @@ def organization_edit(request, slug=None):
 
             # -----------------------------------------------------------------
             # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
             for link in request.POST["tmp_links"].split():
                 url = validate_url(link)
 
@@ -628,8 +623,6 @@ def organization_populate_newsletter(request, slug=None):
     # --- Initials.
     # -------------------------------------------------------------------------
     organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

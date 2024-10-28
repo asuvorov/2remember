@@ -2,8 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
-
 from django import forms
 from django.conf import settings
 from django.forms import BaseModelFormSet
@@ -20,12 +18,12 @@ from termcolor import cprint
 
 from ddcore.models.Attachment import TemporaryFile
 
-from app.choices import (
-    month_choices,
-    day_of_month_choices)
 from .models import (
     Event,
-    Role)
+    Role,
+    # month_choices,
+    # day_of_month_choices
+    )
 
 
 # =============================================================================
@@ -235,6 +233,7 @@ class CreateEditEventForm(forms.ModelForm):
     def clean_duration(self):
         """Clean `duration` Field."""
         duration = self.cleaned_data["duration"]
+
         if duration <= 0:
             raise forms.ValidationError(_("Duration should be greater, than 0"))
 
@@ -243,6 +242,7 @@ class CreateEditEventForm(forms.ModelForm):
     def clean_title(self):
         """Clean `title` Field."""
         title = self.cleaned_data["title"]
+
         if title.lower() in settings.EVENT_TITLE_RESERVED_WORDS:
             self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as a Event Title.")])
@@ -443,25 +443,29 @@ class FilterEventForm(forms.Form):
             attrs={
                 "placeholder": _("Event Title"),
             }),
-        required=False)
+        required=False,
+    )
     year = forms.ChoiceField(
         widget=forms.Select(
             attrs={
                 "class":        "form-control form-select",
                 "placeholder":  _("Year"),
             }),
-        required=False)
+        required=False,
+    )
     month = forms.ChoiceField(
         widget=forms.Select(
             attrs={
                 "class":        "form-control form-select",
                 "placeholder":  _("Month"),
             }),
-        required=False)
+        required=False,
+    )
     day = forms.ChoiceField(
         widget=forms.Select(
             attrs={
                 "class":        "form-control form-select",
                 "placeholder":  _("Day"),
             }),
-        required=False)
+        required=False,
+    )

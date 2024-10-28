@@ -4,6 +4,7 @@
 
 import logging
 
+from django.conf import settings
 from django.db.models import Q
 
 from rest_framework import (
@@ -39,11 +40,9 @@ def api_root(request):
     return Response({})
 
 
-# =============================================================================
-# ===
-# === Authorization
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- Authorization
+# -----------------------------------------------------------------------------
 class GetAuthTokenViewSet(APIView):
     """Get Auth Token."""
 
@@ -55,6 +54,7 @@ class GetAuthTokenViewSet(APIView):
     def post(self, request):
         """POST."""
         serializer = self.serializer_class(data=request.DATA)
+
         if serializer.is_valid():
             token, created = Token.objects.get_or_create(user=serializer.validated_data["user"])
 
@@ -71,11 +71,9 @@ class GetAuthTokenViewSet(APIView):
 get_auth_token = GetAuthTokenViewSet.as_view()
 
 
-# =============================================================================
-# ===
-# === Autocomplete
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- Autocomplete
+# -----------------------------------------------------------------------------
 class AutocompleteMemberViewSet(viewsets.ModelViewSet):
     """Autocomplete."""
 

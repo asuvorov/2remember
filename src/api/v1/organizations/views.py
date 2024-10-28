@@ -2,7 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
 import json
 import logging
 
@@ -36,11 +35,13 @@ from .utils import (
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === ORGANIZATIONS
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ ORGANIZATIONS
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class OrganizationStaffMemberOrderViewSet(APIView):
     """Organization Staff Members Order View Set."""
 
@@ -77,12 +78,12 @@ class OrganizationStaffMemberOrderViewSet(APIView):
                 ]
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         staff_member_order = request.data.get("staff_member_order", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id:
             return Response({
@@ -102,11 +103,11 @@ class OrganizationStaffMemberOrderViewSet(APIView):
                    f"                 {str(exc)}", "white", "on_red")
 
             return Response({
-                "message":      str(exc),
+                "message":      str(e),
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -114,13 +115,14 @@ class OrganizationStaffMemberOrderViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and update the Organization Staff Members.
+        # --- Retrieve and update the Organization Staff Members
         # ---------------------------------------------------------------------
         for staff_member in staff_member_order:
             organization_staff_member = get_object_or_None(
                 OrganizationStaff,
                 pk=staff_member["member_id"],
-                organization_id=organization_id)
+                organization_id=organization_id,
+            )
 
             if organization_staff_member:
                 organization_staff_member.order = staff_member["order"]
@@ -167,14 +169,14 @@ class OrganizationStaffMemberEditViewSet(APIView):
                 }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         member_id = request.data.get("member_id", "")
         position = request.data.get("position", "")
         bio = request.data.get("bio", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id or not member_id:
             return Response({
@@ -187,7 +189,7 @@ class OrganizationStaffMemberEditViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -195,7 +197,7 @@ class OrganizationStaffMemberEditViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and update the Organization Staff Members.
+        # --- Retrieve and update the Organization Staff Members
         # ---------------------------------------------------------------------
         organization_staff_member = get_object_or_None(
             OrganizationStaff,
@@ -250,13 +252,13 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
                 }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         member_id = request.data.get("member_id", "")
         reason = request.data.get("reason", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id or not member_id:
             return Response({
@@ -269,7 +271,7 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -277,7 +279,7 @@ class OrganizationStaffMemberRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and update the Organization Staff Members.
+        # --- Retrieve and update the Organization Staff Members
         # ---------------------------------------------------------------------
         organization_staff_member = get_object_or_None(
             OrganizationStaff,
@@ -333,7 +335,7 @@ class OrganizationGroupListViewSet(APIView):
         data = []
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id:
             return Response({
@@ -341,11 +343,11 @@ class OrganizationGroupListViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -392,13 +394,13 @@ class OrganizationGroupListViewSet(APIView):
                 }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         group_name = request.data.get("group_name", "")
         group_description = request.data.get("group_description", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id:
             return Response({
@@ -411,7 +413,7 @@ class OrganizationGroupListViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -419,9 +421,11 @@ class OrganizationGroupListViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the Organization.
+        # --- Retrieve the Organization
         # ---------------------------------------------------------------------
-        organization = get_object_or_None(Organization, id=organization_id)
+        organization = get_object_or_None(
+            Organization,
+            id=organization_id)
 
         if not organization:
             return Response({
@@ -429,7 +433,7 @@ class OrganizationGroupListViewSet(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
         # ---------------------------------------------------------------------
-        # --- Create a Group.
+        # --- Create a Group
         # ---------------------------------------------------------------------
         group = OrganizationGroup.objects.create(
             author=request.user,
@@ -486,17 +490,15 @@ class OrganizationGroupRemoveViewSet(APIView):
                 }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         group_id = request.data.get("group_id", "")
         reason = request.data.get("reason", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
-        if (
-                not organization_id or
-                not group_id):
+        if not organization_id or not group_id:
             return Response({
                 "message":      _("No Organization/Group ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -507,7 +509,7 @@ class OrganizationGroupRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -515,7 +517,7 @@ class OrganizationGroupRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and update the Organization Group Members.
+        # --- Retrieve and update the Organization Group Members
         # ---------------------------------------------------------------------
         organization_group = get_object_or_None(
             OrganizationGroup,
@@ -530,11 +532,11 @@ class OrganizationGroupRemoveViewSet(APIView):
         organization_group.delete()
 
         # ---------------------------------------------------------------------
-        # --- Send Email Notification(s).
+        # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Save the Log.
+        # --- Save the Log
         # ---------------------------------------------------------------------
 
         return Response({
@@ -578,19 +580,16 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
                 }
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
         group_id = request.data.get("group_id", "")
         member_id = request.data.get("member_id", "")
         reason = request.data.get("reason", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
-        if (
-                not organization_id or
-                not group_id or
-                not member_id):
+        if not organization_id or not group_id or not member_id:
             return Response({
                 "message":      _("No Organization/Group/Member ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -601,7 +600,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_staff_member_required(request, organization_id):
             return Response({
@@ -609,7 +608,7 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and update the Organization Group Members.
+        # --- Retrieve and update the Organization Group Members
         # ---------------------------------------------------------------------
         organization_group = get_object_or_None(
             OrganizationGroup,
@@ -622,7 +621,9 @@ class OrganizationGroupMemberRemoveViewSet(APIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
         # ---------------------------------------------------------------------
-        organization_group_member = get_object_or_None(User, pk=member_id)
+        organization_group_member = get_object_or_None(
+            User,
+            pk=member_id)
 
         if not organization_group_member:
             return Response({
@@ -667,11 +668,11 @@ class OrganizationSubscribeViewSet(APIView):
                 {}
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request.
+        # --- Retrieve Data from the Request
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors.
+        # --- Handle Errors
         # ---------------------------------------------------------------------
         if not organization_id:
             return Response({
@@ -679,7 +680,7 @@ class OrganizationSubscribeViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights.
+        # --- Check the Rights
         # ---------------------------------------------------------------------
         if not organization_access_check_required(request, organization_id):
             return Response({
@@ -689,14 +690,17 @@ class OrganizationSubscribeViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Organization
         # ---------------------------------------------------------------------
-        organization = get_object_or_None(Organization, id=organization_id)
+        organization = get_object_or_None(
+            Organization,
+            id=organization_id)
+
         if not organization:
             return Response({
                 "message":      _("Organization not found."),
             }, status=status.HTTP_404_NOT_FOUND)
 
         # ---------------------------------------------------------------------
-        # --- Subscribe to the Organization.
+        # --- Subscribe to the Organization
         # ---------------------------------------------------------------------
         organization.subscribers.add(request.user)
         organization.save()

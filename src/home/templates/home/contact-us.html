@@ -51,8 +51,8 @@
                     {% endblocktrans %}
                     </div>
 
-                    {% get_tweets for "2rememberlive" as tweets exclude "replies, retweets" limit 10 %}
-                    {# get_tweets for "2rememberlive" as tweets limit 10 #}
+                    {% get_tweets for "2remember" as tweets exclude "replies, retweets" limit 10 %}
+                    {# get_tweets for "2remember" as tweets limit 10 #}
 
                     <ul class="bxslider">
                     {% for tweet in tweets  %}
@@ -127,8 +127,6 @@
         var subject = $("#contact-us-form").find("input[name='subject']").val();
         var message = $("#contact-us-form").find("textarea[name='message']").val();
 
-        $("#spinner").fadeIn("slow");
-
         $.post("{% url 'api-contact-us' %}", {
             "name":                 name,
             "email":                email,
@@ -159,8 +157,6 @@
                 }).show();
             };
         });
-
-        $("#spinner").fadeOut("slow");
 
         return true;
     }

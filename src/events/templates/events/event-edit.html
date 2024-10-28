@@ -76,12 +76,12 @@
                                     <div class="row g-2">
                                         <div class="col-12">
                                             <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
-                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <input id="id_preview" name="preview" class="form-control" type="file" accept="image/*">
                                             <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                         <div class="col-12">
                                             <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
-                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
+                                            <input id="id_cover" name="cover" class="form-control" type="file" accept="image/*">
                                             <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                                         </div>
                                     </div>
@@ -254,15 +254,15 @@
                         </div>
                     </div>
 
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal" style="margin-right:15px;">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadImagesPopupModal">
                         <i class="bi bi-camera"></i>
                         <span id="total_images" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal" style="margin-right:15px;">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadDocumentsPopupModal">
                         <i class="bi bi-paperclip"></i>
                         <span id="total_documents" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
-                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal" style="margin-right:15px;">
+                    <button type="button" class="btn btn-primary position-relative" data-bs-toggle="modal" data-bs-target="#uploadURLsPopupModal">
                         <i class="bi bi-link"></i>
                         <span id="total_links" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
                     </button>
@@ -271,7 +271,7 @@
                         <hr>
                         <h4>{% trans "Images" %}</h4>
                         <div class="gallery">
-                        {% for img in event.image_list.all %}
+                        {% for img in event.get_image_list.all %}
                             <div class="gallery-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                 <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
@@ -283,7 +283,7 @@
                         <hr>
                         <h4>{% trans "Documents" %}</h4>
                         <div class="gallery">
-                        {% for doc in event.document_list.all %}
+                        {% for doc in event.get_document_list.all %}
                             <div class="documents-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                 <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
@@ -296,7 +296,7 @@
                         <hr>
                         <h4>{% trans "Links" %}</h4>
                         <div class="gallery">
-                        {% for url in event.url_list.all %}
+                        {% for url in event.get_url_list.all %}
                             <div class="links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                 <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
@@ -309,7 +309,7 @@
                         <hr>
                         <h4>{% trans "Video Links" %}</h4>
                         <div class="gallery">
-                        {% for video_url in event.video_url_list.all %}
+                        {% for video_url in event.get_video_url_list.all %}
                             <div class="video-links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                 <a href="{{ video_url.url }}">{{ video_url.url }}</a>
@@ -453,16 +453,16 @@
         /*********************************************************************/
         /*** Slider                                                        ***/
         /*********************************************************************/
-        // var mySlider = $("input.slider");
+        var mySlider = $("input.slider");
 
-        // mySlider.bootstrapSlider("setValue", {{ event.duration }});
-        // mySlider.on("slide", function (event) {
-        //     $("#currentSliderValue").text(event.value);
-        // });
+        mySlider.bootstrapSlider("setValue", {{ event.duration }});
+        mySlider.on("slide", function (event) {
+            $("#currentSliderValue").text(event.value);
+        });
 
-        // $("#currentSliderValue").text(
-        //     mySlider.bootstrapSlider("getValue")
-        // );
+        $("#currentSliderValue").text(
+            mySlider.bootstrapSlider("getValue")
+        );
 
         /*********************************************************************/
         /*** Contact Person UX                                             ***/

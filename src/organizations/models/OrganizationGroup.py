@@ -3,6 +3,7 @@
 """
 
 from django.conf import settings
+from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -10,10 +11,14 @@ from django.utils.translation import gettext_lazy as _
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
     AttachmentMixin,
+    BaseModel,
     CommentMixin,
+    ComplaintMixin,
+    Phone,
     RatingMixin,
     ViewMixin,
-    TitleDescriptionBaseModel)
+    TitleDescriptionBaseModel,
+    TitleSlugDescriptionBaseModel)
 
 from .Organization import Organization
 
@@ -135,6 +140,7 @@ class OrganizationGroupMixin:
             pk__in=self.user.organization_group_members.all().values_list(
                 "organization_id", flat=True
             ),
-            is_deleted=False)
+            is_deleted=False,
+        )
 
         return organizations

@@ -7,8 +7,13 @@ from .models import (
     EventCategoryColors, event_category_colors,
     EventCategoryIcons, event_category_icons,
     EventCategoryImages, event_category_images,
+    # EventMode,
+    # EventStatus,
     # ParticipationRemoveMode,
     # ParticipationStatus, participation_status_choices,
+    # Month, month_choices,
+    # DayOfWeek, day_of_week_choices,
+    # day_of_month_choices
     )
 
 
@@ -23,6 +28,8 @@ def pb_event_choices(request):
         "event_category_icons":     event_category_icons,
         "EventCategoryImages":      EventCategoryImages,
         "event_category_images":    event_category_images,
+        # "EventStatus":              EventStatus,
+        # "EventMode":                EventMode,
     }
 
 

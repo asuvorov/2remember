@@ -2,7 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
 import logging
 
 from django.contrib.auth.models import User
@@ -29,11 +28,13 @@ from app.decorators import log_default
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === EMAIL
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ EMAIL
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class EmailUpdateViewSet(APIView):
     """Email Update View Set."""
 
@@ -109,11 +110,13 @@ class EmailUpdateViewSet(APIView):
 email_update = EmailUpdateViewSet.as_view()
 
 
-# =============================================================================
-# ===
-# === PASSWORD
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ PASSWORD
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class ForgotPasswordNotifyViewSet(APIView):
     """Forgot Password notify View Set."""
 
@@ -158,7 +161,10 @@ class ForgotPasswordNotifyViewSet(APIView):
         # --- Retrieve the User
         # ---------------------------------------------------------------------
         try:
-            user = get_object_or_None(User, email=email)
+            user = get_object_or_None(
+                User,
+                email=email)
+
         except Exception as exc:
             cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
                    f"                 {type(exc).__name__}\n"
