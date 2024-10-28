@@ -263,36 +263,3 @@ def need_to_know_rejected_participations_tag(request, account):
     #     account=account,
     #     flag_members=account.privacy_members.participations_rejected,
     #     flag_admins=account.privacy_admins.participations_rejected)
-
-
-# =============================================================================
-# ===
-# === DIFFERENT
-# ===
-# =============================================================================
-@register.simple_tag
-def sum_of_hours_spent_tag(account):
-    """Docstring."""
-    # sum_of_hours_spent = Event.objects.filter(
-    #     pk__in=Participation.objects.filter(
-    #         user=account,
-    #         status=ParticipationStatus.ACKNOWLEDGED
-    #     ).values_list("event_id", flat=True)
-    # ).aggregate(Sum("duration"))
-
-    # if sum_of_hours_spent["duration__sum"]:
-    #     return sum_of_hours_spent["duration__sum"]
-
-    return 0
-
-
-@register.simple_tag
-def is_rated_event_tag(event, account):
-    """Docstring."""
-    return event.is_rated_by_user(account)
-
-
-@register.simple_tag
-def is_complained_event_tag(event, account):
-    """Docstring."""
-    return event.is_complained_by_user(account)

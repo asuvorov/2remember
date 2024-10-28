@@ -271,7 +271,7 @@
                         <hr>
                         <h4>{% trans "Images" %}</h4>
                         <div class="gallery">
-                        {% for img in event.get_image_list.all %}
+                        {% for img in event.image_list.all %}
                             <div class="gallery-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                 <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
@@ -283,7 +283,7 @@
                         <hr>
                         <h4>{% trans "Documents" %}</h4>
                         <div class="gallery">
-                        {% for doc in event.get_document_list.all %}
+                        {% for doc in event.document_list.all %}
                             <div class="documents-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                 <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
@@ -296,7 +296,7 @@
                         <hr>
                         <h4>{% trans "Links" %}</h4>
                         <div class="gallery">
-                        {% for url in event.get_url_list.all %}
+                        {% for url in event.url_list.all %}
                             <div class="links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                 <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
@@ -309,7 +309,7 @@
                         <hr>
                         <h4>{% trans "Video Links" %}</h4>
                         <div class="gallery">
-                        {% for video_url in event.get_video_url_list.all %}
+                        {% for video_url in event.video_url_list.all %}
                             <div class="video-links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                 <a href="{{ video_url.url }}">{{ video_url.url }}</a>

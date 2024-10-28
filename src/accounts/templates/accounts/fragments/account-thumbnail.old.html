@@ -10,12 +10,10 @@
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
-{% sum_of_hours_spent_tag account as sum_of_hours_spent %}
-
 <div class="col-xs-12 col-sm-6 col-md-4 card-thumb">
     <div class="thumbnail">
     {% with account.profile as profile %}
-        <a href="{% url 'profile-view' account.id %}">
+        <a href="{% url 'profile-view' account.uid %}">
             <div class="card hovercard">
                 <div class="card-background">
                 {% if profile.avatar and need_to_know_profile_details %}
@@ -51,10 +49,6 @@
                         {% else %}
                             <i class="bi bi-user-secret"></i>
                         {% endif %}
-                    {% endif %}
-
-                    {% if sum_of_hours_spent and need_to_know_profile_details %}
-                        <span class="badge">{{ sum_of_hours_spent }}</span>
                     {% endif %}
                     </div>
                 </div>

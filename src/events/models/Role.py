@@ -6,16 +6,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from ddcore.Decorators import autoconnect
-from ddcore.models import (
-    Address,
-    AttachmentMixin,
-    BaseModel,
-    CommentMixin,
-    ComplaintMixin,
-    RatingMixin,
-    TitleDescriptionBaseModel,
-    TitleSlugDescriptionBaseModel,
-    ViewMixin)
+from ddcore.models import TitleDescriptionBaseModel
 
 from .Event import Event
 

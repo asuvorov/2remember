@@ -116,6 +116,7 @@ class OrganizationInline(admin.TabularInline):
 # -----------------------------------------------------------------------------
 # --- User Admin.
 # -----------------------------------------------------------------------------
+@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     """User Admin.
 
@@ -129,7 +130,7 @@ class UserAdmin(admin.ModelAdmin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                "id",
+                ("id", "uid"),
                 ("first_name", "last_name"),
                 ("username", "email", "password"),
             ),
@@ -163,7 +164,7 @@ class UserAdmin(admin.ModelAdmin):
         ("last_login", DateRangeFilter),
     ]
     search_fields = []
-    readonly_fields = ["id"]
+    readonly_fields = ["id", "uid"]
     inlines = [
         PostInline,
         EventInline,
@@ -189,9 +190,6 @@ class UserAdmin(admin.ModelAdmin):
             "complaint-deleted",
         ),
     }
-
-
-admin.site.register(User, UserAdmin)
 
 
 # =============================================================================

@@ -96,7 +96,7 @@
                         {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
                     {% endif %}
                         <strong>{% trans "by" %}</strong>
-                        <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                        <a href="{% url 'profile-view' event.author.uid %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
                     </p>
                 {% endif %}
                 </div>

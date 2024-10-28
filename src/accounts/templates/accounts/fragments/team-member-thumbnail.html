@@ -9,10 +9,10 @@
 
 {% get_current_language as LANGUAGE_CODE %}
 
-{% cache 60 team-member-thumbnail account.user.id LANGUAGE_CODE %}
+{% cache 60 team-member-thumbnail account.uid LANGUAGE_CODE %}
 <div class="team-member-thumbnail card mb-3 shadow bg-body rounded" >
 {% with account.user.profile as profile %}
-    <a href="{% url 'profile-view' account.user.id %}">
+    <a href="{% url 'profile-view' account.user.uid %}">
     {% if profile.avatar %}
         {% generateimage "common:medium_fill" source=profile.avatar -- alt=profile.auth_name class='img-fluid' %}
     {% else %}
@@ -21,7 +21,7 @@
     </a>
 
     <div class="card-body">
-        <a href="{% url 'profile-view' account.user.id %}">
+        <a href="{% url 'profile-view' account.user.uid %}">
             <h5 class="card-title">{{ profile.auth_name }}</h5>
         </a>
 
