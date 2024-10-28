@@ -9,8 +9,6 @@ from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
-from profanity.validators import validate_is_profane
-from termcolor import cprint
 
 from ddcore.models.Address import Address
 from ddcore.models.Newsletter import Newsletter
@@ -42,25 +40,20 @@ class AddressForm(forms.ModelForm):
             self.fields["zip_code"].required = True
             self.fields["country"].required = True
 
-        if (
-                self.country_code and
-                self.country_code != "XX"):
+        # Override countries order in choice-list
+        # self.fields["country"].choices = COUNTRIES
+
+        if self.country_code:
             self.fields["country"].initial = self.country_code
         else:
             self.fields["country"].initial = "US"
 
-        # ---------------------------------------------------------------------
-        self.fields["address_1"].validators = [validate_is_profane]
-        self.fields["address_2"].validators = [validate_is_profane]
-        self.fields["city"].validators = [validate_is_profane]
-        self.fields["zip_code"].validators = [validate_is_profane]
-        self.fields["province"].validators = [validate_is_profane]
-        self.fields["notes"].validators = [validate_is_profane]
-
     class Meta:
         model = Address
         fields = [
-            "address_1", "address_2", "city", "zip_code", "province", "country", "notes",
+            "address_1", "address_2", "city",
+            "zip_code", "province", "country",
+            "notes",
         ]
         widgets = {
             "address_1": forms.TextInput(
@@ -217,10 +210,6 @@ class CreateNewsletterForm(forms.ModelForm):
         if self.instance and self.instance.pk:
             pass
 
-        # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["content"].validators = [validate_is_profane]
-
     class Meta:
         model = Newsletter
         fields = [
@@ -306,9 +295,7 @@ class SocialLinkForm(forms.ModelForm):
                     del self.cleaned_data["url"]
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         return self.cleaned_data
 

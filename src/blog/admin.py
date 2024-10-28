@@ -6,11 +6,7 @@ from django.contrib import admin
 
 from rangefilter.filters import DateRangeFilter
 
-from ddcore.admin import (
-    CommentInline,
-    ImagesAdminMixin,
-    RatingInline,
-    ViewInline)
+from ddcore.admin import ImagesAdminMixin
 
 # pylint: disable=import-error
 
@@ -47,7 +43,6 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("title", "post_url"),
                 "description",
                 "content",
-                "custom_data",
                 "status",
             ),
         }),
@@ -65,15 +60,6 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
             ),
             "fields":   (
                 "allow_comments",
-            ),
-        }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                ("created_by", "created"),
-                ("modified_by", "modified"),
             ),
         }),
     )
@@ -96,12 +82,6 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
     ]
     readonly_fields = [
         "preview_image_tag", "cover_image_tag", "post_url",
-        "created", "modified",
-    ]
-    inlines = [
-        CommentInline,
-        RatingInline,
-        ViewInline,
     ]
 
     papertrail_type_filters = {
@@ -112,6 +92,5 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "post-closed",
         ),
     }
-
 
 admin.site.register(Post, PostAdmin)

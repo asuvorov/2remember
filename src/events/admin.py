@@ -53,18 +53,8 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("preview", "preview_image_tag"),
                 ("title", "slug"),
                 "description",
-                "custom_data",
                 "category",
                 ("color", "icon", "image"),
-            ),
-        }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                ("created_by", "created"),
-                ("modified_by", "modified"),
             ),
         }),
     )
@@ -85,7 +75,6 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     readonly_fields = [
         "slug",
         "preview_image_tag",
-        "created", "modified",
     ]
     inlines = []
 
@@ -160,7 +149,6 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("cover", "cover_image_tag"),
                 ("title", "event_url"),
                 "description",
-                "custom_data",
                 ("category", "visibility", "organization"),
                 # ("status", "application"),
                 # "duration",
@@ -212,15 +200,6 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 # ("accept_automatically", "acceptance_text",),
             ),
         }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                ("created_by", "created"),
-                ("modified_by", "modified"),
-            ),
-        }),
     )
 
     list_display = [
@@ -246,7 +225,6 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     ]
     readonly_fields = [
         "preview_image_tag", "cover_image_tag", "event_url",
-        "created", "modified",
     ]
     inlines = [
         # RoleInline,

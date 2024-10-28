@@ -27,13 +27,11 @@ from home.models import FAQ
 logger = logging.getLogger(__name__)
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ FAQ
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# ===  FAQ
+# ===
+# =============================================================================
 class FAQDetailsViewSet(APIView):
     """FAQ Details View Set."""
 
@@ -101,17 +99,15 @@ class FAQDetailsViewSet(APIView):
 faq_details = FAQDetailsViewSet.as_view()
 
 
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~
-# ~~~ Contact Us
-# ~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# =============================================================================
+# ===
+# ===  Contact Us
+# ===
+# =============================================================================
 class ContactUsViewSet(APIView):
-    """Contact usView Set."""
+    """Contact us View Set."""
 
-    # authentication_classes = (CsrfExemptSessionAuthentication, )
+    authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
     # serializer_class = FAQSerializer
@@ -121,25 +117,36 @@ class ContactUsViewSet(APIView):
     def post(self, request):
         """POST: Send a Message
 
-            Receive:
+        Parameters
+        ----------
+        name                :int
+        email               :int
+        subject             :int
+        message             :int
 
-                name                    :uint:
-                email                   :uint:
-                subject                 :uint:
-                message                 :uint:
+        comment_text        :str
 
-            Return:
+                Example Payload:
+                    {
+                        "name":             "Artem Suvorov",
+                        "email":            "artem.suvorov@gmail.com",
+                        "subject":          "Question",
+                        "message":          "Some Message",
+                    }
 
-                status                  200/400/404/500
+        Returns
+        -------
+                            :dict
 
-            Example Payload:
+                Example Payload:
 
-                {
-                    "name":             "Artem Suvorov",
-                    "email":            "artem.suvorov@gmail.com",
-                    "Subject":          "Question",
-                    "Message":          "Some Message",
-                }
+                    {
+                        "message":          "Successfully sent the Message.",
+                    }
+
+        Raises
+        ------
+
         """
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request
@@ -152,7 +159,11 @@ class ContactUsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors
         # ---------------------------------------------------------------------
-        if not name or not email or not subject or not message:
+        if (
+                not name or
+                not email or
+                not subject or
+                not message):
             return Response({
                 "message":      _("No Name, Email, Subject or Message provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -161,10 +172,7 @@ class ContactUsViewSet(APIView):
         # --- Send the Message
         # ---------------------------------------------------------------------
         if request.user.is_authenticated:
-            from_name = "{name} (registered as {account_name} <{account_email}>".format(
-                name=name,
-                account_name=request.user.get_full_name(),
-                account_email=request.user.email)
+            from_name = f"{name} (registered as {request.user.get_full_name()} <{request.user.email}>"
         else:
             from_name = name
 
@@ -191,8 +199,7 @@ class ContactUsViewSet(APIView):
             cc=[
                 email for admin, email in settings.ADMINS
             ],
-            headers=None,
-        )
+            headers=None)
 
         return Response({
             "message":      _("Successfully sent the Message."),

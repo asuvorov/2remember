@@ -2,8 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
-
 from django import forms
 from django.conf import settings
 from django.forms import BaseModelFormSet
@@ -14,25 +12,20 @@ import pendulum
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
-from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
-from termcolor import cprint
 
 from ddcore.models.Attachment import TemporaryFile
 
 from .models import (
     Event,
     Role,
-    # month_choices,
-    # day_of_month_choices
-    )
+    month_choices,
+    day_of_month_choices)
 
 
-# =============================================================================
-# ===
-# === EVENT CREATE/EDIT FORM
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- EVENT CREATE/EDIT FORM
+# -----------------------------------------------------------------------------
 class CreateEditEventForm(forms.ModelForm):
     """Create/edit Event Form."""
 
@@ -94,12 +87,6 @@ class CreateEditEventForm(forms.ModelForm):
         # else:
         #     self.fields["start_tz"].initial = settings.TIME_ZONE
 
-        # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
-
     # contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
         input_formats=[
@@ -134,13 +121,13 @@ class CreateEditEventForm(forms.ModelForm):
             attrs={
                 "placeholder": _("Separate your Links with a Space"),
             }),
-        required=False)
+        required=False,
+    )
 
     class Meta:
         model = Event
         fields = [
-            "preview", "cover", "title", "description", "category", "visibility",
-            "tags", "hashtag",
+            "preview", "cover", "title", "description", "category", "tags", "hashtag",
             # "duration",
             "addressless",
             # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
@@ -164,10 +151,6 @@ class CreateEditEventForm(forms.ModelForm):
                     "maxlength":    1000,
                 }),
             "category": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
-            "visibility": forms.Select(
                 attrs={
                     "class":        "form-control form-select",
                 }),
@@ -241,18 +224,14 @@ class CreateEditEventForm(forms.ModelForm):
 
         return duration
 
-    def clean_title(self):
-        """Clean `title` Field."""
-        title = self.cleaned_data["title"]
-
-        if title.lower() in settings.EVENT_TITLE_RESERVED_WORDS:
+    def clean(self):
+        """Clean."""
+        # ---------------------------------------------------------------------
+        # --- Validate `title` Field
+        if self.cleaned_data["title"].lower() in settings.EVENT_TITLE_RESERVED_WORDS:
             self._errors["title"] = self.error_class(
                 [_("Reserved Word cannot be used as a Event Title.")])
 
-        return title
-
-    def clean(self):
-        """Clean."""
         # ---------------------------------------------------------------------
         # --- Validate `alt_person` Fields
         # --- FIXME
@@ -304,11 +283,55 @@ class CreateEditEventForm(forms.ModelForm):
         return instance
 
 
-# =============================================================================
-# ===
-# === ROLE FORM & FORMSET
-# ===
-# =============================================================================
+class AddEventMaterialsForm(forms.ModelForm):
+    """Add the Event reporting Materials Form."""
+
+    def __init__(self, *args, **kwargs):
+        """Docstring."""
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.id:
+            pass
+
+    tmp_files = forms.ModelMultipleChoiceField(
+        widget=forms.widgets.MultipleHiddenInput,
+        queryset=TemporaryFile.objects.all(),
+        required=False)
+    tmp_links = forms.CharField(
+        label=_("Related Links"),
+        widget=forms.TextInput(
+            attrs={
+                "placeholder": _("Separate your Links with a Space"),
+            }),
+        required=False,
+    )
+
+    class Meta:
+        model = Event
+        fields = [
+            # "achievements",
+        ]
+        widgets = {
+            # "achievements": CKEditorUploadingWidget(),
+        }
+
+    def clean(self):
+        """Clean."""
+        return self.cleaned_data
+
+    def save(self, commit=True):
+        """Docstring."""
+        instance = super().save(commit=False)
+
+        if commit:
+            instance.save()
+
+        return instance
+
+
+# -----------------------------------------------------------------------------
+# --- ROLE FORM & FORMSET
+# -----------------------------------------------------------------------------
 # class RoleForm(forms.ModelForm):
 #     """Role Form."""
 
@@ -396,11 +419,9 @@ class CreateEditEventForm(forms.ModelForm):
 #     max_num=10, extra=0, can_delete=True)
 
 
-# =============================================================================
-# ===
-# === EVENT FILTER FORM
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- EVENT FILTER FORM
+# -----------------------------------------------------------------------------
 class FilterEventForm(forms.Form):
     """Filter Event Form."""
 
@@ -431,9 +452,7 @@ class FilterEventForm(forms.Form):
             self.fields["day"].choices = day_of_month_choices[:-1]
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
             del self.fields["year"]
             del self.fields["month"]

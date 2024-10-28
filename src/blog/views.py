@@ -13,6 +13,7 @@ from django.shortcuts import (
     redirect,
     render)
 from django.urls import reverse
+from django.views.decorators.cache import cache_page
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -27,6 +28,7 @@ from .utils import get_post_list
 logger = logging.getLogger(__name__)
 
 
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def post_list(request):
     """List of the all Blog Posts."""
@@ -60,7 +62,7 @@ def post_create(request):
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
-            post.save(request=request)
+            post.save()
             form.save_m2m()
 
             # -----------------------------------------------------------------
@@ -74,7 +76,7 @@ def post_create(request):
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
 
-            post.save(request=request)
+            post.save()
 
             # -----------------------------------------------------------------
             # --- Save the Log
@@ -91,6 +93,7 @@ def post_create(request):
         })
 
 
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def post_details(request, slug):
     """Post Details."""
@@ -112,7 +115,6 @@ def post_details(request, slug):
     return render(
         request, "blog/post-details.html", {
             "post":     post,
-            "meta":     post.as_meta(request),
         })
 
 
@@ -135,7 +137,7 @@ def post_edit(request, slug):
     if request.method == "POST":
         if form.is_valid():
             post = form.save(commit=False)
-            post.save(request=request)
+            post.save()
             form.save_m2m()
 
             # -----------------------------------------------------------------

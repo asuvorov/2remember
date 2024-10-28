@@ -8,8 +8,6 @@ from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from termcolor import cprint
-
 from ddcore.Decorators import autoconnect
 from ddcore.models import BaseModel
 from ddcore.uuids import get_unique_filename
@@ -135,9 +133,7 @@ class Partner(BaseModel):
                 storage.delete(avatar.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

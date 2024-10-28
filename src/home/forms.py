@@ -6,27 +6,19 @@ from django import forms
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
-from profanity.validators import validate_is_profane
 
 from .models import FAQ
 
 
-# =============================================================================
-# ===
-# === CONTACT US FORM
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- CONTACT US FORM
+# -----------------------------------------------------------------------------
 class ContactUsForm(forms.Form):
     """Contact us Form."""
 
     def __init__(self, *args, **kwargs):
         """Docstring."""
         super().__init__(*args, **kwargs)
-
-        # ---------------------------------------------------------------------
-        self.fields["name"].validators = [validate_is_profane]
-        self.fields["subject"].validators = [validate_is_profane]
-        self.fields["message"].validators = [validate_is_profane]
 
     name = forms.CharField(
         widget=forms.TextInput(
@@ -68,11 +60,9 @@ class ContactUsForm(forms.Form):
         return cleaned_data
 
 
-# =============================================================================
-# ===
-# === FAQ CREATE/EDIT FORM
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- FAQ CREATE/EDIT FORM
+# -----------------------------------------------------------------------------
 class CreateEditFAQForm(forms.ModelForm):
     """Create/edit FAQ Form."""
 
@@ -84,10 +74,6 @@ class CreateEditFAQForm(forms.ModelForm):
 
         if self.instance and self.instance.id:
             pass
-
-        # ---------------------------------------------------------------------
-        self.fields["question"].validators = [validate_is_profane]
-        self.fields["answer"].validators = [validate_is_profane]
 
     class Meta:
         model = FAQ

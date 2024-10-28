@@ -33,6 +33,8 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+# import papertrail
+
 from annoying.functions import get_object_or_None
 from termcolor import cprint
 
@@ -41,7 +43,6 @@ from ddcore.models import (
     Complaint,
     Rating)
 
-# pylint: disable=import-error
 from accounts.models import UserProfile
 from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
@@ -57,7 +58,7 @@ from app.decorators import log_default
 from blog.models import Post
 from events.models import (
     Event,
-    # EventStatus,
+    EventStatus,
     # Participation,
     # ParticipationStatus
     )

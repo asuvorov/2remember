@@ -113,12 +113,10 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
             "classes":  (""),
             "fields":   (
                 "author",
-                "title",
-                "organization_url",
                 ("preview", "preview_image_tag"),
                 ("cover", "cover_image_tag"),
+                ("title", "organization_url"),
                 "description",
-                "custom_data",
                 # "subscribers",
             ),
         }),
@@ -127,7 +125,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("tags", "hashtag"),
+                ("tags", "hashtag",),
             ),
         }),
         ("Address", {
@@ -135,7 +133,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("addressless", "address"),
+                ("addressless", "address",),
             ),
         }),
         ("URLs", {
@@ -143,7 +141,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("website", "video", "email"),
+                ("website", "video", "email",),
             ),
         }),
         # ("Contact Person", {
@@ -161,15 +159,6 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
             ),
             "fields":   (
                 ("allow_comments", "is_newly_created", "is_hidden", "is_deleted"),
-            ),
-        }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                ("created_by", "created"),
-                ("modified_by", "modified"),
             ),
         }),
     )
@@ -193,7 +182,6 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     ]
     readonly_fields = [
         "preview_image_tag", "cover_image_tag", "organization_url",
-        "created", "modified",
     ]
     inlines = [
         EventInline,

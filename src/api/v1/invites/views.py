@@ -23,8 +23,9 @@ from api.auth import CsrfExemptSessionAuthentication
 from app.decorators import log_default
 from events.models import (
     Event,
-    Participation,
-    ParticipationStatus)
+    # Participation,
+    # ParticipationStatus
+    )
 from invites.models import (
     Invite,
     InviteStatus)
@@ -37,11 +38,13 @@ from organizations.models import (
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === INVITES
-# ===
-# =============================================================================
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~
+# ~~~ INVITES
+# ~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 class InviteListViewSet(APIView):
     """Invite List View Set."""
 
@@ -60,7 +63,7 @@ class InviteListViewSet(APIView):
             Receive:
 
                 invitee_id              :uint:
-                event_id                :uint:
+                event_id            :uint:
                 organization_id         :uint:
                 org_group_id            :uint:
                 invitation_text         :str:

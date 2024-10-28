@@ -4,6 +4,9 @@
 
 import logging
 
+from itertools import chain
+from operator import attrgetter
+
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -11,10 +14,16 @@ from django.shortcuts import (
     get_object_or_404,
     render)
 from django.urls import reverse
+from django.views.decorators.cache import cache_page
 
 # pylint: disable=import-error
-from accounts.models import Team
+from accounts.models import (
+    Team,
+    TeamMember)
 from app.decorators import log_default
+from blog.models import Post
+from events.models import Event
+from organizations.models import Organization
 
 from .forms import (
     ContactUsForm,
@@ -28,15 +37,24 @@ from .models import (
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === Index
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- Index
+# -----------------------------------------------------------------------------
+@cache_page(60 * 60)
 @log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
     timeline_qs = []
+    # timeline_qs = sorted(
+    #     chain(
+    #         Post.objects.all(),
+    #         Event.objects.get_upcoming(),
+    #         Organization.objects.filter(
+    #             is_hidden=False,
+    #             is_deleted=False,
+    #         )
+    #     ),
+    #     key=attrgetter("created"))[:10]
 
     return render(
         request, "home/index.html", {
@@ -44,6 +62,7 @@ def index(request):
         })
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def open_to_hire(request):
     """Docstring."""
@@ -51,6 +70,7 @@ def open_to_hire(request):
         request, "home/resume.html", {})
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def privacy_policy(request):
     """Docstring."""
@@ -58,6 +78,7 @@ def privacy_policy(request):
         request, "home/privacy-policy.html", {})
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def user_agreement(request):
     """Docstring."""
@@ -65,6 +86,7 @@ def user_agreement(request):
         request, "home/user-agreement.html", {})
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def our_team(request):
     """Docstring."""
@@ -76,6 +98,7 @@ def our_team(request):
         })
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def our_partners(request):
     """Docstring."""
@@ -87,6 +110,7 @@ def our_partners(request):
         })
 
 
+@cache_page(60 * 60 * 24)
 @log_default(my_logger=logger, cls_or_self=False)
 def about_us(request):
     """Docstring."""
@@ -102,8 +126,7 @@ def contact_us(request):
     # -------------------------------------------------------------------------
     # --- Form is being sent via POST Request.
     form = ContactUsForm(
-        request.POST or None,
-        request.FILES or None)
+        request.POST or None, request.FILES or None)
 
     return render(
         request, "home/contact-us.html", {
@@ -111,11 +134,10 @@ def contact_us(request):
         })
 
 
-# =============================================================================
-# ===
-# === FAQ
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- FAQ
+# -----------------------------------------------------------------------------
+@cache_page(60 * 5)
 @log_default(my_logger=logger, cls_or_self=False)
 def faq(request):
     """List of FAQs."""
@@ -139,8 +161,7 @@ def faq_create(request):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         user=request.user)
 
     if request.method == "POST":
@@ -164,6 +185,7 @@ def faq_edit(request, faq_id):
     # -------------------------------------------------------------------------
     # --- Retrieve FAQ
     # -------------------------------------------------------------------------
+    # -------------------------------------------------------------------------
     faq = get_object_or_404(
         FAQ,
         id=faq_id)
@@ -172,8 +194,7 @@ def faq_edit(request, faq_id):
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditFAQForm(
-        request.POST or None,
-        request.FILES or None,
+        request.POST or None, request.FILES or None,
         user=request.user,
         instance=faq)
 
@@ -191,11 +212,9 @@ def faq_edit(request, faq_id):
         })
 
 
-# =============================================================================
-# ===
-# === Feature Test
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- Feature Test
+# -----------------------------------------------------------------------------
 @login_required
 @staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)

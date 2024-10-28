@@ -21,15 +21,10 @@ class InviteAdmin(admin.ModelAdmin):
         ("", {
             "classes":  (""),
             "fields":   (
-                ("inviter", "invitee", "status"),
-            ),
-        }),
-        ("Content Object", {
-            "classes":  (
-                "grp-collapse grp-open",
-            ),
-            "fields":   (
-                ("content_type", "object_id", "content_object"),
+                "inviter",
+                "invitee",
+                "status",
+                ("content_type", "object_id"),
             ),
         }),
         ("Significant Texts", {
@@ -41,6 +36,14 @@ class InviteAdmin(admin.ModelAdmin):
                 "rejection_text",
             ),
         }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("date_accepted", "date_rejected", "date_revoked"),
+            ),
+        }),
         ("Flags", {
             "classes":  (
                 "grp-collapse grp-open",
@@ -49,23 +52,12 @@ class InviteAdmin(admin.ModelAdmin):
                 ("is_archived_for_inviter", "is_archived_for_invitee"),
             ),
         }),
-        ("Significant Dates", {
-            "classes":  (
-                "grp-collapse grp-closed",
-            ),
-            "fields":   (
-                ("date_accepted", "date_rejected", "date_revoked"),
-                ("created_by", "created"),
-                ("modified_by", "modified"),
-            ),
-        }),
     )
 
     list_display = [
         "id",
-        "inviter", "invitee", "status",
-        "content_type", "object_id", "content_object",
-        "created_by", "created", "modified_by", "modified",
+        "inviter", "invitee", "content_object", "status",
+        "created", "modified",
     ]
     list_display_links = [
         "inviter", "invitee",
@@ -77,10 +69,6 @@ class InviteAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         "inviter", "invitee", "content_object", "status",
-    ]
-    readonly_fields = [
-        "content_object",
-        "created", "modified",
     ]
 
     papertrail_type_filters = {

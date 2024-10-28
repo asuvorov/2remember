@@ -7,7 +7,7 @@ from importlib import import_module
 from django.apps import AppConfig
 
 
-class MainAppConfig(AppConfig):
+class AppConfig(AppConfig):
     """Docstring."""
 
     name = "app"

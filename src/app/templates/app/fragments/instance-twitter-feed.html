@@ -9,7 +9,9 @@
 {% endcomment %}
 
 <div class="alert alert-warning mb-md-3" role="alert">
-    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
+{% blocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
+{% endblocktrans %}
 </div>
 
 {% get_tweets for twitter_acc as tweets exclude "replies, retweets" limit 10 %}

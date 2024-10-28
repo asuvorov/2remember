@@ -2,7 +2,6 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
 import datetime
 import uuid
 
@@ -18,9 +17,7 @@ from django.utils.translation import gettext_lazy as _
 
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from meta.models import ModelMeta
 from taggit.managers import TaggableManager
-from termcolor import cprint
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
@@ -33,7 +30,7 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.uuids import get_unique_filename
 
-# pylint: disable=import-error
+from app.utils import update_seo_model_instance_metadata
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
@@ -90,7 +87,7 @@ def organization_cover_directory_path(instance, filename):
 
 @autoconnect
 class Organization(
-        ModelMeta, TitleSlugDescriptionBaseModel,
+        TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
     """Organization Model."""
 
@@ -171,24 +168,20 @@ class Organization(
         help_text=_("Organization Email"))
 
     # -------------------------------------------------------------------------
+    # --- Social Links.
+
+    # -------------------------------------------------------------------------
     # --- Followers.
-    followers = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        db_index=True,
-        blank=True,
-        related_name="organization_followers",
-        verbose_name=_("Followers"),
-        help_text=_("Organization Followers"))
 
     # -------------------------------------------------------------------------
     # --- Subscribers.
-    subscribers = models.ManyToManyField(
-        settings.AUTH_USER_MODEL,
-        db_index=True,
-        blank=True,
-        related_name="organization_subscribers",
-        verbose_name=_("Subscribers"),
-        help_text=_("Organization Subscribers"))
+    # subscribers = models.ManyToManyField(
+    #     settings.AUTH_USER_MODEL,
+    #     db_index=True,
+    #     blank=True,
+    #     related_name="organization_subscribers",
+    #     verbose_name=_("Subscribers"),
+    #     help_text=_("Organization Subscribers"))
 
     # -------------------------------------------------------------------------
     # --- Contact Person. Author by default.
@@ -233,57 +226,7 @@ class Organization(
         return f"{self.title}"
 
     # -------------------------------------------------------------------------
-    # --- Metadata.
-    # -------------------------------------------------------------------------
-    _metadata = {
-        "description":  "description",
-        # "extra_custom_props"
-        # "extra_props"
-        # "facebook_app_id"
-        "image":        "get_meta_image",
-        # "image_height"
-        # "image_object"
-        # "image_width"
-        "keywords":     "get_keywords",
-        # "locale"
-        # "object_type"
-        # "og_title"
-        # "schemaorg_title"
-        "site_name":    "2Remember",
-        "title":        "title",
-        # "twitter_creator"
-        # "twitter_site"
-        # "twitter_title"
-        # "twitter_type"
-        "url":          "get_absolute_url",
-        # "use_facebook"
-        # "use_og"
-        # "use_schemaorg"
-        # "use_title_tag"
-        # "use_twitter"
-    }
-
-    def get_meta_image(self):
-        """Docstring."""
-        if self.preview:
-            return self.preview.url
-
-    def get_keywords(self):
-        """Docstring."""
-        return ", ".join(self.tags.names())
-
-    # -------------------------------------------------------------------------
-    # --- Properties.
-    # -------------------------------------------------------------------------
-
-
-    # -------------------------------------------------------------------------
-    # --- Methods.
-    # -------------------------------------------------------------------------
-    def save(self, *args, **kwargs):
-        """Docstring."""
-        super().save(*args, **kwargs)
-
+    # --- Organization direct URL
     def public_url(self, request=None):
         """Docstring."""
         if request:
@@ -338,6 +281,9 @@ class Organization(
 
         return upcoming_events
 
+    # -------------------------------------------------------------------------
+    # --- Methods.
+    # -------------------------------------------------------------------------
     def email_notify_admin_org_created(self, request=None):
         """Send Notification to the Organization Admin."""
         # ---------------------------------------------------------------------
@@ -401,15 +347,7 @@ class Organization(
             # --- Send Email
 
     # -------------------------------------------------------------------------
-    # --- Static Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Class Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Signals.
+    # --- Signals
     # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
@@ -421,9 +359,18 @@ class Organization(
         try:
             ping_google()
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+
+        # ---------------------------------------------------------------------
+        # --- FIXME: Update/insert SEO Model Instance Metadata
+        # update_seo_model_instance_metadata(
+        #     title=self.title,
+        #     description=self.description,
+        #     keywords=", ".join(self.tags.names()),
+        #     heading=self.title,
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -461,9 +408,7 @@ class Organization(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -478,9 +423,7 @@ class Organization(
             related_invites.delete()
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def post_delete(self, **kwargs):
         """Docstring."""
