@@ -14,9 +14,7 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.fields import RichTextUploadingField
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
-from meta.models import ModelMeta
 from taggit.managers import TaggableManager
-from termcolor import cprint
 
 from ddcore import enum
 from ddcore.models import (
@@ -26,6 +24,8 @@ from ddcore.models import (
     ViewMixin)
 from ddcore.Decorators import autoconnect
 from ddcore.uuids import get_unique_filename
+
+from app.utils import update_seo_model_instance_metadata
 
 
 # =============================================================================
@@ -88,7 +88,7 @@ def blog_cover_directory_path(instance, filename):
 
 @autoconnect
 class Post(
-        ModelMeta, TitleSlugDescriptionBaseModel,
+        TitleSlugDescriptionBaseModel,
         CommentMixin, RatingMixin, ViewMixin):
     """Post Model."""
 
@@ -164,49 +164,37 @@ class Post(
         """Docstring."""
         return self.__repr__()
 
-    # -------------------------------------------------------------------------
-    # --- Metadata.
-    # -------------------------------------------------------------------------
-    _metadata = {
-        "description":  "description",
-        # "extra_custom_props"
-        # "extra_props"
-        # "facebook_app_id"
-        "image":        "get_meta_image",
-        # "image_height"
-        # "image_object"
-        # "image_width"
-        "keywords":     "get_keywords",
-        # "locale"
-        # "object_type"
-        # "og_title"
-        # "schemaorg_title"
-        "site_name":    "2Remember",
-        "title":        "title",
-        # "twitter_creator"
-        # "twitter_site"
-        # "twitter_title"
-        # "twitter_type"
-        "url":          "get_absolute_url",
-        # "use_facebook"
-        # "use_og"
-        # "use_schemaorg"
-        # "use_title_tag"
-        # "use_twitter"
-    }
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
 
-    def get_meta_image(self):
+    # -------------------------------------------------------------------------
+    # --- Post direct URL
+    def public_url(self, request=None):
         """Docstring."""
-        if self.preview:
-            return self.preview.url
+        if request:
+            domain_name = request.get_host()
+        else:
+            domain_name = settings.DOMAIN_NAME
 
-    def get_keywords(self):
-        """Docstring."""
-        return ", ".join(self.tags.names())
+        url = reverse(
+            "post-details", kwargs={
+                "slug":     self.slug,
+            })
+        post_link = f"http://{domain_name}{url}"
+
+        return post_link
+
+    def get_absolute_url(self):
+        """Method to be called by Django Sitemap Framework."""
+        url = reverse(
+            "post-details", kwargs={
+                "slug":     self.slug,
+            })
+
+        return url
 
     # -------------------------------------------------------------------------
-    # --- Properties.
-    # -------------------------------------------------------------------------
+    # --- Post Status Flags
     @property
     def is_draft(self):
         """Docstring."""
@@ -223,44 +211,10 @@ class Post(
         return self.status == PostStatus.CLOSED
 
     # -------------------------------------------------------------------------
-    # --- Methods.
-    # -------------------------------------------------------------------------
-    def save(self, *args, **kwargs):
-        """Docstring."""
-        super().save(*args, **kwargs)
-
-    def public_url(self, request=None):
-        """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
-
-        url = reverse(
-            "post-details", kwargs={
-                "slug":     self.slug,
-            })
-
-        return f"http://{domain_name}{url}"
-
-    def get_absolute_url(self):
-        """Method to be called by Django Sitemap Framework."""
-        return reverse(
-            "post-details", kwargs={
-                "slug":     self.slug,
-            })
+    # --- Methods
 
     # -------------------------------------------------------------------------
-    # --- Static Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Class Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Signals.
-    # -------------------------------------------------------------------------
+    # --- Signals
     def pre_save(self, **kwargs):
         """Docstring."""
 
@@ -271,9 +225,18 @@ class Post(
         try:
             ping_google()
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+
+        # ---------------------------------------------------------------------
+        # --- FIXME: Update/insert SEO Model Instance Metadata
+        # update_seo_model_instance_metadata(
+        #     title=self.title,
+        #     description=self.content,
+        #     keywords=", ".join(self.tags.names()),
+        #     heading=self.title,
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id)
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Preview Images is:
@@ -311,9 +274,7 @@ class Post(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

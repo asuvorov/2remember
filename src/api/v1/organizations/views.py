@@ -16,7 +16,6 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from annoying.functions import get_object_or_None
-from termcolor import cprint
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
@@ -98,9 +97,7 @@ class OrganizationStaffMemberOrderViewSet(APIView):
         try:
             staff_member_order = json.loads(staff_member_order)
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
             return Response({
                 "message":      str(e),

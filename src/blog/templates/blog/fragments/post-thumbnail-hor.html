@@ -1,4 +1,3 @@
-{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -9,7 +8,6 @@
         :<post>
 {% endcomment %}
 
-{% cache 60 post-thumbnail post.slug LANGUAGE_CODE %}
 <div class="post-thumbnail-hor card mb-3 shadow bg-body rounded">
     <div id="preview">
         <a href="{% url 'post-details' post.slug %}">
@@ -76,4 +74,3 @@
         </div>
     </div>
 </div>
-{% endcache %}

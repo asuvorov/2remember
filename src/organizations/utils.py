@@ -39,9 +39,7 @@ def get_organization_list(request, author=None):
         try:
             organizations = organizations.filter(tags__id=tag_id).distinct()
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     # -------------------------------------------------------------------------
     # --- Slice and paginate the Organization List.

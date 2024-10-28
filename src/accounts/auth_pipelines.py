@@ -2,13 +2,11 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import inspect
 import requests
 
 from django.core.files.base import ContentFile
 
 from requests import HTTPError
-from termcolor import cprint
 
 from ddcore.models import UserLogin
 from .models import UserProfile
@@ -23,9 +21,7 @@ def save_profile(
     try:
         profile = user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-               f"                 {type(exc).__name__}\n"
-               f"                 {str(exc)}", "white", "on_red")
+        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         profile = UserProfile.objects.create(user=user)
 

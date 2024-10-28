@@ -12,9 +12,6 @@ from django.utils.translation import gettext_lazy as _
 
 import pendulum
 
-from meta.models import ModelMeta
-from termcolor import cprint
-
 from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.models import (
@@ -73,56 +70,11 @@ def user_cover_directory_path(instance, filename):
 
 @autoconnect
 class UserProfile(
-        ModelMeta, UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
+        UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
         # ParticipationMixin,
         # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
-    """User Profile Model.
-
-    Attributes
-    ----------
-    user                    : obj       User.
-    avatar                  : obj       Profile Avatar Image.
-    cover                   : obj       Profile Cover Image.
-
-    nickname                : str       Profile Nickname.
-    bio                     : str       Profile Bio.
-    gender                  : str       Profile Gender.
-
-    addressless             : bool      Is addressless?
-    address                 : obj       Profile Address.
-
-    birth_day               : datetime  Profile Birthday.
-    custom_data             : dict      Custom Data JSON Field.
-
-    allow_comments          : bool      Allow Comments?
-    receive_newsletters     : bool      Receive Newsletters?
-    is_newly_created        : bool      Is newly created?
-
-    created_by              : obj       User, created   the Object.
-    modified_by             : obj       User, modified  the Object.
-
-    created                 : datetime  Timestamp the Object has been created.
-    modified                : datetime  Timestamp the Object has been modified.
-
-    Methods
-    -------
-    stat_gender_name()                  Returns Gender Name.
-    full_name_straight()                Returns full   Name.
-    full_name()                         Returns full   Name.
-    short_name()                        Returns short  Name.
-    auth_name()                         Returns Auth   Name.
-    name()                              Returns        Name.
-    public_url()
-    get_absolute_url()
-
-    pre_save()                          `pre_save`    Object Signal.
-    post_save()                         `post_save`   Object Signal.
-    pre_delete()                        `pre_delete`  Object Signal.
-    post_delete()                       `posr_delete` Object Signal.
-    m2m_changed()                       `m2m_changed` Object Signal.
-
-    """
+    """User Profile Model."""
 
     # -------------------------------------------------------------------------
     # --- Basics (defined in `ddcore`).
@@ -131,7 +83,7 @@ class UserProfile(
         blank=True)
 
     # -------------------------------------------------------------------------
-    # --- Address.
+    # --- Address & Phone Number.
     addressless = models.BooleanField(
         default=False,
         verbose_name=_("I will provide the Location later, if any."),
@@ -178,48 +130,33 @@ class UserProfile(
         return self.user.get_full_name()
 
     # -------------------------------------------------------------------------
-    # --- Metadata.
-    # -------------------------------------------------------------------------
-    _metadata = {
-        "description":  "bio",
-        # "extra_custom_props"
-        # "extra_props"
-        # "facebook_app_id"
-        "image":        "get_meta_image",
-        # "image_height"
-        # "image_object"
-        # "image_width"
-        "keywords":     "nickname",
-        # "locale"
-        # "object_type"
-        # "og_title"
-        # "schemaorg_title"
-        "site_name":    "2Remember",
-        "title":        "title",
-        # "twitter_creator"
-        # "twitter_site"
-        # "twitter_title"
-        # "twitter_type"
-        "url":          "get_absolute_url",
-        # "use_facebook"
-        # "use_og"
-        # "use_schemaorg"
-        # "use_title_tag"
-        # "use_twitter"
-    }
-
-    def get_meta_image(self):
+    # --- Profile direct URL.
+    def public_url(self, request=None):
         """Docstring."""
-        if self.avatar:
-            return self.avatar.url
+        if request:
+            domain_name = request.get_host()
+        else:
+            domain_name = settings.DOMAIN_NAME
 
-    # def get_keywords(self):
-    #     """Docstring."""
-    #     return ", ".join(self.tags.names())
+        url = reverse(
+            "profile-view", kwargs={
+                "user_id":  self.user_id,
+            })
+        profile_link = f"http://{domain_name}{url}"
+
+        return profile_link
+
+    def get_absolute_url(self):
+        """Method to be called by Django Sitemap Framework."""
+        url = reverse(
+            "profile-view", kwargs={
+                "user_id":  self.user_id,
+            })
+
+        return url
 
     # -------------------------------------------------------------------------
-    # --- Properties.
-    # -------------------------------------------------------------------------
+    # --- Profile Completeness.
     @property
     def grace_period_days_left(self):
         """Docstring."""
@@ -276,36 +213,13 @@ class UserProfile(
         return completeness_total
 
     # -------------------------------------------------------------------------
-    # --- Methods.
+    # --- Helpers.
+
     # -------------------------------------------------------------------------
-    def save(self, *args, **kwargs):
-        """Docstring."""
-        super().save(*args, **kwargs)
+    # --- Events.
 
-    def public_url(self, request=None):
-        """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
-
-        url = reverse(
-            "profile-view", kwargs={
-                "user_id":  self.user_id,
-            })
-        profile_link = f"http://{domain_name}{url}"
-
-        return profile_link
-
-    def get_absolute_url(self):
-        """Method to be called by Django Sitemap Framework."""
-        url = reverse(
-            "profile-view", kwargs={
-                "user_id":  self.user_id,
-            })
-
-        return url
-
+    # -------------------------------------------------------------------------
+    # --- Methods
     def email_notify_signup_confirmation(self, request=None, url=None):
         """Send Notification to the User."""
         # ---------------------------------------------------------------------
@@ -339,16 +253,10 @@ class UserProfile(
         # --- Send Email
 
     # -------------------------------------------------------------------------
-    # --- Static Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Class Methods.
-    # -------------------------------------------------------------------------
+    # --- Methods.
 
     # -------------------------------------------------------------------------
     # --- Signals.
-    # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
         self.created_by = self.user
@@ -363,9 +271,19 @@ class UserProfile(
         except Exception as exc:
             # -----------------------------------------------------------------
             # --- Logging.
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+
+        # ---------------------------------------------------------------------
+        # --- FIXME: Update/insert SEO Model Instance Metadata.
+        # update_seo_model_instance_metadata(
+        #     title=self.user.get_full_name(),
+        #     description=self.bio,
+        #     keywords=self.nickname,
+        #     heading=self.user.get_full_name(),
+        #     path=self.get_absolute_url(),
+        #     object_id=self.id,
+        #     content_type_id=ContentType.objects.get_for_model(self).id,
+        # )
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
@@ -403,9 +321,7 @@ class UserProfile(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

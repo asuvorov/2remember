@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
 from djangoformsetjs.utils import formset_media_js
 from profanity.validators import validate_is_profane
-from termcolor import cprint
 
 from ddcore.models.Address import Address
 from ddcore.models.Newsletter import Newsletter
@@ -306,9 +305,7 @@ class SocialLinkForm(forms.ModelForm):
                     del self.cleaned_data["url"]
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         return self.cleaned_data
 

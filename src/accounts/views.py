@@ -24,6 +24,7 @@ from django.shortcuts import (
     render)
 from django.urls import reverse
 from django.utils.translation import gettext as _
+from django.views.decorators.cache import cache_page
 from django.views.decorators.csrf import csrf_exempt
 
 from termcolor import cprint
@@ -44,11 +45,11 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
-# from events.models import (
-#     EventStatus,
-#     Participation,
-#     ParticipationStatus
-#     )
+from events.models import (
+    EventStatus,
+    # Participation,
+    # ParticipationStatus
+    )
 from events.utils import get_event_list
 # from organizations.models import OrganizationStaff
 
@@ -122,7 +123,7 @@ def account_signup(request):
             # --- Create User Profile.
             profile = pform.save(commit=False)
             profile.user = user
-            profile.save(request=request)
+            profile.save()
 
             # -----------------------------------------------------------------
             # --- Create User Privacy.
@@ -407,6 +408,7 @@ def password_reset(request):
 # === ACCOUNT LIST
 # ===
 # =============================================================================
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def account_list(request):
     """List of the Members."""
@@ -509,9 +511,7 @@ def my_profile_view(request):
     try:
         profile = request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-               f"                 {type(exc).__name__}\n"
-               f"                 {str(exc)}", "white", "on_red")
+        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         profile = UserProfile.objects.create(user=request.user)
 
@@ -575,7 +575,6 @@ def my_profile_view(request):
 
     response = HttpResponse(render(
         request, "accounts/my-profile-info.html", {
-            "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
             "show_no_email_popup_modal":    show_no_email_popup_modal,
@@ -604,9 +603,7 @@ def my_profile_invitations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-               f"                 {type(exc).__name__}\n"
-               f"                 {str(exc)}", "white", "on_red")
+        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         UserProfile.objects.create(user=request.user)
 
@@ -624,9 +621,7 @@ def my_profile_participations(request):
     try:
         assert request.user.profile
     except Exception as exc:
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-               f"                 {type(exc).__name__}\n"
-               f"                 {str(exc)}", "white", "on_red")
+        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         UserProfile.objects.create(user=request.user)
 
@@ -698,7 +693,7 @@ def my_profile_edit(request):
                 formset_phone.is_valid() and
                 formset_social.is_valid()):
             request.user.profile.address = aform.save()
-            request.user.profile.save(request=request)
+            request.user.profile.save()
 
             request.user.first_name = pform.cleaned_data["first_name"]
             request.user.last_name = pform.cleaned_data["last_name"]
@@ -737,7 +732,7 @@ def my_profile_edit(request):
         is_newly_created = True
 
         request.user.profile.is_newly_created = False
-        request.user.profile.save(request=request)
+        request.user.profile.save()
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -781,9 +776,7 @@ def my_profile_privacy(request):
         privacy_members, created = UserPrivacyMembers.objects.get_or_create(user=request.user)
         privacy_admins, created = UserPrivacyAdmins.objects.get_or_create(user=request.user)
     except Exception as exc:
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-               f"                 {type(exc).__name__}\n"
-               f"                 {str(exc)}", "white", "on_red")
+        print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
         # --- Save the Log.
@@ -837,6 +830,7 @@ def my_profile_privacy(request):
 # === FOREIGN PROFILE
 # ===
 # =============================================================================
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_view(request, user_id):
     """Foreign Profile Info."""
@@ -850,7 +844,10 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(user_model, pk=user_id)
+    account = get_object_or_404(
+        user_model,
+        pk=user_id)
+
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -975,7 +972,6 @@ def profile_view(request, user_id):
     return render(
         request, "accounts/foreign-profile-info.html", {
             "account":                  account,
-            "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
             "related_organizations":    related_organizations,
             "phone_numbers":            phone_numbers,
@@ -984,6 +980,7 @@ def profile_view(request, user_id):
         })
 
 
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_participations(request, user_id):
     """Foreign Profile Participations."""
@@ -1103,6 +1100,7 @@ def profile_participations(request, user_id):
         })
 
 
+@cache_page(60 * 1)
 @log_default(my_logger=logger, cls_or_self=False)
 def profile_events(request, user_id):
     """Foreign Profile Events."""

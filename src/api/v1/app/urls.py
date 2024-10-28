@@ -11,6 +11,12 @@ from . import views
 
 urlpatterns = [
     # -------------------------------------------------------------------------
+    # --- Attachments
+    re_path(r"^tmp-upload/$", views.tmp_upload, name="api-tmp-upload"),
+    re_path(r"^remove-upload/$", views.remove_upload, name="api-remove-upload"),
+    re_path(r"^remove-link/$", views.remove_link, name="api-remove-link"),
+
+    # -------------------------------------------------------------------------
     # --- Comments.
     re_path(r"^comments/$", views.comment_list, name="api-comment-list"),
     re_path(r"^comments/(?P<comment_id>[\w_-]+)/$", views.comment_details, name="api-comment-details"),
