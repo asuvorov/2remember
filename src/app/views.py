@@ -3,7 +3,6 @@
 """
 
 import inspect
-import json
 import logging
 import mimetypes
 
@@ -26,93 +25,57 @@ from ddcore.models.Attachment import (
     AttachedVideoUrl,
     TemporaryFile)
 
-from . import logconst
 from .decorators import log_default
-from .logformat import Format
 from .management.commands import clear_cache
 
 
 logger = logging.getLogger(__name__)
 
 
-# =============================================================================
-# ===
-# === HANDLERS
-# ===
-# =============================================================================
+def permission_denied_handler(request):
+    """Permission denied Handler."""
+    return HttpResponse("You have no Permissions!")
+
+
+def resource_access_handler(request, resource):
+    """Callback for resource access.
+
+    Determines who can see the documentation for which API.
+    """
+    # -------------------------------------------------------------------------
+    # --- Superusers and Staff can see whatever they want
+    if (
+            request.user.is_superuser or
+            request.user.is_staff):
+        return True
+
+    return False
+
+
+# -----------------------------------------------------------------------------
+# --- HANDLERS
+# -----------------------------------------------------------------------------
 @log_default(my_logger=logger, cls_or_self=False)
 def handler400(request, exception=None):
     """400 Handler."""
-    cprint(f"###" * 27, "white", "on_red")
-    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-           f"{type(exception).__name__} : {str(exception)}",
-           "white", "on_red")
-
-    # -------------------------------------------------------------------------
-    # --- Logging.
-    # -------------------------------------------------------------------------
-    logger.exception("", extra=Format.exception(
-        exc=exception,
-        request_id=request.request_id,
-        log_extra={}))
-
     return render(request, "error-pages/400.html", status=404)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler403(request, exception=None):
     """403 Handler."""
-    cprint(f"###" * 27, "white", "on_red")
-    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-           f"{type(exception).__name__} : {str(exception)}",
-           "white", "on_red")
-
-    # -------------------------------------------------------------------------
-    # --- Logging.
-    # -------------------------------------------------------------------------
-    logger.exception("", extra=Format.exception(
-        exc=exception,
-        request_id=request.request_id,
-        log_extra={}))
-
     return render(request, "error-pages/403.html", status=404)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler404(request, exception=None):
     """404 Handler."""
-    cprint(f"###" * 27, "white", "on_red")
-    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-           f"{type(exception).__name__} : {str(exception)}",
-           "white", "on_red")
-
-    # -------------------------------------------------------------------------
-    # --- Logging.
-    # -------------------------------------------------------------------------
-    logger.exception("", extra=Format.exception(
-        exc=exception,
-        request_id=request.request_id,
-        log_extra={}))
-
     return render(request, "error-pages/404.html", status=404)
 
 
 @log_default(my_logger=logger, cls_or_self=False)
 def handler500(request, exception=None):
     """500 Handler."""
-    cprint(f"###" * 27, "white", "on_red")
-    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-           f"{type(exception).__name__} : {str(exception)}",
-           "white", "on_red")
-
-    # -------------------------------------------------------------------------
-    # --- Logging.
-    # -------------------------------------------------------------------------
-    logger.exception("", extra=Format.exception(
-        exc=exception,
-        request_id=request.request_id,
-        log_extra={}))
-
     try:
         clear_cache.Command().handle()
 
@@ -120,27 +83,16 @@ def handler500(request, exception=None):
         # --- Save the Log
 
     except Exception as exc:
-        cprint(f"###" * 27, "white", "on_red")
-        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-               f"{type(exc).__name__} : {str(exc)}",
-               "white", "on_red")
-
-        # ---------------------------------------------------------------------
-        # --- Logging.
-        # ---------------------------------------------------------------------
-        logger.exception("", extra=Format.exception(
-            exc=exception,
-            request_id=request.request_id,
-            log_extra={}))
+        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+               f"                 {type(exc).__name__}\n"
+               f"                 {str(exc)}", "white", "on_red")
 
     return render(request, "error-pages/500.html", status=500)
 
 
-# =============================================================================
-# ===
-# === ATTACHMENTS
-# ===
-# =============================================================================
+# -----------------------------------------------------------------------------
+# --- ATTACHMENTS
+# -----------------------------------------------------------------------------
 @login_required
 @require_http_methods(["POST", ])
 @log_default(my_logger=logger, cls_or_self=False)
@@ -155,24 +107,14 @@ def tmp_upload(request):
         name=request.FILES["file"].name)
 
     result = {
-        "file_name":    tmp_file.file.name,
-        "file_type":    mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
-        "file_size":    tmp_file.file.size,
-        "tmp_file_id":  tmp_file.id,
+        "name":         tmp_file.file.name,
+        "type":         mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
+        "size":         tmp_file.file.size,
+        "tmp_file_id":  tmp_file.id
     }
 
-    cprint(f"[---  INFO   ---] TMP  FILE      : {result}", "cyan")
-
-    # -------------------------------------------------------------------------
-    # --- Logging.
-    # -------------------------------------------------------------------------
-    logger.info("REQUEST", extra=Format.api_detailed_info(
-        log_type=logconst.LOG_VAL_TYPE_API_REQUEST,
-        request_id=request.request_id,
-        log_extra=result.copy()))
-
     return JsonResponse({
-        "files":    [result],
+        "files":    [result]
     })
 
 
@@ -198,18 +140,9 @@ def remove_upload(request):
             try:
                 instance.file.delete()
             except Exception as exc:
-                cprint(f"###" * 27, "white", "on_red")
-                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-                       f"{type(exc).__name__} : {str(exc)}",
-                       "white", "on_red")
-
-                # -------------------------------------------------------------
-                # --- Logging.
-                # -------------------------------------------------------------
-                logger.exception("", extra=Format.exception(
-                    exc=exc,
-                    request_id=request.request_id,
-                    log_extra={}))
+                cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                       f"                 {type(exc).__name__}\n"
+                       f"                 {str(exc)}", "white", "on_red")
 
             instance.delete()
             found = True

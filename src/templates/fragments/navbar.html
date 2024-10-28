@@ -16,38 +16,9 @@
                 <li class="nav-item">
                     <a class="nav-link{% if request.path|slice:'10' == '/accounts/' %} active{% endif %}" href="{% url 'account-list' %}">{% trans "Members" %}</a>
                 </li>
-            {% comment %}
-                <li class="nav-item dropdown {% if request.path|slice:'10' == '/accounts/' %} active {% endif %}">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Members" %}</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'account-near-you-list' %}">{% trans "Near you" %}</a></li>
-                    {% if request.user.is_authenticated %}
-                        <li><a class="dropdown-item" href="{% url 'account-might-know-list' %}">{% trans "Might know" %}</a></li>
-                    {% endif %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'account-new-list' %}">{% trans "New" %}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'account-online-list' %}">{% trans "Online" %}</a></li>
-                    </ul>
-                </li>
-            {% endcomment %}
                 <li class="nav-item">
                     <a class="nav-link{% if request.path|slice:'12' == '/events/' %} active{% endif %}" href="{% url 'event-list' %}">{% trans "Events" %}</a>
                 </li>
-            {% comment %}
-                <li class="nav-item dropdown {% if request.path|slice:'12' == '/events/' %} active {% endif %}">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">{% trans "Events" %}</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{% url 'event-near-you-list' %}">{% trans "Near you" %}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'event-new-list' %}">{% trans "New" %}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'event-dateless-list' %}">{% trans "Dateless" %}</a></li>
-                        <li><a class="dropdown-item" href="{% url 'event-featured-list' %}">{% trans "Featured" %}</a></li>
-                    {% if request.user.is_authenticated and request.user.profile.is_completed %}
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="{% url 'event-create' %}"><i class="bi bi-plus"></i> {% trans "Create" %}</a></li>
-                    {% endif %}
-                    </ul>
-                </li>
-            {% endcomment %}
                 <li class="nav-item {% if request.path|slice:'15' == '/places/' %} active {% endif %}">
                     <a class="nav-link disabled" href="#" aria-disabled="true">{% trans "Places" %}</a>
                 </li>

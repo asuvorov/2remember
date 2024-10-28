@@ -62,7 +62,6 @@ class Format:
     """Helper Class for formatting Logs of specific Types."""
 
     CENSORED_KEYS = ("email", "username", "password", "retry")
-
     MIN_MASKED_STARS = 3
     MAX_MASKED_STARS = 16
     MAX_MASKED_CHARS = 3

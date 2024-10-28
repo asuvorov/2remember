@@ -26,7 +26,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ account.profile.auth_name }}</li>
         </ol>

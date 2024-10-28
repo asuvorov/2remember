@@ -1,3 +1,4 @@
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -6,6 +7,9 @@
         :<account>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 team-member-thumbnail account.user.id LANGUAGE_CODE %}
 <div class="team-member-thumbnail card mb-3 shadow bg-body rounded" >
 {% with account.user.profile as profile %}
     <a href="{% url 'profile-view' account.user.id %}">
@@ -25,3 +29,4 @@
     </div>
 {% endwith %}
 </div>
+{% endcache %}

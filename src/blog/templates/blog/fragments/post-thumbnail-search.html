@@ -1,3 +1,4 @@
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -6,8 +7,9 @@
         :<post>
 {% endcomment %}
 
+{% cache 60 post-thumbnail-search post.slug LANGUAGE_CODE %}
 <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24" style="margin-bottom:10px;">
-    <div class="post-thumb-search">
+    <div class=post-thumbnail-search">
         <div class="row">
             <div class="hidden-xs col-sm-6 col-md-6 col-lg-6">
                 <div class="thumbnail">
@@ -42,3 +44,4 @@
         </div>
     </div>
 </div>
+{% endcache %}

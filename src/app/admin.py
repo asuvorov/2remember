@@ -3,9 +3,7 @@
 """
 
 from django.contrib import admin
-from django.utils.html import format_html
 
-# from djangoseo.admin import register_seo_admin
 from rangefilter.filters import DateRangeFilter
 
 from ddcore.admin import ImagesAdminMixin
@@ -23,11 +21,6 @@ from ddcore.models.Phone import Phone
 from ddcore.models.Rating import Rating
 from ddcore.models.SocialLink import SocialLink
 from ddcore.models.View import View
-
-# from .seo import Metadata
-
-
-# register_seo_admin(admin.site, Metadata)
 
 
 # =============================================================================
@@ -91,36 +84,14 @@ admin.site.register(Address, AddressAdmin)
 # ===
 # =============================================================================
 class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
-    """Attached Image Admin."""
-
-    # === TODO: Move the Tag to `ddcore`.
-    def image_dim_tag(self, obj):
-        """Return Image Dimensions."""
-        if obj.image:
-            return format_html(f"<p>{obj.image.width}x{obj.image.height}</p>")
-
-        return ""
-
-    image_dim_tag.short_description = "Dimensions (W x H)"
-    image_dim_tag.allow_tags = True
-
-    # === TODO: Move the Tag to `ddcore`.
-    def image_size_tag(self, obj):
-        """Return Image File Size."""
-        if obj.image:
-            return format_html(f"<p>{int(obj.image.file.size/1000)} K</p>")
-
-        return ""
-
-    image_size_tag.short_description = "Size (kB)"
-    image_size_tag.allow_tags = True
+    """Attahced Image Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "name",
-                ("image", "image_tag", "image_dim_tag", "image_size_tag",),
+                ("image", "image_tag"),
                 "custom_data",
             ),
         }),
@@ -152,7 +123,7 @@ class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
     )
 
     list_display = [
-        "id", "name", "image_tag", "image_dim_tag", "image_size_tag",
+        "id", "name", "image_tag",
         "content_type", "object_id", "content_object",
         "is_hidden", "is_private",
         "created_by", "created", "modified_by", "modified",
@@ -165,7 +136,7 @@ class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "name", "content_object",
     ]
     readonly_fields = [
-        "image_tag", "image_dim_tag", "image_size_tag", "content_object",
+        "image_tag", "content_object",
         "created", "modified",
     ]
 
@@ -174,25 +145,14 @@ admin.site.register(AttachedImage, AttachedImageAdmin)
 
 
 class AttachedDocumentAdmin(admin.ModelAdmin):
-    """Attached Document Admin."""
-
-    # === TODO: Move the Tag to `ddcore`.
-    def doc_size_tag(self, obj):
-        """Return Image File Size."""
-        if obj.document:
-            return format_html(f"<p>{int(obj.document.file.size/1000)} K</p>")
-
-        return ""
-
-    doc_size_tag.short_description = "Size (kB)"
-    doc_size_tag.allow_tags = True
+    """Attahced Document Admin."""
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "name",
-                ("document", "doc_size_tag"),
+                "document",
                 "custom_data",
             ),
         }),
@@ -224,7 +184,7 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
     )
 
     list_display = [
-        "id", "name", "document", "doc_size_tag",
+        "id", "name", "document",
         "content_type", "object_id", "content_object",
         "is_hidden", "is_private",
         "created_by", "created", "modified_by", "modified",
@@ -237,7 +197,7 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
         "name", "content_object",
     ]
     readonly_fields = [
-        "doc_size_tag", "content_object",
+        "content_object",
         "created", "modified",
     ]
 
@@ -246,7 +206,7 @@ admin.site.register(AttachedDocument, AttachedDocumentAdmin)
 
 
 class AttachedUrlAdmin(admin.ModelAdmin):
-    """Attached URL Admin."""
+    """Attahced URL Admin."""
 
     fieldsets = (
         ("", {
@@ -306,7 +266,7 @@ admin.site.register(AttachedUrl, AttachedUrlAdmin)
 
 
 class AttachedVideoUrlAdmin(admin.ModelAdmin):
-    """Attached Video URL Admin."""
+    """Attahced Video URL Admin."""
 
     fieldsets = (
         ("", {

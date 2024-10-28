@@ -1,5 +1,6 @@
 {% extends "events/event-details-base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -10,13 +11,16 @@
         :<event>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block content %}
+{% cache 60 event-info event.slug LANGUAGE_CODE %}
 <div id="event-info" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START EVENT CARD -->
             <section id="event-card">
-                <div class="card mb-3 shadow bg-body rounded">
+                <div class="card {% if event.is_private %}card-private{% endif %} mb-3 shadow bg-body rounded">
                     <div class="row g-0">
                         <div class="col-md-3">
                         {% if event.preview %}
@@ -175,6 +179,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
 

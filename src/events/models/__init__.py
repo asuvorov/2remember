@@ -6,5 +6,5 @@
 # pylint: disable=unused-wildcard-import
 from . Category import *
 from . Event import *
-# from . Participation import *
+from . Participation import *
 # from . Role import *

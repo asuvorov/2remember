@@ -2,12 +2,15 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
+import inspect
+
 from django.conf import settings
 from django.contrib.sitemaps import ping_google
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from ckeditor_uploader.fields import RichTextUploadingField
+from termcolor import cprint
 
 from ddcore.Decorators import autoconnect
 from ddcore.models import BaseModel
@@ -95,7 +98,9 @@ class FAQ(BaseModel):
         try:
             ping_google()
         except Exception as exc:
-            print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
     def pre_delete(self, **kwargs):
         """Docstring."""

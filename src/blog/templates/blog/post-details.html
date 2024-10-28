@@ -11,15 +11,11 @@
         :<post>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block title %}{% trans "Post" %} "{{ post.title }}" - {{ block.super }}{% endblock %}
 
 {% block extra_meta %}
-{% comment %}
-    {% get_metadata %}
-
-    <link rel="image_src" href="{{ post.avatar.url }}" />
-    <meta name="description" content="{{ post.content|striptags|truncatechars:300 }}" />
-{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
@@ -32,7 +28,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
         </ol>
@@ -41,6 +37,7 @@
 {% endblock %}
 
 {% block content %}
+{% cache 60 post-details post.slug LANGUAGE_CODE %}
 <div id="post-details" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
@@ -142,6 +139,7 @@
         </div>
     </div>
 </div>
+{% endcache %}
 
 <!-- Modals -->
 {% if request.user.is_authenticated %}

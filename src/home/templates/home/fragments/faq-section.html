@@ -1,10 +1,14 @@
+{% load cache %}
 {% load i18n %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% comment %}
     Input Parameters:
         :<section>
 {% endcomment %}
 
+{% cache 3600 faq-section-thumb LANGUAGE_CODE %}
 <div class="faq-section-thumb">
     <h4>{{ section.title }}</h4>
 
@@ -40,3 +44,4 @@
     {% endfor %}
     </div>
 </div>
+{% endcache %}

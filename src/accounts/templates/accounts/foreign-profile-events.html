@@ -1,6 +1,7 @@
 {% extends "accounts/foreign-profile-base.html" %}
 
 {% load accounttags %}
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load taggit_templatetags2_tags %}\
@@ -12,6 +13,8 @@
         :<account> - Account
         :<events>  - List of Events
 {% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{% trans "Events List" %} - {{ block.super }}{% endblock %}
 
@@ -25,7 +28,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'profile-view' account.id %}">{{ account.profile.auth_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Events" %}</li>
@@ -56,6 +59,7 @@
 
             <!-- Tag Cloud -->
             <section id="tag-cloud">
+            {% cache 60 tag-cloud-events LANGUAGE_CODE %}
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "events.event" %}
                 {% get_tagcloud as tagcloud for "events.event" %}
@@ -69,6 +73,7 @@
                     </a>
                 {% endfor %}
                 </div>
+            {% endcache %}
             </section>
 
             <!-- Sponsored Links -->

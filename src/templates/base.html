@@ -1,9 +1,12 @@
 {% load i18n %}
+{% load meta %}
 {% load static %}
 
 <!DOCTYPE HTML>
 <html>
-    <head>
+    <head {% meta_namespaces %}>
+        {% include "meta/meta.html" %}
+
         <title>{% block title %}2Remember Platform - Collect And Share Your Memories Hassle-Free.{% endblock %}</title>
 
     {% block meta %}

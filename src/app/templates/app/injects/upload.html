@@ -15,9 +15,7 @@
         return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
     }
 
-    // ------------------------------------------------------------------------
-    //--- Remove uploaded File.
-    // ------------------------------------------------------------------------
+    //--- Remove uploaded File
     function removeFile(index, container, event) {
         if (is_image($("#id_tmp_images_path_" + index).val())) {
             image_count--;
@@ -35,9 +33,7 @@
         tally();
     }
 
-    // ------------------------------------------------------------------------
-    // --- Check, if uploaded File is an Image.
-    // ------------------------------------------------------------------------
+    //--- Check, if uploaded File is an Image
     function is_image(path) {
         return _.contains(["jpg", "jpeg", "gif", "png"], path.split(".").pop());
     }
@@ -77,18 +73,16 @@
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
                     // Render Thumbnails
-                    if (is_image(file.file_name)) {
-                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.file_name + "' width='100'>").appendTo("#files");
+                    if (is_image(file.name)) {
+                        $("<div class='gallery-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i><img src='{{ MEDIA_URL }}" + file.name + "' width='100'>").appendTo("#files");
                         $("#files-label").show()
                     }
 
-                    // --------------------------------------------------------
-                    // --- UPLOAD ID: Used by Django to associate Upload with Record.
+                    // UPLOAD ID: used by Django to associate upload with record
                     $("<input type='hidden' id='id_tmp_files_" + upload_count + "' name='tmp_files'>").val(file.tmp_file_id).appendTo("#tmp_files");
 
-                    // --------------------------------------------------------
-                    // --- UPLOAD PATH: Used by Javascript to render Thumbnails.
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.file_name).appendTo("#tmp_images_path");
+                    // UPLOAD PATH: used by Javascript to render thumbnails
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
 
                     upload_count++;
                     image_count++;
@@ -111,7 +105,7 @@
         }).prop("disabled", !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : "disabled");
 
         $("#fileupload-images").bind("fileuploadprocessfail", function (e, data) {
-            alert("Sorry, this Field only supports the following File Types:\n - jpg, png, gif\n\nYour File was not added.");
+            alert("Sorry, this field only supports the following file types:\n - jpg, png, gif\n\nYour file was not added.");
         });
 
         $("#fileupload-documents").fileupload({
@@ -126,17 +120,17 @@
             dataType: "json",
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
-                    // Render Thumbnails.
-                    if (!is_image(file.file_name)) {
-                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.file_name.split("/").pop()) + "<br/>").appendTo("#docs");
+                    // Render Thumbnails
+                    if (!is_image(file.name)) {
+                        $("<div class='documents-container' />").html("<i class='bi bi-x-circle' onClick='removeFile(" + upload_count + ", this, event)' tmp-file-id='" + file.tmp_file_id + "'></i> " + (file.name.split("/").pop()) + "<br/>").appendTo("#docs");
                         $("#docs-label").show()
                     }
 
-                    // UPLOAD ID: Used by Django to associate an Upload with a Record.
+                    // UPLOAD ID: used by Django to associate upload with record
                     $("<input type='hidden' id='id_tmp_files_" + upload_count + "' name='tmp_files'>").val(file.tmp_file_id).appendTo("#tmp_files");
 
-                    // UPLOAD PATH: Used by JavaScript to render Thumbnails.
-                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.file_name).appendTo("#tmp_images_path");
+                    // UPLOAD PATH: used by Javascript to render thumbnails
+                    $("<input type='hidden' id='id_tmp_images_path_" + upload_count + "' name='tmp_images_path'>").val("{{ MEDIA_URL }}" + file.name).appendTo("#tmp_images_path");
 
                     upload_count++;
                     //real_upload_count++;
@@ -162,15 +156,12 @@
         .parent().addClass($.support.fileInput ? undefined : "disabled");
 
         $("#fileupload-documents").bind("fileuploadprocessfail", function (e, data) {
-            alert("Sorry, this Field only supports the following File Types:\n - pdf, doc, plain text \n\nYour File was not added.");
+            alert("Sorry, this field only support the following file types:\n - pdf, doc, plain text \n\nYour file was not added.");
         });
 
         tally();
     });
 
-    // ------------------------------------------------------------------------
-    // --- Remove attached File.
-    // ------------------------------------------------------------------------
     function removeAttachedFile(id, type, event) {
         var event = window.event || event;
 
@@ -192,9 +183,6 @@
         });
     }
 
-    // ------------------------------------------------------------------------
-    // --- Remove attached Link.
-    // ------------------------------------------------------------------------
     function removeAttachedLink(id, type, event) {
         var event = window.event || event;
 
@@ -216,9 +204,6 @@
         });
     }
 
-    // ------------------------------------------------------------------------
-    // --- Update Attachment Counters.
-    // ------------------------------------------------------------------------
     function tally() {
         if (typeof saved_images == "undefined") {
             saved_images = 0;

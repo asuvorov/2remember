@@ -1,12 +1,19 @@
 <!-- START PRIVACY POLICY CODE -->
+{% load cache %}
 {% load i18n %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 <div class="alert alert-info alert-dismissible" role="alert">
+{% blocktrans %}
     Date last revised: <i>July 1st, 2024</i>
+{% endblocktrans %}
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 
+{% cache 3600 privacy-policy-fragment LANGUAGE_CODE %}
 <div id="privacy-policy-fragment">
+{% blocktrans %}
     <p><strong>What Information do we collect?</strong></p>
     <p>We collect Information from you, when you register on our Site, subscribe to our Newsletter, or fill out Forms.</p>
     <p>When registering on our Site, as appropriate, you may be asked to enter your: Name, Email Address, mailing Address, Phone Number, or Credit Card Information. You may, however, visit our Site anonymously.</p>
@@ -16,33 +23,23 @@
     <ul>
         <li>
             To personalize your Experience<br/>
-            <blockquote>
-                Your Information helps us to better respond to your individual Needs.
-            </blockquote>
+            <blockquote>Your Information helps us to better respond to your individual Needs.</blockquote>
         </li>
         <li>
             To improve our Website<br/>
-            <blockquote>
-                We continually strive to improve our Website Offerings, based on the Information and Feedback we receive from you.
-            </blockquote>
+            <blockquote>We continually strive to improve our Website Offerings, based on the Information and Feedback we receive from you.</blockquote>
         </li>
         <li>
             To improve Customer Service<br/>
-            <blockquote>
-                Your Information helps us to more effectively respond to your Customer Service Requests and support Needs.
-            </blockquote>
+            <blockquote>Your Information helps us to more effectively respond to your Customer Service Requests and support Needs.</blockquote>
         </li>
         <li>
             To process Transactions<br/>
-            <blockquote>
-                Your Information, whether public or private, will not be sold, exchanged, transferred, or given to any other Company for any Reason.
-            </blockquote>
+            <blockquote>Your Information, whether public or private, will not be sold, exchanged, transferred, or given to any other Company for any Reason.</blockquote>
         </li>
         <li>
             To send periodic Emails<br/>
-            <blockquote>
-                The Email Address you provide, will only be used to send you Information, Notifications and Updates.
-            </blockquote>
+            <blockquote>The Email Address you provide, will only be used to send you Information, Notifications and Updates.</blockquote>
         </li>
     </ul>
 
@@ -75,5 +72,7 @@
 
     <a href="https://2remember.live">2Remember</a><br/>
     <a href="mailto:support@2remember.live">support@2remember.live</a><br/><br/>
+{% endblocktrans %}
 </div>
+{% endcache %}
 <!--  END  PRIVACY POLICY CODE -->

@@ -14,7 +14,6 @@ def get_request_id(request):
     return get_unique_hashname()
 
 
-# === TODO: Move the Middleware to `ddcore`.
 class DjangoRequestIDMiddleware:
     """Django Middleware Class for adding `request_id` to Requests."""
 

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
 
 {% block title %}{% trans "About us" %} - {{ block.super }}{% endblock %}
@@ -10,11 +11,13 @@
 {% block extra_script %}
 {% endblock %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
 {% block breadcrumbs %}
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "About us" %}</li>
         </ol>
     </nav>
@@ -23,18 +26,16 @@
 
 {% block content %}
 <div class="alert alert-warning mb-md-3" role="alert">
-{% blocktrans %}
-    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Page is under Construction.</p>
-{% endblocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Page is under Construction." %}</p>
 </div>
 
+{% cache 3600 about-us LANGUAGE_CODE %}
 <div id="about-us" class="bg-body-tertiary p-3">
     <div class="row">
         <div class="col-12">
         {% comment %}
             <section>
                 <h4>{% trans "In brief" %}</h4>
-
                 <p>{% trans "Initially, work on the Project began back in the Year 2012, and the Project was known as" %} <strong>partici.pe</strong>. {% trans "However, due to the lack of Funding, the Work on the Project was suspended in mid-2013." %}</p>
                 <p>{% trans "Work on the Project was resumed in the second Half of 2014 by a Team of the independent Developers and Enthusiasts, and now the Project is experiencing its second Birth." %}</p>
             </section>
@@ -42,7 +43,6 @@
 
             <section>
                 <h4>{% trans "Who we are" %}</h4>
-
                 <p>{% trans "We are the Team of independent Developers and Enthusiasts." %}</p>
                 <p>{% trans "Our Motto: Shut up, mind your Business, and do your best." %}</p>
         {% comment %}
@@ -62,11 +62,11 @@
 
             <section>
                 <h4>{% trans "Help us to improve the Website" %}</h4>
-
                 <p>{% trans "We work hard on our Project, and therefore your Opinion is very important for us." %}</p>
                 <p>{% trans "All your Suggestions for improving the Website you can send to the Technical Support Team from the" %} <a href="{% url 'contact-us' %}">{% trans "Contact us</a> Page." %}</p>
             </section>
         </div>
     </div>
 </div>
+{% endcache %}
 {% endblock %}

@@ -1,3 +1,4 @@
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 
@@ -6,6 +7,9 @@
         :<event>
 {% endcomment %}
 
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 event-thumbnail-search event.slug LANGUAGE_CODE %}
 <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24" style="margin-bottom:10px;">
     <div class="event-thumb-search">
         <div class="row">
@@ -54,3 +58,4 @@
         </div>
     </div>
 </div>
+{% endcomment %}

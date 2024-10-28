@@ -23,7 +23,7 @@ VERSION_MAJOR = 0
 VERSION_MINOR = 3
 VERSION_PATCH = 1
 
-PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC1"
+PRODUCT_VERSION_NUM = f"v.{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}-RC3 (<a href='https://github.com/asuvorov/2remember/pull/169/'>feat: seo</a>)"
 
 
 ###############################################################################
@@ -159,7 +159,9 @@ MIDDLEWARE = (
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    # "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.common.CommonMiddleware",
+    # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
@@ -191,6 +193,8 @@ INSTALLED_APPS = (
     "corsheaders",
     "ddcore",
     # "django_countries",
+    "django_static_fontawesome",
+    "django_static_ionicons",
     "djangoformsetjs",
     # "djangosecure",
     # "jquery",
@@ -225,7 +229,61 @@ CACHES = {
     "default": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
-    "some-other-cache": {
+    "memcached": {
+        "BACKEND":  "django.core.cache.backends.memcached.PyMemcacheCache",
+        # "LOCATION": "127.0.0.1:11211",
+        "LOCATION": "unix:/tmp/memcached.sock",
+        "OPTIONS": {
+            "MAX_ENTRIES":      1000,
+            "no_delay":         True,
+            "ignore_exc":       True,
+            "max_pool_size":    4,
+            "use_pooling":      True,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "redis": {
+        "BACKEND":  "django.core.cache.backends.redis.RedisCache",
+        # "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": "redis://username:password@127.0.0.1:6379",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+            "db":           "10",
+            "parser_class": "redis.connection.PythonParser",
+            "pool_class":   "redis.BlockingConnectionPool",
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "db": {
+        "BACKEND":  "django.core.cache.backends.db.DatabaseCache",
+        "LOCATION": "cache_table",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "filebased": {
+        "BACKEND":  "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": "/var/tmp/django_cache",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "locmem": {
+        "BACKEND":  "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
+        "OPTIONS": {
+            "MAX_ENTRIES":  1000,
+        },
+        "TIMEOUT":  60,
+        "VERSION":  1,
+    },
+    "dummy": {
         "BACKEND":  "django.core.cache.backends.dummy.DummyCache",
     },
 }
@@ -267,7 +325,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "json",  # "simple",
+            "formatter":    "simple",
         },
         "json_file": {
             "level":        "DEBUG",
@@ -301,7 +359,7 @@ LOGGING = {
     },
     "loggers": {
         "": {
-            "level":        "DEBUG",
+            "level":        "INFO",
             "handlers":     ["console", "json_file", "plain_file"],
             "propagate":    True,
         },
@@ -342,48 +400,6 @@ ORGANIZATION_TITLE_RESERVED_WORDS = [
     "directory", "create",
 ]
 
-SUBSCRIPTION_PLANS = {
-    "BASIC": {
-        "fare": 0,  # Cents.
-        "attachments": {
-            "images": {
-                "max_width":            1600,
-                "max_height":           900,
-                "max_per_event":        25,
-                "max_per_organization": 25,
-            },
-            "documents": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-            "video_urls": {
-                "max_per_event":        5,
-                "max_per_organization": 5,
-            },
-        },
-        "accounts": {},
-        "events": {
-            "upon_request_only":    False,
-            "max_per_day":          1,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
-            "max_per_week":         None,
-            "max_per_month":        None,
-            "max_per_year":         None,
-        },
-        "places": {},
-    }
-}
-
 
 ###############################################################################
 ### DJANGO BOWER                                                            ###
@@ -398,7 +414,6 @@ STATICFILES_FINDERS += (
 BOWER_COMPONENTS_ROOT = os.path.join(PROJECT_PATH, "components/")
 # BOWER_PATH = "/usr/local/bin/bower"
 BOWER_INSTALLED_APPS = (
-    # "awesome-bootstrap-checkbox",
     "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
@@ -651,7 +666,7 @@ MIDDLEWARE += (
     "geoip2_extras.middleware.GeoIP2Middleware",
 )
 GEOIP_PATH = os.path.join(PROJECT_PATH, "geoip/")
-GEOIP2_EXTRAS_CACHE_NAME = "some-other-cache"
+GEOIP2_EXTRAS_CACHE_NAME = "dummy"  # TODO: Explore effective caching Options.
 GEOIP2_EXTRAS_CACHE_TIMEOUT = 3600
 GEOIP2_EXTRAS_ADD_RESPONSE_HEADERS = DEBUG
 
@@ -698,6 +713,63 @@ IMAGEKIT_DEFAULT_CACHEFILE_BACKEND = "imagekit.cachefiles.backends.Simple"
 IMAGEKIT_DEFAULT_CACHEFILE_STRATEGY = "imagekit.cachefiles.strategies.JustInTime"
 IMAGEKIT_CACHEFILE_NAMER = "imagekit.cachefiles.namers.hash"
 IMAGEKIT_SPEC_CACHEFILE_NAMER = "imagekit.cachefiles.namers.source_name_as_path"
+
+
+###############################################################################
+### DJANGO META                                                             ###
+###############################################################################
+INSTALLED_APPS += (
+    "meta",
+)
+
+META_SITE_PROTOCOL = "https"
+# META_SITE_DOMAIN = None
+# META_SITE_TYPE = "og:type"
+# META_SITE_NAME = None
+# META_INCLUDE_KEYWORDS = []
+# META_DEFAULT_KEYWORDS = []
+# META_IMAGE_URL =
+META_USE_OG_PROPERTIES = True
+# META_USE_TWITTER_PROPERTIES = False
+# META_USE_SCHEMAORG_PROPERTIES = False
+# META_USE_TITLE_TAG = True
+META_USE_SITES = True
+# META_OG_NAMESPACES =
+# META_OG_SECURE_URL_ITEMS=
+
+#                         # description
+#                         # extra_custom_props
+#                         # extra_props
+#                         # facebook_app_id
+# META_FB_PAGES           # fb_pages              (default: blank)
+# META_DEFAULT_IMAGE      # image                 (must be an absolute URL, ignores META_IMAGE_URL)
+#                         # image_height
+#                         # image_object
+#                         # image_width
+#                         # keywords
+#                         # locale
+#                         # use_facebook
+#                         # use_og
+#                         # use_schemaorg
+#                         # use_title_tag
+#                         # use_twitter
+# META_FB_APPID           # og_app_id             (default: blank)
+# META_FB_AUTHOR_URL      # og_author_url         (default: blank)
+# META_FB_PROFILE_ID      # og_profile_id         (default: blank)
+# META_FB_PUBLISHER       # og_publisher          (default: blank)
+#                         # og_title
+# META_FB_TYPE            # og_type               (default: first META_FB_TYPES)
+# META_SITE_TYPE          # object_type           (default: first META_OBJECT_TYPES)
+#                         # schemaorg_title
+# META_SCHEMAORG_TYPE     # schemaorg_type        (default: first META_SCHEMAORG_TYPE)
+#                         # site_name
+#                         # title
+# META_TWITTER_AUTHOR     # twitter_author        (default: blank)
+#                         # twitter_creator
+# META_TWITTER_SITE       # twitter_site          (default: blank)
+#                         # twitter_title
+# META_TWITTER_TYPE       # twitter_type          (default: first META_TWITTER_TYPES)
+#                         # url
 
 
 ###############################################################################
@@ -831,14 +903,6 @@ ROSETTA_AUTO_COMPILE = True
 
 
 ###############################################################################
-### DJANGO SEO                                                              ###
-###############################################################################
-# INSTALLED_APPS += (
-#     "djangoseo",
-# )
-
-
-###############################################################################
 ### DJANGO SIMPLE CAPTCHA                                                   ###
 ###############################################################################
 # INSTALLED_APPS += (
@@ -860,16 +924,20 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### PYTHON/DJANGO SOCIAL AUTH                                               ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "social_django",
-# )
+INSTALLED_APPS += (
+    "social_django",
+)
 
-# AUTHENTICATION_BACKENDS += (
-#     "social_core.backends.facebook.FacebookAppOAuth2",
-#     "social_core.backends.facebook.FacebookOAuth2",
-#     "social_core.backends.twitter.TwitterOAuth",
-#     "social_core.backends.linkedin.LinkedinOAuth2",
-# )
+AUTHENTICATION_BACKENDS += (
+    "social_core.backends.open_id.OpenIdAuth",
+    # "social_core.backends.google.GoogleOpenId",
+    # "social_core.backends.google.GoogleOAuth2",
+    # "social_core.backends.google.GoogleOAuth",
+    # "social_core.backends.facebook.FacebookAppOAuth2",
+    # "social_core.backends.facebook.FacebookOAuth2",
+    # "social_core.backends.linkedin.LinkedinOAuth2",
+    # "social_core.backends.twitter.TwitterOAuth",
+)
 
 # SESSION_SERIALIZER = "django.contrib.sessions.serializers.PickleSerializer"
 # SESSION_COOKIE_AGE = 60 * 60 * 24 * 30  # One Month
@@ -878,18 +946,18 @@ LOGIN_URL = "/accounts/signin/"
 LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # LOGIN_ERROR_URL = "/login-error/"
 
-# #SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
-# #SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
-# #SOCIAL_AUTH_LOGIN_URL = "/login-url/"
-# #SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
-# #SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
-# #SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
-# #SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/logged-in/"
+# SOCIAL_AUTH_LOGIN_ERROR_URL = "/login-error/"
+# SOCIAL_AUTH_LOGIN_URL = "/login-url/"
+# SOCIAL_AUTH_NEW_USER_REDIRECT_URL = "/new-users-redirect-url/"
+# SOCIAL_AUTH_NEW_ASSOCIATION_REDIRECT_URL = "/new-association-redirect-url/"
+# SOCIAL_AUTH_DISCONNECT_REDIRECT_URL = "/account-disconnected-redirect-url/"
+# SOCIAL_AUTH_INACTIVE_USER_URL = "/inactive-user/"
 
-# #SOCIAL_AUTH_USER_MODEL = "foo.bar.User"
+SOCIAL_AUTH_USER_MODEL = "ddcore.User"
 
 # SOCIAL_AUTH_UUID_LENGTH = 16
-# SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_USERNAME_IS_FULL_EMAIL = True
 # SOCIAL_AUTH_SLUGIFY_USERNAMES = False
 # SOCIAL_AUTH_CLEAN_USERNAMES = True
 
@@ -901,69 +969,104 @@ LOGIN_REDIRECT_URL = "/accounts/my-profile/"
 # ])
 # SOCIAL_AUTH_CREATE_USERS = True
 
-# SOCIAL_AUTH_PIPELINE = (
-#     "social_core.pipeline.social_auth.social_details",
-#     "social_core.pipeline.social_auth.social_uid",
-#     "social_core.pipeline.social_auth.auth_allowed",
-#     "social_core.pipeline.social_auth.social_user",
-#     "social_core.pipeline.user.get_username",
-#     "social_core.pipeline.mail.mail_validation",
-#     "social_core.pipeline.social_auth.associate_by_email",
-#     "social_core.pipeline.user.create_user",
-#     "social_core.pipeline.social_auth.associate_user",
-#     "social_core.pipeline.debug.debug",
-#     "social_core.pipeline.social_auth.load_extra_data",
-#     "social_core.pipeline.user.user_details",
+SOCIAL_AUTH_PIPELINE = (
+    # Get the Information about the User, and return it in a simple Format to
+    # create the User Instance later.
+    "social_core.pipeline.social_auth.social_details",
 
-#     "accounts.auth_pipelines.save_profile",
-# )
+    # Get the social UID of the given User in the Provider.
+    "social_core.pipeline.social_auth.social_uid",
+
+    # Verify, that the current Auth Process is valid within the current Project.
+    # This is where Emails and Domains Whitelists are applied (if defined).
+    "social_core.pipeline.social_auth.auth_allowed",
+
+    # Check, if the current social Account is already associated in the Site.
+    "social_core.pipeline.social_auth.social_user",
+
+    # Make up a Username for the User, and append a random String at the End,
+    # if there’s any Collision.
+    "social_core.pipeline.user.get_username",
+
+    "social_core.pipeline.mail.mail_validation",
+
+    # Associate current Auth with a User with the same Email Address in the DB.
+    "social_core.pipeline.social_auth.associate_by_email",
+
+    # Create a User Account, if haven’t been found one yet.
+    "social_core.pipeline.user.create_user",
+
+    # Create the Record, that associated the social Account with this User.
+    "social_core.pipeline.social_auth.associate_user",
+
+    "social_core.pipeline.debug.debug",
+
+    # Populate the `extra_data` Field in the social Record with the Values,
+    # specified by Settings (and the default ones, like `access_token`, etc).
+    "social_core.pipeline.social_auth.load_extra_data",
+
+    # Update the User Record with any changed Info from the Auth Service.
+    "social_core.pipeline.user.user_details",
+
+    "accounts.auth_pipelines.save_profile",
+)
+
+# -----------------------------------------------------------------------------
+# --- GOOGLE
+# -----------------------------------------------------------------------------
+# SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ""
+# SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ""
 
 # -----------------------------------------------------------------------------
 # --- FACEBOOK
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
-SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
-SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
-SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    "fields":   "id,name,email",
-}
+# SOCIAL_AUTH_FACEBOOK_KEY = config("SOCIAL_AUTH_FACEBOOK_KEY", default="")
+# SOCIAL_AUTH_FACEBOOK_SECRET = config("SOCIAL_AUTH_FACEBOOK_SECRET", default="")
+# SOCIAL_AUTH_FACEBOOK_SCOPE = ["email", ]
+# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+#     "fields":   "id,name,email",
+# }
 
 # -----------------------------------------------------------------------------
 # --- TWITTER
 # -----------------------------------------------------------------------------
-TWITTER_OAUTH_TOKEN = config("TWITTER_OAUTH_TOKEN", default="")
-TWITTER_OAUTH_SECRET = config("TWITTER_OAUTH_SECRET", default="")
-TWITTER_CONSUMER_KEY = config("TWITTER_CONSUMER_KEY", default="")
-TWITTER_CONSUMER_SECRET = config("TWITTER_CONSUMER_SECRET", default="")
+TWITTER_CONSUMER_KEY = config("X_TWITTER_CONSUMER_KEY", default="")
+TWITTER_CONSUMER_SECRET = config("X_TWITTER_CONSUMER_SECRET", default="")
+TWITTER_OAUTH_TOKEN = config("X_TWITTER_ACCESS_KEY", default="")
+TWITTER_OAUTH_SECRET = config("X_TWITTER_ACCESS_SECRET", default="")
 
-SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
-SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
+# SOCIAL_AUTH_TWITTER_KEY = TWITTER_CONSUMER_KEY
+# SOCIAL_AUTH_TWITTER_SECRET = TWITTER_CONSUMER_SECRET
 
 # -----------------------------------------------------------------------------
 # --- LINKEDIN
 # -----------------------------------------------------------------------------
-LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
-LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
-LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
-LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
-LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
-LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
+# LINKEDIN_OAUTH_TOKEN = config("LINKEDIN_OAUTH_TOKEN", default="")
+# LINKEDIN_OAUTH_SECRET = config("LINKEDIN_OAUTH_SECRET", default="")
+# LINKEDIN_CONSUMER_KEY = config("LINKEDIN_CONSUMER_KEY", default="")
+# LINKEDIN_CONSUMER_SECRET = config("LINKEDIN_CONSUMER_SECRET", default="")
+# LINKEDIN_SCOPE = ["r_basicprofile", "r_emailaddress", ]
+# LINKEDIN_EXTRA_FIELD_SELECTORS = ["email-address", ]
 
 # -----------------------------------------------------------------------------
 # --- OAuth1 Settings.
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
-SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
-SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
-SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+# SOCIAL_AUTH_LINKEDIN_KEY = LINKEDIN_CONSUMER_KEY
+# SOCIAL_AUTH_LINKEDIN_SECRET = LINKEDIN_CONSUMER_SECRET
+# SOCIAL_AUTH_LINKEDIN_SCOPE = LINKEDIN_SCOPE
+# SOCIAL_AUTH_LINKEDIN_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
 
 # -----------------------------------------------------------------------------
 # --- OAuth2 Settings.
 # -----------------------------------------------------------------------------
-SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
-SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
-SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_KEY = LINKEDIN_CONSUMER_KEY
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SECRET = LINKEDIN_CONSUMER_SECRET
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_SCOPE = LINKEDIN_SCOPE
+# SOCIAL_AUTH_LINKEDIN_OAUTH2_FIELD_SELECTORS = LINKEDIN_EXTRA_FIELD_SELECTORS
+
+# -----------------------------------------------------------------------------
+# --- GITHUB
+# -----------------------------------------------------------------------------
 
 
 ###############################################################################
@@ -1009,14 +1112,11 @@ EMAIL_SUPPORT = "support@2remember.live"
 ### 2REMEMBER SOCIAL LINKS                                                  ###
 ###############################################################################
 PB_SOCIAL_LINKS = {
-    # --- On behalf of "artem.suvorov@gamil.com" / S1
     "PB_FACEBOOK":  "#",
-    # --- On behalf of "support@2remember.live"    / S1
-    "PB_TWITTER":   "https://x.com/2rememberlive",
+    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live"    / S1
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
-    # --- On behalf of "support@2remember.live"    / S1
     "PB_INSTAGRAM": "#",
     "PB_TUMBLR":    "#",
 }
@@ -1028,23 +1128,18 @@ PB_SOCIAL_LINKS = {
 UPLOADER_SETTINGS = {
     "default": {
         "FILE_TYPES": [
-            "bmp", "gif", "jpg", "jpeg", "png", "tif", "tiff", "webp",
-            "csv", "doc", "docx", "odt", "pdf", "rtf", "txt",
+            "gif", "jpg", "jpeg", "png",
+            "doc", "docx", "txt", "rtf",
         ],
         "CONTENT_TYPES": [
-            "application/msword",
-            "application/pdf",
-            "application/rtf",
-            "application/vnd.oasis.opendocument.text",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            "image/bmp",
             "image/gif",
             "image/jpeg",
+            "image/pjpeg",
             "image/png",
-            "image/tiff",
-            "image/webp",
-            "text/csv",
+            "application/pdf",
+            "application/msword",
             "text/plain",
+            "text/rtf",
         ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
@@ -1052,68 +1147,71 @@ UPLOADER_SETTINGS = {
     },
     "documents": {
         "FILE_TYPES": [
-            "csv", "doc", "docx", "odt", "pdf", "rtf", "txt",
+            "doc", "docx", "txt", "rtf",
         ],
         "CONTENT_TYPES": [
-            "application/msword",
             "application/pdf",
-            "application/rtf",
-            "application/vnd.oasis.opendocument.text",
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-            "text/csv",
+            "application/msword",
             "text/plain",
-        ],
+            "text/rtf",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "images": {
         "FILE_TYPES": [
-            "bmp", "gif", "jpg", "jpeg", "png", "tif", "tiff", "webp",
+            "gif", "jpg", "jpeg", "png",
         ],
         "CONTENT_TYPES": [
-            "image/bmp",
             "image/gif",
             "image/jpeg",
+            "image/pjpeg",
             "image/png",
-            "image/tiff",
-            "image/webp",
-        ],
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "video": {
         "FILE_TYPES": [
-            "avi", "mp4", "mpg", "mpeg", "ogv", "webm",
+            "flv", "mpg", "mpeg", "mp4",
+            "avi", "mkv", "ogg",
+            "wmv", "mov", "webm",
         ],
         "CONTENT_TYPES": [
-            "video/x-msvideo",
+            "video/mpeg",
             "video/mp4",
-            "video/mpeg"
             "video/ogg",
-            "video/webm"
-        ],
+            "video/quicktime",
+            "video/webm",
+            "video/x-ms-wmv",
+            "video/x-flv",
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
         "AUTO_UPLOAD":      True,
     },
     "audio": {
         "FILE_TYPES": [
-            "aac", "mid", "midi", "mp3", "ogv", "wav", "weba",
+            "mp3", "mp4", "ogg", "wma", "wax", "wav", "webm",
         ],
         "CONTENT_TYPES": [
-            "audio/aac",
-            "audio/midi",
+            "audio/basic",
+            "audio/L24",
+            "audio/mp4",
             "audio/mpeg",
             "audio/ogg",
-            "audio/wav",
+            "audio/vorbis",
+            "audio/x-ms-wma",
+            "audio/x-ms-wax",
+            "audio/vnd.rn-realaudio",
+            "audio/vnd.wave",
             "audio/webm",
-            "audio/x-midi",
-        ],
+            ],
         "MAX_FILE_SIZE":    10485760,
         "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
+        "AUTO_UPLOAD":  True,
     }
 }
 

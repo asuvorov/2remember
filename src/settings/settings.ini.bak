@@ -8,21 +8,21 @@
 # -----------------------------------------------------------------------------
 # --- Environment Variables.
 # -----------------------------------------------------------------------------
-ENVIRONMENT=local
-DJANGO_SETTINGS_MODULE=settings.local
+ENVIRONMENT=
+DJANGO_SETTINGS_MODULE=
 
-CACHE_MIDDLEWARE_ALIAS=redis
-CACHE_MIDDLEWARE_SECONDS=60
-CACHE_MIDDLEWARE_KEY_PREFIX=local
+CACHE_MIDDLEWARE_ALIAS=
+CACHE_MIDDLEWARE_SECONDS=
+CACHE_MIDDLEWARE_KEY_PREFIX=
 
-DB_ENGINE=django.db.backends.mysql
-DB_NAME=toremember
-DB_USER=root
-DB_PASSWORD=root
-DB_HOST=db
-DB_PORT=3306
+DB_ENGINE=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+DB_HOST=
+DB_PORT=
 
-SECURE_SSL_REDIRECT=false
+SECURE_SSL_REDIRECT=true
 
 # -----------------------------------------------------------------------------
 AWS_ACCESS_KEY_ID=
@@ -30,20 +30,7 @@ AWS_SECRET_ACCESS_KEY=
 AWS_STORAGE_BUCKET_NAME=
 
 # -----------------------------------------------------------------------------
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_FILE_PATH=
-EMAIL_HOST=localhost
-EMAIL_HOST_USER=
-EMAIL_HOST_PASSWORD=
-EMAIL_PORT=25
-EMAIL_SUBJECT_PREFIX=
-EMAIL_USE_LOCALTIME=
-EMAIL_USE_TLS=
-EMAIL_USE_SSL=
-EMAIL_SSL_CERTFILE=
-EMAIL_SSL_KEYFILE=
-EMAIL_TIMEOUT=
-
+EMAIL_BACKEND=
 SENDGRID_API_KEY=
 
 # -----------------------------------------------------------------------------

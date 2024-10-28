@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load taggit_templatetags2_tags %}
@@ -10,6 +11,8 @@
 
         :<organizations> - List of Organizations
 {% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{% trans "Create Organization" %} - {{ block.super }}{% endblock %}
 
@@ -23,7 +26,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Organizations" %}</li>
         </ol>
     </nav>
@@ -56,6 +59,7 @@
         <div id="tips" class="col-md-3 right-sidebar">
             <!-- Tag Cloud -->
             <section id="tag-cloud">
+            {% cache 60 tag-cloud-organization LANGUAGE_CODE %}
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "organizations.organization" %}
                 {% get_tagcloud as tagcloud for "organizations.organization" %}
@@ -69,6 +73,7 @@
                     </a>
                 {% endfor %}
                 </div>
+            {% endcache %}
             </section>
 
             <!-- Sponsored Links -->

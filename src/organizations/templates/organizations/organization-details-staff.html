@@ -11,11 +11,6 @@
 {% endcomment %}
 
 {% block extra_meta %}
-    {# get_metadata #}
-{% comment %}
-    <link rel="image_src" href="{{ organization.cover.url }}" />
-    <meta name="description" content="{{ organization.description|truncatechars:300 }}" />
-{% endcomment %}
 {% endblock %}
 
 {% block extra_style %}
@@ -28,7 +23,7 @@
 <div class="container">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
-            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'organization-list' %}">{% trans "Organizations" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'organization-details' organization.slug %}">{{ organization.title }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Staff" %}</li>
@@ -39,9 +34,7 @@
 
 {% block content %}
 <div class="alert alert-warning mb-md-3" role="alert">
-{% blocktrans %}
-    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Page is under Construction.</p>
-{% endblocktrans %}
+    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Page is under Construction." %}</p>
 </div>
 
 <div id="organization-staff" class="bg-body-tertiary p-3">

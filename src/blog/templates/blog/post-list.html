@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+{% load cache %}
 {% load i18n %}
 {% load imagekit %}
 {% load taggit_templatetags2_tags %}
@@ -10,6 +11,8 @@
 
         :<posts> - List of Posts
 {% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{% trans "Our Blog" %} - {{ block.super }}{% endblock %}
 
@@ -57,6 +60,7 @@
 
             <!-- Tag Cloud -->
             <section id="tag-cloud">
+            {% cache 60 tag-cloud-blog LANGUAGE_CODE %}
                 <h4>{% trans "Tag Cloud" %}</h4>
                 {% get_taglist as taglist for "blog.post" %}
                 {% get_tagcloud as tagcloud for "blog.post" %}
@@ -70,6 +74,7 @@
                     </a>
                 {% endfor %}
                 </div>
+            {% endcache %}
             </section>
 
             <!-- Archive -->
@@ -77,9 +82,7 @@
                 <h4>{% trans "Archive" %}</h4>
 
                 <div class="alert alert-warning mb-md-3" role="alert">
-                {% blocktrans %}
-                    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>Section is under Construction.</p>
-                {% endblocktrans %}
+                    <p class="mb-0"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>{% trans "Section is under Construction." %}</p>
                 </div>
             </section>
 
