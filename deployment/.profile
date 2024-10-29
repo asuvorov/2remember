@@ -19,15 +19,15 @@ fi
 export ENVIRONMENT=staging
 export DJANGO_SETTINGS_MODULE=settings.staging
 
-export CACHE_MIDDLEWARE_ALIAS=
-export CACHE_MIDDLEWARE_SECONDS=
-export CACHE_MIDDLEWARE_KEY_PREFIX=
+export CACHE_MIDDLEWARE_ALIAS=locmem
+export CACHE_MIDDLEWARE_SECONDS=60
+export CACHE_MIDDLEWARE_KEY_PREFIX=staging
 
 export DB_ENGINE=django.db.backends.mysql
-export DB_NAME=toremember
-export DB_USER=admin
-export DB_PASSWORD=
-export DB_HOST=toremember-dev.c68kupszimwv.us-east-1.rds.amazonaws.com
+export DB_NAME=2remember
+export DB_USER=ubuntu
+export DB_PASSWORD=ubuntu
+export DB_HOST=localhost  # toremember-dev.c68kupszimwv.us-east-1.rds.amazonaws.com
 export DB_PORT=3306
 
 export SECURE_SSL_REDIRECT=true
