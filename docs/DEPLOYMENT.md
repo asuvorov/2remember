@@ -1,12 +1,10 @@
-Deployment
-==========
+# Deployment
 
 This provides Guideline on how to deploy and configure `Django/Python` Project from scratch under `Ubuntu Server` (`AWS` Instance), with `Nginx` and `uWSGI`.
 
 ---
 
-Amazon Web Services
--------------------
+## Amazon Web Services
 
 ### EC2 Instance
 
@@ -19,6 +17,10 @@ Amazon Web Services
     2.2 *(optional)* Configure **`Security Groups`**, i.e. open Ports (e.g. `SSH`, all `TCP`, all `UDP`, all `ICMP`, `HTTP`, `HTTPS`).
    
     2.3 Create **`SSH-Keypair`** and store it somewhere on your Computer (it's highly recommended to keep **SSH Keys** in **`$HOME/.ssh/`**).
+   
+   ```bash
+   [~]$ ssh-keygen
+   ```
    
     2.4 Change **`SSH-Keypair`** Access Rights:
    
@@ -36,8 +38,7 @@ Amazon Web Services
 
 ---
 
-Setting up Ubuntu Instance (after connecting via SSH)
------------------------------------------------------
+## Setting up Ubuntu Instance (after connecting via SSH)
 
 ### Install Essentials
 
@@ -49,36 +50,39 @@ Setting up Ubuntu Instance (after connecting via SSH)
 [~]$ sudo apt-get install -y nodejs npm
 ```
 
-```bash
-        [~]# sudo apt-get install libcurl4-openssl-dev libxml2-dev libxslt1-dev
-```
-
 ### Install MySQL Client/Server
 
-1. Install `MySQL`:
+1. Install **`MySQL`**:
    
    ```bash
-   [~]$ sudo apt-get install mysql-server mysql-client
+   [~]$ sudo apt-get install -y mysql-server mysql-client
    ```
 
-2. Configure MySQL *(optional)*. Not required for the **Staging / Production** Environments:
+2. Configure **`MySQL`** *(optional)*. Not required for the **Staging / Production** Environments:
+   **NOTE**: The default Password for the `root` User is `root`
    
-            [~]# mysql -u root -p
-       
-            mysql> create user "USERNAME"@"localhost" identified by "PASSWORD";
-            mysql> grant all privileges on * . * to "USERNAME"@"localhost";
-            mysql> ^D
+   **NOTE**: Replace **`<DB_USERNAME>`** and **`<DB_PASSWORD>`** with the actual Username and Password you're going to use in your **`Django`** Project to connect to **MySQL**
+   
+   ```bash
+   [~]$ sudo mysql -u root -p
+   
+        mysql> create user "<DB_USERNAME>"@"localhost" identified by "<DB_PASSWORD>";
+        mysql> grant all privileges on * . * to "<DB_USERNAME>"@"localhost";
+        mysql> exit
+   ```
 
 3. Create working Database *(optional)*. Not required for the **Staging / Production** Environments:
    
-            [~]# mysql -u USERNAME -p
-       
-            mysql> create database DBNAME;
-            mysql> ^D
+   ```bash
+   [~]$ mysql -u <DB_USERNAME> -p
+   
+        mysql> create database <DB_NAME>;
+        mysql> exit
+   ```
 
 ### Install ElasticSearch Server
 
-Installation and configuration of ElasticSearch originally taken from [How to Install Elasticsearch 8 on Ubuntu 24.04, 22.04, or 20.04 - LinuxCapable](https://linuxcapable.com/how-to-install-elasticsearch-8-on-ubuntu-linux/).
+Installation and configuration of **`ElasticSearch`** originally taken from [How to Install Elasticsearch 8 on Ubuntu 24.04, 22.04, or 20.04 - LinuxCapable](https://linuxcapable.com/how-to-install-elasticsearch-8-on-ubuntu-linux/).
 
 0. Install Java 8
    
@@ -125,9 +129,9 @@ Installation and configuration of ElasticSearch originally taken from [How to In
 
 6. Rebuild Indexes:
    
-   ```
-      [~]# cd /opt/app/2remember/src
-      [/opt/apps/2remember/src]# python manage.py rebuild_index -v2
+   ```bash
+   [~]$ cd /opt/app/2remember/src
+   [/opt/apps/2remember/src]$ python manage.py rebuild_index -v2
    ```
 
 ### Install Bower & LessJS
@@ -138,74 +142,126 @@ Installation and configuration of ElasticSearch originally taken from [How to In
 
 ---
 
-Setting up Django/Python Project (after connecting via SSH)
---------------------------------
+## Setting up Django/Python Project (after connecting via SSH)
 
 1. Cloning the Project:
    
     1.1 Creating working Directory:
    
-            [~]# sudo chown ubuntu:ubuntu /opt
-            [~]# mkdir /opt/apps
+   ```bash
+   [~]$ sudo chown ubuntu:ubuntu /opt
+   [~]$ mkdir /opt/apps
+   ```
    
-    1.2 Cloning Project (don't forget to add **SSH Key**, created via **`ssh-keygen`**, to Git Account):
+    1.2 Cloning Project:
    
-            [~]# cd /opt/apps
-            [/opt/apps]# git clone git@github.com:asuvorov/2remember.git
+   **NOTE**: If cloning via **SSH** Link - don't forget to add **SSH Key**, created via **`ssh-keygen`**, to the **Git** Account
+   
+   ```bash
+   [~]$ cd /opt/apps
+   [/opt/apps]$ git clone git@github.com:asuvorov/2remember.git
+   
+   or
+   
+   [/opt/apps]$ git clone https://github.com/asuvorov/2remember.git
+   ```
 
 2. Installing Virtual Environment and Project Dependencies:
    
-            [/opt/apps]# cd 2remember
-            [/opt/apps/2remember]# virtualenv ve --no-site-packages
-            [/opt/apps/2remember]# . ve/bin/activate
-            [/opt/apps/2remember]# pip install --no-cache-dir -r requirements.txt
+   ```bash
+   [/opt/apps]$ cd 2remember
+   [/opt/apps/2remember]$ git checkout dev
+   [/opt/apps/2remember]$ virtualenv .env
+   [/opt/apps/2remember]$ . .env/bin/activate
+   [/opt/apps/2remember]$ pip install --no-cache-dir -r requirements.txt
+   ```
 
-3. Export Environment Variables. For the **Staging** Environment add the following to the End of the `/home/ubuntu/.bashrc` File:
+3. Export Environment Variables. For the **Staging** Environment add the following to the End of the **`~/.profile`** File:
    
-            # Custom Environment Variables
-            export ENVIRONMENT=staging
-            export DJANGO_SETTINGS_MODULE=settings.staging
-            export DB_NAME=
-            export DB_USER=
-            export DB_PASSWORD=
-            export DB_HOST=
-            export DB_PORT=
-            export AWS_ACCESS_KEY_ID=
-            export AWS_SECRET_ACCESS_KEY=
-            export AWS_STAGING_BUCKET_NAME=2remember-staging
-
-4. Setting up Project:
+   **NOTE**: An Example of the **`.profile`** File can be found at [2remember/deployment/.profile at feat/pre-release · asuvorov/2remember · GitHub](https://github.com/asuvorov/2remember/blob/feat/pre-release/deployment/.profile)
    
-            [/opt/apps/2remember/src]# python manage.py migrate
-            [/opt/apps/2remember/src]# python manage.py bower install
-            [/opt/apps/2remember/src]# python manage.py collectstatic
-            [/opt/apps/2remember/src]# python manage.py runserver
-
----------------------------------
-
-Setting up Django Cache Framework
----------------------------------
-
-1. Create the Cache Table for the **Staging** and **Production** Environment:
+   ```bash
+   # Custom Environment Variables
+   export ENVIRONMENT=staging
+   export DJANGO_SETTINGS_MODULE=settings.staging
    
-            [/opt/apps/2remember/src]# python manage.py createcachetable
-
----------------------
-
-Setting up Django SEO
----------------------
-
-1. Create and run Migrations:
+   export CACHE_MIDDLEWARE_ALIAS=
+   export CACHE_MIDDLEWARE_SECONDS=
+   export CACHE_MIDDLEWARE_KEY_PREFIX=
    
-            [/opt/apps/2remember/src]# python manage.py makemigrations djangoseo
-            [/opt/apps/2remember/src]# python manage.py migrate djangoseo --fake-initial
+   export DB_ENGINE=django.db.backends.mysql
+   export DB_NAME=<DB_NAME>
+   export DB_USER=<DB_USERNAME>
+   export DB_PASSWORD=<DB_PASSWORD>
+   export DB_HOST=<DB_HOST>      # e.g. 'localhost', or 'toremember-dev.c68kupszimwv.us-east-1.rds.amazonaws.com'
+   export DB_PORT=3306
+   
+   export SECURE_SSL_REDIRECT=true
+   
+   export AWS_ACCESS_KEY_ID=
+   export AWS_SECRET_ACCESS_KEY=
+   export AWS_STORAGE_BUCKET_NAME=2remember-staging
+   
+   export EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+   export EMAIL_FILE_PATH=
+   export EMAIL_HOST=localhost
+   export EMAIL_HOST_USER=
+   export EMAIL_HOST_PASSWORD=
+   export EMAIL_PORT=25
+   export EMAIL_SUBJECT_PREFIX=
+   export EMAIL_USE_LOCALTIME=
+   export EMAIL_USE_TLS=
+   export EMAIL_USE_SSL=
+   export EMAIL_SSL_CERTFILE=
+   export EMAIL_SSL_KEYFILE=
+   export EMAIL_TIMEOUT=
+   
+   export SENDGRID_API_KEY=
+   
+   export SENTRY_DSN=
+   
+   export STRIPE_DEBUG=true
+   export STRIPE_DEFAULT_PLAN=
+   export STRIPE_PUBLIC_KEY=
+   export STRIPE_SECRET_KEY=
+   
+   export X_TWITTER_PROJECT_ID=
+   export X_TWITTER_BEARER_TOKEN=
+   export X_TWITTER_CONSUMER_KEY=
+   export X_TWITTER_CONSUMER_SECRET=
+   export X_TWITTER_ACCESS_KEY=
+   export X_TWITTER_ACCESS_SECRET=
+   ```
 
-2. Go into Django Admin Section `/admin/sites/site/1/` and change the Domain Name to "www.2remember.com".
+4. Setting up the Project:
+   
+   ```bash
+   [/opt/apps/2remember]$ cd src
+   [/opt/apps/2remember/src]$ mkdir media logs
+   [/opt/apps/2remember/src]$ python manage.py migrate
+   [/opt/apps/2remember/src]$ python manage.py loaddata admin categories faq faq_sections site teams team_members
+   [/opt/apps/2remember/src]$ python manage.py bower install
+   [/opt/apps/2remember/src]$ python manage.py collectstatic --clear --no-input
+   [/opt/apps/2remember/src]$ python manage.py createcachetable
+   ```
 
---------------------------------------
+5. Create an Admin Account to access Django Admin Panel:
+   
+   **NOTE:** Simply follow the Prompts
+   
+   ```bash
+   [/opt/apps/2remember/src]$ python manage.py createsuperuser
+   ```
 
-Serving Django/Python with uWSGI/Nginx
---------------------------------------
+6. Run the Server:
+   
+   ```bash
+   [/opt/apps/2remember/src]$ python manage.py runserver
+   ```
+
+---
+
+## Serving Django/Python with uWSGI/Nginx
 
 Installation and configuration of uWSGI/Nginx originally taken from [here](http://posterous.adambard.com/start-to-finish-serving-mysql-backed-django-w).
 
@@ -215,13 +271,17 @@ https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#ngin
    
     1.1 Generate the private Key and CSR locally:
    
-            [/opt/apps]# openssl req -new -newkey rsa:2048 -nodes -keyout 2remember.key -out 2remember.csr
+   ```bash
+   [/opt/apps]$ openssl req -new -newkey rsa:2048 -nodes -keyout 2remember.key -out 2remember.csr
+   ```
    
     1.2 Generate/buy the SSL Certificate from [name.com](https://www.name.com/)
    
     1.3 Create a new File for storing the **SSL Certificate**:
    
-            [/opt/apps]# touch 2remember.cer
+   ```bash
+   [/opt/apps]$ touch 2remember.cer
+   ```
    
     1.4 Copy/paste the generated SSL Certificate into the `/opt/apps/2remember.cer` File
 
@@ -229,80 +289,107 @@ https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#ngin
    
     2.1 Install **uWSGI**:
    
-            [~]# sudo apt-get install uwsgi
-            [~]# sudo apt-get install uwsgi-plugin-python3
+   ```bash
+   [~]$ sudo apt-get install -y uwsgi uwsgi-plugin-python3
+   ```
    
     2.2 Run daemonized **uWSGI**:
    
-    2.2.1 Copy configuration File:
+    2.2.1 Copy configuration File(s):
    
-            [~]# sudo cp /opt/apps/2remember/deployment/staging/uwsgi/etc/init/uwsgi.conf /etc/init/
+   ```bash
+   [~]$ cp /opt/apps/2remember/deployment/opt/apps/uwsgi.ini /opt/apps/
+   
+   [~]$ sudo cp /opt/apps/2remember/deployment/etc/init/uwsgi.conf /etc/init/
+   ```
    
     2.2.2 If **uWSGI** is located at **`/usr/local/bin`** (failed to run Service), create following Link:
    
-            [~]# sudo ln /usr/local/bin/uwsgi /usr/bin/uwsgi
+   ```bash
+   [~]$ sudo ln /usr/local/bin/uwsgi /usr/bin/uwsgi
+   ```
    
-    2.2.3 Run/terminate daemonized **uWSGI**:
+    2.2.3 Run/reload/terminate daemonized **uWSGI**:
    
-            [~]# sudo start uwsgi
-            [~]# sudo stop  uwsgi
+   ```bash
+   [~]$ sudo uwsgi --ini    /opt/apps/uwsgi.ini --daemonize /var/log/uwsgi.log --pidfile /tmp/project-master.pid
+   [~]$ sudo uwsgi --reload /tmp/project-master.pid
+   [~]$ sudo uwsgi --stop   /tmp/project-master.pid
+   ```
 
 3. Setting up **Nginx** for the **Staging** Environment:
    
     3.1 Install **Nginx**:
    
-            [~]# sudo apt-get install nginx
+   ```bash
+   [~]$ sudo apt-get install -y nginx
+   ```
    
     3.2 Configure **Nginx**:
    
-    3.2.1 Create / update configuration File (usually, not needed):
+    3.2.1 Create / update **uWSGI** Configuration File (usually, not needed):
    
-            [~]# sudo nano /etc/nginx/uwsgi_params
-       
-            # /etc/nginx/uwsgi_params
-       
-            uwsgi_param  QUERY_STRING       $query_string;
-            uwsgi_param  REQUEST_METHOD     $request_method;
-            uwsgi_param  CONTENT_TYPE       $content_type;
-            uwsgi_param  CONTENT_LENGTH     $content_length;
-       
-            uwsgi_param  REQUEST_URI        $request_uri;
-            uwsgi_param  PATH_INFO          $document_uri;
-            uwsgi_param  DOCUMENT_ROOT      $document_root;
-            uwsgi_param  SERVER_PROTOCOL    $server_protocol;
-       
-            uwsgi_param  REMOTE_ADDR        $remote_addr;
-            uwsgi_param  REMOTE_PORT        $remote_port;
-            uwsgi_param  SERVER_PORT        $server_port;
-            uwsgi_param  SERVER_NAME        $server_name;
+   **NOTE**: An Example of the **`uwsgi_params`** File can be found at https://github.com/asuvorov/2remember/blob/feat/pre-release/deployment/etc/nginx/uwsgi_params
+   
+   ```bash
+   [~]$ sudo nano /etc/nginx/uwsgi_params
+   
+   # /etc/nginx/uwsgi_params
+   
+   uwsgi_param  QUERY_STRING       $query_string;
+   uwsgi_param  REQUEST_METHOD     $request_method;
+   uwsgi_param  CONTENT_TYPE       $content_type;
+   uwsgi_param  CONTENT_LENGTH     $content_length;
+   
+   uwsgi_param  REQUEST_URI        $request_uri;
+   uwsgi_param  PATH_INFO          $document_uri;
+   uwsgi_param  DOCUMENT_ROOT      $document_root;
+   uwsgi_param  SERVER_PROTOCOL    $server_protocol;
+   
+   uwsgi_param  REMOTE_ADDR        $remote_addr;
+   uwsgi_param  REMOTE_PORT        $remote_port;
+   uwsgi_param  SERVER_PORT        $server_port;
+   uwsgi_param  SERVER_NAME        $server_name;
+   ```
    
     3.2.2 Create following Directories:
    
-            [~]# mkdir /opt/nginx
-            [~]# mkdir /opt/nginx/{sites-available,sites-enabled}
+   ```bash
+   [~]$ mkdir /opt/nginx
+   [~]$ mkdir /opt/nginx/{sites-available,sites-enabled}
+   ```
    
-    3.2.3 Add the following Line within the **http** section of **`/etc/nginx/nginx.conf`**, right after the line that reads **`include/etc/nginx/conf.d/*.conf`**:
+    3.2.3 Open the **Nginx** Configuration File for updating:
    
-            include /opt/nginx/sites-enabled/*;
+   ```bash
+   [~]$ sudo nano /etc/nginx/nginx.conf
+   ```
    
-    3.3 Copy configuration File:
+   and add the following Line within the **http** Section, right after the Line, that reads **`include/etc/nginx/conf.d/*.conf`**:
    
-            [~]# sudo cp /opt/apps/2remember/deployment/staging/nginx/sites-available/2remember /opt/nginx/sites-available/
+   ```bash
+   include /opt/nginx/sites-enabled/*;
+   ```
    
-    3.4 Create following Link:
+    3.3 Copy the actual Project Configuration File:
    
-            [~]# ln -s /opt/nginx/sites-available/2remember /opt/nginx/sites-enabled/2remember
+   ```bash
+   [~]$ cp /opt/apps/2remember/deployment/opt/nginx/sites-available/2remember /opt/nginx/sites-available/
+   ```
+   
+    3.4 Create the following Link:
+   
+   ```bash
+   [~]$ ln -s /opt/nginx/sites-available/2remember /opt/nginx/sites-enabled/2remember
+   ```
    
     3.5 Restart **Nginx**:
    
-            [~]# sudo /etc/init.d/nginx restart
+   ```bash
+   [~]$ sudo /etc/init.d/nginx restart
+   ```
 
--------------
-
-ElasticSearch
--------------
-
------------------
+---
 
 Django Compressor
 -----------------
@@ -323,9 +410,8 @@ Django Compressor
    
             [~]# sudo ln -s /opt/apps/2remember/src/static/img/ /opt/apps/2remember/src/staticserve/CACHE/img/
 
----------------------
+---
 
-Setting up Supervisor
----------------------
+## Setting up Supervisor
 
 Installation and Configuration originally taken from [here](http://supervisord.org/).
