@@ -4,12 +4,10 @@
 
 import inspect
 import logging
-import mimetypes
 
 from io import BytesIO
 
 from django.conf import settings
-from django.contrib.contenttypes.models import ContentType
 from django.core.files import File
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage as storage
@@ -93,13 +91,22 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
     max_width = subscription_plan["attachments"]["images"]["max_width"]
     max_height = subscription_plan["attachments"]["images"]["max_height"]
 
+    # -------------------------------------------------------------------------
+    # --- Save temporary Files.
+    # -------------------------------------------------------------------------
+    cprint(f"[---  INFO   ---] FILES        : {tmp_files}", "cyan")
     for tmp_file in tmp_files:
-        file_ext = tmp_file.file.name.split(".")[-1]
+        data = {
+            "original-file-name":   tmp_file.name,
+            "original-file-size":   tmp_file.file.size,
+        }
+        file_ext = tmp_file.file.name.split(".")[-1].lower()
 
-        cprint(f"[---  INFO   ---] TMP  FILE    : {tmp_file}\n"
-               f"                  EXT  FILE    : {file_ext}\n"
-               f"                  FILE IN IMGS : {file_ext in settings.SUPPORTED_IMAGES}\n"
-               f"                  FILE IN DOCS : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
+        cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}\n"
+               f"                  TMP  FILE EXT  : {file_ext}\n"
+               f"                  TMP  FILE SIZE : {tmp_file.file.size}\n"
+               f"                  FILE  IN  IMGS : {file_ext in settings.SUPPORTED_IMAGES}\n"
+               f"                  FILE  IN  DOCS : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
 
         if file_ext in settings.SUPPORTED_IMAGES:
             # -----------------------------------------------------------------
@@ -115,10 +122,17 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 # --- Reopen Image, because `img.verify()` moves Pointer to the End of the File.
                 img = Image.open(tmp_file.file)
 
-                cprint(f"[---  DUMP   ---] Image's original Size : {img.size}\n"
-                       f"                  Image's File Format   : {img.format}\n"
-                       f"                  Image’s Pixel Format  : {img.mode}\n"
-                       f"                  Image's Palette       : {img.palette}", "yellow")
+                # cprint(f"[---  DUMP   ---] Image's original Size : {img.size}\n"
+                #        f"                  Image's File Format   : {img.format}\n"
+                #        f"                  Image’s Pixel Format  : {img.mode}\n"
+                #        f"                  Image's Palette       : {img.palette}", "yellow")
+
+                data.update({
+                    "original-file-dimensions": img.size,
+                    "original-file-format":     img.format,
+                    "original-file-mode":       img.mode,
+                    "original-file-palette":    img.palette,
+                })
 
                 # -------------------------------------------------------------
                 # --- Convert PNG to RGB.
@@ -155,16 +169,16 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 else:
                     pass
 
-                cprint(f"[---  INFO   ---] Calculated Dimensions\n"
-                       f"[---  DUMP   ---] Image's new Width  : {new_width}\n"
+                cprint(f"[---  INFO   ---] Calculated new Dimensions\n"
+                       f"                  Image's new Width  : {new_width}\n"
                        f"                  Image's new Height : {new_height}", "cyan")
 
                 # -------------------------------------------------------------
                 # --- Resize the image.
-                if new_width and new_height:
+                if (
+                        new_width and
+                        new_height):
                     img = img.resize((new_width, new_height), Image.LANCZOS)
-
-                cprint(f"               IMG : {img}", "yellow")
 
                 # -------------------------------------------------------------
                 # --- Prepare the Image and save as JPEG.
@@ -172,26 +186,29 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 img.save(temp_img, format="JPEG", quality=100, optimize=True)
                 temp_img.seek(0)
 
-                cprint(f"               IMG : {img}", "yellow")
-                cprint(f"          TEMP IMG : {temp_img}", "yellow")
-
                 # -------------------------------------------------------------
                 # --- Change File's Extension to `.jpg`
                 original_name, _ = tmp_file.name.lower().split(".")
                 new_name = f"{original_name}.jpg"
 
-                cprint(f"     Original Name : {original_name}", "yellow")
-                cprint(f"     New      Name : {new_name}", "yellow")
-                cprint(f"     Content  File : {ContentFile(temp_img.read())}", "yellow")
+                # cprint(f"[---  INFO   ---] Resize the Image\n"
+                #        f"                  Original Name : {original_name}\n"
+                #        f"                  New      Name : {new_name}\n"
+                #        f"                  New      Size : {img.size}\n", "cyan")
+
+                data.update({
+                    "new-file-dimensions":  img.size,
+                    "new-file-format":      img.format,
+                })
 
                 # -------------------------------------------------------------
                 # --- Save the `BytesIO` Object to the `ImageField` with the new Filename.
-                AttachedImage.objects.create(
+                attached_image = AttachedImage.objects.create(
                     name=new_name,
-                    image=ContentFile(temp_img.read()),
-                    # image=File(storage.open(tmp_file.file.name, "rb")),
                     content_type=content_type,
                     object_id=object_id)
+                attached_image.image.save(new_name, ContentFile(temp_img.read()), save=False)
+                attached_image.save()
 
             except (IOError, SyntaxError) as exc:
                 cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
@@ -207,27 +224,47 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
 
                 raise ValueError(f"The uploaded File is not a valid Image. -- {exc}") from exc
 
-            # -----------------------------------------------------------------
-            # ---  END  RESIZING IMAGE
-            # -----------------------------------------------------------------
+            else:
+                # -------------------------------------------------------------
+                # --- Save the Log.
+                papertrail.log(
+                    event_type="attached-image",
+                    message=f"Image attached by <{request.user}> for <{attached_image.content_object}>",
+                    data=data,
+                    # timestamp=timezone.now(),
+                    targets={
+                        "user":     request.user,
+                        "instance": attached_image.content_object,
+                    })
 
-            # AttachedImage.objects.create(
-            #     name=tmp_file.name,
-            #     image=File(storage.open(tmp_file.file.name, "rb")),
-            #     content_type=content_type,
-            #     object_id=object_id)
+            finally:
+                pass
 
         elif file_ext in settings.SUPPORTED_DOCUMENTS:
-            AttachedDocument.objects.create(
+            attached_document = AttachedDocument.objects.create(
                 name=tmp_file.name,
                 document=File(storage.open(tmp_file.file.name, "rb")),
                 content_type=content_type,
                 object_id=object_id)
 
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+            papertrail.log(
+                event_type="attached-document",
+                message=f"Document attached by <{request.user}> for <{attached_document.content_object}>",
+                data=data,
+                # timestamp=timezone.now(),
+                targets={
+                    "user":     request.user,
+                    "instance": attached_document.content_object,
+                })
+
         tmp_file.delete()
 
-    # -----------------------------------------------------------------
+    # -------------------------------------------------------------------------
     # --- Save URLs and Video URLs and pull their Titles.
+    # -------------------------------------------------------------------------
+    cprint(f"[---  INFO   ---] LINKS        : {tmp_links}", "cyan")
     for link in tmp_links.split():
         url = validate_url(link)
 

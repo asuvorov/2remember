@@ -29,6 +29,7 @@ from ddcore.models.View import View
 # === ADDRESS ADMIN
 # ===
 # =============================================================================
+@admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
     """Address Admin."""
 
@@ -76,14 +77,12 @@ class AddressAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Address, AddressAdmin)
-
-
 # =============================================================================
 # ===
 # === ATTACHMENTS ADMIN
 # ===
 # =============================================================================
+@admin.register(AttachedImage)
 class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Attached Image Admin."""
 
@@ -164,9 +163,7 @@ class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
     ]
 
 
-admin.site.register(AttachedImage, AttachedImageAdmin)
-
-
+@admin.register(AttachedDocument)
 class AttachedDocumentAdmin(admin.ModelAdmin):
     """Attached Document Admin."""
 
@@ -236,9 +233,7 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(AttachedDocument, AttachedDocumentAdmin)
-
-
+@admin.register(AttachedUrl)
 class AttachedUrlAdmin(admin.ModelAdmin):
     """Attached URL Admin."""
 
@@ -296,9 +291,7 @@ class AttachedUrlAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(AttachedUrl, AttachedUrlAdmin)
-
-
+@admin.register(AttachedVideoUrl)
 class AttachedVideoUrlAdmin(admin.ModelAdmin):
     """Attached Video URL Admin."""
 
@@ -356,14 +349,12 @@ class AttachedVideoUrlAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(AttachedVideoUrl, AttachedVideoUrlAdmin)
-
-
 # =============================================================================
 # ===
 # === COMMENT ADMIN
 # ===
 # =============================================================================
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """Comment Admin."""
 
@@ -424,9 +415,6 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Comment, CommentAdmin)
-
-
 # =============================================================================
 # ===
 # === COMPLAINT ADMIN
@@ -448,6 +436,7 @@ def mark_as_deleted(modeladmin, request, queryset):
 mark_as_deleted.short_description = "Mark selected Complaints as deleted"
 
 
+@admin.register(Complaint)
 class ComplaintAdmin(admin.ModelAdmin):
     """Complaint Admin."""
 
@@ -514,14 +503,12 @@ class ComplaintAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Complaint, ComplaintAdmin)
-
-
 # =============================================================================
 # ===
 # === NEWSLETTER ADMIN
 # ===
 # =============================================================================
+@admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     """Newsletter Admin."""
 
@@ -577,14 +564,12 @@ class NewsletterAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Newsletter, NewsletterAdmin)
-
-
 # =============================================================================
 # ===
 # === PHONE ADMIN
 # ===
 # =============================================================================
+@admin.register(Phone)
 class PhoneAdmin(admin.ModelAdmin):
     """Phone Admin."""
 
@@ -625,14 +610,12 @@ class PhoneAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Phone, PhoneAdmin)
-
-
 # =============================================================================
 # ===
 # === RATING ADMIN
 # ===
 # =============================================================================
+@admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     """Rating Admin."""
     fieldsets = (
@@ -683,14 +666,12 @@ class RatingAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Rating, RatingAdmin)
-
-
 # =============================================================================
 # ===
 # === SOCIAL LINK ADMIN
 # ===
 # =============================================================================
+@admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
     """Social Link Admin."""
 
@@ -743,14 +724,12 @@ class SocialLinkAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(SocialLink, SocialLinkAdmin)
-
-
 # =============================================================================
 # ===
 # === TEMPORARY FILE ADMIN
 # ===
 # =============================================================================
+@admin.register(TemporaryFile)
 class TemporaryFileAdmin(admin.ModelAdmin):
     """Temporary File Admin."""
 
@@ -789,14 +768,12 @@ class TemporaryFileAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(TemporaryFile, TemporaryFileAdmin)
-
-
 # =============================================================================
 # ===
 # === VIEW ADMIN
 # ===
 # =============================================================================
+@admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     """View Admin."""
 
@@ -837,6 +814,3 @@ class ViewAdmin(admin.ModelAdmin):
     readonly_fields = [
         "created", "modified",
     ]
-
-
-admin.site.register(View, ViewAdmin)

@@ -43,6 +43,7 @@ from .models import (
 # -----------------------------------------------------------------------------
 # --- Event Category Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Category Admin."""
 
@@ -90,9 +91,6 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     inlines = []
 
 
-admin.site.register(Category, CategoryAdmin)
-
-
 # =============================================================================
 # ===
 # === EVENT ADMIN
@@ -136,6 +134,7 @@ admin.site.register(Category, CategoryAdmin)
 # -----------------------------------------------------------------------------
 # --- Event Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Event)
 class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Admin."""
 
@@ -294,9 +293,6 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     }
 
 
-admin.site.register(Event, EventAdmin)
-
-
 # =============================================================================
 # ===
 # === PARTICIPATION ADMIN
@@ -366,6 +362,3 @@ admin.site.register(Event, EventAdmin)
 #     readonly_fields = [
 #         "image_tag",
 #     ]
-
-
-# admin.site.register(Participation, ParticipationAdmin)

@@ -41,6 +41,7 @@ from ddcore.Utilities import (
 
 # pylint: disable=import-error
 from accounts.utils import is_profile_complete
+from app import attachment_processors
 from app.decorators import log_default
 from app.forms import (
     AddressForm,
@@ -511,6 +512,10 @@ def organization_edit(request, slug=None):
             object_id=organization.id))
 
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
                 form.is_valid() and
                 aform.is_valid() and
@@ -542,50 +547,12 @@ def organization_edit(request, slug=None):
                 social_link.object_id = organization.id
                 social_link.save()
 
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Organization Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1].lower()
-
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
-
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
+            attachment_processors.process(
+                request=request,
+                content_type=ContentType.objects.get_for_model(organization),
+                object_id=organization.id,
+                tmp_files=form.cleaned_data["tmp_files"],
+                tmp_links=request.POST["tmp_links"])
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications.

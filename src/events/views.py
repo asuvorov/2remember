@@ -49,6 +49,7 @@ from ddcore.models.SocialLink import SocialLink
 from accounts.utils import (
     is_event_admin,
     is_profile_complete)
+from app import attachment_processors
 from app.decorators import log_default
 from app.forms import (
     AddressForm,
@@ -478,8 +479,9 @@ def event_edit(request, slug):
         instance=event.address)
 
     # formset_social = SocialLinkFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="socials",
+    #     request.POST or None,
+    #     request.FILES or None,
+    #     # prefix="socials",
     #     queryset=SocialLink.objects.filter(
     #         content_type=ContentType.objects.get_for_model(event),
     #         object_id=event.id))
@@ -491,7 +493,7 @@ def event_edit(request, slug):
 
         if (
                 form.is_valid() and
-                aform.is_valid()):
+                aform.is_valid()):  # and
                 # formset_social.is_valid()):
             form.save()
             form.save_m2m()
@@ -501,56 +503,22 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
+            # SocialLink.objects.filter(
+            #     content_type=ContentType.objects.get_for_model(event),
+            #     object_id=event.id
+            #     ).delete()
             # social_links = formset_social.save(commit=True)
             # for social_link in social_links:
             #     social_link.content_type = ContentType.objects.get_for_model(event)
             #     social_link.object_id = event.id
             #     social_link.save()
 
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Event Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1].lower()
-
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
-
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
+            attachment_processors.process(
+                request=request,
+                content_type=ContentType.objects.get_for_model(event),
+                object_id=event.id,
+                tmp_files=form.cleaned_data["tmp_files"],
+                tmp_links=request.POST["tmp_links"])
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).
