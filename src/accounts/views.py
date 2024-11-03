@@ -26,6 +26,8 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
+import papertrail
+
 from termcolor import cprint
 
 from ddcore.models import (
@@ -36,8 +38,6 @@ from ddcore.Utilities import (
     make_json_cond,
     # render_to_pdf,
 )
-
-import papertrail
 
 # pylint: disable=import-error
 from app.decorators import log_default
