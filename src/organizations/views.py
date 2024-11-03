@@ -546,7 +546,7 @@ def organization_edit(request, slug=None):
             # --- Move temporary Files to real Organization Images/Documents.
             cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
             for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1]
+                file_ext = tmp_file.file.name.split(".")[-1].lower()
 
                 cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
                 cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
