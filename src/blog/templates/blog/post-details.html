@@ -89,9 +89,9 @@
                             <div class="card-footer bg-transparent border-success">
                                 <p class="card-text">
                                     <small class="text-muted">
-                                        <i class="bi bi-feather"></i>&nbsp;{{ post.get_comments_count }}
+                                        <i class="bi bi-feather"></i>&nbsp;{{ post.comments_count }}
                                         <span class="vert-delimiter">|</span>
-                                        <i class="bi bi-eye"></i>&nbsp;{{ post.get_views_count }}<br/>
+                                        <i class="bi bi-eye"></i>&nbsp;{{ post.views_count }}<br/>
                                         {% trans "Last updated" %} {{ post.modified|timesince }} {% trans "ago" %}
                                     </small>
                                 </p>
