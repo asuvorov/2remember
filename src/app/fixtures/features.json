@@ -1,0 +1,13 @@
+[
+    {
+        "model":        "app.feature",
+        "pk":           1,
+        "fields": {
+            "title":        "Private URLs",
+            "slug":         "private-urls",
+            "status":       "1",
+            "modified":     "2024-11-07",
+            "created":      "2024-11-07"
+        }
+    }
+]

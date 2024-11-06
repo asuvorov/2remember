@@ -2,15 +2,19 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-from django.http.response import Http404, HttpResponseRedirect
+from django.http.response import (
+    Http404,
+    HttpResponseRedirect)
 
 from .models import PrivateUrl
-from .signals import privateurl_ok, privateurl_fail
+from .signals import (
+    privateurl_ok,
+    privateurl_fail)
 
 
 def privateurl_view(request, action, token):
     """Docstring."""
-    obj = PrivateUrl.objects.get_or_none(action, token)
+    obj = PrivateUrl.objects.get_object_or_None(action, token)
     ok = False
 
     if (

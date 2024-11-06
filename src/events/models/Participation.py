@@ -93,7 +93,8 @@ class Participation(BaseModel):
     """Participation Model."""
 
     # -------------------------------------------------------------------------
-    # --- Related Objects
+    # --- Related Objects.
+    # -------------------------------------------------------------------------
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -118,7 +119,8 @@ class Participation(BaseModel):
         help_text=_("Role, if applicable"))
 
     # -------------------------------------------------------------------------
-    # --- Status
+    # --- Status.
+    # -------------------------------------------------------------------------
     status = models.CharField(
         max_length=2,
         choices=participation_status_choices,
@@ -127,7 +129,8 @@ class Participation(BaseModel):
         help_text=_("Participation Status"))
 
     # -------------------------------------------------------------------------
-    # --- Significant Texts
+    # --- Significant Texts.
+    # -------------------------------------------------------------------------
     application_text = models.TextField(
         null=True, blank=True,
         verbose_name=_("Application Text"),
@@ -154,7 +157,8 @@ class Participation(BaseModel):
         help_text=_("Acknowledgement Text"))
 
     # -------------------------------------------------------------------------
-    # --- Significant Dates
+    # --- Significant Dates.
+    # -------------------------------------------------------------------------
     date_created = models.DateField(
         db_index=True,
         auto_now_add=True,

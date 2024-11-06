@@ -97,6 +97,7 @@ def event_cover_directory_path(instance, filename):
     return f"events/{instance.id}/covers/{fname}"
 
 
+@autoconnect
 class Event(
         ModelMeta, TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
@@ -245,6 +246,7 @@ class Event(
 
     # -------------------------------------------------------------------------
     # --- Followers & Subscribers.
+    # -------------------------------------------------------------------------
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
