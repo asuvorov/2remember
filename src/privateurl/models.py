@@ -121,8 +121,7 @@ class PrivateUrl(BaseModel):
     @classmethod
     def create(
             cls, action, user=None, data=None, hits_limit=1, expire=None,
-            auto_delete=False, token_size=None, replace=False,
-            dashed_piece_size=None):
+            auto_delete=False, token_size=None, replace=False):
         """Create a new PrivateUrl Object.
 
         Parameters
@@ -134,18 +133,17 @@ class PrivateUrl(BaseModel):
         expire              :datetime   Expiration Time, Date/Time, Time-delta (`None` to disable
                                         the Time Limit).
         auto_delete         :bool       Automatically remove, when URL is not available.
-        token_size          :tuple,int  Length of Token (`None` for default Value from Settings).
+        token_size          :int        Length of Token (`None` for default Value from Settings).
         replace             :bool       Remove existing Object for User and Action before creating
                                         a new one.
-        dashed_piece_size   :int        Split Token with Dashes every N Symbols (`None` for default
-                                        Value from Settings).
 
         Returns
         -------
-        Response        : obj           Service Status.
+                            :obj        Private URL Object.
 
         Raises
         ------
+        IntegrityError
 
         """
         if replace and user:
@@ -154,32 +152,27 @@ class PrivateUrl(BaseModel):
         if isinstance(expire, datetime.timedelta):
             expire = timezone.now() + expire
 
-        max_tries, n = 20, 0
+        try:
+            token = cls.generate_token(token_size=token_size)
+            obj = PrivateUrl(
+                user=user,
+                action=action,
+                token=token,
+                data=data,
+                hits_limit=hits_limit,
+                expire=expire,
+                auto_delete=auto_delete)
 
-        while True:
-            try:
-                token = cls.generate_token(
-                    size=token_size,
-                    dashed_piece_size=dashed_piece_size)
-                obj = PrivateUrl(
-                    user=user,
-                    action=action,
-                    token=token,
-                    data=data,
-                    hits_limit=hits_limit,
-                    expire=expire,
-                    auto_delete=auto_delete)
+            with transaction.atomic():
+                obj.save()
 
-                with transaction.atomic():
-                    obj.save()
+            return obj
 
-                return obj
+        except IntegrityError:
+            raise RuntimeError(f"Failed to create `PrivateUrl` Object ({action=}, {token_size=})")
 
-            except IntegrityError:
-                n += 1
-                if n > max_tries:
-                    raise RuntimeError("Failed to create PrivateUrl Object (action={}, token_size={})".format(
-                        action, token_size))
+        except Exception as exc:
+            raise exc
 
     def is_available(self, dt=None):
         """ Return True, if the Object can be used."""
@@ -222,61 +215,31 @@ class PrivateUrl(BaseModel):
             self.save(update_fields=uf)
 
     @classmethod
-    def generate_token(cls, size=None, dashed_piece_size=None):
+    def generate_token(cls, token_size=None):
+        """Generate new unique Token.
+
+        Parameters
+        ----------
+        token_size          :int        Length of Token (`None` for default Value from Settings).
+
+        Returns
+        -------
+        Response            :obj        Service Status.
+
+        Raises
+        ------
+        AttributeError
+
         """
-        Generate new unique token.
-        size - length of token, tuple (min, max) or static int,
-            None set default value from settings.PRIVATEURL_DEFAULT_TOKEN_SIZE
-        dashed_piece_size - split token with dash every N symbols, int,
-            None set default value from settings.PRIVATEURL_DEFAULT_TOKEN_DASHED_PIECE_SIZE
-        """
-        if size is None:
-            size = purl_settings.PRIVATEURL_DEFAULT_TOKEN_SIZE
+        if token_size is None:
+            token_size = purl_settings.PRIVATEURL_DEFAULT_TOKEN_SIZE
 
-        if dashed_piece_size is None:
-            dashed_piece_size = purl_settings.PRIVATEURL_DEFAULT_TOKEN_DASHED_PIECE_SIZE
+        if not isinstance(token_size, int):
+            raise AttributeError("Attribute `token_size` must be `int`.")
 
-        if not isinstance(size, (int, list, tuple)):
-            raise AttributeError("Attr size must be int, list or tuple.")
-
-        size = (size, size) if isinstance(size, int) else tuple(size)
-
-        if len(size) != 2:
-            raise AttributeError("Attr size must contains two values.")
-
-        for v in size:
-            if (
-                    not isinstance(v, int) or
-                    not (cls.TOKEN_MIN_SIZE <= v <= cls.TOKEN_MAX_SIZE)):
-                raise AttributeError("Attr size must contains values between {} and {}.".format(
-                    cls.TOKEN_MIN_SIZE, cls.TOKEN_MAX_SIZE
-                ))
-
-        if size[0] > size[1]:
-            raise AttributeError("Attr size has incorrect values: first value must be less than second one.")
-
-        if not isinstance(dashed_piece_size, int):
-            raise AttributeError("Attr dash_split_each must be int.")
-        elif dashed_piece_size < 0:
-            raise AttributeError("Attr dash_split_each must be greater or equal 0.")
-
-        if size[0] != size[1]:
-            random.seed(get_random_string(length=100))
-            _size = random.randint(*size)
-        else:
-            _size = size[0]
-
-        token = get_random_string(length=_size)
-
-        if dashed_piece_size:
-            n = dashed_piece_size
-            while n < len(token):
-                token = token[:n] + "-" + token[n:]
-                n += dashed_piece_size + 1
-            token = token[:_size].rstrip('-')
-
-        return token
+        return get_random_string(length=token_size)
 
     def get_absolute_url(self):
+        """Get absolute URL."""
         return reverse("{}:privateurl".format(purl_settings.PRIVATEURL_URL_NAMESPACE),
                        kwargs={"action": self.action, "token": self.token})
