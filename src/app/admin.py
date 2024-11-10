@@ -22,6 +22,8 @@ from ddcore.models.Rating import Rating
 from ddcore.models.SocialLink import SocialLink
 from ddcore.models.View import View
 
+from .models import Feature
+
 
 # =============================================================================
 # ===
@@ -481,6 +483,59 @@ class ComplaintAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Complaint, ComplaintAdmin)
+
+
+# =============================================================================
+# ===
+# === FEATURE ADMIN
+# ===
+# =============================================================================
+class FeatureAdmin(admin.ModelAdmin):
+    """Feature Admin."""
+
+    fieldsets = (
+        ("", {
+            "classes":  (""),
+            "fields":   (
+                "uid",
+                ("title", "slug", "status"),
+                "url",
+                "description",
+                "assignees",
+            ),
+        }),
+        ("Significant Dates", {
+            "classes":  (
+                "grp-collapse grp-closed",
+            ),
+            "fields":   (
+                ("created_by", "created"),
+                ("modified_by", "modified"),
+            ),
+        }),
+    )
+
+    list_display = [
+        "id", "title", "slug", "url_tag", "status",
+        "created_by", "created", "modified_by", "modified",
+    ]
+    list_display_links = [
+        "id", "title",
+    ]
+    list_filter = [
+        "slug", "status",
+        ("created", DateRangeFilter),
+        ("modified", DateRangeFilter),
+    ]
+    search_fields = [
+        "slug", "status",
+    ]
+    readonly_fields = [
+        "uid", "slug", "created", "modified",
+    ]
+
+
+admin.site.register(Feature, FeatureAdmin)
 
 
 # =============================================================================

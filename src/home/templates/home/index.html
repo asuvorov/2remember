@@ -185,7 +185,52 @@
         </div>
     </div>
 </div>
+{% endcache %}
 <!--  END  TWITTER FEED -->
+
+<hr class="featurette-divider">
+
+<!-- START FEATURES -->
+{% cache 3600 index-features LANGUAGE_CODE %}
+<div id="index-features" class="mb-6">
+    <div class="row g-2" align="center">
+        <div class="col-12 header">
+            <h2>{% trans "Development" %}</h2>
+        </div>
+
+        <div class="col-12 table-responsive">
+            <table class="table table-sm table-hover table-success table-striped">
+                <caption>List of testable Features</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Feature</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for feature in features %}
+                    <tr>
+                        <th scope="row">{{ feature.title }}</th>
+                        <td>{{ feature.description|default:"N/A" }}</td>
+                        <td>{{ feature.url_tag }}</td>
+                        <td><span class="{{ feature.stat_status_badge_class }}">{{ feature.stat_status_name }}</span></td>
+                        <td></td>
+                    </tr>
+                {% empty %}
+                    <div class="col-12">
+                        <span class="badge text-bg-warning">{% trans "There are no testable Features at the Moment" %}</span>
+                    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endcache %}
+<!--  END  FEATURES -->
 
 <!-- START SCRIPT -->
 <script>
@@ -194,6 +239,5 @@
     //-------------------------------------------------------------------------
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
 </script>
-{% endcache %}
 <!--  END  SCRIPT -->
 {% endblock %}
