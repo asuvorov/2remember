@@ -414,4 +414,28 @@ Django Compressor
 
 ## Setting up Supervisor
 
-Installation and Configuration originally taken from [here](http://supervisord.org/).
+Installation and Configuration originally taken from [here](http://supervisord.org/), and:
+
+- [How to run trytond with nginx + supervisord + uwsgi - Draft Howto - Tryton Discussion](https://discuss.tryton.org/t/how-to-run-trytond-with-nginx-supervisord-uwsgi/5889)
+
+- 
+1. Install **supervisor**:
+   
+   ```bash
+   [~]$ sudo apt-get install supervisor
+   ```
+
+2. Copy configuration File(s):
+   
+   ```bash
+   [~]$ sudo cp /opt/apps/2remember/deployment/etc/supervisor/conf.d/uwsgi.conf /etc/supervisor/conf.d/
+   ```
+
+3. Update **supervisor** and start **uwsgi** Daemon with **supervisor**:
+   
+   ```bash
+   [~]$ supervisorctl update
+   supervisorctl start trytond
+   ```
+
+4. 
