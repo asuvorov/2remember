@@ -82,7 +82,7 @@ This provides Guideline on how to deploy and configure `Django/Python` Project f
 
 ### Install ElasticSearch Server
 
-Installation and configuration of **`ElasticSearch`** originally taken from [How to Install Elasticsearch 8 on Ubuntu 24.04, 22.04, or 20.04 - LinuxCapable](https://linuxcapable.com/how-to-install-elasticsearch-8-on-ubuntu-linux/).
+Installation and Configuration of **`ElasticSearch`** originally taken from [How to Install Elasticsearch 8 on Ubuntu 24.04, 22.04, or 20.04 - LinuxCapable](https://linuxcapable.com/how-to-install-elasticsearch-8-on-ubuntu-linux/).
 
 0. Install Java 8
    
@@ -112,7 +112,7 @@ Installation and configuration of **`ElasticSearch`** originally taken from [How
    [~]$ sudo systemctl start  elasticsearch.service
    ```
 
-4. Make sure service is running
+4. Make sure Service is running
    
    ```bash
    [~]$ curl http://localhost:9200
@@ -295,7 +295,7 @@ https://uwsgi-docs.readthedocs.io/en/latest/tutorials/Django_and_nginx.html#ngin
    
     2.2 Run daemonized **uWSGI**:
    
-    2.2.1 Copy configuration File(s):
+    2.2.1 Copy Configuration File(s):
    
    ```bash
    [~]$ cp /opt/apps/2remember/deployment/opt/apps/uwsgi.ini /opt/apps/
@@ -425,7 +425,7 @@ Installation and Configuration originally taken from [here](http://supervisord.o
    [~]$ sudo apt-get install supervisor
    ```
 
-2. Copy configuration File(s):
+2. Copy Configuration File(s):
    
    ```bash
    [~]$ sudo cp /opt/apps/2remember/deployment/etc/supervisor/conf.d/uwsgi.conf /etc/supervisor/conf.d/
@@ -435,7 +435,7 @@ Installation and Configuration originally taken from [here](http://supervisord.o
    
    ```bash
    [~]$ supervisorctl update
-   supervisorctl start trytond
+   [~]$ supervisorctl start uwsgi
    ```
 
 4. 
