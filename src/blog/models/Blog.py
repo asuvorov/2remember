@@ -267,22 +267,24 @@ class Post(
         # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Preview Images is:
+        # --- The Path for uploading Cover/Preview Images is:
         #
+        #            MEDIA_ROOT/blog/<id>/covers/<filename>
         #            MEDIA_ROOT/blog/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Blog Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Blog looks like:
         #
+        #            MEDIA_ROOT/blog/None/covers/<filename>
         #            MEDIA_ROOT/blog/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Preview File in the Path;
-        #     2. Assign the Preview File Content to the Blog Preview Object;
-        #     3. Save the Blog Instance. Now the Preview Image in the
+        #     1. Open the Cover/Preview File in the Path;
+        #     2. Assign the Cover/Preview File Content to the Blog Cover/Preview Object;
+        #     3. Save the Blog Instance. Now the Cover/Preview Image in the
         #        correct Path;
-        #     4. Delete previous Preview File;
+        #     4. Delete previous Cover/Preview File;
         #
         try:
             if created:
@@ -293,6 +295,13 @@ class Post(
 
                 storage.delete(preview.file.name)
 
+        except Exception as exc:
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
+
+        try:
+            if created:
                 # -------------------------------------------------------------
                 cover = File(storage.open(self.cover.file.name, "rb"))
 

@@ -6,7 +6,7 @@ services:
       - mysql-db:/var/lib/mysql
       - ./docker_config/init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
     environment:
-      MYSQL_DATABASE:       toremember
+      MYSQL_DATABASE:       2remember
       MYSQL_ROOT_PASSWORD:  root
     ports:
       - 3306:3306
