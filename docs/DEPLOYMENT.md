@@ -181,56 +181,8 @@ Installation and configuration of **`ElasticSearch`** originally taken from [How
    **NOTE**: An Example of the **`.profile`** File can be found at [2remember/deployment/.profile at feat/pre-release · asuvorov/2remember · GitHub](https://github.com/asuvorov/2remember/blob/feat/pre-release/deployment/.profile)
    
    ```bash
-   # Custom Environment Variables
-   export ENVIRONMENT=staging
-   export DJANGO_SETTINGS_MODULE=settings.staging
-   
-   export CACHE_MIDDLEWARE_ALIAS=
-   export CACHE_MIDDLEWARE_SECONDS=
-   export CACHE_MIDDLEWARE_KEY_PREFIX=
-   
-   export DB_ENGINE=django.db.backends.mysql
-   export DB_NAME=<DB_NAME>
-   export DB_USER=<DB_USERNAME>
-   export DB_PASSWORD=<DB_PASSWORD>
-   export DB_HOST=<DB_HOST>      # e.g. 'localhost', or 'toremember-dev.c68kupszimwv.us-east-1.rds.amazonaws.com'
-   export DB_PORT=3306
-   
-   export SECURE_SSL_REDIRECT=true
-   
-   export AWS_ACCESS_KEY_ID=
-   export AWS_SECRET_ACCESS_KEY=
-   export AWS_STORAGE_BUCKET_NAME=2remember-staging
-   
-   export EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-   export EMAIL_FILE_PATH=
-   export EMAIL_HOST=localhost
-   export EMAIL_HOST_USER=
-   export EMAIL_HOST_PASSWORD=
-   export EMAIL_PORT=25
-   export EMAIL_SUBJECT_PREFIX=
-   export EMAIL_USE_LOCALTIME=
-   export EMAIL_USE_TLS=
-   export EMAIL_USE_SSL=
-   export EMAIL_SSL_CERTFILE=
-   export EMAIL_SSL_KEYFILE=
-   export EMAIL_TIMEOUT=
-   
-   export SENDGRID_API_KEY=
-   
-   export SENTRY_DSN=
-   
-   export STRIPE_DEBUG=true
-   export STRIPE_DEFAULT_PLAN=
-   export STRIPE_PUBLIC_KEY=
-   export STRIPE_SECRET_KEY=
-   
-   export X_TWITTER_PROJECT_ID=
-   export X_TWITTER_BEARER_TOKEN=
-   export X_TWITTER_CONSUMER_KEY=
-   export X_TWITTER_CONSUMER_SECRET=
-   export X_TWITTER_ACCESS_KEY=
-   export X_TWITTER_ACCESS_SECRET=
+   [/opt/apps/2remember]$ cp /opt/apps/2remember/deployment/.profile ~
+   [/opt/apps/2remember]$ source ~/.profile
    ```
 
 4. Setting up the Project:
@@ -239,7 +191,7 @@ Installation and configuration of **`ElasticSearch`** originally taken from [How
    [/opt/apps/2remember]$ cd src
    [/opt/apps/2remember/src]$ mkdir media logs
    [/opt/apps/2remember/src]$ python manage.py migrate
-   [/opt/apps/2remember/src]$ python manage.py loaddata admin categories faq faq_sections site teams team_members
+   [/opt/apps/2remember/src]$ python manage.py loaddata admin categories faq_sections faq site teams team_members
    [/opt/apps/2remember/src]$ python manage.py bower install
    [/opt/apps/2remember/src]$ python manage.py collectstatic --clear --no-input
    [/opt/apps/2remember/src]$ python manage.py createcachetable

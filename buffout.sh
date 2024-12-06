@@ -36,6 +36,9 @@ git checkout dev
 virtualenv .env && . .env/bin/activate
 pip install --no-cache-dir -r requirements.txt
 
+cp /opt/apps/2remember/deployment/.profile ~
+source ~/.profile
+
 cd src
 mkdir media logs
 python manage.py migrate
