@@ -161,7 +161,7 @@ run-local: ## Start the Compose, bypassing Build Steps.
 	$(info Starting the Compose, bypassing Build Steps.)
 	@docker-compose -f docker-compose.local.yml up -d
 	@docker-compose -f docker-compose.local.yml exec web python manage.py migrate
-	@docker-compose -f docker-compose.local.yml exec web python manage.py loaddata admin categories faq_sections faq teams team_members site
+	@docker-compose -f docker-compose.local.yml exec web python manage.py loaddata admin categories faq_sections faq features site teams team_members
 .PHONY: run-local
 
 prereq-win:
@@ -220,7 +220,7 @@ compilemessages:
 
 loaddata:
 	$(info Loading Data)
-	@docker-compose exec web python manage.py loaddata admin categories faq faq_sections site teams team_members
+	@docker-compose exec web python manage.py loaddata admin categories faq_sections faq features site teams team_members
 .PHONY: loaddata
 
 collectstatic:

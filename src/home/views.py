@@ -15,6 +15,7 @@ from django.urls import reverse
 # pylint: disable=import-error
 from accounts.models import Team
 from app.decorators import log_default
+from app.models import Feature
 
 from .forms import (
     ContactUsForm,
@@ -30,16 +31,21 @@ logger = logging.getLogger(__name__)
 
 # =============================================================================
 # ===
-# === Index
+# === INDEX
 # ===
 # =============================================================================
 @log_default(my_logger=logger, cls_or_self=False)
 def index(request):
     """Docstring."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+    features = Feature.objects.all()
     timeline_qs = []
 
     return render(
         request, "home/index.html", {
+            "features":     features,
             "timeline_qs":  timeline_qs,
         })
 
@@ -193,7 +199,7 @@ def faq_edit(request, faq_id):
 
 # =============================================================================
 # ===
-# === Feature Test
+# === FEATURE TEST
 # ===
 # =============================================================================
 @login_required
