@@ -81,6 +81,8 @@ cp /opt/apps/2remember/deployment/opt/apps/uwsgi.ini /opt/apps/
 sudo cp /opt/apps/2remember/deployment/etc/init/uwsgi.conf /etc/init/
 sudo ln /usr/local/bin/uwsgi /usr/bin/uwsgi
 
+sudo uwsgi --ini    /opt/apps/uwsgi.ini --daemonize /var/log/uwsgi.log --pidfile /tmp/project-master.pid
+
 echo ">>> INFO    : Setting up Nginx"
 echo
 
@@ -90,6 +92,13 @@ sudo cp /opt/apps/2remember/deployment/etc/nginx/nginx.conf   /etc/nginx
 
 mkdir /opt/nginx
 mkdir /opt/nginx/{sites-available,sites-enabled}
+cp /opt/apps/2remember/deployment/opt/nginx/sites-available/2remember /opt/nginx/sites-available/
+ln -s /opt/nginx/sites-available/2remember /opt/nginx/sites-enabled/2remember
 
-echo ">>> INFO    : Install MySQL Client/Server"
-echo
+sudo /etc/init.d/nginx restart
+
+
+
+echo "========================================================================"
+echo "=== Setting up Supervisor                                            ==="
+echo "========================================================================"
