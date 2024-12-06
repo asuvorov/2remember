@@ -29,11 +29,15 @@ from ddcore.models import TitleSlugDescriptionBaseModel
 # -----------------------------------------------------------------------------
 Status = enum(
     PLANNED="-16",
+    ASSIGNED="-8",
+    IN_PROGRESS="-4",
     DISABLED="0",
     ENABLED_BETA="1",
     ENABLED="2")
 status_choices = [
     (Status.PLANNED,        _("Planned")),
+    (Status.ASSIGNED,       _("Assigned")),
+    (Status.IN_PROGRESS,    _("In Progress")),
     (Status.DISABLED,       _("Disabled")),
     (Status.ENABLED_BETA,   _("Enabled Beta")),
     (Status.ENABLED,        _("Enabled")),
@@ -41,11 +45,15 @@ status_choices = [
 
 StatusBadgeClasses = enum(
     PLANNED="-16",
+    ASSIGNED="-8",
+    IN_PROGRESS="-4",
     DISABLED="0",
     ENABLED_BETA="1",
     ENABLED="2")
 status_badge_classes = [
     (StatusBadgeClasses.PLANNED,        "badge text-bg-warning"),
+    (StatusBadgeClasses.ASSIGNED,       "badge text-bg-warning"),
+    (StatusBadgeClasses.IN_PROGRESS,    "badge text-bg-warning"),
     (StatusBadgeClasses.DISABLED,       "badge text-bg-warning"),
     (StatusBadgeClasses.ENABLED_BETA,   "badge text-bg-warning"),
     (StatusBadgeClasses.ENABLED,        "badge text-bg-warning"),
