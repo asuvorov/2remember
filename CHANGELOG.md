@@ -1,8 +1,9 @@
 # X.Y.Z (YYYY-MM-DD)
 
-# New
+### New
 
 - Added sending Email to the Team from the "Contact Us" Page.
+- Added the Features Feature for toggling the new testable Features.
 
 # 0.4.0 (2024-08-10)
 
