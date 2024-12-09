@@ -27,12 +27,14 @@ from ddcore.models.Attachment import (
     AttachedUrl,
     AttachedVideoUrl)
 
+from .models import Feature
+
 
 logger = logging.getLogger("py.warnings")
 
 
 def adjust_size(
-        original_width: int, original_height: int, max_width: int, max_height: int ):
+        original_width: int, original_height: int, max_width: int, max_height: int):
     """Adjust Image Size, according to one of the providing Sides.
 
     Parameters
@@ -110,7 +112,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
 
         if file_ext in settings.SUPPORTED_IMAGES:
             # -----------------------------------------------------------------
-            # --- START RESIZING IMAGE
+            # --- START SANITIZING IMAGE
             # -----------------------------------------------------------------
             try:
                 # -------------------------------------------------------------
@@ -139,51 +141,61 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 if img.mode in ("RGBA", "LA", "P"):
                     img = img.convert("RGB")
 
-                # -------------------------------------------------------------
-                # --- Calculate new Dimensions to maintain Aspect Ratio.
-                original_width, original_height = img.size
-                new_width, new_height = None, None
+                if Feature.is_enabled(request, slug="resize-images"):
+                    # ---------------------------------------------------------
+                    # --- Calculate new Dimensions to maintain Aspect Ratio.
+                    original_width, original_height = img.size
+                    new_width, new_height = None, None
 
-                if (
-                        original_width >= original_height and
-                        original_width > max_width):
-                    # --- Handle horizontally-oriented Image.
-                    new_width, new_height =\
-                        adjust_size(original_width, original_height, max_width, None)
-
-                    # --- Handle Panorama Style Image.
-                    if new_height < max_height * 0.9:
-                        new_width, new_height =\
-                            adjust_size(original_width, original_height, None, max_height)
-                elif (
-                        original_height >= original_width and
-                        original_height > max_height):
-                    # --- Handle vertically-oriented Image.
-                    new_width, new_height =\
-                        adjust_size(original_width, original_height, None, max_height)
-
-                    # --- Handle Panorama Style Image.
-                    if new_width < max_width * 0.9:
+                    if (
+                            original_width >= original_height and
+                            original_width > max_width):
+                        # --- Handle horizontally-oriented Image.
                         new_width, new_height =\
                             adjust_size(original_width, original_height, max_width, None)
-                else:
-                    pass
 
-                cprint(f"[---  INFO   ---] Calculated new Dimensions\n"
-                       f"                  Image's new Width  : {new_width}\n"
-                       f"                  Image's new Height : {new_height}", "cyan")
+                        # --- Handle Panorama Style Image.
+                        if new_height < max_height * 0.9:
+                            new_width, new_height =\
+                                adjust_size(original_width, original_height, None, max_height)
+                    elif (
+                            original_height >= original_width and
+                            original_height > max_height):
+                        # --- Handle vertically-oriented Image.
+                        new_width, new_height =\
+                            adjust_size(original_width, original_height, None, max_height)
 
-                # -------------------------------------------------------------
-                # --- Resize the image.
-                if (
-                        new_width and
-                        new_height):
-                    img = img.resize((new_width, new_height), Image.LANCZOS)
+                        # --- Handle Panorama Style Image.
+                        if new_width < max_width * 0.9:
+                            new_width, new_height =\
+                                adjust_size(original_width, original_height, max_width, None)
+                    else:
+                        pass
+
+                    cprint(f"[---  INFO   ---] Calculated new Dimensions\n"
+                           f"                  Image's new Width  : {new_width}\n"
+                           f"                  Image's new Height : {new_height}", "cyan")
+
+                    # ---------------------------------------------------------
+                    # --- Resize the image.
+                    if (
+                            new_width and
+                            new_height):
+                        img = img.resize((new_width, new_height), Image.LANCZOS)
 
                 # -------------------------------------------------------------
                 # --- Prepare the Image and save as JPEG.
                 temp_img = BytesIO()
                 img.save(temp_img, format="JPEG", quality=100, optimize=True)
+
+                data.update({
+                    "new-file-size":        temp_img.tell(),
+                    "new-file-dimensions":  img.size,
+                    "new-file-format":      img.format,
+                    "new-file-mode":        img.mode,
+                    "new-file-palette":     img.palette,
+                })
+
                 temp_img.seek(0)
 
                 # -------------------------------------------------------------
@@ -195,11 +207,6 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 #        f"                  Original Name : {original_name}\n"
                 #        f"                  New      Name : {new_name}\n"
                 #        f"                  New      Size : {img.size}\n", "cyan")
-
-                data.update({
-                    "new-file-dimensions":  img.size,
-                    "new-file-format":      img.format,
-                })
 
                 # -------------------------------------------------------------
                 # --- Save the `BytesIO` Object to the `ImageField` with the new Filename.
@@ -233,8 +240,9 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                     data=data,
                     # timestamp=timezone.now(),
                     targets={
-                        "user":     request.user,
-                        "instance": attached_image.content_object,
+                        "user":         request.user,
+                        "instance":     attached_image.content_object,
+                        "attachment":   attached_image,
                     })
 
             finally:
@@ -255,8 +263,9 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 data=data,
                 # timestamp=timezone.now(),
                 targets={
-                    "user":     request.user,
-                    "instance": attached_document.content_object,
+                    "user":         request.user,
+                    "instance":     attached_document.content_object,
+                    "attachment":   attached_document,
                 })
 
         tmp_file.delete()

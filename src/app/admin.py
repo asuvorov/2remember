@@ -510,6 +510,7 @@ class ComplaintAdmin(admin.ModelAdmin):
 # === FEATURE ADMIN
 # ===
 # =============================================================================
+@admin.register(Feature)
 class FeatureAdmin(admin.ModelAdmin):
     """Feature Admin."""
 
@@ -521,7 +522,7 @@ class FeatureAdmin(admin.ModelAdmin):
                 ("title", "slug", "status"),
                 "url",
                 "description",
-                "assignees",
+                ("assignees", "testers"),
             ),
         }),
         ("Significant Dates", {
@@ -553,9 +554,6 @@ class FeatureAdmin(admin.ModelAdmin):
     readonly_fields = [
         "uid", "slug", "created", "modified",
     ]
-
-
-admin.site.register(Feature, FeatureAdmin)
 
 
 # =============================================================================

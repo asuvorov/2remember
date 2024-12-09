@@ -35,6 +35,7 @@ from ddcore.models import (
     SocialLink,
     UserLogin)
 from ddcore.Utilities import (
+    get_client_ip,
     make_json_cond,
     # render_to_pdf,
 )
@@ -269,6 +270,20 @@ def account_signin(request):
                     return HttpResponseRedirect(redirect_to)
 
                 return HttpResponseRedirect(reverse("my-profile-view"))
+
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+            papertrail.log(
+                event_type="user-log-in-attempt",
+                message="User tried to log-in",
+                data={
+                    "username":     data["username"],
+                    "password":     data["password"],
+                    "geo_data":     request.geo_data,
+                    "ip_addr":      get_client_ip(request),
+                },
+                # timestamp=timezone.now(),
+                targets={})
 
             form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
 

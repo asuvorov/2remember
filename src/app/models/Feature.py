@@ -10,6 +10,7 @@ from django.db import models
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
+from annoying.functions import get_object_or_None
 from termcolor import cprint
 
 from ddcore import enum
@@ -51,12 +52,26 @@ StatusBadgeClasses = enum(
     ENABLED_BETA="1",
     ENABLED="2")
 status_badge_classes = [
-    (StatusBadgeClasses.PLANNED,        "badge text-bg-warning"),
-    (StatusBadgeClasses.ASSIGNED,       "badge text-bg-warning"),
+    (StatusBadgeClasses.PLANNED,        "badge text-bg-light"),
+    (StatusBadgeClasses.ASSIGNED,       "badge text-bg-secondary"),
     (StatusBadgeClasses.IN_PROGRESS,    "badge text-bg-warning"),
-    (StatusBadgeClasses.DISABLED,       "badge text-bg-warning"),
-    (StatusBadgeClasses.ENABLED_BETA,   "badge text-bg-warning"),
-    (StatusBadgeClasses.ENABLED,        "badge text-bg-warning"),
+    (StatusBadgeClasses.DISABLED,       "badge text-bg-danger"),
+    (StatusBadgeClasses.ENABLED_BETA,   "badge text-bg-info"),
+    (StatusBadgeClasses.ENABLED,        "badge text-bg-success"),
+]
+
+
+OTHER_STATES = [
+    Status.PLANNED,
+    Status.ASSIGNED,
+    Status.IN_PROGRESS,
+]
+DISABLED_STATES = [
+    Status.DISABLED,
+]
+ENABLED_STATES = [
+    Status.ENABLED_BETA,
+    Status.ENABLED,
 ]
 
 
@@ -86,6 +101,9 @@ class Feature(TitleSlugDescriptionBaseModel):
     slug                    : str       Feature Slug, populated from Title Field.
     description             : str       Feature Description.
     status                  : str       Feature Status.
+
+    assignees               : obj       Feature Assignees.
+    testers                 : obj       Feature Testers (in Beta).
 
     custom_data             : dict      Custom Data JSON Field.
 
@@ -135,6 +153,13 @@ class Feature(TitleSlugDescriptionBaseModel):
         related_name="feature_assignees",
         verbose_name=_("assignees"),
         help_text=_("Feature Assignees"))
+    testers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="feature_testers",
+        verbose_name=_("testers"),
+        help_text=_("Feature Testers"))
 
     # -------------------------------------------------------------------------
     # --- Flags
@@ -175,20 +200,40 @@ class Feature(TitleSlugDescriptionBaseModel):
 
         return ""
 
-    @property
-    def is_planned(self):
-        """Docstring."""
-        return self.status == Status.PLANNED
+    # @property
+    # def is_planned(self):
+    #     """Docstring."""
+    #     return self.status == Status.PLANNED
 
-    @property
-    def is_disabled(self):
-        """Docstring."""
-        return self.status == Status.DISABLED
+    # @property
+    # def is_disabled(self):
+    #     """Docstring."""
+    #     return self.status in DISABLED_STATES
 
-    @property
-    def is_enabled(self):
-        """Docstring."""
-        return self.status in [Status.ENABLED_BETA, Status.ENABLED]
+    # @property
+    # def is_enabled(self):
+    #     """Docstring."""
+    #     return self.status in ENABLED_STATES
+
+    def is_beta_tester(self, request):
+        """Check, if the authenticated User is a Beta Tester of the enabled Feature.
+
+        Parameters
+        ----------
+        request             :obj        Request Object.
+
+        Returns
+        -------
+                            :bool,None
+        Raises
+        ------
+
+        """
+        if request.user.is_authenticated:
+            if self.status == Status.ENABLED_BETA:
+                return request.user in self.testers.all()
+
+        return None
 
     @property
     def url_tag(self):
@@ -200,7 +245,117 @@ class Feature(TitleSlugDescriptionBaseModel):
         return format_html(f"<a href='{self.url}' target='_blank' rel='noopener noreferrer'>{self.url}</a>")
 
     # -------------------------------------------------------------------------
+    # --- Class Methods.
+    # -------------------------------------------------------------------------
+    @classmethod
+    def exists(cls, slug):
+        """Check, if Feature exists.
+
+        Parameters
+        ----------
+        slug                :str        Feature Slug.
+
+        Returns
+        -------
+                            :bool
+        Raises
+        ------
+
+        """
+        return cls.objects.filter(slug=slug).exists()
+
+    @classmethod
+    def get(cls, slug):
+        """Fetch the Feature Object.
+
+        Parameters
+        ----------
+        slug                :str        Feature Slug.
+
+        Returns
+        -------
+                            :obj
+        Raises
+        ------
+
+        """
+        return get_object_or_None(cls, slug=slug)
+
+    @classmethod
+    def is_other(cls, request, slug):
+        """Docstring."""
+        feature = cls.get(slug)
+        if feature:
+            return feature.status in OTHER_STATES
+
+    @classmethod
+    def is_disabled(cls, request, slug):
+        """Check, if Feature is disabled.
+
+        Parameters
+        ----------
+        request             :obj        Request Object.
+        slug                :str        Feature Slug.
+
+        Returns
+        -------
+                            :bool
+        Raises
+        ------
+
+        """
+        feature = cls.get(slug)
+        if feature:
+            return feature.status in DISABLED_STATES
+
+    @classmethod
+    def is_enabled(cls, request, slug):
+        """Check, if Feature is enabled.
+
+        Parameters
+        ----------
+        request             :obj        Request Object.
+        slug                :str        Feature Slug.
+
+        Returns
+        -------
+                            :bool
+        Raises
+        ------
+
+        """
+        feature = cls.get(slug)
+        if feature:
+            return feature.status in ENABLED_STATES
+
+    @classmethod
+    def is_beta_tester(cls, request, slug):
+        """Check, if the authenticated User is a Beta Tester of the enabled Feature.
+
+        Parameters
+        ----------
+        request             :obj        Request Object.
+        slug                :str        Feature Slug.
+
+        Returns
+        -------
+                            :bool,None
+        Raises
+        ------
+
+        """
+        if request.user.is_authenticated:
+            feature = cls.get(slug)
+            if (
+                    feature and
+                    feature.status == Status.ENABLED_BETA):
+                return request.user in feature.testers.all()
+
+        return None
+
+    # -------------------------------------------------------------------------
     # --- Signals
+    # -------------------------------------------------------------------------
     def pre_save(self, **kwargs):
         """Docstring."""
 

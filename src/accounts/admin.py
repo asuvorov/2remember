@@ -45,6 +45,28 @@ from .models import (
 # -----------------------------------------------------------------------------
 # --- Inlines.
 # -----------------------------------------------------------------------------
+class UserLoginInline(admin.TabularInline):
+    """UserLogin Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+    fields = [
+        "id", "user", "ip", "user_agent", "provider", "geo_data",
+        "created", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
+
+    model = UserLogin
+    fk_name = "user"
+    extra = 1
+
+
 class PostInline(admin.TabularInline):
     """Post Inline."""
 
@@ -158,7 +180,7 @@ class UserAdmin(admin.ModelAdmin):
         "is_active", "is_staff", "is_superuser",
         "date_joined", "last_login",
     ]
-    list_display_links = []
+    list_display_links = ["id", "email"]
     list_filter = [
         ("date_joined", DateRangeFilter),
         ("last_login", DateRangeFilter),
@@ -166,6 +188,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = []
     readonly_fields = ["id", "uid"]
     inlines = [
+        UserLoginInline,
         PostInline,
         EventInline,
         OrganizationInline,

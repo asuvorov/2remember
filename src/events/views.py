@@ -317,9 +317,7 @@ def event_details(request, slug):
     if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
-        is_admin = is_event_admin(
-            request.user,
-            event)
+        is_admin = is_event_admin(request.user, event)
 
         # if event.is_closed and not is_admin:
         #     raise Http404
