@@ -7,13 +7,14 @@ import uuid
 
 from django.conf import settings
 from django.db import models
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
-from ckeditor_uploader.fields import RichTextUploadingField
 from termcolor import cprint
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
+from ddcore.Utilities import get_website_title
 from ddcore.models import TitleSlugDescriptionBaseModel
 
 
@@ -27,11 +28,35 @@ from ddcore.models import TitleSlugDescriptionBaseModel
 # --- Feature Model Choices.
 # -----------------------------------------------------------------------------
 Status = enum(
+    PLANNED="-16",
+    ASSIGNED="-8",
+    IN_PROGRESS="-4",
     DISABLED="0",
-    ENABLED="1")
+    ENABLED_BETA="1",
+    ENABLED="2")
 status_choices = [
-    (Status.DISABLED,   _("Disabled")),
-    (Status.ENABLED,    _("Enabled")),
+    (Status.PLANNED,        _("Planned")),
+    (Status.ASSIGNED,       _("Assigned")),
+    (Status.IN_PROGRESS,    _("In Progress")),
+    (Status.DISABLED,       _("Disabled")),
+    (Status.ENABLED_BETA,   _("Enabled Beta")),
+    (Status.ENABLED,        _("Enabled")),
+]
+
+StatusBadgeClasses = enum(
+    PLANNED="-16",
+    ASSIGNED="-8",
+    IN_PROGRESS="-4",
+    DISABLED="0",
+    ENABLED_BETA="1",
+    ENABLED="2")
+status_badge_classes = [
+    (StatusBadgeClasses.PLANNED,        "badge text-bg-warning"),
+    (StatusBadgeClasses.ASSIGNED,       "badge text-bg-warning"),
+    (StatusBadgeClasses.IN_PROGRESS,    "badge text-bg-warning"),
+    (StatusBadgeClasses.DISABLED,       "badge text-bg-warning"),
+    (StatusBadgeClasses.ENABLED_BETA,   "badge text-bg-warning"),
+    (StatusBadgeClasses.ENABLED,        "badge text-bg-warning"),
 ]
 
 
@@ -95,12 +120,21 @@ class Feature(TitleSlugDescriptionBaseModel):
         unique=True,
         primary_key=False,
         editable=False)
+    url = models.URLField()
 
     status = models.CharField(
-        max_length=2,
-        choices=status_choices, default=Status.DISABLED,
+        max_length=4,
+        choices=status_choices, default=Status.PLANNED,
         verbose_name=_("Status"),
         help_text=_("Feature Status"))
+
+    assignees = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        db_index=True,
+        blank=True,
+        related_name="feature_assignees",
+        verbose_name=_("assignees"),
+        help_text=_("Feature Assignees"))
 
     # -------------------------------------------------------------------------
     # --- Flags
@@ -119,6 +153,51 @@ class Feature(TitleSlugDescriptionBaseModel):
     def __str__(self):
         """Docstring."""
         return self.__repr__()
+
+    # -------------------------------------------------------------------------
+    # --- Properties.
+    # -------------------------------------------------------------------------
+    @property
+    def stat_status_name(self):
+        """Docstring."""
+        for code, name in status_choices:
+            if self.status == code:
+                return name
+
+        return ""
+
+    @property
+    def stat_status_badge_class(self):
+        """Docstring."""
+        for code, name in status_badge_classes:
+            if self.status == code:
+                return name
+
+        return ""
+
+    @property
+    def is_planned(self):
+        """Docstring."""
+        return self.status == Status.PLANNED
+
+    @property
+    def is_disabled(self):
+        """Docstring."""
+        return self.status == Status.DISABLED
+
+    @property
+    def is_enabled(self):
+        """Docstring."""
+        return self.status in [Status.ENABLED_BETA, Status.ENABLED]
+
+    @property
+    def url_tag(self):
+        """Docstring."""
+        title = get_website_title(self.url)
+        if title:
+            return format_html(f"<a href='{self.url}' target='_blank' rel='noopener noreferrer'>{title}</a>")
+
+        return format_html(f"<a href='{self.url}' target='_blank' rel='noopener noreferrer'>{self.url}</a>")
 
     # -------------------------------------------------------------------------
     # --- Signals

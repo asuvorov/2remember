@@ -40,14 +40,14 @@
     // --- Check, if uploaded File is an Document.
     // ------------------------------------------------------------------------
     function is_document(path) {
-        return _.contains({{ documents|safe }}, path.split(".").pop());
+        return _.contains({{ documents|safe }}, path.split(".").pop().toLowerCase());
     }
 
     // ------------------------------------------------------------------------
     // --- Check, if uploaded File is an Image.
     // ------------------------------------------------------------------------
     function is_image(path) {
-        return _.contains({{ images|safe }}, path.split(".").pop());
+        return _.contains({{ images|safe }}, path.split(".").pop().toLowerCase());
     }
 
     $(function () {

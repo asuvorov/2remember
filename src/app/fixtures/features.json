@@ -3,9 +3,20 @@
         "model":        "app.feature",
         "pk":           1,
         "fields": {
+            "title":        "Resize Images",
+            "slug":         "resize-images",
+            "status":       "-16",
+            "modified":     "2024-11-07",
+            "created":      "2024-11-07"
+        }
+    },
+    {
+        "model":        "app.feature",
+        "pk":           2,
+        "fields": {
             "title":        "Private URLs",
             "slug":         "private-urls",
-            "status":       "1",
+            "status":       "-16",
             "modified":     "2024-11-07",
             "created":      "2024-11-07"
         }

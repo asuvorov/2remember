@@ -22,13 +22,14 @@ from meta.models import ModelMeta
 # from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from termcolor import cprint
-from timezone_field import TimeZoneField
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.SendgridUtil import send_templated_email
 from ddcore.models import (
     Address,
+    AttachedDocument,
+    AttachedImage,
     AttachmentMixin,
     CommentMixin,
     ComplaintMixin,
@@ -845,22 +846,24 @@ class Event(
         # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Preview Images is:
+        # --- The Path for uploading Cover/Preview Images is:
         #
+        #            MEDIA_ROOT/events/<id>/covers/<filename>
         #            MEDIA_ROOT/events/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Event Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Event looks like:
         #
+        #            MEDIA_ROOT/events/None/covers/<filename>
         #            MEDIA_ROOT/events/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Preview File in the Path;
-        #     2. Assign the Preview File Content to the Event Preview Object;
-        #     3. Save the Event Instance. Now the Preview Image in the
+        #     1. Open the Cover/Preview File in the Path;
+        #     2. Assign the Cover/Preview File Content to the Event Cover/Preview Object;
+        #     3. Save the Event Instance. Now the Cover/Preview Image in the
         #        correct Path;
-        #     4. Delete previous Preview File;
+        #     4. Delete previous Cover/Preview File;
         #
         try:
             if created:
@@ -871,6 +874,13 @@ class Event(
 
                 storage.delete(preview.file.name)
 
+        except Exception as exc:
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
+
+        try:
+            if created:
                 # -------------------------------------------------------------
                 cover = File(storage.open(self.cover.file.name, "rb"))
 
@@ -887,12 +897,17 @@ class Event(
     def pre_delete(self, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Remove related Invites, if any.
+        # --- Remove related Objects, if any.
         try:
-            related_invites = Invite.objects.filter(
+            Invite.objects.filter(
                 content_type=ContentType.objects.get_for_model(self),
-                object_id=self.id)
-            related_invites.delete()
+                object_id=self.id).delete()
+            AttachedImage.objects.filter(
+                content_type=ContentType.objects.get_for_model(self),
+                object_id=self.id).delete()
+            AttachedDocument.objects.filter(
+                content_type=ContentType.objects.get_for_model(self),
+                object_id=self.id).delete()
 
         except Exception as exc:
             cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
