@@ -146,7 +146,9 @@ class PrivateUrl(BaseModel):
         IntegrityError
 
         """
-        if replace and user:
+        if (
+                replace and
+                user):
             cls.objects.filter(action=action, user=user).delete()
 
         if isinstance(expire, datetime.timedelta):
@@ -241,5 +243,8 @@ class PrivateUrl(BaseModel):
 
     def get_absolute_url(self):
         """Get absolute URL."""
-        return reverse("{}:privateurl".format(purl_settings.PRIVATEURL_URL_NAMESPACE),
-                       kwargs={"action": self.action, "token": self.token})
+        return reverse(
+            "{}:privateurl".format(purl_settings.PRIVATEURL_URL_NAMESPACE), kwargs={
+                "action":   self.action,
+                "token":    self.token,
+            })

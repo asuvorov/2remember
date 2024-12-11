@@ -8,6 +8,7 @@ from django.utils.translation import gettext, ugettext_lazy as _
 from .models import PrivateUrl
 
 
+@admin.register(PrivateUrl)
 class PrivateUrlAdmin(admin.ModelAdmin):
     list_display = ("action_with_token", "user", "created", "expire", "used", "available")
     list_filter = ("action",)
@@ -15,7 +16,7 @@ class PrivateUrlAdmin(admin.ModelAdmin):
     raw_id_fields = ("user",)
 
     def __init__(self, *args, **kwargs):
-        super(PrivateUrlAdmin, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def action_with_token(self, obj):
         return "{}/{}".format(obj.action, obj.token)
@@ -32,6 +33,3 @@ class PrivateUrlAdmin(admin.ModelAdmin):
 
     used.short_description = _("available")
     available.boolean = True
-
-
-admin.site.register(PrivateUrl, PrivateUrlAdmin)

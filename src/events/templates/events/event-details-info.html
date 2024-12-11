@@ -155,6 +155,15 @@
                 <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
             </section>
 
+            <!-- Private Link to Page -->
+            {% if event.is_private %}
+            <section>
+                <h4>{% trans "Private Link to this Page" %}</h4>
+                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ event.get_private_url }}" />
+                <a class="btn btn-danger w-100 my-2" href="#"><i class="bi bi-arrow-repeat"></i> {% trans "Refresh" %}</a>
+            </section>
+            {% endif %}
+
             <!-- Social Links -->
         {% if social_links %}
             <section>
