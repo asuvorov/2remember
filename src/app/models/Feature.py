@@ -96,6 +96,7 @@ class Feature(TitleSlugDescriptionBaseModel):
     Attributes
     ----------
     uid                     : str       Feature UUID.
+    url                     : str       Feature URL (e.g. GitHub PR or Issue).
 
     title                   : str       Feature Title.
     slug                    : str       Feature Slug, populated from Title Field.

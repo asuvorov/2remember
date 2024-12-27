@@ -8,8 +8,8 @@
 
 #------------------------------------------------------------------------------
 # --- "#"
-git+https://github.com/asuvorov/ddaemon-core-python.git@v0.5.1
-git+https://github.com/asuvorov/ddaemon-django-papertrail.git@v0.1.3
+ddaemon-core-python==0.5.1
+ddaemon-django-papertrail==0.1.0
 
 # APScheduler==3.9.1
 Pillow
