@@ -3,9 +3,11 @@
         "model":        "app.feature",
         "pk":           1,
         "fields": {
+            "url":          "https://github.com/asuvorov/2remember/pull/29",
             "title":        "Resize Images",
             "slug":         "resize-images",
-            "status":       "-16",
+            "description":  "Resize uploaded Images to the default Tier Dimensions of 1600x900 px.",
+            "status":       "1",
             "modified":     "2024-11-07",
             "created":      "2024-11-07"
         }
@@ -14,8 +16,10 @@
         "model":        "app.feature",
         "pk":           2,
         "fields": {
+            "url":          "https://github.com/asuvorov/2remember/pull/42",
             "title":        "Private URLs",
             "slug":         "private-urls",
+            "description":  "Generate URLs for accessing the private Events.",
             "status":       "-16",
             "modified":     "2024-11-07",
             "created":      "2024-11-07"
