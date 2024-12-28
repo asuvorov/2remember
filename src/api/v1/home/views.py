@@ -172,11 +172,7 @@ class ContactUsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors.
         # ---------------------------------------------------------------------
-        if (
-                not name or
-                not email or
-                not subject or
-                not message):
+        if not all(name, email, subject, message):
             return Response({
                 "message":      _("No Name, Email, Subject or Message provided."),
             }, status=status.HTTP_400_BAD_REQUEST)

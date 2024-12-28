@@ -15,6 +15,8 @@ def pb_settings(request):
     return {
         "product_version_num":  settings.PRODUCT_VERSION_NUM,
         "ENVIRONMENT":          settings.ENVIRONMENT,
+        "EMAIL_SENDER":         settings.EMAIL_SENDER,
+        "EMAIL_SUPPORT":        settings.EMAIL_SUPPORT,
     }
 
 
