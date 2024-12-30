@@ -152,15 +152,25 @@
             <!-- Link to Page -->
             <section>
                 <h4>{% trans "Link to this Page" %}</h4>
-                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                <div class="input-group mb-3">
+                    <a id="button-addon1" class="btn btn-primary" type="button" href="#" alt="Copy Link"><i class="bi bi-copy"></i></a>
+                    <a id="button-addon1" class="btn btn-success" type="button" href="#" alt="Share Link"><i class="bi bi-share"></i></a>
+                    <input class="form-control link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                </div>
             </section>
 
             <!-- Private Link to Page -->
             {% if event.is_private %}
             <section>
                 <h4>{% trans "Private Link to this Page" %}</h4>
-                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ event.get_private_url }}" />
-                <a class="btn btn-danger w-100 my-2" href="#"><i class="bi bi-arrow-repeat"></i> {% trans "Refresh" %}</a>
+                <div class="input-group mb-3">
+                    <a id="button-addon1" class="btn btn-primary" type="button" href="#" alt="Copy Link"><i class="bi bi-copy"></i></a>
+                    <a id="button-addon1" class="btn btn-success" type="button" href="#" alt="Share Link"><i class="bi bi-share"></i></a>
+                    <input class="form-control link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ event.get_private_url }}">
+                    <a id="button-addon1" class="btn btn-danger"  type="button" href="#" alt="Refresh Link"><i class="bi bi-arrow-repeat"></i></a>
+                </div>
+
+                <!-- <a class="btn btn-danger w-100 my-2" href="#"><i class="bi bi-arrow-repeat"></i> {% trans "Refresh" %}</a> -->
             </section>
             {% endif %}
 
