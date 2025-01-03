@@ -11,6 +11,7 @@ from django.utils.translation import gettext_lazy as _
 from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.models import BaseModel
+
 from .Event import Event
 from .Role import Role
 
@@ -69,19 +70,19 @@ class ParticipationManager(models.Manager):
             ParticipationStatus.CONFIRMED,
             ParticipationStatus.WAITING_FOR_SELFREFLECTION,
             ParticipationStatus.ACKNOWLEDGED,
-            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
         ])
 
     def waiting_for_confirmation(self):
         """Return all waiting for Confirmation Participations."""
         return self.filter(status__in=[
-            ParticipationStatus.WAITING_FOR_CONFIRMATION
+            ParticipationStatus.WAITING_FOR_CONFIRMATION,
         ])
 
     def waiting_for_acknowledgement(self):
         """Return all waiting for Acknowledgment Participations."""
         return self.filter(status__in=[
-            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
         ])
 
 
@@ -112,8 +113,8 @@ class Participation(BaseModel):
     role = models.ForeignKey(
         Role,
         db_index=True,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
-        on_delete=models.CASCADE,
         related_name="role_participations",
         verbose_name=_("Role"),
         help_text=_("Role, if applicable"))

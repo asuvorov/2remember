@@ -50,7 +50,8 @@ class FAQ(BaseModel):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE)
+        on_delete=models.SET_NULL,
+        null=True, blank=True,)
     section = models.ForeignKey(
         Section,
         db_index=True,
