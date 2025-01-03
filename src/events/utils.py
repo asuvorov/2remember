@@ -29,10 +29,12 @@ def get_event_list(request, author=None):
     # --- Retrieve Data from the Request.
     # -------------------------------------------------------------------------
     category_slug = request.GET.get("cat", None)
+    dateless = request.GET.get("dateless", False)
     tag_id = request.GET.get("tag", None)
     page = request.GET.get("page", 1)
 
     cprint(f"[---  DUMP   ---] CATEGORY SLUG    : {category_slug}", "yellow")
+    cprint(f"[---  DUMP   ---]      DATELESS    : {dateless}", "yellow")
     cprint(f"[---  DUMP   ---]           TAG    : {tag_id}", "yellow")
     cprint(f"[---  DUMP   ---]          PAGE    : {page}", "yellow")
 
