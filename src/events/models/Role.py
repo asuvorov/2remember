@@ -38,15 +38,46 @@ class RoleManager(models.Manager):
 # -----------------------------------------------------------------------------
 @autoconnect
 class Role(TitleDescriptionBaseModel):
-    """Role Model."""
+    """Role Model.
+
+    Attributes
+    ----------
+    title                   : str       Role Title.
+    description             : str       Role Description.
+    quantity                : int       Role Quantity.
+
+    event                   : obj       Event Object.
+
+    custom_data             : dict      Custom Data JSON Field.
+
+    allow_comments          : bool      Allow Comments?
+    is_newly_created        : bool      Is newly created?
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
+
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
+
+    created                 : datetime  Timestamp the Object has been created.
+    modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
+
+    Methods
+    -------
+    save()
+
+    pre_save()                          `pre_save`    Object Signal.
+    post_save()                         `post_save`   Object Signal.
+    pre_delete()                        `pre_delete`  Object Signal.
+    post_delete()                       `posr_delete` Object Signal.
+    m2m_changed()                       `m2m_changed` Object Signal.
+
+    """
 
     # -------------------------------------------------------------------------
     # --- Basics
-    # name = models.CharField(
-    #     db_index=True,
-    #     max_length=80,
-    #     verbose_name=_("Name"),
-    #     help_text=_("Role Name"))
     quantity = models.PositiveIntegerField(
         verbose_name=_("Quantity"),
         help_text=_("Quantity"))
