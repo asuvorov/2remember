@@ -12,6 +12,20 @@ from .base import *
 # -----------------------------------------------------------------------------
 DEBUG = True
 
+DATABASES = {
+    "default": {
+        "ENGINE":   "django.db.backends.sqlite3",
+        "NAME":     "test-sqlite.db",
+        "USER":     "",
+        "PASSWORD": "",
+        "HOST":     "",
+        "PORT":     "",
+        "OPTIONS": {
+            # "autocommit": True,
+        }
+    }
+}
+
 
 ###############################################################################
 ### AWS SETTINGS                                                            ###

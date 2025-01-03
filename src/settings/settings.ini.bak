@@ -10,6 +10,7 @@
 # -----------------------------------------------------------------------------
 ENVIRONMENT=local
 DJANGO_SETTINGS_MODULE=settings.local
+DEBUG=true
 
 CACHE_MIDDLEWARE_ALIAS=redis
 CACHE_MIDDLEWARE_SECONDS=60

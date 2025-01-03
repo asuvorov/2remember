@@ -54,7 +54,9 @@ from app.forms import (
     AddressForm,
     SocialLinkFormSet)
 
-from .decorators import event_access_check_required
+from .decorators import (
+    event_edit_access_check_required,
+    event_view_access_check_required)
 from .forms import (
     CreateEditEventForm,
     FilterEventForm)
@@ -182,8 +184,8 @@ def event_category_list(request):
 # === EVENT CREATE
 # ===
 # =============================================================================
-@login_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_create(request):
     """Create the Event."""
@@ -280,7 +282,7 @@ def event_create(request):
 # === EVENT DETAILS
 # ===
 # =============================================================================
-# @event_access_check_required
+@event_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_details(request, slug):
     """Event Details."""
@@ -290,11 +292,9 @@ def event_details(request, slug):
     is_admin = False
     is_rated = False
     is_complained = False
+
     participation = None
-    show_withdraw_form = False
-    show_signup_form = False
-    show_selfreflection_form = False
-    show_not_participated_form = False
+
     show_rate_form = False
     show_complain_form = False
 
@@ -316,12 +316,7 @@ def event_details(request, slug):
     if request.user.is_authenticated:
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
-        is_admin = is_event_admin(
-            request.user,
-            event)
-
-        # if event.is_closed and not is_admin:
-        #     raise Http404
+        is_admin = is_event_admin(request.user, event)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Event.
@@ -329,7 +324,7 @@ def event_details(request, slug):
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Event.
-        is_complained = False  # FIXME event.is_complained_by_user(request.user)
+        is_complained = event.is_complained_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
@@ -424,16 +419,12 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     return render(
         request, "events/event-details-info.html", {
-            "event":                        event,
-            "meta":                         event.as_meta(request),
-            "participation":                participation,
-            "is_admin":                     is_admin,
-            "show_withdraw_form":           show_withdraw_form,
-            "show_signup_form":             show_signup_form,
-            "show_selfreflection_form":     show_selfreflection_form,
-            "show_not_participated_form":   show_not_participated_form,
-            "show_rate_form":               show_rate_form,
-            "show_complain_form":           show_complain_form,
+            "event":                event,
+            "meta":                 event.as_meta(request),
+            "participation":        participation,
+            "is_admin":             is_admin,
+            "show_rate_form":       show_rate_form,
+            "show_complain_form":   show_complain_form,
             # "is_newly_created":             is_newly_created,
             # "social_links":                 social_links,
         })
@@ -444,6 +435,7 @@ def event_details(request, slug):
 # === EVENT EDIT
 # ===
 # =============================================================================
+@event_edit_access_check_required
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug):
@@ -452,16 +444,6 @@ def event_edit(request, slug):
     # --- Initials.
     # -------------------------------------------------------------------------
     event = get_object_or_404(Event, slug=slug)
-    if not event.is_author(request):
-        raise PermissionDenied
-
-    # -------------------------------------------------------------------------
-    # --- Completed or closed (deleted) Events cannot be modified.
-    # -------------------------------------------------------------------------
-    # if (
-    #         event.is_complete or
-    #         event.is_closed):
-    #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

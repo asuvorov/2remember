@@ -164,7 +164,8 @@ class Organization(
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         related_name="created_organizations",
         verbose_name=_("Author"),
         help_text=_("Organization Author"))
@@ -227,7 +228,7 @@ class Organization(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("Organization Address"))
