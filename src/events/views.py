@@ -62,11 +62,7 @@ from .forms import (
     FilterEventForm)
 from .models import (
     Category,
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus,
-    )
+    Event)
 from .utils import get_event_list
 
 

@@ -1,5 +1,12 @@
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<events> - List of Events
+{% endcomment %}
+
 <div>
     {% regroup events|dictsortreversed:"start_date" by start_date|date:"Y" as events_by_year %}
     {% for events_year in events_by_year %}
