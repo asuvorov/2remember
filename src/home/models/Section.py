@@ -74,9 +74,9 @@ class Section(BaseModel):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE,
-        related_name="authored_faq_sections",
+        on_delete=models.SET_NULL,
         null=True, blank=True,
+        related_name="authored_faq_sections",
         verbose_name=_("Author"),
         help_text=_("Section Author"))
 

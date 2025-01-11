@@ -14,4 +14,6 @@ class EventsConfig(AppConfig):
 
     def ready(self):
         """Docstring."""
+        import_module("events.receivers")
+        import_module("events.signals")
         import_module("events.tasks")

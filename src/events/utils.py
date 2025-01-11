@@ -20,7 +20,8 @@ from organizations.models import OrganizationStaff
 from .filters import EventFilter
 from .models import (
     Category,
-    Event)
+    Event,
+    Visibility)
 
 
 def get_event_list(request, author=None):
@@ -58,6 +59,12 @@ def get_event_list(request, author=None):
             cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
                    f"                 {type(exc).__name__}\n"
                    f"                 {str(exc)}", "white", "on_red")
+
+    # -------------------------------------------------------------------------
+    # --- Hide the private Events from the unauthenticated Users.
+    # -------------------------------------------------------------------------
+    if not request.user.is_authenticated:
+        events = events.exclude(visibility=Visibility.PRIVATE)
 
     # -------------------------------------------------------------------------
     # --- Slice and paginate the Event List.
@@ -110,7 +117,6 @@ def get_event_list(request, author=None):
     #         Q(organization=None) |
     #         Q(organization__is_hidden=False),
     #     )
-
 
     # event_filter = EventFilter(
     #     request.GET,

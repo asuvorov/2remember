@@ -53,7 +53,8 @@ class OrganizationGroup(
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         related_name="organization_group_author",
         verbose_name=_("Author"),
         help_text=_("Organization Group Author"))
