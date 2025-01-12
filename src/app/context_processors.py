@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -15,6 +15,8 @@ def pb_settings(request):
     return {
         "product_version_num":  settings.PRODUCT_VERSION_NUM,
         "ENVIRONMENT":          settings.ENVIRONMENT,
+        "EMAIL_SENDER":         settings.EMAIL_SENDER,
+        "EMAIL_SUPPORT":        settings.EMAIL_SUPPORT,
     }
 
 
