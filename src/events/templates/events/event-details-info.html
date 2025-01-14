@@ -86,13 +86,14 @@
                                 </p>
                             {% endif %}
 
-                            {% if event.author.profile.avatar %}
-                                {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
-                            {% else %}
-                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
-                            {% endif %}
-                                <a href="{% url 'profile-view' event.author.uid %}">{{ event.author.first_name }}</a>
-                                {{ event.created|timesince }} {% trans "ago" %}
+                                <p class="card-text">
+                                {% if event.author.profile.avatar %}
+                                    {% generateimage "header:thumbnail" source=event.author.profile.avatar -- alt=event.author.profile.auth_name %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                                {% endif %}
+                                    <a href="{% url 'profile-view' event.author.uid %}">{{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+                                </p>
                             </div>
                         </div>
                     </div>

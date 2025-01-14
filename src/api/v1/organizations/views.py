@@ -7,10 +7,13 @@ import json
 import logging
 
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.template import loader
 from django.utils.translation import gettext_lazy as _
 
-from rest_framework import status
+from rest_framework import (
+    status,
+    viewsets)
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
@@ -27,7 +30,9 @@ from organizations.models import (
     OrganizationGroup,
     OrganizationStaff)
 
-from .serializers import OrganizationGroupSerializer
+from .serializers import (
+    AutocompleteOrganizationSerializer,
+    OrganizationGroupSerializer)
 from .utils import (
     organization_access_check_required,
     organization_staff_member_required,)
@@ -41,6 +46,88 @@ logger = logging.getLogger(__name__)
 # === ORGANIZATIONS
 # ===
 # =============================================================================
+
+# -----------------------------------------------------------------------------
+# --- Autocomplete.
+# -----------------------------------------------------------------------------
+class AutocompleteOrganizationViewSet(viewsets.ModelViewSet):
+    """Autocomplete."""
+
+    model = Organization
+    serializer_class = AutocompleteOrganizationSerializer
+
+    def get_object(self, queryset=None):
+        """Docstring."""
+        return self.request.user
+
+    def get_queryset(self):
+        """Docstring."""
+        queryset = self.model.objects.filter(
+            user__privacy_general__hide_profile_from_search=False,
+            user__is_active=True,
+        ).exclude(
+            user=self.request.user,
+        )
+
+        return queryset
+
+    @log_default(my_logger=logger)
+    def list(self, request, *args, **kwargs):
+        """Docstring."""
+        q = request.GET.get("term", "")
+
+        queryset = self.get_queryset().filter(title__icontains=q).distinct()[:20]
+        result = self.serializer_class(
+            queryset,
+            many=True,
+            context={
+                "request":  request,
+            },
+        ).data
+
+        return Response(
+            result,
+            status=status.HTTP_200_OK)
+
+    def create(self, request, *args, **kwargs):
+        """Docstring."""
+        return super().create()
+
+    def retrieve(self, request, *args, **kwargs):
+        """Docstring."""
+        return super().retrieve()
+
+    def update(self, request, *args, **kwargs):
+        """Docstring."""
+        return super().update()
+
+    def partial_update(self, request, *args, **kwargs):
+        """Docstring."""
+        return super().partial_update()
+
+    def destroy(self, request, *args, **kwargs):
+        """Docstring."""
+        return super().destroy()
+
+    def pre_save(self, obj):
+        """Docstring."""
+
+    def post_save(self, obj):
+        """Docstring."""
+
+
+autocomplete_organization_list = AutocompleteOrganizationViewSet.as_view({
+    "get":      "list",
+    # "post":     "create",
+})
+autocomplete_organization_detail = AutocompleteOrganizationViewSet.as_view({
+    "get":      "retrieve",
+    # "put":      "update",
+    # "patch":    "partial_update",
+    # "delete":   "destroy",
+})
+
+
 class OrganizationStaffMemberOrderViewSet(APIView):
     """Organization Staff Members Order View Set."""
 

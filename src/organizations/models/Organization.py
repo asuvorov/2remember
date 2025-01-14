@@ -123,6 +123,7 @@ class Organization(
 
     followers               : obj       Organization Followers.
     subscribers             : obj       Organization Subscribers.
+    parent                  : obj       Parent Organization.
 
     custom_data             : dict      Custom Data JSON Field.
 
@@ -250,6 +251,18 @@ class Organization(
         related_name="organization_subscribers",
         verbose_name=_("Subscribers"),
         help_text=_("Organization Subscribers"))
+
+    # -------------------------------------------------------------------------
+    # --- Parent Organization.
+    # -------------------------------------------------------------------------
+    parent = models.ForeignKey(
+        "self",
+        null=True, blank=True,
+        db_index=True,
+        on_delete=models.SET_NULL,
+        related_name="children",
+        verbose_name=_("Parent Organization"),
+        help_text=_("Parent Organization"))
 
     # -------------------------------------------------------------------------
     # --- Flags.
