@@ -107,6 +107,12 @@
                             <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
+                        <div class="form-floating col-12 {% if form.parent.errors %}has-error{% endif %}">
+                            {{ form.parent }}
+                            <label for="id_parent" class="form-label">{{ form.parent.label }}{% if form.parent.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.parent.errors %}{% for error in form.parent.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
                     {% comment %}
                         <div class="checkbox checkbox-primary">
                             {{ form.is_hidden }}
@@ -188,7 +194,7 @@
 
                 <div class="alert alert-info">
                 {% blocktrans %}
-                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
+                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:{{ EMAIL_SUPPORT }}">contact Support</a>.
                 {% endblocktrans %}
                 </div>
 
@@ -203,6 +209,30 @@
 <!-- Scripts -->
 
 <script>
+    /*************************************************************************/
+    /*** Autocomplete                                                      ***/
+    /*************************************************************************/
+    $(function () {
+        $("#id_parent").autocomplete({
+            source:     "{% url 'autocomplete-organization-list' %}",
+            minLength:  3,
+            delay:      500,
+            select:     function (event, ui) {
+                console.log(">>> ID    :", ui.item.id);
+                console.log(">>> UUID  :", ui.item.uuid);
+                console.log(">>> LABEL :", ui.item.label);
+                console.log(">>> VALUE :", ui.item.value);
+
+                $("#hidden-invitee-id").val(ui.item.uuid);
+            }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a><img src='" + item.avatar + "' width='30' height='30' /> " + item.label + "<br></a>")
+                .appendTo(ul);
+        };
+    });
+
     /*************************************************************************/
     /*** Form Submitting                                                   ***/
     /*************************************************************************/

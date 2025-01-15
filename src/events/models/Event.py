@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -285,7 +285,6 @@ class Event(
         default=True,
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
-
     is_newly_created = models.BooleanField(default=True)
 
     class Meta:

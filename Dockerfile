@@ -9,7 +9,7 @@ RUN apt install -y build-essential curl g++ gcc gettext git make libc-dev libffi
 RUN apt install -y apt-transport-https ca-certificates dirmngr software-properties-common
 RUN apt install -y python3-dev python3-pip python3-virtualenv default-libmysqlclient-dev python3-psycopg2
 RUN apt install -y nodejs npm
-RUN npm install -g bower less recess
+RUN npm install -g npm bower less recess
 
 RUN pip install --upgrade pip
 RUN pip install --upgrade --no-cache-dir -r requirements.txt

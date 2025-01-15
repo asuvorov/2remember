@@ -5,6 +5,7 @@ For more Information on how to work in the Project, check out some of the other 
 * [Contributing](docs/CONTRIBUTING.md)
 * [Developer](docs/CDEVELOPER.md)
 * [Telemetry](docs/TELEMETRY.md)
+* [Changelog](CHANGELOG.md)
 <!--te-->
 
 # Install Dependencies

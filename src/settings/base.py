@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import os
@@ -1198,8 +1198,8 @@ WHITENOISE_MAX_AGE = 31536000
 ###############################################################################
 ### EMAILING                                                                 ###
 ###############################################################################
-EMAIL_SENDER = "no-reply@2remember.live"
-EMAIL_SUPPORT = "support@2remember.live"
+EMAIL_SENDER = "artem.suvorov@copycatsoftware.llc"
+EMAIL_SUPPORT = "artem.suvorov@copycatsoftware.llc"
 
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"

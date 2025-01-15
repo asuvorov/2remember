@@ -123,6 +123,12 @@
                             <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
+                        <div class="form-floating col-12 {% if form.parent.errors %}has-error{% endif %}">
+                            {{ form.parent }}
+                            <label for="id_parent" class="form-label">{{ form.parent.label }}{% if form.parent.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.parent.errors %}{% for error in form.parent.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
                     {% comment %}
                         <div class="checkbox checkbox-primary">
                             {{ form.is_hidden }}

@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -161,11 +161,19 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 ("title", "event_url"),
                 "description",
                 "custom_data",
-                ("category", "visibility", "organization"),
+                ("category", "visibility"),
                 # ("status", "application"),
                 # "duration",
                 # "achievements",
                 # "closed_reason",
+            ),
+        }),
+        ("Relations", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("followers", "subscribers", "organization"),
             ),
         }),
         ("Tags", {
@@ -207,7 +215,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("allow_comments", "is_newly_created"),
+                ("allow_comments", "is_newly_created", "is_hidden", "is_deleted"),
                 # "allow_reenter",
                 # ("accept_automatically", "acceptance_text",),
             ),
@@ -227,7 +235,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "id", "title", "author",
         "preview_image_tag", "cover_image_tag", "start_date",
         "organization", "visibility",
-        "addressless", "allow_comments", "is_newly_created",
+        "addressless", "allow_comments", "is_newly_created", "is_hidden", "is_deleted",
         "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
