@@ -1,5 +1,14 @@
 {% load cache %}
 {% load static %}
+{% load urls %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<page_total>  - Total Number of Pages
+        :<page_number> - Number of current Page
+{% endcomment %}
 
 {% cache 3600 faq-thumb-search LANGUAGE_CODE %}
 <script>
@@ -140,7 +149,7 @@
         leaps:          true,
         prev:           "<i class='bi bi-chevron-double-left'></i>",
         next:           "<i class='bi bi-chevron-double-right'></i>",
-        href:           "?page={{ page_number }}",
+        href:           "{% url_params current_url page=page_number %}",  // "?page={{ page_number }}",
         hrefVariable:   "{{ page_number }}",
         firstLastUse:   true,
         first:          "<i class='bi bi-arrow-left'></i>",

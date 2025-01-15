@@ -5,6 +5,7 @@
 - Added `parent` Organization Field to the Organization Model.
 - Added sending Email to the Team from the "Contact Us" Page.
 - Added the Features Feature for toggling the new testable Features.
+- Added a View for the dateless Events.
 
 # 0.4.0 (2024-08-10)
 

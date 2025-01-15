@@ -654,7 +654,7 @@ def my_profile_events(request):
     # -------------------------------------------------------------------------
     # --- Process Request.
     # -------------------------------------------------------------------------
-    events, page_total, page_number = get_event_list(request, author=request.user)
+    events, dateless, page_total, page_number = get_event_list(request, author=request.user)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -662,6 +662,7 @@ def my_profile_events(request):
     return render(
         request, "accounts/my-profile-events.html", {
             "events":       events,
+            "dateless":     dateless,
             "page_total":   page_total,
             "page_number":  page_number,
         })
@@ -1123,7 +1124,7 @@ def profile_events(request, uid36):
     # -------------------------------------------------------------------------
     # --- Process Request.
     # -------------------------------------------------------------------------
-    events, page_total, page_number = get_event_list(request, author=account)
+    events, dateless, page_total, page_number = get_event_list(request, author=account)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -1175,6 +1176,7 @@ def profile_events(request, uid36):
         request, "accounts/foreign-profile-events.html", {
             "account":      account,
             "events":       events,
+            "dateless":     dateless,
             "page_total":   page_total,
             "page_number":  page_number,
         })

@@ -62,11 +62,7 @@ from .forms import (
     FilterEventForm)
 from .models import (
     Category,
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus,
-    )
+    Event)
 from .utils import get_event_list
 
 
@@ -90,7 +86,7 @@ def event_list(request):
     #     status=EventStatus.UPCOMING,
     #     start_date__gte=datetime.date.today(),
     #
-    events, page_total, page_number = get_event_list(request)
+    events, dateless, page_total, page_number = get_event_list(request)
 
     # -------------------------------------------------------------------------
     # --- Events near.
@@ -153,6 +149,7 @@ def event_list(request):
     return render(
         request, "events/event-list.html", {
             "events":       events,
+            "dateless":     dateless,
             "page_title":   _("All Events"),
             "page_total":   page_total,
             "page_number":  page_number,
