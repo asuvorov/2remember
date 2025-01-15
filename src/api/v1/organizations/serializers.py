@@ -4,7 +4,23 @@
 
 from rest_framework import serializers
 
-from organizations.models import OrganizationGroup
+from organizations.models import (
+    Organization,
+    OrganizationGroup)
+
+
+class AutocompleteOrganizationSerializer(serializers.HyperlinkedModelSerializer):
+    """Organization Serializer."""
+
+    class Meta:
+        """Docstring."""
+
+        model = Organization
+        fields = (
+            "id",
+            "organization_id",
+            "name",
+            "description")
 
 
 class OrganizationGroupSerializer(serializers.HyperlinkedModelSerializer):

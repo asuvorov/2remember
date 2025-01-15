@@ -50,6 +50,17 @@
                 {% endif %}
                 </p>
 
+            {% if organization.parent %}
+                <p class="card-text">
+                {% if organization.parent.preview %}
+                    {% generateimage "header:thumbnail" source=organization.parent.preview -- alt=organization.parent.title %}
+                {% else %}
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.parent.title }}" />
+                {% endif %}
+                    <a href="{% url 'organization-details' organization.parent.slug %}">{{ organization.parent.title }}</a>
+                </p>
+            {% endif %}
+
                 <p class="card-text">
                 {% if organization.author.profile.avatar %}
                     {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}

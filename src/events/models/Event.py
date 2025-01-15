@@ -285,7 +285,6 @@ class Event(
         default=True,
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
-
     is_newly_created = models.BooleanField(default=True)
 
     class Meta:
