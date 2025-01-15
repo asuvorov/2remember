@@ -4,15 +4,27 @@
     Input Parameters:
         :<request> - Request
 
-        :<events> - List of Events
+        :<events>   - List of Events
+        :<dateless> - Show dateless?
 {% endcomment %}
 
 <div>
+{% if dateless %}
+    {% regroup events|dictsortreversed:"created" by created|date:"Y" as events_by_year %}
+{% else %}
     {% regroup events|dictsortreversed:"start_date" by start_date|date:"Y" as events_by_year %}
+{% endif %}
+
     {% for events_year in events_by_year %}
         {% regroup events_year.list by start_date|date:"F" as events_by_month %}
         {% for events_month in events_by_month %}
             <div class="event-list-date-grouper">
+            {% if dateless %}
+                <time></time>
+                <div class="info">
+                    <span class="title">{% trans "Dateless" %}</span>
+                </div>
+            {% else %}
                 <time>
                     <span class="year">{{ events_year.grouper }}</span>
                     <span class="month">{{ events_month.grouper|slice:":3" }}</span>
@@ -21,6 +33,7 @@
                 <div class="info">
                     <span class="title">{{ events_month.grouper }}, {{ events_year.grouper }}</span>
                 </div>
+            {% endif %}
             </div>
 
             <div class="row g-2 mb-3">

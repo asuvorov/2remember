@@ -30,13 +30,13 @@ def get_event_list(request, author=None):
     # --- Retrieve Data from the Request.
     # -------------------------------------------------------------------------
     category_slug = request.GET.get("cat", None)
-    dateless = request.GET.get("dateless", None)
+    dateless = True if request.GET.get("dateless", None) is not None else False
     tag_id = request.GET.get("tag", None)
     page = request.GET.get("page", 1)
 
     cprint(f"[---  DUMP   ---]        AUTHOR : {author}\n"
            f"                  CATEGORY SLUG : {category_slug}\n"
-           f"                       DATELESS : {dateless is not None}\n"
+           f"                       DATELESS : {dateless}\n"
            f"                            TAG : {tag_id}\n"
            f"                           PAGE : {page}", "yellow")
 
@@ -60,7 +60,7 @@ def get_event_list(request, author=None):
             events = events.filter(category=category.category)
 
     # -------------------------------------------------------------------------
-    if dateless is not None:
+    if dateless:
         events = events.exclude(start_date__isnull=False)
     else:
         events = events.exclude(start_date__isnull=True)
@@ -106,4 +106,4 @@ def get_event_list(request, author=None):
     #     queryset=events)
 
     # return event_filter.qs
-    return events, paginator.num_pages, events.number
+    return events, dateless, paginator.num_pages, events.number
