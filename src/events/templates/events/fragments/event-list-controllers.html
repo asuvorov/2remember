@@ -5,12 +5,17 @@
     Input Parameters:
         :<request> - Request
 
-        :<events> - List of Events
+        :<events>   - List of Events
+        :<dateless> - Show Dateless?
 {% endcomment %}
 
 <div class="controllers">
     <a class="btn btn-secondary" data-toggle="collapse" href="#collapse-event-filter" aria-expanded="false" aria-controls="collapse-event-filter"><i class="bi bi-filter"></i> {% trans "Filter" %}</a>
+{% if dateless %}
+    <a class="btn btn-warning" href="{% toggle_params request.get_full_path dateless='' %}"><i class="bi bi-calendar2-x"></i> {% trans "Hide Dateless" %}</a>
+{% else %}
     <a class="btn btn-info" href="{% toggle_params request.get_full_path dateless='' %}"><i class="bi bi-calendar2-x"></i> {% trans "Show Dateless" %}</a>
+{% endif %}
 
     <div style="display:inline;">
         <div class="category-item">
