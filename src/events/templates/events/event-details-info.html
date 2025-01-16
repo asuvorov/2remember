@@ -161,7 +161,7 @@
             </section>
 
             <!-- Private Link to Page -->
-            {% if event.is_private %}
+            {% if event.is_private and event.author == request.user %}
             <section>
                 <h4>{% trans "Private Link to this Page" %}</h4>
                 <div class="input-group mb-3">
