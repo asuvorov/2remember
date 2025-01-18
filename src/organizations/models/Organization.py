@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
@@ -123,6 +123,7 @@ class Organization(
 
     followers               : obj       Organization Followers.
     subscribers             : obj       Organization Subscribers.
+    parent                  : obj       Parent Organization.
 
     custom_data             : dict      Custom Data JSON Field.
 
@@ -164,7 +165,8 @@ class Organization(
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         related_name="created_organizations",
         verbose_name=_("Author"),
         help_text=_("Organization Author"))
@@ -227,7 +229,7 @@ class Organization(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("Organization Address"))
@@ -249,6 +251,18 @@ class Organization(
         related_name="organization_subscribers",
         verbose_name=_("Subscribers"),
         help_text=_("Organization Subscribers"))
+
+    # -------------------------------------------------------------------------
+    # --- Parent Organization.
+    # -------------------------------------------------------------------------
+    parent = models.ForeignKey(
+        "self",
+        null=True, blank=True,
+        db_index=True,
+        on_delete=models.SET_NULL,
+        related_name="children",
+        verbose_name=_("Parent Organization"),
+        help_text=_("Parent Organization"))
 
     # -------------------------------------------------------------------------
     # --- Flags.

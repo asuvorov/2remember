@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from decouple import config
@@ -13,6 +13,7 @@ from .base import *
 # --- Override Settings here.
 # -----------------------------------------------------------------------------
 DEBUG = True
+DOMAIN_NAME = "127.0.0.1:8000"
 
 
 ###############################################################################

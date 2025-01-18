@@ -1,15 +1,16 @@
 {% extends "accounts/my-profile-base.html" %}
 
-{% load i18n %}
 {% load cache %}
-{% load imagekit %}
-{% load taggit_templatetags2_tags %}
+{% load i18n %}
 
 {% comment %}
     Input Parameters:
         :<request> - Request
 
-        :<events> - Events List
+        :<events>      - List of Events
+        :<dateless>    - Show dateless?
+        :<page_total>  - Total Number of Pages
+        :<page_number> - Number of current Page
 {% endcomment %}
 
 {% get_current_language as LANGUAGE_CODE %}
@@ -39,9 +40,11 @@
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START CONTROLLERS -->
+            {% include "events/fragments/event-list-controllers.html" %}
             <!--  END  CONTROLLERS -->
 
             <!-- START FILTER FORM -->
+            {# include "events/fragments/event-list-filter-form.html" #}
             <!--  END  FILTER FORM -->
 
             <!-- START EVENTS -->
@@ -52,24 +55,11 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <!-- Media -->
-
             <!-- Tag Cloud -->
             <section id="tag-cloud">
             {% cache 60 tag-cloud-events LANGUAGE_CODE %}
                 <h4>{% trans "Tag Cloud" %}</h4>
-                {% get_taglist as taglist for "events.event" %}
-                {% get_tagcloud as tagcloud for "events.event" %}
-
-                <div class="tag-cloud">
-                {% for tag in tagcloud %}
-                    <a href="?tag={{ tag.id }}">
-                        <font size="{{ tag.weight|floatformat:0 }}">
-                            {{ tag.name }} ({{ tag.num_times }})
-                        </font>
-                    </a>
-                {% endfor %}
-                </div>
+                {% include "events/fragments/event-list-tag-cloud.html" %}
             {% endcache %}
             </section>
 

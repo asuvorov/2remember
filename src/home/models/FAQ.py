@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
@@ -50,7 +50,8 @@ class FAQ(BaseModel):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE)
+        on_delete=models.SET_NULL,
+        null=True, blank=True,)
     section = models.ForeignKey(
         Section,
         db_index=True,

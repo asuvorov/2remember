@@ -63,10 +63,9 @@
                                     {% endif %}
                                 {% endif %}
 
-                                    <br/>
-
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
+                                    <br/>
                                     {% for phone_number in phone_numbers %}
                                         <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
                                     {% if not forloop.last %}
@@ -83,9 +82,8 @@
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-film"></i>{% if organization.video %}<a href="{{ organization.video }}">{% trans "Video" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
 
-                                    <br/>
-
                                 {% if organization.tags.all and organization.hashtag %}
+                                    <br/>
                                     <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}
@@ -96,13 +94,25 @@
                                 {% endif %}
                                 </p>
 
-                            {% if organization.author.profile.avatar %}
-                                {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
-                            {% else %}
-                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                            {% if organization.parent %}
+                                <p class="card-text">
+                                {% if organization.parent.preview %}
+                                    {% generateimage "header:thumbnail" source=organization.parent.preview -- alt=organization.parent.title %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.parent.title }}" />
+                                {% endif %}
+                                    <a href="{% url 'organization-details' organization.parent.slug %}">{{ organization.parent.title }}</a>
+                                </p>
                             {% endif %}
-                                <a href="{% url 'profile-view' organization.author.uid %}">{{ organization.author.first_name }}</a>
-                                {{ organization.created|timesince }} {% trans "ago" %}
+
+                                <p class="card-text">
+                                {% if organization.author.profile.avatar %}
+                                    {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.author.profile.auth_name }}" />
+                                {% endif %}
+                                    <a href="{% url 'profile-view' organization.author.uid %}">{{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
+                                </p>
                             </div>
                         </div>
                     </div>

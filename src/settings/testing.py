@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 # pylint: disable=wildcard-import
@@ -11,6 +11,20 @@ from .base import *
 # --- Override Settings here.
 # -----------------------------------------------------------------------------
 DEBUG = True
+
+DATABASES = {
+    "default": {
+        "ENGINE":   "django.db.backends.sqlite3",
+        "NAME":     "test-sqlite.db",
+        "USER":     "",
+        "PASSWORD": "",
+        "HOST":     "",
+        "PORT":     "",
+        "OPTIONS": {
+            # "autocommit": True,
+        }
+    }
+}
 
 
 ###############################################################################

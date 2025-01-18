@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
@@ -172,11 +172,7 @@ class ContactUsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors.
         # ---------------------------------------------------------------------
-        if (
-                not name or
-                not email or
-                not subject or
-                not message):
+        if not all(name, email, subject, message):
             return Response({
                 "message":      _("No Name, Email, Subject or Message provided."),
             }, status=status.HTTP_400_BAD_REQUEST)

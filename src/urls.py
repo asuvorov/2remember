@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -35,6 +35,7 @@ sitemaps = {
 
 urlpatterns = [
     re_path(r"", include("social_django.urls", namespace="social")),
+    re_path(r"", include(("privateurl.urls", "privateurl"), namespace="privateurl")),
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
     re_path(r"^grappelli/", include("grappelli.urls")),
     re_path(r"^admin/", admin.site.urls),

@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import os
@@ -179,7 +179,7 @@ ROOT_URLCONF = "urls"
 WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = (
-    # --- Django Apps
+    # --- Django Apps.
     "grappelli",
 
     "django.contrib.admin",
@@ -192,11 +192,10 @@ INSTALLED_APPS = (
     # "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
 
-    # --- 3rd Party Apps
+    # --- 3rd Party Apps.
     "adminsortable2",
     # "bootstrap3_datetime",
     "corsheaders",
-    "ddcore",
     # "django_countries",
     "django_static_fontawesome",
     "django_static_ionicons",
@@ -210,7 +209,12 @@ INSTALLED_APPS = (
     "twitter_tag",
     "url_tools",
 
-    # --- Project Apps
+    # --- DDaemon Family Apps.
+    "ddcore",
+    "papertrail",
+    "privateurl",
+
+    # --- Project Apps.
     "accounts",
     "api",
     "app",
@@ -219,7 +223,6 @@ INSTALLED_APPS = (
     "home",
     "invites",
     "organizations",
-    "papertrail",
     "places",
     # "tests",
 )
@@ -1235,8 +1238,8 @@ WHITENOISE_MAX_AGE = 31536000
 ###############################################################################
 ### EMAILING                                                                 ###
 ###############################################################################
-EMAIL_SENDER = "no-reply@2remember.live"
-EMAIL_SUPPORT = "support@2remember.live"
+EMAIL_SENDER = "artem.suvorov@copycatsoftware.llc"
+EMAIL_SUPPORT = "artem.suvorov@copycatsoftware.llc"
 
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"

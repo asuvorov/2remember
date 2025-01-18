@@ -167,7 +167,7 @@ run-local: ## Start the Compose, bypassing Build Steps.
 prereq-win:
 	$(info Installing Prerequisits for Windows Platform)
 	@choco install make nodejs git
-	@npm install -g bower less recess
+	@npm install -g npm bower less recess
 	@pip install virtualenv
 	@python -m venv .env
 	$(ACTIVATE_WIN)

@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 import inspect
 
@@ -145,7 +145,7 @@ class UserProfile(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("User Address"))

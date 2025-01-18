@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django import forms
@@ -74,8 +74,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
         model = Organization
         fields = [
             "preview", "cover", "title", "description", "tags", "hashtag",
-            "addressless", "is_hidden", "website", "video", "email",
-            # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
+            "addressless", "parent", "is_hidden", "website", "video", "email",
             "allow_comments",
         ]
         widgets = {
@@ -95,7 +94,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Tags"),
-                    # "data-role":    "tagsinput",
+                    "data-role":    "tagsinput",
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -107,10 +106,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 attrs={
                     "class":        "form-check-input",
                 }),
-            # "is_alt_person": forms.CheckboxInput(
-            #     attrs={
-            #         "class":        "form-check-input",
-            #     }),
             "website": forms.URLInput(
                 attrs={
                     "class":        "form-control",
@@ -127,23 +122,13 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "placeholder":  _("Organization Email"),
                     "maxlength":    100,
                 }),
-            # "alt_person_fullname": forms.TextInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Full Name"),
-            #         "maxlength":    80,
-            #     }),
-            # "alt_person_email": forms.EmailInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Email"),
-            #         "maxlength":    100,
-            #     }),
-            # "alt_person_phone": forms.TextInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Phone Number"),
-            #     }),
+            "parent": forms.Select(
+                attrs={
+                    "class":        "form-control form-select autocomplete",
+                    "autocomplete": "on",
+                    "placeholder":  "Start typing a Name...",
+                    # "onclick":      "$(this).select();",
+                }),
             "allow_comments": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
@@ -162,33 +147,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
 
     def clean(self):
         """Clean."""
-        # ---------------------------------------------------------------------
-        # --- Validate `alt_person` Fields.
-        # if self.cleaned_data["contact"] == "me":
-        #     self.cleaned_data["is_alt_person"] = False
-        # else:
-        #     self.cleaned_data["is_alt_person"] = True
-
-        #     if not self.cleaned_data["alt_person_fullname"]:
-        #         self._errors["alt_person_fullname"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_fullname"]
-
-        #     if not self.cleaned_data["alt_person_email"]:
-        #         self._errors["alt_person_email"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_email"]
-
-        #     if (
-        #             "alt_person_phone" in self.cleaned_data and
-        #             not self.cleaned_data["alt_person_phone"]):
-        #         self._errors["alt_person_phone"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_phone"]
-
         return self.cleaned_data
 
     def save(self, commit=True):

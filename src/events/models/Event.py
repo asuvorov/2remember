@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -41,6 +41,7 @@ from ddcore.uuids import get_unique_filename
 # pylint: disable=import-error
 from invites.models import Invite
 from organizations.models import Organization
+from privateurl.models import PrivateUrl
 
 from .Category import (
     event_category_choices,
@@ -216,8 +217,11 @@ class Event(
         choices=visibility_choices, default=Visibility.PUBLIC,
         verbose_name=_("Visibility"),
         help_text=_("Event Visibility"))
-    private_url = models.URLField(
-        max_length=255, null=True, blank=True,
+    private_url = models.ForeignKey(
+        PrivateUrl,
+        db_index=True,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         verbose_name=_("Private URL"),
         help_text=_("Event private URL"))
 
@@ -231,7 +235,7 @@ class Event(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("Event Location"))
@@ -247,6 +251,7 @@ class Event(
 
     # -------------------------------------------------------------------------
     # --- Followers & Subscribers.
+    # -------------------------------------------------------------------------
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -269,7 +274,7 @@ class Event(
         Organization,
         null=True, blank=True,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name=_("Organization"),
         help_text=_("Event Organization"))
 
@@ -280,7 +285,6 @@ class Event(
         default=True,
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
-
     is_newly_created = models.BooleanField(default=True)
 
     class Meta:
@@ -392,18 +396,40 @@ class Event(
     # --- Methods.
     # -------------------------------------------------------------------------
     def save(self, *args, **kwargs):
-        """Docstring."""
+        """Save."""
         super().save(*args, **kwargs)
 
     def public_url(self, request=None):
-        """Docstring."""
+        """Generate and return the public URL."""
         domain_name = request.get_host() if request else settings.DOMAIN_NAME
-
         url = reverse(
             "event-details", kwargs={
                 "slug":     self.slug,
             })
+
         return f"http://{domain_name}{url}"
+
+    def get_private_url(self, request=None):
+        """Generate and return the private URL."""
+        if not self.private_url:
+            private_url = PrivateUrl.create(
+                action="access-private-event",
+                user=None,
+                data={
+                    "uid":      self.uid,
+                    "slug":     self.slug,
+                },
+                hits_limit=0,  # Unlimited Hits.
+                expire=None,
+                auto_delete=True,
+                token_size=None,
+                replace=True)
+            self.private_url = private_url
+            self.save()
+
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
+
+        return f"http://{domain_name}{self.private_url.get_absolute_url()}"
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""
