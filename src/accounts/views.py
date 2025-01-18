@@ -238,6 +238,18 @@ def account_signin(request):
     if request.method == "POST":
         if form.is_valid():
             data = form.cleaned_data
+
+            from django.contrib.auth import get_user_model
+            import sesame.utils
+            User = get_user_model()
+            user = User.objects.get(email=data["username"])
+
+            link = reverse("sesame-login")
+            link = request.build_absolute_uri(link)  # add this
+            link += sesame.utils.get_query_string(user)
+
+            print("magic link:", link)
+
             user = authenticate(
                 username=data["username"],
                 password=data["password"])

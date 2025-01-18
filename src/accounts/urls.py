@@ -4,6 +4,8 @@
 
 from django.urls import re_path
 
+from sesame.views import LoginView
+
 from . import views
 
 
@@ -18,6 +20,9 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Account Registration.
     # -------------------------------------------------------------------------
+    re_path(r"^sesame/login/$",
+        LoginView.as_view(),
+        name="sesame-login"),
     re_path(r"^signup/$",
         views.account_signup,
         name="signup"),
