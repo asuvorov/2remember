@@ -5,6 +5,7 @@
 from django import forms
 from django.apps import apps
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.forms.forms import NON_FIELD_ERRORS
 from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
@@ -21,8 +22,7 @@ from .models import (
     UserProfile)
 
 
-app_label, model_name = settings.AUTH_USER_MODEL.split(".")
-user_model = apps.get_model(app_label, model_name)
+user_model = get_user_model()
 
 
 # =============================================================================

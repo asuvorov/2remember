@@ -94,6 +94,7 @@ setup(
         "django-profanity-filter==0.2.1",
         "django-rosetta==0.10.0",
         # "django-secure==1.0.2",
+        "django-sesame==3.2.2",
         # "django-simple-captcha==0.5.17",
         # "django-sslserver==0.22",
         "django-static-fontawesome==6.5.2.0",

@@ -4,6 +4,7 @@
 
 from django.apps import apps
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
@@ -17,8 +18,7 @@ from events.models import (
     Participation)
 
 
-app_label, model_name = settings.AUTH_USER_MODEL.split(".")
-user_model = apps.get_model(app_label, model_name)
+user_model = get_user_model()
 
 
 # TODO: Expand django.contrib.auth.models.User and move methods there
@@ -90,7 +90,6 @@ def get_admin_events(user):
     orgs = user.created_organizations.all()
     admin_events = Event.objects.filter(
         Q(organization__in=orgs) |
-        Q(author=user)
-    )
+        Q(author=user))
 
     return admin_events

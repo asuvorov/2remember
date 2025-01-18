@@ -8,6 +8,7 @@ import os.path
 from django.utils.translation import gettext_lazy as _
 
 from decouple import config
+from termcolor import cprint
 
 from . import __version__
 
@@ -105,8 +106,6 @@ STATICFILES_FINDERS = (
 SECRET_KEY = config("SECRET_KEY", default="@zew8t_wcz!qn9=8+hheltx@&b#!x@i6ores96lhbnobr3jp*c")
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 
-print(f">>> {SECURE_SSL_REDIRECT=}")
-
 TEMPLATES = [
     {
         "BACKEND":  "django.template.backends.django.DjangoTemplates",
@@ -169,6 +168,7 @@ MIDDLEWARE = (
     # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "sesame.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -389,6 +389,7 @@ LOGGING = {
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
+    "sesame.backends.ModelBackend",
 )
 AUTH_USER_MODEL = "ddcore.User"
 
@@ -969,7 +970,7 @@ REST_FRAMEWORK = {
 
 ###############################################################################
 ### DJANGO ROSETTA                                                          ###
-##############################################################################
+###############################################################################
 INSTALLED_APPS += (
     "rosetta",
 )
@@ -1003,6 +1004,20 @@ ROSETTA_ACCESS_CONTROL_FUNCTION = None
 ROSETTA_LANGUAGE_GROUPS = False
 
 ROSETTA_AUTO_COMPILE = True
+
+
+###############################################################################
+### DJANGO SESAME                                                           ###
+###############################################################################
+# INSTALLED_APPS += (
+#     "sesame",
+# )
+# AUTHENTICATION_BACKENDS += (
+#     "sesame.backends.ModelBackend",
+# )
+
+SESAME_MAX_AGE = 300  # 300 Seconds.
+TOKEN_NAME = "sesame"
 
 
 ###############################################################################
@@ -1217,12 +1232,14 @@ EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
 EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
 EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
 EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
-EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None, cast=int)
 
 # --- SendGrid Gateway
 # EMAIL_BACKEND = "sgbackend.SendGridBackend"
 # SENDGRID_API_KEY = ""
 
+cprint(f">>> {EMAIL_HOST_USER=}", "cyan")
+cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
 
 ###############################################################################
 ### PROJECT PAGES TRIGGERS                                                  ###

@@ -10,7 +10,9 @@ from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (
+    AllowAny,
+    IsAuthenticated)
 from rest_framework.renderers import JSONRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -18,11 +20,12 @@ from rest_framework.views import APIView
 from annoying.functions import get_object_or_None
 from termcolor import cprint
 
-from ddcore.SendgridUtil import send_templated_email
+# from ddcore.SendgridUtil import send_templated_email
 
 # pylint: disable=import-error
 from api.auth import CsrfExemptSessionAuthentication
 from app.decorators import log_default
+from app.utils import send_templated_email
 from home.models import FAQ
 
 
@@ -38,7 +41,7 @@ class FAQDetailsViewSet(APIView):
     """FAQ Details View Set."""
 
     authentication_classes = (CsrfExemptSessionAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
     renderer_classes = (JSONRenderer, )
     # serializer_class = FAQSerializer
     # model = FAQ
@@ -117,7 +120,7 @@ class ContactUsViewSet(APIView):
     """Contact usView Set."""
 
     # authentication_classes = (CsrfExemptSessionAuthentication, )
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (AllowAny, )
     renderer_classes = (JSONRenderer, )
     # serializer_class = FAQSerializer
     # model = FAQ
@@ -172,7 +175,7 @@ class ContactUsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors.
         # ---------------------------------------------------------------------
-        if not all(name, email, subject, message):
+        if not all([name, email, subject, message]):
             return Response({
                 "message":      _("No Name, Email, Subject or Message provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
@@ -200,7 +203,7 @@ class ContactUsViewSet(APIView):
         #            f"                 {type(exc).__name__}\n"
         #            f"                 {str(exc)}", "white", "on_red")
 
-        send_templated_email(
+        result = send_templated_email(
             template_subj={
                 "name":     "home/emails/inquiry_subject.txt",
                 "context":  {},
@@ -219,6 +222,8 @@ class ContactUsViewSet(APIView):
             to=[settings.EMAIL_SUPPORT],
             cc=[email for admin, email in settings.ADMINS],
             headers=None)
+
+        cprint(f">>> {result=}", "white", "on_red")
 
         return Response({
             "message":      _("Successfully sent the Message."),
