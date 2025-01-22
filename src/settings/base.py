@@ -169,6 +169,7 @@ MIDDLEWARE = (
     # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "sesame.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -969,7 +970,7 @@ REST_FRAMEWORK = {
 
 ###############################################################################
 ### DJANGO ROSETTA                                                          ###
-##############################################################################
+###############################################################################
 INSTALLED_APPS += (
     "rosetta",
 )
@@ -1003,6 +1004,20 @@ ROSETTA_ACCESS_CONTROL_FUNCTION = None
 ROSETTA_LANGUAGE_GROUPS = False
 
 ROSETTA_AUTO_COMPILE = True
+
+
+###############################################################################
+### DJANGO SESAME                                                           ###
+###############################################################################
+INSTALLED_APPS += (
+    "sesame",
+)
+AUTHENTICATION_BACKENDS += (
+    "sesame.backends.ModelBackend",
+)
+
+SESAME_MAX_AGE = 300  # 300 Seconds.
+TOKEN_NAME = "sesame"
 
 
 ###############################################################################

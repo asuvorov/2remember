@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<email> - Email
+{% endcomment %}
+
+{% block title %}{% trans "Sign-in Confirmation Email" %} - {{ block.super }}{% endblock %}
+
+{% block extra_style %}
+{% endblock %}
+
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign-in" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="account-signin-confirmation-email-sent" class="p-3">
+    <div class="row align-items-center p-5 rounded-3 border shadow" style="background-color:#eef;">
+        <div class="col-12">
+            <p class="lead">
+                {% trans "We sent a sign-in Link. Please, check your Email" %}: <a href="#">{{ email }}</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

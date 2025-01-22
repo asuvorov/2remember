@@ -12,6 +12,7 @@ from django.contrib.auth import (
     authenticate,
     login,
     logout)
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator as token_generator
 from django.contrib.contenttypes.models import ContentType
@@ -26,16 +27,15 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
+import sesame.utils
+
 from termcolor import cprint
 
 from ddcore.models import (
     Phone,
     SocialLink,
     UserLogin)
-from ddcore.Utilities import (
-    make_json_cond,
-    # render_to_pdf,
-)
+from ddcore.Utilities import make_json_cond
 
 import papertrail
 
@@ -238,37 +238,72 @@ def account_signin(request):
     if request.method == "POST":
         if form.is_valid():
             data = form.cleaned_data
-            user = authenticate(
-                username=data["username"],
-                password=data["password"])
+            cprint(f"[---  DUMP   ---] {request.POST=}\n"
+                   f"                  {data=}", "yellow")
 
-            if user:
-                login(request, user)
+            if "email-signing" in request.POST:
+                cprint("[---  INFO   ---] EMAIL SIGN-IN", "cyan")
 
-                if data["remember_me"]:
-                    request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+                User = get_user_model()
+                user = User.objects.get(email=data["username"])
+
+                if user:
+                    link = reverse("sesame-login")
+                    link = request.build_absolute_uri(link)  # add this
+                    link += sesame.utils.get_query_string(user)
+
+                    cprint(f"[---  INFO   ---] {link=}", "cyan")
+
+                    # -------------------------------------------------------------
+                    # --- Save the Log.
+
+                    return render(
+                        request,
+                        "accounts/account-signin-confirmation-email-sent.html", {
+                            "email":    data["username"],
+                        })
                 else:
-                    request.session.set_expiry(0)
+                    # -------------------------------------------------------------
+                    # --- TODO: Create a Phantom User Account and send the Sign-in Link anyways.
 
-                # -------------------------------------------------------------
-                # --- Track IP.
-                UserLogin.objects.insert(request=request)
+                    # -------------------------------------------------------------
+                    # --- Save the Log.
 
-                # -------------------------------------------------------------
-                # --- Save the Log.
-                papertrail.log(
-                    event_type="user-logged-in",
-                    message="User logged-in",
-                    data={},
-                    # timestamp=timezone.now(),
-                    targets={
-                        "user":     user,
-                    })
+                    pass
 
-                if redirect_to:
-                    return HttpResponseRedirect(redirect_to)
+            elif "password-signing" in request.POST:
+                cprint("[---  INFO   ---] PASSWORD SIGN-IN", "cyan")
 
-                return HttpResponseRedirect(reverse("my-profile-view"))
+                user = authenticate(
+                    username=data["username"],
+                    password=data["password"])
+                if user:
+                    login(request, user)
+
+                    if data["remember_me"]:
+                        request.session.set_expiry(settings.SESSION_COOKIE_AGE)
+                    else:
+                        request.session.set_expiry(0)
+
+                    # -------------------------------------------------------------
+                    # --- Track IP.
+                    UserLogin.objects.insert(request=request)
+
+                    # -------------------------------------------------------------
+                    # --- Save the Log.
+                    papertrail.log(
+                        event_type="user-logged-in",
+                        message="User logged-in",
+                        data={},
+                        # timestamp=timezone.now(),
+                        targets={
+                            "user":     user,
+                        })
+
+                    if redirect_to:
+                        return HttpResponseRedirect(redirect_to)
+
+                    return HttpResponseRedirect(reverse("my-profile-view"))
 
             form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
 
