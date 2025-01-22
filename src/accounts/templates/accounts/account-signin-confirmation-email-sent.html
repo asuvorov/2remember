@@ -2,33 +2,39 @@
 
 {% load i18n %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<email> - Email
+{% endcomment %}
+
 {% block title %}{% trans "Sign-in Confirmation Email" %} - {{ block.super }}{% endblock %}
 
-{% block content %}
-<div class="nav-header">
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24">
-                <div class="breadcrumbs pull-right">
-                    <a href="{% url 'account-list' %}">{% trans "Members" %}</a>
-                    <i class="bi bi-chevron-circle-right"></i>
-                    <a href="{% url 'signin' %}">{% trans "Sign-in" %}</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+{% block extra_style %}
+{% endblock %}
 
+{% block extra_script %}
+{% endblock %}
+
+{% block breadcrumbs %}
 <div class="container">
-    <div id="account-confirmation-email-sent">
-        <div class="row">
-            <div class="col-xs-24 col-sm-24 col-md-24 col-lg-24">
-                <div class="jumbotron">
-                    <p>
-                        {% trans "We sent a sign-in Link. Please, check your Email" %}: <a href="#">{{ email }}</a>
-                    </p>
-                </div>
-            </div>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign-in" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="account-signin-confirmation-email-sent" class="p-3">
+    <div class="row align-items-center p-5 rounded-3 border shadow" style="background-color:#eef;">
+        <div class="col-12">
+            <p class="lead">
+                {% trans "We sent a sign-in Link. Please, check your Email" %}: <a href="#">{{ email }}</a>
+            </p>
         </div>
     </div>
 </div>

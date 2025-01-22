@@ -22,7 +22,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign in" %}</li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Sign-in" %}</li>
         </ol>
     </nav>
 </div>
@@ -54,7 +54,7 @@
                     {{ form.username }}
                     <label for="id_username" class="form-label">{{ form.username.label }}{% if form.username.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                     <span class="help-block">{% if form.username.errors %}{% for error in form.username.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                    <button class="btn btn-success w-100 py-2 my-2">{% trans "Send sign-in Link" %}</button>
+                    <button name="email-signing" class="btn btn-success w-100 py-2 my-2" type="submit">{% trans "Send sign-in Link" %}</button>
                 </div>
 
                 <div class="text-start my-2">
@@ -79,7 +79,7 @@
                         <label for="id_remember_me" class="form-check-label">{{ form.remember_me.label }}</label>
                     </div>
 
-                    <button class="btn btn-primary w-100 py-2" type="submit">{% trans "Sign-in" %}</button>
+                    <button name="password-signing" class="btn btn-primary w-100 py-2" type="submit">{% trans "Sign-in" %}</button>
                 </div>
                 <input type="hidden" name="next" id="next_page" value="{{ next }}" />
             </div>

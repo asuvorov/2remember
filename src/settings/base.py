@@ -169,6 +169,7 @@ MIDDLEWARE = (
     # "django.middleware.cache.FetchFromCacheMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "sesame.middleware.AuthenticationMiddleware",
     # "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -203,7 +204,6 @@ INSTALLED_APPS = (
     # "djangosecure",
     # "jquery",
     "rangefilter",
-    "sesame",
     # "sslserver",
     "storages",
     "timezone_field",
@@ -1009,11 +1009,15 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### DJANGO SESAME                                                           ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "django_mptt_admin",
-# )
+INSTALLED_APPS += (
+    "sesame",
+)
+AUTHENTICATION_BACKENDS += (
+    "sesame.backends.ModelBackend",
+)
 
 SESAME_MAX_AGE = 300  # 300 Seconds.
+TOKEN_NAME = "sesame"
 
 
 ###############################################################################
