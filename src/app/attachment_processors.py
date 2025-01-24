@@ -14,7 +14,7 @@ from django.core.files.storage import default_storage as storage
 
 import papertrail
 
-from PIL import Image
+from PIL import Image, ImageOps
 from termcolor import cprint
 
 from ddcore.Utilities import (
@@ -123,6 +123,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 # -------------------------------------------------------------
                 # --- Reopen Image, because `img.verify()` moves Pointer to the End of the File.
                 img = Image.open(tmp_file.file)
+                img = ImageOps.exif_transpose(img)
 
                 # cprint(f"[---  DUMP   ---] Image's original Size : {img.size}\n"
                 #        f"                  Image's File Format   : {img.format}\n"
