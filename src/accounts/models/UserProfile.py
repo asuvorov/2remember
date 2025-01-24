@@ -1,6 +1,7 @@
 """
 (C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
+
 import inspect
 
 from django.conf import settings
@@ -27,6 +28,7 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app.utils import send_templated_email
 from events.models import (
     EventMixin,
     # ParticipationMixin
@@ -310,6 +312,17 @@ class UserProfile(
                 "uid36":    self.user.uid,
             })
 
+    # -------------------------------------------------------------------------
+    # --- Static Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Class Methods.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Communication.
+    # -------------------------------------------------------------------------
     def email_notify_signup_confirmation(self, request=None, url=None):
         """Send Notification to the User."""
         # ---------------------------------------------------------------------
@@ -326,6 +339,49 @@ class UserProfile(
         # ---------------------------------------------------------------------
         # --- Send Email
 
+    def email_sesame_signin_link(self, request, link):
+        """Send Notification to the Event Admin."""
+        # ---------------------------------------------------------------------
+        # --- Render HTML Email Content.
+        greetings = _(
+            "Dear, %(user)s.") % {
+                "user":     self.auth_name,
+            }
+        htmlbody = _(
+            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully created.</p>") % {
+                "url":      self.public_url(request),
+                "name":     self.title,
+            }
+
+        # ---------------------------------------------------------------------
+        # --- Send Email.
+        send_templated_email(
+            template_subj={
+                "name":     "accounts/emails/account_sesame_signin_link_subject.txt",
+                "context":  {},
+            },
+            template_text={
+                "name":     "accounts/emails/account_sesame_signin_link.txt",
+                "context":  {
+                    "user":         self.author,
+                    "event":        self,
+                    "event_link":   self.public_url(request),
+                },
+            },
+            template_html={
+                "name":     "emails/base.html",
+                "context":  {
+                    "greetings":    greetings,
+                    "htmlbody":     htmlbody,
+                },
+            },
+            from_email=settings.EMAIL_SENDER,
+            to=[
+                self.author.email,
+            ],
+            headers=None,
+        )
+
     def email_notify_password_reset(self, request=None, url=None):
         """Send Notification to the User."""
         # ---------------------------------------------------------------------
@@ -341,14 +397,6 @@ class UserProfile(
 
         # ---------------------------------------------------------------------
         # --- Send Email
-
-    # -------------------------------------------------------------------------
-    # --- Static Methods.
-    # -------------------------------------------------------------------------
-
-    # -------------------------------------------------------------------------
-    # --- Class Methods.
-    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Signals.

@@ -25,7 +25,7 @@ from termcolor import cprint
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
-from ddcore.SendgridUtil import send_templated_email
+# from ddcore.SendgridUtil import send_templated_email
 from ddcore.models import (
     Address,
     AttachedDocument,

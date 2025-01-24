@@ -32,6 +32,17 @@ def generate_sesame_token(request, user):
 
     # -------------------------------------------------------------------------
     # --- Save the Log.
+    papertrail.log(
+        event_type="sesame-token-generate",
+        message="Generated Sesame Token",
+        data={
+            "request":  request.POST,
+            "link":     link,
+        },
+        # timestamp=timezone.now(),
+        targets={
+            "user": user,
+        })
 
     return link
 

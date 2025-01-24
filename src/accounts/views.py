@@ -46,6 +46,7 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
+from app.utils import generate_sesame_token
 from events.models import (
     Participation,
     ParticipationStatus)
@@ -244,14 +245,11 @@ def account_signin(request):
 
                 user = user_model.objects.get(email=data["username"])
                 if user:
-                    link = reverse("sesame-login")
-                    link = request.build_absolute_uri(link)  # add this
-                    link += sesame.utils.get_query_string(user)
+                    link = generate_sesame_token(request, user)
 
-                    cprint(f"[---  INFO   ---] {link=}", "cyan")
-
-                    # -------------------------------------------------------------
-                    # --- Save the Log.
+                    # ---------------------------------------------------------
+                    # --- Send Email.
+                    user.email_sesame_signin_link(request, link)
 
                     return render(
                         request,
@@ -259,10 +257,10 @@ def account_signin(request):
                             "email":    data["username"],
                         })
                 else:
-                    # -------------------------------------------------------------
+                    # ---------------------------------------------------------
                     # --- TODO: Create a Phantom User Account and send the Sign-in Link anyways.
 
-                    # -------------------------------------------------------------
+                    # ---------------------------------------------------------
                     # --- Save the Log.
 
                     pass

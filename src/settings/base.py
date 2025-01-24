@@ -389,7 +389,6 @@ LOGGING = {
 
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
-    "sesame.backends.ModelBackend",
 )
 AUTH_USER_MODEL = "ddcore.User"
 
@@ -1009,12 +1008,12 @@ ROSETTA_AUTO_COMPILE = True
 ###############################################################################
 ### DJANGO SESAME                                                           ###
 ###############################################################################
-# INSTALLED_APPS += (
-#     "sesame",
-# )
-# AUTHENTICATION_BACKENDS += (
-#     "sesame.backends.ModelBackend",
-# )
+INSTALLED_APPS += (
+    "sesame",
+)
+AUTHENTICATION_BACKENDS += (
+    "sesame.backends.ModelBackend",
+)
 
 SESAME_MAX_AGE = 300  # 300 Seconds.
 TOKEN_NAME = "sesame"
@@ -1045,9 +1044,8 @@ TOKEN_NAME = "sesame"
 INSTALLED_APPS += (
     "social_django",
 )
-
 AUTHENTICATION_BACKENDS += (
-    "social_core.backends.open_id.OpenIdAuth",
+    # "social_core.backends.open_id.OpenIdAuth",
     # "social_core.backends.google.GoogleOpenId",
     # "social_core.backends.google.GoogleOAuth2",
     # "social_core.backends.google.GoogleOAuth",
@@ -1241,8 +1239,6 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None, cast=int)
 # cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
 # cprint(f">>> {EMAIL_USE_TLS=}", "cyan")
 
-cprint(f">>> {EMAIL_HOST_USER=}", "cyan")
-cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
 
 ###############################################################################
 ### PROJECT PAGES TRIGGERS                                                  ###
