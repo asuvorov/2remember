@@ -249,7 +249,7 @@ def account_signin(request):
 
                     # ---------------------------------------------------------
                     # --- Send Email.
-                    user.email_sesame_signin_link(request, link)
+                    user.profile.email_sesame_signin_link(request, link)
 
                     return render(
                         request,

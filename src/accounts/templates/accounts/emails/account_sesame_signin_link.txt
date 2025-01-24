@@ -2,10 +2,10 @@
     THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
 *******************************************************************************
 
-Dear, {{ user.first_name }}.
+Dear, {{ user }}.
 
-You are about to restore your Password on 2Remember.
+You requested that we send you a Link to sign-in on 2Remember.
+To proceed, please, follow this Link: {{ link }}
 
-To proceed, please, follow this Link: {{ confirmation_link }}
-
-Thank you, 2Remember Team.
+Thank you for using our Platform!
+2Remember Team.

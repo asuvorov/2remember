@@ -115,15 +115,27 @@ class UserProfile(
 
     Methods
     -------
-    stat_gender_name()                  Returns Gender Name.
-    full_name_straight()                Returns full   Name.
-    full_name()                         Returns full   Name.
-    short_name()                        Returns short  Name.
-    auth_name()                         Returns Auth   Name.
-    name()                              Returns        Name.
+    save()
     public_url()
     get_absolute_url()
 
+    email_sesame_signin_link()
+
+    Properties
+    ----------
+    grace_period_days_left
+    is_completed
+    completeness_total
+
+    stat_gender_name                    Returns Gender Name.
+    full_name_straight                  Returns full   Name.
+    full_name                           Returns full   Name.
+    short_name                          Returns short  Name.
+    auth_name                           Returns Auth   Name.
+    name                                Returns        Name.
+
+    Signals
+    -------
     pre_save()                          `pre_save`    Object Signal.
     post_save()                         `post_save`   Object Signal.
     pre_delete()                        `pre_delete`  Object Signal.
@@ -348,9 +360,9 @@ class UserProfile(
                 "user":     self.auth_name,
             }
         htmlbody = _(
-            "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully created.</p>") % {
-                "url":      self.public_url(request),
-                "name":     self.title,
+            "<p>You requested that we send you a Link to sign-in on 2Remember.</p>"
+            "<p>To proceed, please, follow this \"<a href=\"%(link)s\">Link</a>\".</p>") % {
+                "link": link,
             }
 
         # ---------------------------------------------------------------------
@@ -363,9 +375,8 @@ class UserProfile(
             template_text={
                 "name":     "accounts/emails/account_sesame_signin_link.txt",
                 "context":  {
-                    "user":         self.author,
-                    "event":        self,
-                    "event_link":   self.public_url(request),
+                    "user": self.auth_name,
+                    "link": link,
                 },
             },
             template_html={
@@ -377,7 +388,7 @@ class UserProfile(
             },
             from_email=settings.EMAIL_SENDER,
             to=[
-                self.author.email,
+                self.user.email,
             ],
             headers=None,
         )
