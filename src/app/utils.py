@@ -67,7 +67,9 @@ def send_templated_email(
             to=to,
             cc=cc,
             bcc=bcc,
-            headers=headers)
+            headers=headers,
+            # fail_silently=False
+            )
 
         # ---------------------------------------------------------------------
         # --- 1. Add Template ID.
@@ -97,5 +99,14 @@ def send_templated_email(
 
         # ---------------------------------------------------------------------
         # --- Save the Log.
+        papertrail.log(
+            event_type="send-email-failed",
+            message="Failed to send Email",
+            data={
+                "type": type(exc).__name__,
+                "msg":  str(exc),
+            },
+            # timestamp=timezone.now(),
+            targets={})
 
     return False

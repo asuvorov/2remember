@@ -1211,32 +1211,35 @@ WHITENOISE_MAX_AGE = 31536000
 
 
 ###############################################################################
-### EMAILING                                                                 ###
+### EMAILING                                                                ###
 ###############################################################################
-EMAIL_SENDER = "artem.suvorov@copycatsoftware.llc"
-EMAIL_SUPPORT = "artem.suvorov@copycatsoftware.llc"
+# --- DOC : For Reference: https://www.twilio.com/docs/sendgrid/for-developers/sending-email/django
+SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="")
 
+EMAIL_SENDER = "admin@copycatsoftware.org"
+EMAIL_SUPPORT = "artem.suvorov@copycatsoftware.llc"
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"
                                                                                                 # "django.core.mail.backends.filebased.EmailBackend"
                                                                                                 # "django.core.mail.backends.locmem.EmailBackend"
                                                                                                 # "django.core.mail.backends.dummy.EmailBackend"
-EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)  # e.g. "/tmp/app-messages"
-EMAIL_HOST = config("EMAIL_HOST", default="localhost")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_PORT = config("EMAIL_PORT", default=25)
+EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)                   # e.g. "/tmp/app-messages"
+EMAIL_HOST = config("EMAIL_HOST", default="localhost", cast=str)            # This is exactly the Value `"smtp.sendgrid.net"`, if using Sendgrid.
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="", cast=str)           # This is exactly the Value `"apikey"`, if using Sendgrid.
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="", cast=str)   # This is the Value of your `SENDGRID_API_KEY`, if using Sendgrid.
+EMAIL_PORT = config("EMAIL_PORT", default=25)                               # This is exactly the Value `587`, if using Sendgrid.
 EMAIL_SUBJECT_PREFIX = config("EMAIL_SUBJECT_PREFIX", default="[Django] ")
 EMAIL_USE_LOCALTIME = config("EMAIL_USE_LOCALTIME", default=False)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)           # This is exactly the Value `True`, if using Sendgrid.
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
 EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
 EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
 EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None, cast=int)
 
-# --- SendGrid Gateway
-# EMAIL_BACKEND = "sgbackend.SendGridBackend"
-# SENDGRID_API_KEY = ""
+# cprint(f">>> {EMAIL_HOST=}", "cyan")
+# cprint(f">>> {EMAIL_HOST_USER=}", "cyan")
+# cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
+# cprint(f">>> {EMAIL_USE_TLS=}", "cyan")
 
 cprint(f">>> {EMAIL_HOST_USER=}", "cyan")
 cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
