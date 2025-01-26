@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="modal fade" id="uploadImagesPopupModal" tabindex="-1" role="dialog" aria-labelledby="uploadImagesPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{% trans "Upload Images" %}</h5>
@@ -21,8 +21,8 @@
 
                     <p class="my-2">{% blocktrans %}Only Images ({{ images_str }}) are supported.{% endblocktrans %}</p>
 
-                    <div id="progress" class="progress" style="display:none;">
-                        <div class="progress-bar progress-bar-success progress-striped active"></div>
+                    <div id="progress" class="progress my-2" style="/*! display: none; */">
+                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar"></div>
                     </div>
 
                     <div id="files" class="files"></div>

@@ -50,4 +50,8 @@ def pb_supported_media(request):
         "images_str":           settings.SUPPORTED_IMAGES_STR,
         "images_str_ext":       settings.SUPPORTED_IMAGES_STR_EXT,
         "images_str_reg":       settings.SUPPORTED_IMAGES_STR_REG,
+        "video":                settings.SUPPORTED_VIDEO,
+        "video_str":            settings.SUPPORTED_VIDEO_STR,
+        "video_str_ext":        settings.SUPPORTED_VIDEO_STR_EXT,
+        "video_str_reg":        settings.SUPPORTED_VIDEO_STR_REG,
     }

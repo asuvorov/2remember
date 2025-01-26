@@ -6,6 +6,15 @@
 - Added sending Email to the Team from the "Contact Us" Page.
 - Added the Features Feature for toggling the new testable Features.
 - Added a View for the dateless Events.
+- Verify uploaded File Size on the Go.
+
+### Changes
+
+- Upload Images and Documents Modals now are bigger and scrollable.
+
+### Fix
+
+- Upload Images and Documents Modals now show correct Progress in the Progress Bar.
 
 # 0.4.0 (2024-08-10)
 
