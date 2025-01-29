@@ -218,6 +218,7 @@ class Invite(BaseModel):
     objects = InviteManager()
 
     class Meta:
+        app_label = "invites"
         verbose_name = _("invite")
         verbose_name_plural = _("invites")
         ordering = ["-id", ]

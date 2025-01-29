@@ -51,6 +51,7 @@ class Team(BaseModel):
     objects = TeamManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("team")
         verbose_name_plural = _("teams")
         ordering = ["order", ]
@@ -135,6 +136,7 @@ class TeamMember(BaseModel):
     objects = TeamMemberManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("team member")
         verbose_name_plural = _("team members")
         ordering = ["order", ]

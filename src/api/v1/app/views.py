@@ -163,14 +163,15 @@ class RemoveUploadViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
-    # model = Comment
+    # serializer_class =
+    # model =
 
     @log_default(my_logger=logger)
     def post(self, request):
         """Remove uploaded File."""
-        found = False
-
+        # ---------------------------------------------------------------------
+        # --- INITIALS
+        # ---------------------------------------------------------------------
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
@@ -188,27 +189,37 @@ class RemoveUploadViewSet(APIView):
                 instance = get_object_or_None(TemporaryFile, id=upload_id)
 
             if instance:
-                try:
-                    instance.file.delete()
-                except Exception as exc:
-                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                           f"                 {type(exc).__name__}\n"
-                           f"                 {str(exc)}", "white", "on_red")
+                if (
+                        request.user == instance.created_by or
+                        request.user.is_superuser):
+                    try:
+                        instance.file.delete()
+                    except Exception as exc:
+                        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                               f"                 {type(exc).__name__}\n"
+                               f"                 {str(exc)}", "white", "on_red")
 
-                    # ---------------------------------------------------------
-                    # --- Logging.
-                    # ---------------------------------------------------------
-                    logger.exception("", extra=Format.exception(
-                        exc=exc,
-                        request_id=request.request_id,
-                        log_extra={}))
+                        # -----------------------------------------------------
+                        # --- Logging.
+                        # -----------------------------------------------------
+                        logger.exception("", extra=Format.exception(
+                            exc=exc,
+                            request_id=request.request_id,
+                            log_extra={}))
 
-                instance.delete()
-                found = True
+                    instance.delete()
+
+                    return Response({
+                        "deleted":  True,
+                    }, status=status.HTTP_200_OK)
+
+            return Response({
+                "deleted":  False,
+            }, status=status.HTTP_403_FORBIDDEN)
 
         return Response({
-            "deleted":  found,
-        }, status=status.HTTP_200_OK)
+            "deleted":  False,
+        }, status=status.HTTP_404_NOT_FOUND)
 
 
 remove_upload = RemoveUploadViewSet.as_view()
@@ -220,14 +231,15 @@ class RemoveLinkViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
-    # model = Comment
+    # serializer_class =
+    # model =
 
     @log_default(my_logger=logger)
     def post(self, request):
         """Remove Link."""
-        found = False
-
+        # ---------------------------------------------------------------------
+        # --- INITIALS
+        # ---------------------------------------------------------------------
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
@@ -243,12 +255,22 @@ class RemoveLinkViewSet(APIView):
                 instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
 
             if instance:
-                instance.delete()
-                found = True
+                if (
+                        request.user == instance.created_by or
+                        request.user.is_superuser):
+                    instance.delete()
+
+                    return Response({
+                        "deleted":  True,
+                    }, status=status.HTTP_200_OK)
+
+            return Response({
+                "deleted":  False,
+            }, status=status.HTTP_403_FORBIDDEN)
 
         return Response({
-            "deleted":  found,
-        }, status=status.HTTP_200_OK)
+            "deleted":  False,
+        }, status=status.HTTP_404_NOT_FOUND)
 
 
 remove_link = RemoveLinkViewSet.as_view()

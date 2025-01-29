@@ -168,6 +168,7 @@ class Feature(TitleSlugDescriptionBaseModel):
     objects = FeatureManager()
 
     class Meta:
+        app_label = "app"
         verbose_name = _("feature")
         verbose_name_plural = _("features")
         ordering = ["-created", ]

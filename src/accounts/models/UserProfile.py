@@ -168,6 +168,7 @@ class UserProfile(
     # objects = UserProfileManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
         ordering = [

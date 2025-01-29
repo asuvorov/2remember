@@ -105,6 +105,7 @@ class Role(TitleDescriptionBaseModel):
     objects = RoleManager()
 
     class Meta:
+        app_label = "events"
         verbose_name = _("role")
         verbose_name_plural = _("roles")
         ordering = ["created", ]

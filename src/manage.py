@@ -8,7 +8,15 @@ import sys
 
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
+    try:
+        command = sys.argv[1]
+    except IndexError:
+        command = "help"
+
+    if command == "test":
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.testing")
+    else:
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
 
     from djangobower.management.base import BaseBowerCommand
     BaseBowerCommand.requires_system_checks = []

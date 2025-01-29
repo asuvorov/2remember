@@ -276,6 +276,7 @@ class Organization(
     objects = OrganizationManager()
 
     class Meta:
+        app_label = "organizations"
         verbose_name = _("organization")
         verbose_name_plural = _("organizations")
         ordering = ["-created", ]

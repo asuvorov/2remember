@@ -223,7 +223,7 @@ INSTALLED_APPS = (
     "invites",
     "organizations",
     "places",
-    # "tests",
+    "tests",
 )
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
@@ -241,7 +241,7 @@ CACHES = {
         # "LOCATION": "127.0.0.1:11211",
         "LOCATION": "unix:/tmp/memcached.sock",
         "OPTIONS": {
-            "MAX_ENTRIES":      1000,
+            # "MAX_ENTRIES":      1000,
             "no_delay":         True,
             "ignore_exc":       True,
             "max_pool_size":    4,
