@@ -14,6 +14,7 @@ from .models import Invite
 # === INVITE ADMIN
 # ===
 # =============================================================================
+@admin.register(Invite)
 class InviteAdmin(admin.ModelAdmin):
     """Invite Admin."""
 
@@ -91,6 +92,3 @@ class InviteAdmin(admin.ModelAdmin):
             "invite-revoked",
         ),
     }
-
-
-admin.site.register(Invite, InviteAdmin)

@@ -3,6 +3,7 @@
 """
 
 from django.contrib import admin
+from django.utils.html import format_html
 
 from rangefilter.filters import DateRangeFilter
 
@@ -30,6 +31,7 @@ from .models import Feature
 # === ADDRESS ADMIN
 # ===
 # =============================================================================
+@admin.register(Address)
 class AddressAdmin(admin.ModelAdmin):
     """Address Admin."""
 
@@ -77,23 +79,43 @@ class AddressAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Address, AddressAdmin)
-
-
 # =============================================================================
 # ===
 # === ATTACHMENTS ADMIN
 # ===
 # =============================================================================
+@admin.register(AttachedImage)
 class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
-    """Attahced Image Admin."""
+    """Attached Image Admin."""
+
+    # === TODO: Move the Tag to `ddcore`.
+    def image_dim_tag(self, obj):
+        """Return Image Dimensions."""
+        if obj.image:
+            return format_html(f"<p>{obj.image.width}x{obj.image.height}</p>")
+
+        return ""
+
+    image_dim_tag.short_description = "Dimensions (W x H)"
+    image_dim_tag.allow_tags = True
+
+    # === TODO: Move the Tag to `ddcore`.
+    def image_size_tag(self, obj):
+        """Return Image File Size."""
+        if obj.image:
+            return format_html(f"<p>{int(obj.image.file.size/1000)} K</p>")
+
+        return ""
+
+    image_size_tag.short_description = "Size (kB)"
+    image_size_tag.allow_tags = True
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "name",
-                ("image", "image_tag"),
+                ("image", "image_tag", "image_dim_tag", "image_size_tag"),
                 "custom_data",
             ),
         }),
@@ -125,7 +147,7 @@ class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
     )
 
     list_display = [
-        "id", "name", "image_tag",
+        "id", "name", "image_tag", "image_dim_tag", "image_size_tag",
         "content_type", "object_id", "content_object",
         "is_hidden", "is_private",
         "created_by", "created", "modified_by", "modified",
@@ -138,23 +160,32 @@ class AttachedImageAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "name", "content_object",
     ]
     readonly_fields = [
-        "image_tag", "content_object",
+        "image_tag", "image_dim_tag", "image_size_tag", "content_object",
         "created", "modified",
     ]
 
 
-admin.site.register(AttachedImage, AttachedImageAdmin)
-
-
+@admin.register(AttachedDocument)
 class AttachedDocumentAdmin(admin.ModelAdmin):
-    """Attahced Document Admin."""
+    """Attached Document Admin."""
+
+    # === TODO: Move the Tag to `ddcore`.
+    def doc_size_tag(self, obj):
+        """Return Image File Size."""
+        if obj.document:
+            return format_html(f"<p>{int(obj.document.file.size/1000)} K</p>")
+
+        return ""
+
+    doc_size_tag.short_description = "Size (kB)"
+    doc_size_tag.allow_tags = True
 
     fieldsets = (
         ("", {
             "classes":  (""),
             "fields":   (
                 "name",
-                "document",
+                ("document", "doc_size_tag"),
                 "custom_data",
             ),
         }),
@@ -186,7 +217,7 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
     )
 
     list_display = [
-        "id", "name", "document",
+        "id", "name", "document", "doc_size_tag",
         "content_type", "object_id", "content_object",
         "is_hidden", "is_private",
         "created_by", "created", "modified_by", "modified",
@@ -199,16 +230,14 @@ class AttachedDocumentAdmin(admin.ModelAdmin):
         "name", "content_object",
     ]
     readonly_fields = [
-        "content_object",
+        "doc_size_tag", "content_object",
         "created", "modified",
     ]
 
 
-admin.site.register(AttachedDocument, AttachedDocumentAdmin)
-
-
+@admin.register(AttachedUrl)
 class AttachedUrlAdmin(admin.ModelAdmin):
-    """Attahced URL Admin."""
+    """Attached URL Admin."""
 
     fieldsets = (
         ("", {
@@ -264,11 +293,9 @@ class AttachedUrlAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(AttachedUrl, AttachedUrlAdmin)
-
-
+@admin.register(AttachedVideoUrl)
 class AttachedVideoUrlAdmin(admin.ModelAdmin):
-    """Attahced Video URL Admin."""
+    """Attached Video URL Admin."""
 
     fieldsets = (
         ("", {
@@ -324,14 +351,12 @@ class AttachedVideoUrlAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(AttachedVideoUrl, AttachedVideoUrlAdmin)
-
-
 # =============================================================================
 # ===
 # === COMMENT ADMIN
 # ===
 # =============================================================================
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     """Comment Admin."""
 
@@ -392,9 +417,6 @@ class CommentAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Comment, CommentAdmin)
-
-
 # =============================================================================
 # ===
 # === COMPLAINT ADMIN
@@ -416,6 +438,7 @@ def mark_as_deleted(modeladmin, request, queryset):
 mark_as_deleted.short_description = "Mark selected Complaints as deleted"
 
 
+@admin.register(Complaint)
 class ComplaintAdmin(admin.ModelAdmin):
     """Complaint Admin."""
 
@@ -482,14 +505,12 @@ class ComplaintAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Complaint, ComplaintAdmin)
-
-
 # =============================================================================
 # ===
 # === FEATURE ADMIN
 # ===
 # =============================================================================
+@admin.register(Feature)
 class FeatureAdmin(admin.ModelAdmin):
     """Feature Admin."""
 
@@ -501,7 +522,7 @@ class FeatureAdmin(admin.ModelAdmin):
                 ("title", "slug", "status"),
                 "url",
                 "description",
-                "assignees",
+                ("assignees", "testers"),
             ),
         }),
         ("Significant Dates", {
@@ -535,14 +556,12 @@ class FeatureAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Feature, FeatureAdmin)
-
-
 # =============================================================================
 # ===
 # === NEWSLETTER ADMIN
 # ===
 # =============================================================================
+@admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
     """Newsletter Admin."""
 
@@ -598,14 +617,12 @@ class NewsletterAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Newsletter, NewsletterAdmin)
-
-
 # =============================================================================
 # ===
 # === PHONE ADMIN
 # ===
 # =============================================================================
+@admin.register(Phone)
 class PhoneAdmin(admin.ModelAdmin):
     """Phone Admin."""
 
@@ -646,14 +663,12 @@ class PhoneAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Phone, PhoneAdmin)
-
-
 # =============================================================================
 # ===
 # === RATING ADMIN
 # ===
 # =============================================================================
+@admin.register(Rating)
 class RatingAdmin(admin.ModelAdmin):
     """Rating Admin."""
     fieldsets = (
@@ -704,14 +719,12 @@ class RatingAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(Rating, RatingAdmin)
-
-
 # =============================================================================
 # ===
 # === SOCIAL LINK ADMIN
 # ===
 # =============================================================================
+@admin.register(SocialLink)
 class SocialLinkAdmin(admin.ModelAdmin):
     """Social Link Admin."""
 
@@ -764,14 +777,12 @@ class SocialLinkAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(SocialLink, SocialLinkAdmin)
-
-
 # =============================================================================
 # ===
 # === TEMPORARY FILE ADMIN
 # ===
 # =============================================================================
+@admin.register(TemporaryFile)
 class TemporaryFileAdmin(admin.ModelAdmin):
     """Temporary File Admin."""
 
@@ -810,14 +821,12 @@ class TemporaryFileAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(TemporaryFile, TemporaryFileAdmin)
-
-
 # =============================================================================
 # ===
 # === VIEW ADMIN
 # ===
 # =============================================================================
+@admin.register(View)
 class ViewAdmin(admin.ModelAdmin):
     """View Admin."""
 
@@ -858,6 +867,3 @@ class ViewAdmin(admin.ModelAdmin):
     readonly_fields = [
         "created", "modified",
     ]
-
-
-admin.site.register(View, ViewAdmin)

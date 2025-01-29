@@ -410,6 +410,46 @@ ORGANIZATION_TITLE_RESERVED_WORDS = [
 ]
 
 SUBSCRIPTION_PLANS = {
+    "DEV": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "documents": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "upon_request_only":    False,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "organizations": {
+            "upon_request_only":    True,
+            "max_per_day":          0,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "places": {},
+    },
     "BASIC": {
         "fare": 0,  # Cents.
         "attachments": {

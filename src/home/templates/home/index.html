@@ -4,6 +4,14 @@
 {% load i18n %}
 {% load twitter_tag %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<features>     - List of Features.
+        :<timeline_qs>  - Timeline Queryset.
+{% endcomment %}
+
 {% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{{ block.super }}{% endblock %}
@@ -217,7 +225,15 @@
                         <td>{{ feature.description|default:"N/A" }}</td>
                         <td>{{ feature.url_tag }}</td>
                         <td><span class="{{ feature.stat_status_badge_class }}">{{ feature.stat_status_name }}</span></td>
-                        <td></td>
+                        <td>
+                        {% comment %}
+                        {% if feature.is_beta_tester request is True %}
+                            <span class="badge text-bg-success">You were selected as a Beta Tester</span>
+                        {% elif feature.is_beta_tester request is False %}
+                            <span class="badge text-bg-secondary">You were not selected as a Beta Tester</span>
+                        {% endif %}
+                        {% endcomment %}
+                        </td>
                     </tr>
                 {% empty %}
                     <div class="col-12">

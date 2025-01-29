@@ -93,6 +93,7 @@ class EventInline(admin.TabularInline):
 # -----------------------------------------------------------------------------
 # --- Organization Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Organization)
 class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     """Organization Admin."""
 
@@ -228,9 +229,6 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     }
 
 
-admin.site.register(Organization, OrganizationAdmin)
-
-
 # =============================================================================
 # ===
 # === ORGANIZATION STAFF ADMIN
@@ -301,6 +299,3 @@ admin.site.register(Organization, OrganizationAdmin)
 #             "invite-revoked",
 #         ),
 #     }
-
-
-# admin.site.register(OrganizationGroup, OrganizationGroupAdmin)
