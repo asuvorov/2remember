@@ -45,6 +45,28 @@ from .models import (
 # -----------------------------------------------------------------------------
 # --- Inlines.
 # -----------------------------------------------------------------------------
+class UserLoginInline(admin.TabularInline):
+    """UserLogin Inline."""
+
+    classes = [
+        "grp-collapse grp-closed",
+    ]
+    inline_classes = [
+        "grp-collapse grp-closed",
+    ]
+    fields = [
+        "id", "user", "ip", "user_agent", "provider", "geo_data",
+        "created", "modified",
+    ]
+    readonly_fields = [
+        "created", "modified",
+    ]
+
+    model = UserLogin
+    fk_name = "user"
+    extra = 1
+
+
 class PostInline(admin.TabularInline):
     """Post Inline."""
 
@@ -158,7 +180,7 @@ class UserAdmin(admin.ModelAdmin):
         "is_active", "is_staff", "is_superuser",
         "date_joined", "last_login",
     ]
-    list_display_links = []
+    list_display_links = ["id", "email"]
     list_filter = [
         ("date_joined", DateRangeFilter),
         ("last_login", DateRangeFilter),
@@ -166,6 +188,7 @@ class UserAdmin(admin.ModelAdmin):
     search_fields = []
     readonly_fields = ["id", "uid"]
     inlines = [
+        UserLoginInline,
         PostInline,
         EventInline,
         OrganizationInline,
@@ -205,6 +228,7 @@ class UserAdmin(admin.ModelAdmin):
 # -----------------------------------------------------------------------------
 # --- User Profile Admin.
 # -----------------------------------------------------------------------------
+@admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """User Profile Admin."""
 
@@ -297,9 +321,6 @@ class UserProfileAdmin(admin.ModelAdmin, ImagesAdminMixin):
     }
 
 
-admin.site.register(UserProfile, UserProfileAdmin)
-
-
 # =============================================================================
 # ===
 # === USER PROFILE PRIVACY ADMIN
@@ -387,6 +408,7 @@ admin.site.register(UserProfile, UserProfileAdmin)
 # -----------------------------------------------------------------------------
 # --- User Login Admin.
 # -----------------------------------------------------------------------------
+@admin.register(UserLogin)
 class UserLoginAdmin(admin.ModelAdmin):
     """User Login Admin."""
 
@@ -437,9 +459,6 @@ class UserLoginAdmin(admin.ModelAdmin):
     }
 
 
-admin.site.register(UserLogin, UserLoginAdmin)
-
-
 # =============================================================================
 # ===
 # === TEAM ADMIN
@@ -473,6 +492,7 @@ class TeamMemberInline(SortableInlineAdminMixin, admin.TabularInline):
 # -----------------------------------------------------------------------------
 # --- Team Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Team)
 class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Team Admin."""
 
@@ -526,12 +546,10 @@ class TeamAdmin(SortableAdminMixin, admin.ModelAdmin):
         return super().formfield_for_dbfield(db_field, **kwargs)
 
 
-admin.site.register(Team, TeamAdmin)
-
-
 # -----------------------------------------------------------------------------
 # --- Team Member Admin.
 # -----------------------------------------------------------------------------
+@admin.register(TeamMember)
 class TeamMemberAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Team Member Admin."""
 
@@ -580,6 +598,3 @@ class TeamMemberAdmin(SortableAdminMixin, admin.ModelAdmin):
             db_field.default = current_order_count
 
         return super().formfield_for_dbfield(db_field, **kwargs)
-
-
-admin.site.register(TeamMember, TeamMemberAdmin)

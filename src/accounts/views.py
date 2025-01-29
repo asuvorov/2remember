@@ -26,6 +26,8 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
+import papertrail
+
 from termcolor import cprint
 
 from ddcore.models import (
@@ -33,11 +35,10 @@ from ddcore.models import (
     SocialLink,
     UserLogin)
 from ddcore.Utilities import (
+    get_client_ip,
     make_json_cond,
     # render_to_pdf,
 )
-
-import papertrail
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -269,6 +270,20 @@ def account_signin(request):
                     return HttpResponseRedirect(redirect_to)
 
                 return HttpResponseRedirect(reverse("my-profile-view"))
+
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+            papertrail.log(
+                event_type="user-log-in-attempt",
+                message="User tried to log-in",
+                data={
+                    "username":     data["username"],
+                    "password":     data["password"],
+                    "geo_data":     request.geo_data,
+                    "ip_addr":      get_client_ip(request),
+                },
+                # timestamp=timezone.now(),
+                targets={})
 
             form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
 
