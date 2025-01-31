@@ -8,7 +8,7 @@ import unittest
 import urllib.parse
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, get_user_model, login
 from django.contrib.auth.models import User
 from django.test import (
     Client,
@@ -34,6 +34,7 @@ api_client = APIClient()
 client = Client(
     HTTP_USER_AGENT="Mozilla/5.0",
     enforce_csrf_checks=True)
+user_model = get_user_model()
 
 
 # =============================================================================
@@ -45,9 +46,17 @@ class TmpUploadViewSetTests(APITestCase):
 
     """TmpUploadViewSet Test Class."""
 
+    fixtures = [
+        "test_accounts_users",
+    ]
+
     def setUp(self):
         """Constructor."""
         super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john.doe@mail.ru")
+        self.jane = user_model.objects.get(username="jane.doe@gmail.com")
 
     def tearDown(self):
         """Destructor."""
@@ -65,12 +74,33 @@ class TmpUploadViewSetTests(APITestCase):
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        response = self.client.post(url, data, format="json")
+        api_client.force_authenticate(user=None)
+        response = api_client.post(url, data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_no_files(self):
+        """Temporary Upload: User has not provided the File(s) in Request."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        url = reverse("api-tmp-upload")
+        data = {}
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+        response = api_client.post(url, data, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class RemoveUploadViewSetTests(APITestCase):
@@ -100,7 +130,8 @@ class RemoveUploadViewSetTests(APITestCase):
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        response = self.client.post(url, data, format="json")
+        api_client.force_authenticate(user=None)
+        response = api_client.post(url, data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
@@ -135,10 +166,10 @@ class RemoveLinkViewSetTests(APITestCase):
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        response = self.client.post(url, data, format="json")
+        api_client.force_authenticate(user=None)
+        response = api_client.post(url, data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
