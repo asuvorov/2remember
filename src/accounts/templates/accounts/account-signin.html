@@ -31,7 +31,7 @@
 {% block content %}
 <div id="account-signin" class="p-3">
     <div class="card mb-3 shadow">
-        <div class="alert alert-warning mb-md-3" role="alert">
+        <div class="alert alert-warning mb-0" role="alert">
         {% blocktrans %}
             <h5 class="alert-heading"><i class="bi bi-sign-stop flex-shrink-0 me-2"></i>WIP</h5>
             <p class="mb-0">Currently, the Social Auth is not set up.<br/>Please, stay tuned.</p>
@@ -46,6 +46,10 @@
             <li class="ms-3"><button onclick="javascript:document.location.href='{% url 'social:begin' backend='github' %}';" class="btn btn-github"><i class="bi bi-github"></i></button></li>
         </ul> -->
 
+        <div class="divider d-flex align-items-center my-2">
+            <p class="text-center fw-bold mx-3 mb-0 text-muted">or</p>
+        </div>
+
         <form id="signin-form" role="form" action="" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -54,12 +58,14 @@
                     {{ form.username }}
                     <label for="id_username" class="form-label">{{ form.username.label }}{% if form.username.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                     <span class="help-block">{% if form.username.errors %}{% for error in form.username.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                    <button name="email-signing" class="btn btn-lg btn-success w-100 py-2 my-2" type="submit">{% trans "Send sign-in Link" %}</button>
+                    <button name="email-signing" class="btn btn-lg btn-success w-100 py-2 mt-2" type="submit">{% trans "Send sign-in Link" %}</button>
                 </div>
 
-                <div class="text-start my-2">
-                    <p class="m-0">or sign-in providing Password</p>
+                <div class="divider d-flex align-items-center my-2">
+                    <p class="text-center fw-bold mx-3 mb-0 text-muted">or</p>
                 </div>
+
+                <div class="text-start my-0"><p class="m-0">sign-in with Password</p></div>
 
                 <div class="form-floating col-12 {% if form.password.errors %}has-error{% endif %}">
                     {{ form.password }}
@@ -85,9 +91,9 @@
             </div>
         </form>
 
-        <hr>
+        <hr class="my-3">
 
-        <div class="text-start my-2">
+        <div class="text-start">
             <p class="m-0">{% trans "Forgot" %} <a href="{% url 'password-forgot' %}">{% trans "Password" %}</a>?</p>
             <p class="m-0">{% trans "Don't have an Account?" %} <a href="{% url 'signup' %}">{% trans "Sign-up now" %}</a>.</p>
         </div>
