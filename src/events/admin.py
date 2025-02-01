@@ -154,6 +154,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         ("", {
             "classes":  (""),
             "fields":   (
+                ("id", "uid"),
                 "author",
                 ("preview", "preview_image_tag"),
                 ("cover", "cover_image_tag"),
@@ -252,6 +253,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "title", "organization",
     ]
     readonly_fields = [
+        "id", "uid",
         "preview_image_tag", "cover_image_tag", "event_url",
         "created", "modified",
     ]

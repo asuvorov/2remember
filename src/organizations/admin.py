@@ -113,6 +113,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
         ("", {
             "classes":  (""),
             "fields":   (
+                ("id", "uid"),
                 "author",
                 ("preview", "preview_image_tag"),
                 ("cover", "cover_image_tag"),
@@ -191,6 +192,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
         "title", "author",
     ]
     readonly_fields = [
+        "id", "uid",
         "preview_image_tag", "cover_image_tag", "organization_url",
         "created", "modified",
     ]

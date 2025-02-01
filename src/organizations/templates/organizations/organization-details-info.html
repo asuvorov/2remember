@@ -1,4 +1,4 @@
-{% extends "organizations/organization-details-base.html" %}
+{% extends "organizations/organization-base.html" %}
 
 {% load cache %}
 {% load i18n %}
@@ -8,7 +8,7 @@
     Input Parameters:
         :<request> - Request
 
-        :<organization>
+        :<organization> - Organization
 {% endcomment %}
 
 {% get_current_language as LANGUAGE_CODE %}
@@ -135,6 +135,13 @@
             </section>
             <!--  END  ORGANIZATION CARD -->
 
+            <!-- START ORGANIZATION EVENTS -->
+            <section id="organization-events">
+                <h3>{% trans "Events" %}</h3>
+                {% include "organizations/fragments/organization-event-list.html" %}
+            </section>
+            <!--  END  ORGANIZATION EVENTS -->
+
             <!-- START ORGANIZATION ATTACHMENTS -->
             <section id="organization-attachments">
                 {% include "app/fragments/instance-attachments.html" with instance=organization %}
@@ -159,7 +166,11 @@
             <!-- Link to Page -->
             <section>
                 <h4>{% trans "Link to this Page" %}</h4>
-                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                <div class="input-group mb-3">
+                    <a id="button-addon1" class="btn btn-primary" type="button" href="#" alt="Copy Link"><i class="bi bi-copy"></i></a>
+                    <a id="button-addon1" class="btn btn-success" type="button" href="#" alt="Share Link"><i class="bi bi-share"></i></a>
+                    <input class="form-control link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                </div>
             </section>
 
             <!-- Social Links -->

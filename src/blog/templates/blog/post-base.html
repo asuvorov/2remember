@@ -2,7 +2,12 @@
 
 {% load i18n %}
 
-{% block title %}{% trans "User Agreement" %} - {{ block.super }}{% endblock %}
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<post>
+{% endcomment %}
 
 {% block extra_meta %}{% endblock %}
 {% block extra_style %}{% endblock %}
@@ -16,22 +21,17 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{% trans "User Agreement" %}</li>
+            <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
         </ol>
     </nav>
-</div>
+</a>
 {% endblock %}
 
 {% block header %}{% endblock %}
 
-{% block content %}
-<div id="user-agreement" class="bg-body-tertiary p-3">
-    <div class="row">
-        <div class="col-12">
-            {% include 'home/fragments/user-agreement-fragment.html' %}
-        </div>
-    </div>
-</div>
-{% endblock %}
+{% block content %}{% endblock %}
 
-{% block extra_content %}{% endblock %}
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=post %}
+{% endblock %}

@@ -5,8 +5,8 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 {% cache 3600 footer LANGUAGE_CODE %}
-<div class="container">
-    <footer class="py-5">
+<footer>
+    <div class="container py-5">
         <div class="row">
             <div class="col-6 col-md-2 mb-3">
                 <h5>{% trans "Terms &amp; Conditions" %}</h5>
@@ -75,6 +75,6 @@
                 <li class="mx-3"><img src="{{ STATIC_URL }}img/engine-logos/sentry.png" height="20" alt="sentry" /></li>
             </ul>
         </div>
-    </footer>
-</div>
+    </div>
+</footer>
 {% endcache %}
