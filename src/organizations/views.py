@@ -5,7 +5,6 @@
 import inspect
 import logging
 
-from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
@@ -13,8 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
 # from django.db.models import Q
 from django.http import (
     HttpResponseForbidden,
@@ -55,9 +52,11 @@ from events.models import (
     # ParticipationStatus
     )
 
-# from .decorators import (
-#     organization_access_check_required,
-#     organization_staff_member_required)
+from .decorators import (
+    organization_create_access_check_required,
+    organization_view_access_check_required,
+    organization_edit_access_check_required,
+    organization_populate_newsletter_access_check_required)
 from .forms import CreateEditOrganizationForm
 from .models import (
     Organization,
@@ -76,6 +75,10 @@ logger = logging.getLogger(__name__)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
     # -------------------------------------------------------------------------
     # --- Retrieve the Organizations with the Organization Privacy Settings:
     #     1. Organization is set to Public;
@@ -128,6 +131,10 @@ def organization_list(request):
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
     # --- Retrieve the Organizations with the Organization Privacy Settings:
     #     1. Organization is set to Public;
     #     2. Organization is set to Private, and:
@@ -178,11 +185,16 @@ def organization_directory(request):
 # === ORGANIZATION CREATE
 # ===
 # =============================================================================
-@login_required
+@organization_create_access_check_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
@@ -279,9 +291,9 @@ def organization_create(request):
 # === ORGANIZATION DETAILS
 # ===
 # =============================================================================
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_details(request, slug=None):
+def organization_details(request, slug, organization=None):
     """Organization Details."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -290,11 +302,6 @@ def organization_details(request, slug=None):
     show_complain_form = False
 
     is_staff_member = False
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Organization.
-    # -------------------------------------------------------------------------
-    organization = get_object_or_404(Organization, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -415,9 +422,9 @@ def organization_details(request, slug=None):
         })
 
 
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_staff(request, slug=None):
+def organization_staff(request, slug):
     """Organization Staff."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -442,9 +449,9 @@ def organization_staff(request, slug=None):
         })
 
 
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_groups(request, slug=None):
+def organization_groups(request, slug):
     """Organization Groups."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -474,14 +481,14 @@ def organization_groups(request, slug=None):
 # === ORGANIZATION EDIT
 # ===
 # =============================================================================
+@organization_edit_access_check_required
 @login_required
-# @organization_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_edit(request, slug=None):
+def organization_edit(request, slug, organization=None):
     """Edit Organization."""
-    organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -586,17 +593,14 @@ def organization_edit(request, slug=None):
 # === ORGANIZATION POPULATE NEWSLETTER
 # ===
 # =============================================================================
+@organization_populate_newsletter_access_check_required
 @login_required
-# @organization_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_populate_newsletter(request, slug=None):
+def organization_populate_newsletter(request, slug, organization=None):
     """Organization, populate Newsletter."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

@@ -420,6 +420,10 @@ SUBSCRIPTION_PLANS = {
                 "max_per_organization": 5,
                 "quality":              80,
             },
+            "video": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
             "documents": {
                 "max_per_event":        2,
                 "max_per_organization": 2,
@@ -443,7 +447,7 @@ SUBSCRIPTION_PLANS = {
         },
         "organizations": {
             "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
@@ -460,6 +464,10 @@ SUBSCRIPTION_PLANS = {
                 "max_per_organization": 25,
                 "quality":              80,
             },
+            "video": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
             "documents": {
                 "max_per_event":        5,
                 "max_per_organization": 5,
@@ -483,7 +491,7 @@ SUBSCRIPTION_PLANS = {
         },
         "organizations": {
             "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
@@ -500,6 +508,10 @@ SUBSCRIPTION_PLANS = {
                 "max_per_organization": 25,
                 "quality":              90,
             },
+            "video": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
             "documents": {
                 "max_per_event":        5,
                 "max_per_organization": 5,
@@ -523,7 +535,7 @@ SUBSCRIPTION_PLANS = {
         },
         "organizations": {
             "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
