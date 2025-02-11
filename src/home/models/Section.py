@@ -93,6 +93,7 @@ class Section(BaseModel):
     objects = SectionManager()
 
     class Meta:
+        app_label = "home"
         verbose_name = _("section")
         verbose_name_plural = _("sections")
         ordering = ["order", ]

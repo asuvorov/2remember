@@ -152,6 +152,7 @@ class Post(
     objects = PostManager()
 
     class Meta:
+        app_label = "blog"
         verbose_name = _("blog post")
         verbose_name_plural = _("blog posts")
         ordering = ["-created", ]

@@ -290,6 +290,7 @@ class Event(
     class Meta:
         """Meta."""
 
+        app_label = "events"
         verbose_name = _("event")
         verbose_name_plural = _("events")
         ordering = ["-created", ]

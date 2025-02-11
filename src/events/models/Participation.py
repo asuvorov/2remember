@@ -194,6 +194,7 @@ class Participation(BaseModel):
     objects = ParticipationManager()
 
     class Meta:
+        app_label = "events"
         verbose_name = _("participation")
         verbose_name_plural = _("participations")
         ordering = ["-date_created", ]
