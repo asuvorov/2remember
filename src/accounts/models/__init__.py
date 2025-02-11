@@ -4,6 +4,6 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . Team import *
-# from . UserPrivacy import *
-from . UserProfile import *
+from accounts.models.Team import *
+# from accounts.models.UserPrivacy import *
+from accounts.models.UserProfile import *

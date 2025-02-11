@@ -4,4 +4,4 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . Feature import *
+from app.models.Feature import *

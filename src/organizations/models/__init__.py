@@ -4,6 +4,6 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . Organization import *
+from organizations.models.Organization import *
 # from . OrganizationGroup import *
 # from . OrganizationStaff import *

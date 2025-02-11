@@ -4,4 +4,4 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . Blog import *
+from blog.models.Blog import *

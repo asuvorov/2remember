@@ -7,19 +7,19 @@ import http.client
 from django.test import TestCase
 
 
-class RobotsTest(TestCase):
-    """Test `robots.txt`."""
+class AdsTest(TestCase):
+    """Test `ads.txt`."""
 
     def test_get(self):
-        """Test `robots.txt`."""
-        response = self.client.get("/robots.txt")
+        """Test `ads.txt`."""
+        response = self.client.get("/ads.txt")
 
         self.assertEqual(response.status_code, http.client.OK)
         self.assertEqual(response["content-type"], "text/plain")
 
     def test_post(self):
-        """Test `robots.txt`."""
-        response = self.client.post("/robots.txt")
+        """Test `ads.txt`."""
+        response = self.client.post("/ads.txt")
 
         self.assertEqual(response.status_code, http.client.METHOD_NOT_ALLOWED)
 
@@ -37,5 +37,22 @@ class HumansTest(TestCase):
     def test_post(self):
         """Test `humans.txt`."""
         response = self.client.post("/humans.txt")
+
+        self.assertEqual(response.status_code, http.client.METHOD_NOT_ALLOWED)
+
+
+class RobotsTest(TestCase):
+    """Test `robots.txt`."""
+
+    def test_get(self):
+        """Test `robots.txt`."""
+        response = self.client.get("/robots.txt")
+
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertEqual(response["content-type"], "text/plain")
+
+    def test_post(self):
+        """Test `robots.txt`."""
+        response = self.client.post("/robots.txt")
 
         self.assertEqual(response.status_code, http.client.METHOD_NOT_ALLOWED)
