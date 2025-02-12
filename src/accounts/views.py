@@ -36,9 +36,7 @@ from ddcore.models import (
     UserLogin)
 from ddcore.Utilities import (
     get_client_ip,
-    make_json_cond,
-    # render_to_pdf,
-)
+    make_json_cond)
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -204,8 +202,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
         # ---------------------------------------------------------------------
         # --- Save the Log.
 
-        return HttpResponseRedirect(
-            reverse("my-profile-edit"))
+        return HttpResponseRedirect(reverse("my-profile-edit"))
 
     # -------------------------------------------------------------------------
     # --- Save the Log.
@@ -588,6 +585,11 @@ def my_profile_view(request):
     # related_organizations = staff_member_organizations | group_member_organizations
     # related_organizations = related_organizations.exclude(id__in=created_organizations)
 
+    (
+        create_event_eligible,
+        create_event_details
+    ) = request.user.profile.check_event_create_eligibilty()
+
     # -------------------------------------------------------------------------
     # --- Prepare Response.
     # -------------------------------------------------------------------------
@@ -605,6 +607,8 @@ def my_profile_view(request):
             "show_no_email_popup_modal":    show_no_email_popup_modal,
             "phone_numbers":                phone_numbers,
             "social_links":                 social_links,
+            "create_event_eligible":        create_event_eligible,
+            "create_event_details":         create_event_details,
         }))
 
     # -------------------------------------------------------------------------
@@ -1133,8 +1137,7 @@ def profile_events(request, uid36):
     # -------------------------------------------------------------------------
     account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
-        return HttpResponseRedirect(
-            reverse("my-profile-view"))
+        return HttpResponseRedirect(reverse("my-profile-view"))
 
     # -------------------------------------------------------------------------
     # --- Process Request.

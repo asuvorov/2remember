@@ -39,6 +39,11 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app import (
+    DAY_AGO,
+    WEEK_AGO,
+    MONTH_AGO,
+    YEAR_AGO)
 from invites.models import Invite
 from organizations.models import Organization
 from privateurl.models import PrivateUrl
@@ -901,9 +906,10 @@ class Event(
                 storage.delete(preview.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
         try:
             if created:
@@ -916,9 +922,10 @@ class Event(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
     def pre_delete(self, **kwargs):
         """Docstring."""
@@ -961,3 +968,53 @@ class EventMixin:
             Q(author=self.user))
 
         return admin_events
+
+    def check_event_create_eligibilty(self):
+        """Check, if User is eligible to create an Event."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        eligible = True
+        details = []
+
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        max_events = subscription_plan["events"]
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        events = Event.objects.all()
+
+        if max_events["max_per_day"]:
+            count = events.filter(created__gte=DAY_AGO).count()
+            if count >= max_events["max_per_day"]:
+                eligible = False
+                details.append((False, f"You reached the maximum of {max_events['max_per_day']} Events per Day."))
+            else:
+                details.append((True, f"You used {count} of {max_events['max_per_day']} Events per Day."))
+
+        if max_events["max_per_week"]:
+            count = events.filter(created__gte=WEEK_AGO).count()
+            if count >= max_events["max_per_week"]:
+                eligible = False
+                details.append((False, f"You reached the maximum of {max_events['max_per_week']} Events per Week."))
+            else:
+                details.append((True, f"You used {count} of {max_events['max_per_week']} Events per Week."))
+
+        if max_events["max_per_month"]:
+            count = events.filter(created__gte=MONTH_AGO).count()
+            if count >= max_events["max_per_month"]:
+                eligible = False
+                details.append((False, f"You reached the maximum of {max_events['max_per_month']} Events per Month."))
+            else:
+                details.append((True, f"You used {count} of {max_events['max_per_month']} Events per Month."))
+
+        if max_events["max_per_year"]:
+            count = events.filter(created__gte=YEAR_AGO).count()
+            if count >= max_events["max_per_year"]:
+                eligible = False
+                details.append((False, f"You reached the maximum of {max_events['max_per_year']} Events per Year."))
+            else:
+                details.append((True, f"You used {count} of {max_events['max_per_year']} Events per Year."))
+
+        return (eligible, details)

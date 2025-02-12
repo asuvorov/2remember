@@ -26,6 +26,198 @@ DATABASES = {
     }
 }
 
+SUBSCRIPTION_PLANS = {
+    "DAILY": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        102400,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "upon_request_only":    False,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "organizations": {
+            "upon_request_only":    True,
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+        },
+        "places": {},
+    },
+    "WEEKLY": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        102400,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "max_per_day":          None,
+            "max_per_week":         2,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          None,
+            "max_per_week":         2,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+    "MONTHLY": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        102400,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        2,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        2,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+    "YEARLY": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        102400,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        102400,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         2,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         2,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+}
+SUBSCRIPTION_PLAN_DEFAULT = "DAILY"
+
 
 ###############################################################################
 ### AWS SETTINGS                                                            ###

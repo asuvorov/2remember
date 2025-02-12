@@ -3680,24 +3680,27 @@ class ChallengeCreateFormTestCase(TestCase):
 
 
 """
-    self.assertEqual                /               self.assertNotEqual
+    self.assertEqual                /   self.assertNotEqual
     self.assertGreater
     self.assertGreaterEqual
     self.assertLess
     self.assertLessEqual
-    self.assertTrue                 /               self.assertFalse
-    self.assertIs                   /               self.assertIsNot
-    self.assertIsNone               /               self.assertIsNotNone
-    self.assertIn                   /               self.assertNotIn
-    self.assertIsInstance           /               self.assertNotIsInstance
-    self.assertRegexpMatches        /               self.assertNotRegexpMatches
+    self.assertTrue                 /   self.assertFalse
+    self.assertIs                   /   self.assertIsNot
+    self.assertIsNone               /   self.assertIsNotNone
+    self.assertIn                   /   self.assertNotIn
+    self.assertIsInstance           /   self.assertNotIsInstance
+    self.assertRegexpMatches        /   self.assertNotRegexpMatches
+
     self.assertRaises
+    self.assertRaisesMessage
     self.assertRaisesRegexp
 
     self.assertDictContainsSubset
+    self.assertNumQueries
 
-    self.assertContains             /               self.assertNotContains
-    self.assertTemplateUsed         /               self.assertTemplateNotUsed
+    self.assertContains             /   self.assertNotContains
+    self.assertTemplateUsed         /   self.assertTemplateNotUsed
     self.assertInHTML
-    self.assertJSONEqual            /               self.assertJSONNotEqual
+    self.assertJSONEqual            /   self.assertJSONNotEqual
 """

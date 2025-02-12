@@ -13,7 +13,7 @@ from rest_framework.test import APIClient
 from events.models import (
     Event,
     Visibility)
-from tests.test_core import GenericUserTestCase
+from tests import GenericUserTestCase
 
 
 # =============================================================================
@@ -28,10 +28,10 @@ class PrivateEventTestCase(GenericUserTestCase):
         """Constructor."""
         super().setUp()
 
-        self.event = Event.objects.create(
-            author=self.admin,
-            title="Private Event",
-            visibility=Visibility.PRIVATE)
+        # self.event = Event.objects.create(
+        #     author=self.admin,
+        #     title="Private Event",
+        #     visibility=Visibility.PRIVATE)
 
     def tearDown(self):
         """Destructor."""

@@ -1,7 +1,9 @@
 [run]
 omit =
     *__init__.py
+    *admin.py
     *migrations/*
+    *settings/*
     *tests/*
 source = .
 

@@ -13,8 +13,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
@@ -29,8 +27,7 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from annoying.functions import get_object_or_None
-from termcolor import colored, cprint
+from termcolor import cprint
 from url_tools.helper import UrlHelper
 
 from ddcore.Utilities import (
@@ -43,7 +40,7 @@ from ddcore.models.Attachment import (
     AttachedImage,
     AttachedUrl,
     AttachedVideoUrl)
-from ddcore.models.SocialLink import SocialLink
+# from ddcore.models.SocialLink import SocialLink
 
 # pylint: disable=import-error
 from accounts.utils import (
