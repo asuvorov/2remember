@@ -8,7 +8,10 @@ import unittest
 import urllib.parse
 
 from django.conf import settings
-from django.contrib.auth import authenticate, get_user_model, login
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login)
 from django.contrib.auth.models import User
 from django.test import (
     Client,
@@ -55,8 +58,8 @@ class TmpUploadViewSetTests(APITestCase):
         super().setUp()
 
         self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john.doe@mail.ru")
-        self.jane = user_model.objects.get(username="jane.doe@gmail.com")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
 
     def tearDown(self):
         """Destructor."""

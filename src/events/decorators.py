@@ -2,19 +2,9 @@
 (C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
-from django.conf import settings
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-
-import pendulum
-
-from app import (
-    DAY_AGO,
-    WEEK_AGO,
-    MONTH_AGO,
-    YEAR_AGO)
 
 from .models import Event
 
@@ -25,33 +15,18 @@ def event_create_access_check_required(func):
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        subscription_plan = settings.SUBSCRIPTION_PLANS["BASIC"]
-
-        max_events = subscription_plan["events"]
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Event.
         # ---------------------------------------------------------------------
-        if max_events["max_per_day"]:
-            events = Event.objects.filter(created__gte=DAY_AGO).count()
-            if events >= max_events["max_per_day"]:
-                return
-        if max_events["max_per_week"]:
-            events = Event.objects.filter(created__gte=WEEK_AGO).count()
-            if events >= max_events["max_per_week"]:
-                return
-        if max_events["max_per_month"]:
-            events = Event.objects.filter(created__gte=MONTH_AGO).count()
-            if events >= max_events["max_per_month"]:
-                return
-        if max_events["max_per_year"]:
-            events = Event.objects.filter(created__gte=YEAR_AGO).count()
-            if events >= max_events["max_per_year"]:
-                return
 
         # ---------------------------------------------------------------------
         # --- Perform Checks.
         # ---------------------------------------------------------------------
+        if not request.user.is_staff:
+            eligible, details = request.user.profile.check_event_create_eligibilty()
+            if not eligible:
+                raise PermissionDenied
 
         # ---------------------------------------------------------------------
         # --- Return from the Decorator.
@@ -83,9 +58,11 @@ def event_view_access_check_required(func):
         # ---------------------------------------------------------------------
         # --- Perform Checks.
         # ---------------------------------------------------------------------
-        if event.is_private:
-            if not event.is_author(request):
-                raise PermissionDenied
+        if (
+                event.is_private and
+                not request.user.is_staff and
+                not event.is_author(request)):
+            raise PermissionDenied
 
         # ---------------------------------------------------------------------
         # --- Return from the Decorator.
@@ -117,7 +94,9 @@ def event_edit_access_check_required(func):
         # ---------------------------------------------------------------------
         # --- Perform Checks.
         # ---------------------------------------------------------------------
-        if not event.is_author(request):
+        if (
+                not request.user.is_staff and
+                not event.is_author(request)):
             raise PermissionDenied
 
         # ---------------------------------------------------------------------

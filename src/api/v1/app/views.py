@@ -92,7 +92,7 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
-        subscription_plan = settings.SUBSCRIPTION_PLANS["BASIC"]
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
         tmp_file = TemporaryFile.objects.create(
             file=request.FILES["file"],
             name=request.FILES["file"].name)
