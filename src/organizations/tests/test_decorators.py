@@ -260,7 +260,7 @@ class OrganizationViewAccessCheckRequiredTest(GenericUserTestCase):
         # --- Initials.
         # ---------------------------------------------------------------------
         organization = Organization.objects.create(
-            author=self.john, title="Organization #1", visibility=Visibility.PRIVATE)
+            author=self.john, title="Organization #1", is_private=True)
         self.req_kwargs = {"slug":  organization.slug}
 
         # ---------------------------------------------------------------------

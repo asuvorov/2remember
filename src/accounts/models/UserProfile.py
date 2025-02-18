@@ -31,9 +31,11 @@ from events.models import (
     EventMixin,
     # ParticipationMixin
     )
-# from organizations.models import (
-#     OrganizationStaffMixin,
-#     OrganizationGroupMixin)
+from organizations.models import (
+    # OrganizationStaffMixin,
+    # OrganizationGroupMixin
+    OrganizationMixin,
+    )
 
 
 # =============================================================================
@@ -75,6 +77,7 @@ def user_cover_directory_path(instance, filename):
 class UserProfile(
         ModelMeta, UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
         # ParticipationMixin,
+        OrganizationMixin,
         # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
     """User Profile Model.

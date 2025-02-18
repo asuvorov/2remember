@@ -35,6 +35,11 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app import (
+    DAY_AGO,
+    WEEK_AGO,
+    MONTH_AGO,
+    YEAR_AGO)
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
@@ -550,3 +555,64 @@ class Organization(
 # -----------------------------------------------------------------------------
 # --- Organization Model Mixin.
 # -----------------------------------------------------------------------------
+@autoconnect
+class OrganizationMixin:
+    """Organization Mixin Class."""
+
+    def check_organization_create_eligibilty(self):
+        """Check, if User is eligible to create an Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        eligible = True
+        details = []
+
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        max_organizations = subscription_plan["organizations"]
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        organizations = Organization.objects.all()
+
+        if max_organizations["max_per_day"]:
+            count = organizations.filter(created__gte=DAY_AGO).count()
+            if count >= max_organizations["max_per_day"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Organizations per Day.").format(
+                    max_organizations["max_per_day"])))
+            else:
+                details.append((True, _("You used {} of {} Organizations per Day.").format(
+                    count, max_organizations["max_per_day"])))
+
+        if max_organizations["max_per_week"]:
+            count = organizations.filter(created__gte=WEEK_AGO).count()
+            if count >= max_organizations["max_per_week"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Organizations per Week.").format(
+                    max_organizations["max_per_week"])))
+            else:
+                details.append((True, _("You used {} of {} Organizations per Week.").format(
+                    count, max_organizations['max_per_week'])))
+
+        if max_organizations["max_per_month"]:
+            count = organizations.filter(created__gte=MONTH_AGO).count()
+            if count >= max_organizations["max_per_month"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Organizations per Month.").format(
+                    max_organizations["max_per_month"])))
+            else:
+                details.append((True, _("You used {} of {} Organizations per Month.").format(
+                    count, max_organizations["max_per_month"])))
+
+        if max_organizations["max_per_year"]:
+            count = organizations.filter(created__gte=YEAR_AGO).count()
+            if count >= max_organizations["max_per_year"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Organizations per Year.").format(
+                    max_organizations["max_per_year"])))
+            else:
+                details.append((True, _("You used {} of {} Organizations per Year.").format(
+                    count, max_organizations["max_per_year"])))
+
+        return (eligible, details)

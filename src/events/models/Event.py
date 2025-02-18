@@ -989,32 +989,40 @@ class EventMixin:
             count = events.filter(created__gte=DAY_AGO).count()
             if count >= max_events["max_per_day"]:
                 eligible = False
-                details.append((False, f"You reached the maximum of {max_events['max_per_day']} Events per Day."))
+                details.append((False, _("You reached the maximum of {} Events per Day.").format(
+                    max_events["max_per_day"])))
             else:
-                details.append((True, f"You used {count} of {max_events['max_per_day']} Events per Day."))
+                details.append((True, _("You used {} of {} Events per Day.").format(
+                    count, max_events["max_per_day"])))
 
         if max_events["max_per_week"]:
             count = events.filter(created__gte=WEEK_AGO).count()
             if count >= max_events["max_per_week"]:
                 eligible = False
-                details.append((False, f"You reached the maximum of {max_events['max_per_week']} Events per Week."))
+                details.append((False, _("You reached the maximum of {} Events per Week.").format(
+                    max_events["max_per_week"])))
             else:
-                details.append((True, f"You used {count} of {max_events['max_per_week']} Events per Week."))
+                details.append((True, _("You used {} of {} Events per Week.").format(
+                    count, max_events["max_per_week"])))
 
         if max_events["max_per_month"]:
             count = events.filter(created__gte=MONTH_AGO).count()
             if count >= max_events["max_per_month"]:
                 eligible = False
-                details.append((False, f"You reached the maximum of {max_events['max_per_month']} Events per Month."))
+                details.append((False, _("You reached the maximum of {} Events per Month.").format(
+                    max_events["max_per_month"])))
             else:
-                details.append((True, f"You used {count} of {max_events['max_per_month']} Events per Month."))
+                details.append((True, _("You used {} of {} Events per Month.").format(
+                    count, max_events["max_per_month"])))
 
         if max_events["max_per_year"]:
             count = events.filter(created__gte=YEAR_AGO).count()
             if count >= max_events["max_per_year"]:
                 eligible = False
-                details.append((False, f"You reached the maximum of {max_events['max_per_year']} Events per Year."))
+                details.append((False, _("You reached the maximum of {} Events per Year.").format(
+                    max_events["max_per_year"])))
             else:
-                details.append((True, f"You used {count} of {max_events['max_per_year']} Events per Year."))
+                details.append((True, _("You used {} of {} Events per Year.").format(
+                    count, max_events["max_per_year"])))
 
         return (eligible, details)
