@@ -132,7 +132,9 @@ def organization_populate_newsletter_access_check_required(func):
         # ---------------------------------------------------------------------
         # --- Perform Checks.
         # ---------------------------------------------------------------------
-        if not organization.is_author(request):
+        if (
+                not request.user.is_staff and
+                not organization.is_author(request)):
             raise PermissionDenied
 
         # ---------------------------------------------------------------------

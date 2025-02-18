@@ -590,6 +590,11 @@ def my_profile_view(request):
         create_event_details
     ) = request.user.profile.check_event_create_eligibilty()
 
+    (
+        create_organization_eligible,
+        create_organization_details
+    ) = request.user.profile.check_organization_create_eligibilty()
+
     # -------------------------------------------------------------------------
     # --- Prepare Response.
     # -------------------------------------------------------------------------
@@ -609,6 +614,8 @@ def my_profile_view(request):
             "social_links":                 social_links,
             "create_event_eligible":        create_event_eligible,
             "create_event_details":         create_event_details,
+            "create_organization_eligible": create_organization_eligible,
+            "create_organization_details":  create_organization_details,
         }))
 
     # -------------------------------------------------------------------------

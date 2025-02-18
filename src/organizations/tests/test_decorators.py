@@ -30,7 +30,8 @@ from app import (
 from organizations.decorators import (
     organization_create_access_check_required,
     organization_view_access_check_required,
-    organization_edit_access_check_required)
+    organization_edit_access_check_required,
+    organization_populate_newsletter_access_check_required)
 from organizations.models import Organization
 from tests import GenericUserTestCase
 
@@ -370,6 +371,89 @@ class OrganizationEditAccessCheckRequiredTest(GenericUserTestCase):
 
     def test_retrieve(self):
         """Test `organizations.decorators.organization_edit_access_check_required` retrieving Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        organization = Organization.objects.create(author=self.john, title="Organization #1")
+        self.req_kwargs = {}
+
+        # ---------------------------------------------------------------------
+        with self.assertRaises(Http404):
+            self.decorated(
+                self._generate_post_request(self.john),
+                 *self.req_args, **self.req_kwargs)
+
+        # ---------------------------------------------------------------------
+        self.decorated(
+            self._generate_post_request(self.john, data={"organization_uid": organization.uid}),
+            *self.req_args, **self.req_kwargs)
+
+        # ---------------------------------------------------------------------
+        self.req_kwargs = {"slug":  organization.slug}
+        self.decorated(
+            self._generate_post_request(self.john),
+            *self.req_args, **self.req_kwargs)
+
+
+class OrganizationPopulateNewsletterAccessCheckRequiredTest(GenericUserTestCase):
+
+    """Test `organizations.decorators.organization_populate_newsletter_access_check_required` Decorator."""
+
+    fixtures = [
+        "test_accounts_users",
+        "test_accounts_profiles",
+    ]
+
+    def setUp(self):
+        """Constructor."""
+        super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.fnc = mock.MagicMock(return_value='fake response')
+        self.decorated = organization_populate_newsletter_access_check_required(self.fnc)
+
+        self.req_args = []
+        self.req_kwargs = {}
+
+    def tearDown(self):
+        """Destructor."""
+        super().tearDown()
+
+    def test_common(self):
+        """Test `organizations.decorators.organization_populate_newsletter_access_check_required` against Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        organization = Organization.objects.create(author=self.john, title="Organization #1")
+        self.req_kwargs = {"slug":  organization.slug}
+
+        # ---------------------------------------------------------------------
+        # --- Author can populate Organization Newsletter.
+        # ---------------------------------------------------------------------
+        self.decorated(
+            self._generate_post_request(self.john),
+            *self.req_args, **self.req_kwargs)
+
+        # ---------------------------------------------------------------------
+        # --- Non-Author CANNOT populate Organization Newsletter.
+        # ---------------------------------------------------------------------
+        with self.assertRaises(PermissionDenied):
+            self.decorated(
+                self._generate_post_request(self.jane),
+                *self.req_args, **self.req_kwargs)
+
+        # ---------------------------------------------------------------------
+        # --- Admin can populate Organization Newsletter.
+        # ---------------------------------------------------------------------
+        self.decorated(
+            self._generate_post_request(self.admin),
+            *self.req_args, **self.req_kwargs)
+
+    def test_retrieve(self):
+        """Test `organizations.decorators.organization_populate_newsletter_access_check_required` retrieving Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
