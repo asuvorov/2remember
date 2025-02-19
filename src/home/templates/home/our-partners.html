@@ -14,11 +14,12 @@
 
 {% block title %}{% trans "Our Partners" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -30,6 +31,8 @@
     </nav>
 </div>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 {% cache 3600 our-partners LANGUAGE_CODE %}
@@ -56,3 +59,5 @@
 </div>
 {% endcache %}
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

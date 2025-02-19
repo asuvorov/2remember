@@ -16,6 +16,11 @@
 
 {% block title %}{{ block.super }}{% endblock %}
 
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
 {% block important_message %}
 <div class="alert alert-warning alert-dismissible fade d-flex align-items-center show mb-md-0" role="alert" style="border-radius:0;">
 {% blocktrans %}
@@ -25,8 +30,8 @@
 </div>
 {% endblock %}
 
-{% block breadcrumbs %}
-{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block header %}{% endblock %}
 
 <!-- START CAROUSEL -->
 {% block carousel %}
@@ -257,3 +262,5 @@
 </script>
 <!--  END  SCRIPT -->
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

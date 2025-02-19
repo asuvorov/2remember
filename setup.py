@@ -114,6 +114,8 @@ setup(
         "mysqlclient==2.2.4",
         "newrelic==9.13.0",
         "pymemcache==4.0.0",
+        "pytest-django==4.9.0",
+        "pytest-mock==3.14.0",
         "pytz==2024.1",
         "selenium==4.25.0",
         "sendgrid==6.11.0",

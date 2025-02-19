@@ -18,11 +18,12 @@
 
 {% block title %}{% trans "Create Event" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -35,6 +36,8 @@
     </nav>
 </div>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="event-create" class="bg-body-tertiary p-3">
@@ -455,3 +458,5 @@
     });
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

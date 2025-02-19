@@ -7,6 +7,13 @@
         :<request> - Request
 {% endcomment %}
 
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
 {% block breadcrumbs %}
 <div class="container">
     <nav aria-label="breadcrumb">
@@ -18,6 +25,8 @@
     </nav>
 </div>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block extra_content %}
 <div id="my-profile-invitations" class="bg-body-tertiary p-3">

@@ -196,7 +196,7 @@ def event_create(request):
     # -------------------------------------------------------------------------
     # --- Retrieve the Data from the GET Request.
     # -------------------------------------------------------------------------
-    organization_ids = map(int, query_dict.get("organization", []))
+    organization_uids = list(map(str, query_dict.get("organization", [])))
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -205,7 +205,7 @@ def event_create(request):
         request.POST or None,
         request.FILES or None,
         user=request.user,
-        organization_ids=organization_ids)
+        organization_uids=organization_uids)
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,

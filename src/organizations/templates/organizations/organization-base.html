@@ -10,18 +10,17 @@
         :<aform>          - Address Form
         :<formset_roles>  - Roles Formset
         :<formset_social> - Social Links Formset
+        :<organization>   - Organization
 {% endcomment %}
 
 {% block title %}{% trans "Organization" %} "{{ organization.name }}" - {{ block.super }}{% endblock %}
 
-{% block extra_meta %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
-
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -61,8 +60,7 @@
 {% endcomment %}
 {% endblock %}
 
-{% block content %}
-{% endblock %}
+{% block content %}{% endblock %}
 
 {% block extra_content %}
     {% include "app/fragments/instance-images-script.html" with instance=organization %}

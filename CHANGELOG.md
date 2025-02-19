@@ -7,6 +7,11 @@
 - Added the Features Feature for toggling the new testable Features.
 - Added a View for the dateless Events.
 
+### Fix
+
+- Fixed an Access to the Event editing.
+- Fixed the Organization Details Page, which didn't show the associated Events.
+
 # 0.4.0 (2024-08-10)
 
 ### New
