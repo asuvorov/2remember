@@ -19,6 +19,13 @@
 {% need_to_know_profile_details_tag request account as need_to_know_profile_details %}
 {% need_to_know_contact_details_tag request account as need_to_know_contact_details %}
 
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
 {% block content %}
 {% cache 60 foreign-profile-info account.user.id LANGUAGE_CODE %}
 <div id="foreign-profile-info" class="bg-body-tertiary p-3">

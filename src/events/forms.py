@@ -23,6 +23,7 @@ from ddcore.models.Attachment import TemporaryFile
 from app.choices import (
     month_choices,
     day_of_month_choices)
+from organizations.models import Organization
 from .models import (
     Event,
     Role)
@@ -39,13 +40,20 @@ class CreateEditEventForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         """Docstring."""
         self.user = kwargs.pop("user", None)
-        self.organization_ids = kwargs.pop("organization_ids", None)
+        self.organization_uids = kwargs.pop("organization_uids", None)
         # self.tz_name = kwargs.pop("tz_name", None)
 
         super().__init__(*args, **kwargs)
 
         if self.instance and self.instance.id:
             pass
+
+        if self.organization_uids:
+            try:
+                self.fields["organization"].initial =\
+                    Organization.objects.filter(uid__in=self.organization_uids)[0]
+            except Exception as exc:
+                print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
         # --- Get QuerySet of the Organizations, where User is a Staff Member.
