@@ -38,25 +38,15 @@
                 {% include "fragments/navbar.html" %}
             {% endblock %}
 
-            {% block important_message %}
-            {% endblock %}
-
-            {% block breadcrumbs %}
-            {% endblock %}
-
-            {% block header %}
-            {% endblock %}
-
-            {% block carousel %}
-            {% endblock %}
+            {% block important_message %}{% endblock %}
+            {% block breadcrumbs %}{% endblock %}
+            {% block header %}{% endblock %}
+            {% block carousel %}{% endblock %}
             </header>
 
             <main class="container">
-            {% block content %}
-            {% endblock %}
-
-            {% block extra_content %}
-            {% endblock %}
+            {% block content %}{% endblock %}
+            {% block extra_content %}{% endblock %}
 
             {% block footer %}
                 {% include "fragments/footer.html" %}

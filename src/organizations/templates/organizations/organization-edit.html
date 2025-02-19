@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "organizations/organization-base.html" %}
 
 {% load i18n %}
 {% load static %}
@@ -17,12 +17,6 @@
 {% endcomment %}
 
 {% block title %}{% trans "Edit Organization" %} - {{ block.super }}{% endblock %}
-
-{% block extra_style %}
-{% endblock %}
-
-{% block extra_script %}
-{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -390,8 +384,4 @@
         })
     });
 </script>
-{% endblock %}
-
-{% block extra_content %}
-    {% include "app/fragments/instance-images-script.html" with instance=organization %}
 {% endblock %}

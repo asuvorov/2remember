@@ -45,12 +45,8 @@ from app.forms import (
     CreateNewsletterForm,
     PhoneFormSet,
     SocialLinkFormSet)
-from events.models import (
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus
-    )
+from events.models import Event
+from events.utils import get_event_list
 
 from .decorators import (
     organization_create_access_check_required,
@@ -585,6 +581,38 @@ def organization_edit(request, slug, organization=None):
             "formset_phone":    formset_phone,
             "formset_social":   formset_social,
             "organization":     organization,
+        })
+
+
+# =============================================================================
+# ===
+# === ORGANIZATION EVENTS
+# ===
+# =============================================================================
+@log_default(my_logger=logger, cls_or_self=False)
+def organization_events(request, slug=None):
+    """Organization Events List."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+    organization = get_object_or_404(Organization, slug=slug)
+    events, dateless, page_total, page_number = get_event_list(request, organization=organization)
+
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    organization.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "organizations/organization-details-events.html", {
+            "organization": organization,
+            "events":       events,
+            "dateless":     dateless,
+            "page_total":   page_total,
+            "page_number":  page_number,
         })
 
 

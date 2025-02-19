@@ -110,7 +110,7 @@ def post_details(request, slug):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "blog/post-details.html", {
+        request, "blog/post-details-info.html", {
             "post":     post,
             "meta":     post.as_meta(request),
         })

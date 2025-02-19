@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "events/event-base.html" %}
 
 {% load i18n %}
 {% load static %}
@@ -19,11 +19,12 @@
 
 {% block title %}{% trans "Edit Event" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -37,6 +38,8 @@
     </nav>
 </a>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="event-edit" class="bg-body-tertiary p-3">
@@ -483,8 +486,4 @@
         });
     });
 </script>
-{% endblock %}
-
-{% block extra_content %}
-    {% include "app/fragments/instance-images-script.html" with instance=event %}
 {% endblock %}

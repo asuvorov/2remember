@@ -1,9 +1,24 @@
 {% extends "base.html" %}
 
 {% load i18n %}
-{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
 
 {% block title %}{% trans "Add FAQ" %} - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div class="nav-header">
@@ -89,3 +104,5 @@
     });
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

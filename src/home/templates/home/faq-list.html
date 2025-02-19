@@ -5,20 +5,16 @@
 {% comment %}
     Input Parameters:
         :<request> - Request
-
-        :<form>           - Event Form
-        :<aform>          - Address Form
-        :<formset_roles>  - Roles Formset
-        :<formset_social> - Social Links Formset
 {% endcomment %}
 
 {% block title %}{% trans "FAQ" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -30,6 +26,8 @@
     </nav>
 </a>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="faq-list" class="bg-body-tertiary p-3">
@@ -114,3 +112,5 @@
     })
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

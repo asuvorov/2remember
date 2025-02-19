@@ -17,6 +17,11 @@
 
 - Upload Images and Documents Modals now show correct Progress in the Progress Bar.
 
+### Fix
+
+- Fixed an Access to the Event editing.
+- Fixed the Organization Details Page, which didn't show the associated Events.
+
 # 0.4.0 (2024-08-10)
 
 ### New

@@ -605,7 +605,7 @@ def my_profile_view(request):
         show_no_email_popup_modal = True
 
     response = HttpResponse(render(
-        request, "accounts/my-profile-info.html", {
+        request, "accounts/my-profile-details-info.html", {
             "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
@@ -686,7 +686,7 @@ def my_profile_events(request):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/my-profile-events.html", {
+        request, "accounts/my-profile-details-events.html", {
             "events":       events,
             "dateless":     dateless,
             "page_total":   page_total,
@@ -1008,7 +1008,7 @@ def profile_view(request, uid36):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/foreign-profile-info.html", {
+        request, "accounts/foreign-profile-details-info.html", {
             "account":                  account,
             "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
@@ -1198,7 +1198,7 @@ def profile_events(request, uid36):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/foreign-profile-events.html", {
+        request, "accounts/foreign-profile-details-events.html", {
             "account":      account,
             "events":       events,
             "dateless":     dateless,

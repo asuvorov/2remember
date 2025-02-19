@@ -6,6 +6,7 @@
 
         :<events>   - List of Events
         :<dateless> - Show dateless?
+        :[show_org] - Show Organization Name?
 {% endcomment %}
 
 <div>
@@ -39,7 +40,7 @@
             <div class="row g-2 mb-3">
             {% for event in events_month.list %}
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                    {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=True %}
+                    {% include "events/fragments/event-thumbnail-vert.html" with event=event show_org=show_org|default_if_none:True %}
                 </div>
             {% endfor %}
             </div>
