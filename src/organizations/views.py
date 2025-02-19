@@ -582,7 +582,6 @@ def organization_edit(request, slug=None):
 # === ORGANIZATION EVENTS
 # ===
 # =============================================================================
-@login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_events(request, slug=None):
     """Organization Events List."""
