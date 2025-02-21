@@ -4,6 +4,8 @@
 
 from django.core.cache import cache
 
+from termcolor import cprint
+
 from .forms import LoginForm
 
 
@@ -19,7 +21,12 @@ def signin_form(request):
 def eligibility(request):
     """Docstring."""
     if not request.user.is_authenticated:
-        return
+        return {
+            "create_event_eligible":        False,
+            "create_event_details":         [],
+            "create_organization_eligible": False,
+            "create_organization_details":  [],
+        }
 
     eligibility = cache.get(f"eligibility_{request.user.uid}")
     if not eligibility:
