@@ -19,9 +19,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from termcolor import colored
 
-from events.models import (
-    Event,
-    Visibility)
+from events.models import Event
 from organizations.models import Organization
 from tests import GenericUserTestCase
 
@@ -34,113 +32,9 @@ user_model = get_user_model()
 
 # =============================================================================
 # ===
-# === TEST LIST EVENTS
+# === TEST LIST ORGANIZATIONS
 # ===
 # =============================================================================
-class ListEventsTest(GenericUserTestCase):
-
-    """Test list Events."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.url = reverse("event-create")
-        self.login_url = reverse("event-list")
-        self.data = {}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-
-class ListDatelessEventsTest(GenericUserTestCase):
-
-    """Test list dateless Events."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.url = reverse("event-create")
-        self.login_url = reverse("event-list")
-        self.data = {}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-
-class ListMyProfileEventsTest(GenericUserTestCase):
-
-    """Test list `My Profile` Events."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.url = reverse("event-create")
-        self.login_url = reverse("event-list")
-        self.data = {}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-
-class ListForeignProfileEventsTest(GenericUserTestCase):
-
-    """Test list `Foreign Profile` Events."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.url = reverse("event-create")
-        self.login_url = reverse("event-list")
-        self.data = {}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-
 class ListOrganizationEventsTest(GenericUserTestCase):
 
     """Test list Organization Events."""
@@ -158,8 +52,8 @@ class ListOrganizationEventsTest(GenericUserTestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
-        self.url = reverse("event-create")
-        self.login_url = reverse("event-list")
+        self.url = reverse("organization-organizations")
+        self.login_url = reverse("signin")
         self.data = {}
 
     def tearDown(self):
@@ -169,12 +63,19 @@ class ListOrganizationEventsTest(GenericUserTestCase):
 
 # =============================================================================
 # ===
-# === TEST CREATE EVENT
+# === TEST ORGANIZATIONS DIRECTORY
 # ===
 # =============================================================================
-class CreateEventTest(GenericUserTestCase):
 
-    """Test create Event."""
+
+# =============================================================================
+# ===
+# === TEST CREATE ORGANIZATION
+# ===
+# =============================================================================
+class CreateOrganizationTest(GenericUserTestCase):
+
+    """Test create Organization."""
 
     fixtures = [
         "test_accounts_users",
@@ -189,7 +90,7 @@ class CreateEventTest(GenericUserTestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
-        self.url = reverse("event-create")
+        self.url = reverse("organization-create")
         self.login_url = reverse("signin")
         self.data = {}
 
@@ -197,8 +98,8 @@ class CreateEventTest(GenericUserTestCase):
         """Destructor."""
         super().tearDown()
 
-    def test_anonymous_cannot_create_event(self):
-        """Anonymous CANNOT create Event."""
+    def test_anonymous_cannot_create_organization(self):
+        """Anonymous CANNOT create Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -215,8 +116,8 @@ class CreateEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.OK)
         self.assertTemplateUsed(response, "accounts/account-signin.html")
 
-    def test_auth_can_create_event(self):
-        """Authenticated User can create Event."""
+    def test_auth_can_create_organization(self):
+        """Authenticated User can create Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -232,10 +133,10 @@ class CreateEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-create.html")
+        self.assertTemplateUsed(response, "organizations/organization-create.html")
 
-    def test_admin_can_create_event(self):
-        """Admin can create Event."""
+    def test_admin_can_create_organization(self):
+        """Admin can create Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -251,12 +152,128 @@ class CreateEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-create.html")
+        self.assertTemplateUsed(response, "organizations/organization-create.html")
 
 
-class CreateOrganizationEventTest(GenericUserTestCase):
+# =============================================================================
+# ===
+# === TEST VIEW ORGANIZATION
+# ===
+# =============================================================================
+class ViewPublicOrganizationTest(GenericUserTestCase):
 
-    """Test create Organization Event."""
+    """Test view Organization Details."""
+
+    fixtures = [
+        "test_accounts_users",
+        "test_accounts_profiles",
+    ]
+
+    def setUp(self):
+        """Constructor."""
+        super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.organization = Organization.objects.create(author=self.john, title="Organization #1")
+        self.url = reverse("organization-details", kwargs={
+            "slug": self.organization.slug,
+        })
+        self.data = {}
+
+    def tearDown(self):
+        """Destructor."""
+        super().tearDown()
+
+    def test_anonymous_can_view_organization(self):
+        """Anonymous can view public Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
+
+        self.assertEqual(response.context["organization"], self.organization)
+
+    def test_author_can_view_organization(self):
+        """Author can view public Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.john)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
+
+        self.assertEqual(response.context["organization"], self.organization)
+
+    def test_non_author_can_view_organization(self):
+        """Non-Author can view public Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.jane)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
+
+        self.assertEqual(response.context["organization"], self.organization)
+
+    def test_admin_can_view_organization(self):
+        """Admin can view public Organization."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.admin)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
+
+        self.assertEqual(response.context["organization"], self.organization)
+
+
+class ViewPrivateOrganizationTest(GenericUserTestCase):
+
+    """Test private Organizations."""
 
     fixtures = [
         "test_accounts_users",
@@ -272,63 +289,9 @@ class CreateOrganizationEventTest(GenericUserTestCase):
         self.jane = user_model.objects.get(username="jane")
 
         self.organization = Organization.objects.create(
-            author=self.john, title="Organization #1")
-        self.url = reverse("event-create")
-        self.login_url = reverse("signin")
-        self.data = {"organization":    self.organization.uid}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    # @unittest.skip("Skip the Test. Waiting for Implementation to be merged.")
-    def test_create_organization_event(self):
-        """Authenticated User can create Organization Event."""
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Prepare and send Request.
-        # ---------------------------------------------------------------------
-        client.force_login(user=self.john)
-        response = client.get(self.url, data=self.data, follow=True)
-
-        # ---------------------------------------------------------------------
-        # --- Test Response.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-create.html")
-
-        self.assertEqual(response.context["form"].fields["organization"].initial, self.organization)
-
-
-# =============================================================================
-# ===
-# === TEST VIEW EVENT
-# ===
-# =============================================================================
-class ViewPublicEventTest(GenericUserTestCase):
-
-    """Test view Event Details."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.event = Event.objects.create(author=self.john, title="Event #1")
-        self.url = reverse("event-details", kwargs={
-            "slug": self.event.slug,
+            author=self.john, title="Organization #1", is_private=True)
+        self.url = reverse("organization-details", kwargs={
+            "slug": self.organization.slug,
         })
         self.data = {}
 
@@ -336,136 +299,8 @@ class ViewPublicEventTest(GenericUserTestCase):
         """Destructor."""
         super().tearDown()
 
-    def test_anonymous_can_view_event(self):
-        """Anonymous can view public Event."""
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Prepare and send Request.
-        # ---------------------------------------------------------------------
-        response = client.get(self.url, data=self.data, follow=True)
-
-        # ---------------------------------------------------------------------
-        # --- Test Response.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
-
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
-
-    def test_author_can_view_event(self):
-        """Author can view public Event."""
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Prepare and send Request.
-        # ---------------------------------------------------------------------
-        client.force_login(user=self.john)
-        response = client.get(self.url, data=self.data, follow=True)
-
-        # ---------------------------------------------------------------------
-        # --- Test Response.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
-
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertTrue(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
-
-    def test_non_author_can_view_event(self):
-        """Non-Author can view public Event."""
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Prepare and send Request.
-        # ---------------------------------------------------------------------
-        client.force_login(user=self.jane)
-        response = client.get(self.url, data=self.data, follow=True)
-
-        # ---------------------------------------------------------------------
-        # --- Test Response.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
-
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
-
-    def test_admin_can_view_event(self):
-        """Admin can view public Event."""
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Prepare and send Request.
-        # ---------------------------------------------------------------------
-        client.force_login(user=self.admin)
-        response = client.get(self.url, data=self.data, follow=True)
-
-        # ---------------------------------------------------------------------
-        # --- Test Response.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
-
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
-
-
-class ViewPrivateEventTest(GenericUserTestCase):
-
-    """Test private Events."""
-
-    fixtures = [
-        "test_accounts_users",
-        "test_accounts_profiles",
-    ]
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-        self.admin = user_model.objects.get(username="admin")
-        self.john = user_model.objects.get(username="john")
-        self.jane = user_model.objects.get(username="jane")
-
-        self.event = Event.objects.create(
-            author=self.john, title="Event #1", visibility=Visibility.PRIVATE)
-        self.url = reverse("event-details", kwargs={
-            "slug": self.event.slug,
-        })
-        self.data = {}
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    def test_anonymous_cannot_view_event(self):
-        """Anonymous CANNOT view private Event."""
+    def test_anonymous_cannot_view_organization(self):
+        """Anonymous CANNOT view private Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -482,8 +317,8 @@ class ViewPrivateEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.FORBIDDEN)
         self.assertTemplateUsed(response, "error-pages/403.html")
 
-    def test_author_can_view_event(self):
-        """Author can view private Event."""
+    def test_author_can_view_organization(self):
+        """Author can view private Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -499,16 +334,12 @@ class ViewPrivateEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertTrue(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
+        self.assertEqual(response.context["organization"], self.organization)
 
-    def test_non_author_cannot_view_event(self):
-        """Non-Author CANNOT view private Event."""
+    def test_non_author_cannot_view_organization(self):
+        """Non-Author CANNOT view private Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -526,8 +357,8 @@ class ViewPrivateEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.FORBIDDEN)
         self.assertTemplateUsed(response, "error-pages/403.html")
 
-    def test_admin_can_view_event(self):
-        """Admin can view private Event."""
+    def test_admin_can_view_organization(self):
+        """Admin can view private Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -543,23 +374,19 @@ class ViewPrivateEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-details-info.html")
+        self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
-        self.assertEqual(response.context["event"], self.event)
-        self.assertIsNone(response.context["participation"])
-        self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
+        self.assertEqual(response.context["organization"], self.organization)
 
 
 # =============================================================================
 # ===
-# === TEST EDIT EVENT
+# === TEST EDIT ORGANIZATION
 # ===
 # =============================================================================
-class EditEventTest(GenericUserTestCase):
+class EditOrganizationTest(GenericUserTestCase):
 
-    """Test edit Event."""
+    """Test edit Organization."""
 
     fixtures = [
         "test_accounts_users",
@@ -574,9 +401,9 @@ class EditEventTest(GenericUserTestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
-        self.event = Event.objects.create(author=self.john, title="Event #1")
-        self.url = reverse("event-edit", kwargs={
-            "slug": self.event.slug,
+        self.organization = Organization.objects.create(author=self.john, title="Organization #1")
+        self.url = reverse("organization-edit", kwargs={
+            "slug": self.organization.slug,
         })
         self.login_url = reverse("signin")
         self.data = {}
@@ -585,8 +412,8 @@ class EditEventTest(GenericUserTestCase):
         """Destructor."""
         super().tearDown()
 
-    def test_anonymous_cannot_edit_event(self):
-        """Anonymous CANNOT edit Event."""
+    def test_anonymous_cannot_edit_organization(self):
+        """Anonymous CANNOT edit Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -603,8 +430,8 @@ class EditEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.FORBIDDEN)
         self.assertTemplateUsed(response, "error-pages/403.html")
 
-    def test_author_can_edit_event(self):
-        """Author can edit Event."""
+    def test_author_can_edit_organization(self):
+        """Author can edit Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -620,12 +447,12 @@ class EditEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-edit.html")
+        self.assertTemplateUsed(response, "organizations/organization-edit.html")
 
-        self.assertEqual(response.context["event"], self.event)
+        self.assertEqual(response.context["organization"], self.organization)
 
-    def test_non_author_cannot_edit_event(self):
-        """Non-Author CANNOT edit Event."""
+    def test_non_author_cannot_edit_organization(self):
+        """Non-Author CANNOT edit Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -643,8 +470,8 @@ class EditEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.FORBIDDEN)
         self.assertTemplateUsed(response, "error-pages/403.html")
 
-    def test_admin_can_edit_event(self):
-        """Admin can edit Event."""
+    def test_admin_can_edit_organization(self):
+        """Admin can edit Organization."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -660,6 +487,119 @@ class EditEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.request["PATH_INFO"], self.url)
         self.assertEqual(response.status_code, http.client.OK)
-        self.assertTemplateUsed(response, "events/event-edit.html")
+        self.assertTemplateUsed(response, "organizations/organization-edit.html")
 
-        self.assertEqual(response.context["event"], self.event)
+        self.assertEqual(response.context["organization"], self.organization)
+
+
+# =============================================================================
+# ===
+# === TEST POPULATE ORGANIZATION NEWSLETTER
+# ===
+# =============================================================================
+class PopulateOrganizationNewsletterTest(GenericUserTestCase):
+
+    """Test populate Organization Newsletter."""
+
+    fixtures = [
+        "test_accounts_users",
+        "test_accounts_profiles",
+    ]
+
+    def setUp(self):
+        """Constructor."""
+        super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.organization = Organization.objects.create(author=self.john, title="Organization #1")
+        self.url = reverse("organization-populate-newsletter", kwargs={
+            "slug": self.organization.slug,
+        })
+        self.login_url = reverse("signin")
+        self.data = {}
+
+    def tearDown(self):
+        """Destructor."""
+        super().tearDown()
+
+    def test_anonymous_cannot_populate_organization_newsletter(self):
+        """Anonymous CANNOT populate Organization Newsletter."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.FORBIDDEN)
+        self.assertTemplateUsed(response, "error-pages/403.html")
+
+    def test_author_can_populate_organization_newsletter(self):
+        """Author can populate Organization Newsletter."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.john)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-populate-newsletter.html")
+
+        self.assertEqual(response.context["organization"], self.organization)
+
+    def test_non_author_cannot_populate_organization_newsletter(self):
+        """Non-Author CANNOT populate Organization Newsletter."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.jane)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.FORBIDDEN)
+        self.assertTemplateUsed(response, "error-pages/403.html")
+
+    def test_admin_can_populate_organization_newsletter(self):
+        """Admin can populate Organization Newsletter."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        client.force_login(user=self.admin)
+        response = client.get(self.url, data=self.data, follow=True)
+
+        # ---------------------------------------------------------------------
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.request["PATH_INFO"], self.url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "organizations/organization-populate-newsletter.html")
+
+        self.assertEqual(response.context["organization"], self.organization)

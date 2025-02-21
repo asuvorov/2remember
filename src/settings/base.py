@@ -138,6 +138,7 @@ TEMPLATES = [
                 "social_django.context_processors.login_redirect",
 
                 "accounts.context_processors.signin_form",
+                "accounts.context_processors.eligibility",
 
                 "events.context_processors.pb_event_choices",
                 "events.context_processors.pb_participation_choices",
@@ -413,14 +414,21 @@ SUBSCRIPTION_PLANS = {
     "DEV": {
         "fare": 0,  # Cents.
         "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
             "images": {
                 "max_width":            900,
                 "max_height":           600,
+                "max_file_size":        10485760,
                 "max_per_event":        5,
                 "max_per_organization": 5,
                 "quality":              80,
             },
-            "documents": {
+            "video": {
+                "max_file_size":        10485760,
                 "max_per_event":        2,
                 "max_per_organization": 2,
             },
@@ -435,18 +443,18 @@ SUBSCRIPTION_PLANS = {
         },
         "accounts": {},
         "events": {
-            "upon_request_only":    False,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    False,
         },
         "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    True,
         },
         "places": {},
     },
@@ -489,7 +497,7 @@ SUBSCRIPTION_PLANS = {
             "upon_request_only":    False,
         },
         "organizations": {
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
@@ -536,7 +544,7 @@ SUBSCRIPTION_PLANS = {
             "upon_request_only":    False,
         },
         "organizations": {
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
@@ -545,6 +553,8 @@ SUBSCRIPTION_PLANS = {
         "places": {},
     },
 }
+SUBSCRIPTION_PLAN_DEFAULT = "BASIC"
+
 #  720p – SD (1280 x 720)
 #            (1600 x 900)
 # 1080p – HD (1920 x 1080)

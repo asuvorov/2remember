@@ -88,7 +88,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    subscription_plan = settings.SUBSCRIPTION_PLANS["BASIC"]
+    subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
 
     max_width = subscription_plan["attachments"]["images"]["max_width"]
     max_height = subscription_plan["attachments"]["images"]["max_height"]

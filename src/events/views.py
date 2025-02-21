@@ -13,8 +13,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
@@ -29,8 +27,7 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from annoying.functions import get_object_or_None
-from termcolor import colored, cprint
+from termcolor import cprint
 from url_tools.helper import UrlHelper
 
 from ddcore.Utilities import (
@@ -43,7 +40,7 @@ from ddcore.models.Attachment import (
     AttachedImage,
     AttachedUrl,
     AttachedVideoUrl)
-from ddcore.models.SocialLink import SocialLink
+# from ddcore.models.SocialLink import SocialLink
 
 # pylint: disable=import-error
 from accounts.utils import (
@@ -56,6 +53,7 @@ from app.forms import (
     SocialLinkFormSet)
 
 from .decorators import (
+    event_create_access_check_required,
     event_edit_access_check_required,
     event_view_access_check_required)
 from .forms import (
@@ -182,6 +180,7 @@ def event_category_list(request):
 # === EVENT CREATE
 # ===
 # =============================================================================
+@event_create_access_check_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
@@ -282,7 +281,7 @@ def event_create(request):
 # =============================================================================
 @event_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def event_details(request, slug):
+def event_details(request, slug, event=None):
     """Event Details."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -295,11 +294,6 @@ def event_details(request, slug):
 
     show_rate_form = False
     show_complain_form = False
-
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
-    # -------------------------------------------------------------------------
-    event = get_object_or_404(Event, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
@@ -436,12 +430,11 @@ def event_details(request, slug):
 @event_edit_access_check_required
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
-def event_edit(request, slug):
+def event_edit(request, slug, event=None):
     """Edit Event."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(Event, slug=slug)
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

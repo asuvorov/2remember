@@ -5,12 +5,12 @@
         "fields":   {
             "user":                 1,
             "avatar":               null,
-            "nickname":             "",
+            "nickname":             "admin",
             "bio":                  "Admin Profile",
             "gender":               "1",
             "birth_day":            "1984-05-14",
-            "address":              11,
-            "phone_number":         11,
+            "addressless":          true,
+            "address":              null,
             "receive_newsletters":  true,
             "created":              "2016-01-01 00:00:00-0700",
             "modified":             "2016-01-01 00:00:00-0700"
@@ -22,12 +22,12 @@
         "fields":   {
             "user":                 2,
             "avatar":               null,
-            "nickname":             "",
+            "nickname":             "john",
             "bio":                  "John Doe Profile",
             "gender":               "2",
             "birth_day":            "1984-05-14",
-            "address":              12,
-            "phone_number":         12,
+            "addressless":          true,
+            "address":              null,
             "receive_newsletters":  true,
             "created":              "2016-01-01 00:00:00-0700",
             "modified":             "2016-01-01 00:00:00-0700"
@@ -39,29 +39,12 @@
         "fields":   {
             "user":                 3,
             "avatar":               null,
-            "nickname":             "",
-            "bio":                  "Artem Suvorov Profile",
+            "nickname":             "jane",
+            "bio":                  "Jane Doe Profile",
             "gender":               "1",
             "birth_day":            "1984-05-14",
-            "address":              13,
-            "phone_number":         13,
-            "receive_newsletters":  true,
-            "created":              "2016-01-01 00:00:00-0700",
-            "modified":             "2016-01-01 00:00:00-0700"
-        }
-    },
-    {
-        "pk":       4,
-        "model":    "accounts.userprofile",
-        "fields":   {
-            "user":                 4,
-            "avatar":               null,
-            "nickname":             "",
-            "bio":                  "Maryna Suvorova Profile",
-            "gender":               "0",
-            "birth_day":            "1985-12-27",
-            "address":              14,
-            "phone_number":         14,
+            "addressless":          true,
+            "address":              null,
             "receive_newsletters":  true,
             "created":              "2016-01-01 00:00:00-0700",
             "modified":             "2016-01-01 00:00:00-0700"
