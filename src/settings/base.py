@@ -138,6 +138,7 @@ TEMPLATES = [
                 "social_django.context_processors.login_redirect",
 
                 "accounts.context_processors.signin_form",
+                "accounts.context_processors.eligibility",
 
                 "events.context_processors.pb_event_choices",
                 "events.context_processors.pb_participation_choices",
@@ -442,18 +443,18 @@ SUBSCRIPTION_PLANS = {
         },
         "accounts": {},
         "events": {
-            "upon_request_only":    False,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    False,
         },
         "organizations": {
-            "upon_request_only":    True,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    True,
         },
         "places": {},
     },
@@ -496,7 +497,7 @@ SUBSCRIPTION_PLANS = {
             "upon_request_only":    False,
         },
         "organizations": {
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
@@ -543,7 +544,7 @@ SUBSCRIPTION_PLANS = {
             "upon_request_only":    False,
         },
         "organizations": {
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,

@@ -585,16 +585,6 @@ def my_profile_view(request):
     # related_organizations = staff_member_organizations | group_member_organizations
     # related_organizations = related_organizations.exclude(id__in=created_organizations)
 
-    (
-        create_event_eligible,
-        create_event_details
-    ) = request.user.profile.check_event_create_eligibilty()
-
-    (
-        create_organization_eligible,
-        create_organization_details
-    ) = request.user.profile.check_organization_create_eligibilty()
-
     # -------------------------------------------------------------------------
     # --- Prepare Response.
     # -------------------------------------------------------------------------
@@ -612,10 +602,6 @@ def my_profile_view(request):
             "show_no_email_popup_modal":    show_no_email_popup_modal,
             "phone_numbers":                phone_numbers,
             "social_links":                 social_links,
-            "create_event_eligible":        create_event_eligible,
-            "create_event_details":         create_event_details,
-            "create_organization_eligible": create_organization_eligible,
-            "create_organization_details":  create_organization_details,
         }))
 
     # -------------------------------------------------------------------------

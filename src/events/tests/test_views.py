@@ -301,7 +301,7 @@ class CreateOrganizationEventTest(GenericUserTestCase):
         self.assertEqual(response.status_code, http.client.OK)
         self.assertTemplateUsed(response, "events/event-create.html")
 
-        self.assertEqual(response.context["form"]["organization"], self.organization)
+        self.assertEqual(response.context["form"].fields["organization"].initial, self.organization)
 
 
 # =============================================================================
