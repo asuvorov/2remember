@@ -71,7 +71,7 @@ class TmpUploadViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
+    # serializer_class =
     # model = Comment
 
     error_1 = (f"Sorry, this Field only supports the following File Types:\n - "
@@ -109,7 +109,6 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Verify File Type.
         file_ext = tmp_file.file.name.split(".")[-1].lower()
-
         if file_ext in settings.SUPPORTED_IMAGES:
             media = "images"
         elif file_ext in settings.SUPPORTED_DOCUMENTS:
@@ -172,11 +171,13 @@ class RemoveUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        instance = None
+
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"    [--- DUMP ---] UPLOAD TYPE : {upload_type}\n"
+               f"                   UPLOAD   ID : {upload_id}", "yellow")
 
         if (
                 upload_type and
@@ -188,30 +189,34 @@ class RemoveUploadViewSet(APIView):
             elif upload_type == "temp":
                 instance = get_object_or_None(TemporaryFile, id=upload_id)
 
-            if instance:
-                if (
-                        request.user == instance.created_by or
-                        request.user.is_superuser):
-                    try:
+            if (instance and (
+                    request.user == instance.created_by or
+                    request.user.is_superuser)):
+                try:
+                    if upload_type == "document":
+                        instance.document.delete()
+                    elif upload_type == "image":
+                        instance.image.delete()
+                    elif upload_type == "temp":
                         instance.file.delete()
-                    except Exception as exc:
-                        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                               f"                 {type(exc).__name__}\n"
-                               f"                 {str(exc)}", "white", "on_red")
+                except Exception as exc:
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                           f"                 {type(exc).__name__}\n"
+                           f"                 {str(exc)}", "white", "on_red")
 
-                        # -----------------------------------------------------
-                        # --- Logging.
-                        # -----------------------------------------------------
-                        logger.exception("", extra=Format.exception(
-                            exc=exc,
-                            request_id=request.request_id,
-                            log_extra={}))
+                    # -----------------------------------------------------
+                    # --- Logging.
+                    # -----------------------------------------------------
+                    logger.exception("", extra=Format.exception(
+                        exc=exc,
+                        request_id=request.request_id,
+                        log_extra={}))
 
-                    instance.delete()
+                instance.delete()
 
-                    return Response({
-                        "deleted":  True,
-                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "deleted":  True,
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 "deleted":  False,
@@ -240,11 +245,13 @@ class RemoveLinkViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        instance = None
+
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"    [--- DUMP ---] UPLOAD TYPE : {upload_type}\n"
+               f"                   UPLOAD   ID : {upload_id}", "yellow")
 
         if (
                 upload_type and
@@ -254,15 +261,14 @@ class RemoveLinkViewSet(APIView):
             elif upload_type == "video":
                 instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
 
-            if instance:
-                if (
-                        request.user == instance.created_by or
-                        request.user.is_superuser):
-                    instance.delete()
+            if (instance and (
+                    request.user == instance.created_by or
+                    request.user.is_superuser)):
+                instance.delete()
 
-                    return Response({
-                        "deleted":  True,
-                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "deleted":  True,
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 "deleted":  False,
