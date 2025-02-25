@@ -458,6 +458,53 @@ SUBSCRIPTION_PLANS = {
         },
         "places": {},
     },
+    "ADMIN": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        1000,
+                "max_per_organization": 1000,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        10485760,
+                "max_per_event":        1000,
+                "max_per_organization": 1000,
+                "quality":              90,
+            },
+            "video": {
+                "max_file_size":        10485760,
+                "max_per_event":        1000,
+                "max_per_organization": 1000,
+            },
+            "urls": {
+                "max_per_event":        1000,
+                "max_per_organization": 1000,
+            },
+            "video_urls": {
+                "max_per_event":        1000,
+                "max_per_organization": 1000,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "max_per_day":          100,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          100,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
     "BASIC": {
         "fare": 0,  # Cents.
         "attachments": {

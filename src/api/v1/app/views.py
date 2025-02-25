@@ -8,6 +8,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
@@ -93,6 +94,9 @@ class TmpUploadViewSet(APIView):
         # --- INITIALS
         # ---------------------------------------------------------------------
         subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        if request.user.is_staff:
+            subscription_plan = settings.SUBSCRIPTION_PLANS["ADMIN"]
+
         tmp_file = TemporaryFile.objects.create(
             file=request.FILES["file"],
             name=request.FILES["file"].name)
@@ -105,9 +109,17 @@ class TmpUploadViewSet(APIView):
         cprint(f"[---  DUMP   ---] UPLOAD TYPE : {result}", "yellow")
 
         # ---------------------------------------------------------------------
+        # --- Pull out cached Data.
+        # ---------------------------------------------------------------------
+        # upload_numbers = cache.get(f"upload_numbers_{request.user.uid}")
+        # if not upload_numbers:
+        #     cache.set(f"upload_numbers_{request.user.uid}", upload_numbers, 60)
+
+        # ---------------------------------------------------------------------
         # --- START SANITIZING UPLOAD
         # ---------------------------------------------------------------------
         # --- Verify File Type.
+        # ---------------------------------------------------------------------
         file_ext = tmp_file.file.name.split(".")[-1].lower()
         if file_ext in settings.SUPPORTED_IMAGES:
             media = "images"
@@ -126,7 +138,12 @@ class TmpUploadViewSet(APIView):
             }, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
         # ---------------------------------------------------------------------
+        # --- Verify File Amount.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
         # --- Verify File Size.
+        # ---------------------------------------------------------------------
         if tmp_file.file.size > subscription_plan["attachments"][media]["max_file_size"]:
             cprint("[---  ERROR  ---] Upload - too large", "white", "on_red")
 
@@ -136,9 +153,6 @@ class TmpUploadViewSet(APIView):
             return Response({
                 "files":    [],
             }, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
-
-        # ---------------------------------------------------------------------
-        # --- TODO: Verify File Amount.
 
         # ---------------------------------------------------------------------
         # --- Save the Log.

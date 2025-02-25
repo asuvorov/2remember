@@ -4,8 +4,6 @@
 
 from django.core.cache import cache
 
-from termcolor import cprint
-
 from .forms import LoginForm
 
 
@@ -47,7 +45,7 @@ def eligibility(request):
             "create_organization_details":  create_organization_details,
         }
 
-        cache.set(f"eligibility_{request.user.uid}", 60)
+        cache.set(f"eligibility_{request.user.uid}", eligibility, 60)
 
     return {
         "create_event_eligible":        eligibility["create_event_eligible"],
