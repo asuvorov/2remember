@@ -59,8 +59,7 @@ setup(
         "Natural Language :: English",
         "Operating System :: POSIX :: Linux",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.9",
-        "Programming Language :: Python :: 3.9.6",
+        "Programming Language :: Python :: 3.12",
         "Topic :: Database",
         "Topic :: Documentation :: Sphinx",
         "Topic :: Games/Entertainment",
@@ -71,7 +70,7 @@ setup(
         "Topic :: Utilities",
     ],
     install_requires=[
-        "ddaemon-core-python==0.5.1",
+        "ddaemon-core-python==0.5.2",
         "ddaemon-django-papertrail==0.1.3",
         "ddaemon-django-private-url==0.1.0",
         # "APScheduler==3.9.1",

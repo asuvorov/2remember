@@ -8,7 +8,7 @@
 
 #------------------------------------------------------------------------------
 # --- "#"
-ddaemon-core-python==0.5.1
+ddaemon-core-python==0.5.2
 ddaemon-django-papertrail==0.1.3
 ddaemon-django-private-url==0.1.0
 
