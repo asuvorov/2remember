@@ -1,0 +1,13 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user.first_name }}!
+
+Thank you for participating in Event "{{ event.title }}".
+
+Please, submit your Experience Report within {{ time }} Days on the Event Details Page here: {{ event_link }}
+
+Also, you can find Link to this Event on your Profile Page.
+
+Thank you, 2Remember Team.

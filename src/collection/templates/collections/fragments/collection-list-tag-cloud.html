@@ -1,0 +1,22 @@
+{% load taggit_templatetags2_tags %}
+{% load urls %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collections> - List of Collections
+{% endcomment %}
+
+{% get_taglist as taglist for "collection.collection" %}
+{% get_tagcloud as tagcloud for "collection.collection" %}
+
+<div class="tag-cloud">
+{% for tag in tagcloud %}
+    <a href="{% toggle_params request.get_full_path tag=tag.id %}">
+        <font size="{{ tag.weight|floatformat:0 }}">
+            {{ tag.name }} ({{ tag.num_times }})
+        </font>
+    </a>
+{% endfor %}
+</div>

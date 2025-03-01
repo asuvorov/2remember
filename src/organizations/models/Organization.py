@@ -35,6 +35,9 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app.models import (
+    Visibility,
+    visibility_choices)
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event

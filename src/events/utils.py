@@ -24,7 +24,7 @@ from .models import (
     Visibility)
 
 
-def get_event_list(request, author=None, organization=None):
+def get_event_list(request, author=None, events=None, organization=None):
     """Return the List of the Events, based on Query Parameters and Filters."""
     # -------------------------------------------------------------------------
     # --- Retrieve Data from the Request.
@@ -35,6 +35,7 @@ def get_event_list(request, author=None, organization=None):
     page = request.GET.get("page", 1)
 
     cprint(f"[---  DUMP   ---]        AUTHOR : {author}\n"
+           f"                         EVENTS : {events}\n"
            f"                   ORGANIZATION : {organization}\n"
            f"                  CATEGORY SLUG : {category_slug}\n"
            f"                       DATELESS : {dateless}\n"
@@ -44,9 +45,11 @@ def get_event_list(request, author=None, organization=None):
     # -------------------------------------------------------------------------
     # --- Prepare the Event List.
     # -------------------------------------------------------------------------
-    events = Event.objects.filter(
-        Q(organization=None) |
-        Q(organization__is_hidden=False))
+    if not events:
+        events = Event.objects.all()
+        # events = Event.objects.filter(
+        #     Q(organization=None) |
+        #     Q(organization__is_hidden=False))
 
     cprint(f"[---  DUMP   ---] EVENTS        : {events}", "yellow")
 

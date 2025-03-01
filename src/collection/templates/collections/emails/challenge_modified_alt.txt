@@ -1,0 +1,11 @@
+*******************************************************************************
+    THIS IS AN AUTOMATED EMAIL - PLEASE DO NOT REPLY.
+*******************************************************************************
+
+Dear, {{ user }}!
+
+The Event "{{ event.title }}", where you added as a contact Person, was modified!
+
+Link to the Event Details Page: {{ event_link }}
+
+Thank you, 2Remember Team.

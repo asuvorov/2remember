@@ -218,6 +218,7 @@ INSTALLED_APPS = (
     "api",
     "app",
     "blog",
+    "collection",
     "events",
     "home",
     "invites",
@@ -402,11 +403,14 @@ PAYPAL_SHARE_LINK = ("https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_r
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
 
+COLLECTION_TITLE_RESERVED_WORDS = [
+    "create", "edit",
+]
 EVENT_TITLE_RESERVED_WORDS = [
-    "near-you", "new", "dateless", "featured", "categories",
+    "create", "edit", "near-you", "new", "dateless", "featured", "categories",
 ]
 ORGANIZATION_TITLE_RESERVED_WORDS = [
-    "directory", "create",
+    "create", "edit", "directory", "create",
 ]
 
 SUBSCRIPTION_PLANS = {
@@ -939,6 +943,9 @@ MAX_POSTS_PER_QUERY = 100
 
 MAX_EVENTS_PER_PAGE = 25
 MAX_EVENTS_PER_QUERY = 250
+
+MAX_COLLECTIONS_PER_PAGE = 25
+MAX_COLLECTIONS_PER_QUERY = 250
 
 MAX_ORGANIZATIONS_PER_PAGE = 25
 MAX_ORGANIZATIONS_PER_QUERY = 250

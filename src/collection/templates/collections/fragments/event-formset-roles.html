@@ -1,0 +1,132 @@
+{% load i18n %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<formset_social>
+{% endcomment %}
+
+<div id="formset-social" data-formset-prefix="{{ formset_social.prefix }}" style="display:inline-block; width:100%">
+    {{ formset_social.management_form }}
+
+    <div data-formset-body>
+        <!-- New forms will be inserted in here -->
+    {% for fs in formset_social %}
+        <div class="row g-3" data-formset-form>
+            {{ fs.id }}
+            <div class="form-floating col-3">
+                {{ fs.social_app }}
+                {{ fs.social_app.label_tag }}
+            </div>
+            <div class="form-floating col-6">
+                {{ fs.url }}
+                {{ fs.url.label_tag }}
+            </div>
+            <div class="col-3">
+                <div class="hidden">{{ fs.DELETE }}</div>
+                <a type="button" class="btn pull-right" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+
+    <!-- The empty form template. By wrapping this in a <script> tag, the __prefix__ placeholder can easily be replaced in both attributes and any scripts -->
+    <script type="form-template" data-formset-empty-form>
+    {% escapescript %}
+        <div class="row g-3" data-formset-form>
+            {{ formset_social.empty_form.id }}
+            <div class="form-floating col-3">
+                {{ formset_social.empty_form.social_app }}
+                {{ formset_social.empty_form.social_app.label_tag }}
+            </div>
+            <div class="form-floating col-6">
+                {{ formset_social.empty_form.url }}
+                {{ formset_social.empty_form.url.label_tag }}
+            </div>
+            <div class="col-3">
+                <div class="hidden">{{ formset_social.empty_form.DELETE }}</div>
+                <a type="button" class="btn pull-right" style="width:auto;" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
+            </div>
+        </div>
+    {% endescapescript %}
+    </script>
+
+    <!-- This Button will add a new Form, when clicked -->
+    <a type="button" class="btn pull-right" style="width:auto;" data-formset-add><i class="bi bi-plus"></i> {% trans "Add" %}</a>
+
+    <script>
+        jQuery(function ($) {
+            $("#formset-social").formset({
+                animateForms:   true
+            });
+        });
+    </script>
+</div>
+
+
+
+
+
+
+
+
+
+                                    <div class="alert alert-info">
+                                    {% blocktrans %}
+                                        If you are looking for the differently skilled Volunteers / Participants, you can add specific Roles and Quantity here (e.g. 1 Driver, 10 Street-cleaners, etc.).<br/>
+                                        If Roles are specified, Members will be offered to choose, which Role they want to take, on signing up to the Event / Event.
+                                    {% endblocktrans %}
+                                    </div>
+
+                                    <div id="formset-roles" data-formset-prefix="{{ formset_roles.prefix }}" style="display:inline-block; width:100%">
+                                        {{ formset_roles.management_form }}
+
+                                        <div data-formset-body>
+                                            <!-- New forms will be inserted in here -->
+                                        {% for fs in formset_roles %}
+                                            <div class="row" data-formset-form>
+                                                {{ fs.id }}
+                                                <div class="col-xs-12 col-sm-16 col-md-16">
+                                                    {{ fs.name }}
+                                                </div>
+                                                <div class="col-xs-6 col-sm-4 col-md-4">
+                                                    {{ fs.quantity }}
+                                                </div>
+                                                <div class="col-xs-6 col-sm-4 col-md-4">
+                                                    <div class="hidden">{{ fs.DELETE }}</div>
+                                                    <a type="button" class="btn pull-right" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        </div>
+
+                                        <!-- The empty form template. By wrapping this in a <script> tag, the __prefix__ placeholder can easily be replaced in both attributes and any scripts -->
+                                        <script type="form-template" data-formset-empty-form>
+                                        {% escapescript %}
+                                            <div class="row" data-formset-form>
+                                                {{ formset_roles.empty_form.id }}
+                                                <div class="col-xs-12 col-sm-16 col-md-16">
+                                                    {{ formset_roles.empty_form.name }}
+                                                </div>
+                                                <div class="col-xs-6 col-sm-4 col-md-4">
+                                                    {{ formset_roles.empty_form.quantity }}
+                                                </div>
+                                                <div class="col-xs-6 col-sm-4 col-md-4">
+                                                    <div class="hidden">{{ formset_roles.empty_form.DELETE }}</div>
+                                                    <a type="button" class="btn pull-right" style="width:auto;" data-formset-delete-button><i class="bi bi-minus"></i> {% trans "Del" %}</a>
+                                                </div>
+                                            </div>
+                                        {% endescapescript %}
+                                        </script>
+
+                                        <!-- This Button will add a new Form, when clicked -->
+                                        <a type="button" class="btn pull-right" style="width:auto;" data-formset-add><i class="bi bi-plus"></i> {% trans "Add" %}</a>
+
+                                        <script>
+                                            jQuery(function ($) {
+                                                $("#formset-roles").formset({
+                                                    animateForms:   true
+                                                });
+                                            });
+                                        </script>
+                                    </div>
