@@ -22,6 +22,8 @@ def eligibility(request):
     """Docstring."""
     if not request.user.is_authenticated:
         return {
+            "create_collection_eligible":   False,
+            "create_collection_details":    [],
             "create_event_eligible":        False,
             "create_event_details":         [],
             "create_organization_eligible": False,
@@ -30,6 +32,11 @@ def eligibility(request):
 
     eligibility = cache.get(f"eligibility_{request.user.uid}")
     if not eligibility:
+        (
+            create_collection_eligible,
+            create_collection_details
+        ) = request.user.profile.check_collection_create_eligibilty()
+
         (
             create_event_eligible,
             create_event_details
@@ -41,6 +48,8 @@ def eligibility(request):
         ) = request.user.profile.check_organization_create_eligibilty()
 
         eligibility = {
+            "create_collection_eligible":   create_collection_eligible,
+            "create_collection_details":    create_collection_details,
             "create_event_eligible":        create_event_eligible,
             "create_event_details":         create_event_details,
             "create_organization_eligible": create_organization_eligible,
@@ -50,6 +59,8 @@ def eligibility(request):
         cache.set(f"eligibility_{request.user.uid}", 60)
 
     return {
+        "create_collection_eligible":   eligibility["create_collection_eligible"],
+        "create_collection_details":    eligibility["create_collection_details"],
         "create_event_eligible":        eligibility["create_event_eligible"],
         "create_event_details":         eligibility["create_event_details"],
         "create_organization_eligible": eligibility["create_organization_eligible"],

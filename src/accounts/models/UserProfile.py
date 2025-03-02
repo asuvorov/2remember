@@ -27,6 +27,7 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from collection.models import CollectionMixin
 from events.models import (
     EventMixin,
     # ParticipationMixin
@@ -75,10 +76,9 @@ def user_cover_directory_path(instance, filename):
 
 @autoconnect
 class UserProfile(
-        ModelMeta, UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
-        # ParticipationMixin,
-        OrganizationMixin,
-        # OrganizationGroupMixin, OrganizationStaffMixin,
+        ModelMeta, UserProfileBase, CollectionMixin, CommentMixin, ComplaintMixin,
+        EventMixin,  # ParticipationMixin,
+        OrganizationMixin,  # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
     """User Profile Model.
 
