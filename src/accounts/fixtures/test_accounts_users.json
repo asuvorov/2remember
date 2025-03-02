@@ -1,0 +1,47 @@
+[
+    {
+        "pk":       1,
+        "model":    "ddcore.User",
+        "fields":   {
+            "uid":                  "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
+            "username":             "admin",
+            "first_name":           "John",
+            "last_name":            "Smith",
+            "email":                "admin@2remember.live",
+            "password":             "pbkdf2_sha256$24000$IrQ6chsyG57T$4c1GnryIaNzhXkYZBKguCuWp7v4rWlL8d70Fn52lQUM=",
+            "is_staff":             true,
+            "is_active":            true,
+            "is_superuser":         true
+        }
+    },
+    {
+        "pk":       2,
+        "model":    "ddcore.User",
+        "fields":   {
+            "uid":                  "0e2a03c3-12e4-4cd3-a118-0dbf79baa444",
+            "username":             "john",
+            "first_name":           "John",
+            "last_name":            "Doe",
+            "email":                "john@2remember.live",
+            "password":             "pbkdf2_sha256$24000$IrQ6chsyG57T$4c1GnryIaNzhXkYZBKguCuWp7v4rWlL8d70Fn52lQUM=",
+            "is_staff":             false,
+            "is_active":            true,
+            "is_superuser":         false
+        }
+    },
+    {
+        "pk":       3,
+        "model":    "ddcore.User",
+        "fields":   {
+            "uid":                  "7187bbe4-8648-48e6-a9ce-98632cfae8c3",
+            "username":             "jane",
+            "first_name":           "Jane",
+            "last_name":            "Doe",
+            "email":                "jane@2remember.live",
+            "password":             "pbkdf2_sha256$24000$IrQ6chsyG57T$4c1GnryIaNzhXkYZBKguCuWp7v4rWlL8d70Fn52lQUM=",
+            "is_staff":             false,
+            "is_active":            true,
+            "is_superuser":         false
+        }
+    }
+]

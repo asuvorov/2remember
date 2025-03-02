@@ -1,6 +1,9 @@
 <script>
     /*************************************************************************/
     /*** Files Uploading                                                   ***/
+    /***                                                                   ***/
+    /*** https://github.com/blueimp/jQuery-File-Upload/wiki/Options        ***/
+    /***                                                                   ***/
     /*************************************************************************/
     var upload_count = $("#tmp_files input").length;
 
@@ -82,7 +85,15 @@
                 }
             },
             dataType: "json",
+            dropZone: $("#fileupload-images"),
+            singleFileUploads: true,
+            sequentialUploads: true,
+            recalculateProgress: true,
+            progressInterval: 50,
             done: function (e, data) {
+                console.log(">>> DONE");
+                // console.log(">>> e", e);
+                console.log(">>> data", data);
                 $.each(data.result.files, function (index, file) {
                     // --------------------------------------------------------
                     // --- Render Thumbnails.
@@ -106,22 +117,32 @@
                 });
 
                 window.setTimeout(function () {
-                    $("#progress .progress-bar").css("width", "0%");
-                    $("#progress").css("display", "none");
+                    // $("#uploadImagesPopupModal #progress .progress-bar").css("width", "0%");
+                    // $("#uploadImagesPopupModal #progress").css("display", "none");
                 }, 1000);
             },
             fail: function (e, data) {
                 console.log(">>> FAIL");
-                console.log(">>> e", e);
+                // console.log(">>> e", e);
                 console.log(">>> data", data);
+
+                // if (data.jqXHR.status==413) {} else if (data.jqXHR.status==415) {} else {}
+                new Noty({
+                    text:   data.textStatus + ": " + data.jqXHR.statusText
+                }).show();
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
 
-                $("#progress").css("display", "block");
-                $("#progress .progress-bar").css("width", progress + "%");
-            },
-            dropZone: $("#fileupload-images")
+                console.log(">>> PROGRESS");
+                // console.log(">>> e", e);
+                console.log(">>> data", data);
+                console.log(">>> progress", progress);
+
+                $("#uploadImagesPopupModal #progress").css("display", "grid");
+                $("#uploadImagesPopupModal #progress .progress-bar").css("width", progress + "%");
+                $("#uploadImagesPopupModal #progress .progress-bar").text(progress + "%");
+            }
         }).prop("disabled", !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : "disabled");
 
         $("#fileupload-images").bind("fileuploadprocessfail", function (e, data) {
@@ -138,6 +159,11 @@
                 }
             },
             dataType: "json",
+            dropZone: $("#fileupload-documents"),
+            singleFileUploads: true,
+            sequentialUploads: true,
+            recalculateProgress: true,
+            progressInterval: 50,
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
                     // --------------------------------------------------------
@@ -162,17 +188,17 @@
                 });
 
                 window.setTimeout(function() {
-                    $("#progress .progress-bar").css("width", "0%");
-                    $("#progress").css("display", "none");
+                    // $("#uploadDocumentsPopupModal #progress .progress-bar").css("width", "0%");
+                    // $("#uploadDocumentsPopupModal #progress").css("display", "none");
                 }, 1000);
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
 
-                $("#progress").css("display", "block");
-                $("#progress .progress-bar").css("width", progress + "%");
-            },
-            dropZone: $("#fileupload-documents")
+                $("#uploadDocumentsPopupModal #progress").css("display", "grid");
+                $("#uploadDocumentsPopupModal #progress .progress-bar").css("width", progress + "%");
+                $("#uploadDocumentsPopupModal #progress .progress-bar").text(progress + "%");
+            }
         })
         .prop("disabled", !$.support.fileInput)
         .parent().addClass($.support.fileInput ? undefined : "disabled");

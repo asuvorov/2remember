@@ -182,6 +182,7 @@ class Category(TitleSlugDescriptionBaseModel):
     objects = CategoryManager()
 
     class Meta:
+        app_label = "events"
         verbose_name = _("category")
         verbose_name_plural = _("categories")
         ordering = ["id", ]

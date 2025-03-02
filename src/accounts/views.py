@@ -36,9 +36,7 @@ from ddcore.models import (
     UserLogin)
 from ddcore.Utilities import (
     get_client_ip,
-    make_json_cond,
-    # render_to_pdf,
-)
+    make_json_cond)
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -204,8 +202,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
         # ---------------------------------------------------------------------
         # --- Save the Log.
 
-        return HttpResponseRedirect(
-            reverse("my-profile-edit"))
+        return HttpResponseRedirect(reverse("my-profile-edit"))
 
     # -------------------------------------------------------------------------
     # --- Save the Log.
@@ -1133,8 +1130,7 @@ def profile_events(request, uid36):
     # -------------------------------------------------------------------------
     account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
-        return HttpResponseRedirect(
-            reverse("my-profile-view"))
+        return HttpResponseRedirect(reverse("my-profile-view"))
 
     # -------------------------------------------------------------------------
     # --- Process Request.
