@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-07 22:30-0500\n"
+"POT-Creation-Date: 2025-02-19 14:38-0500\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#: .\accounts\choices.py:17 .\accounts\models\UserProfile.py:52
+#: .\accounts\choices.py:17 .\accounts\models\UserProfile.py:54
 msgid "Paranoid"
 msgstr ""
 
-#: .\accounts\choices.py:18 .\accounts\models\UserProfile.py:53
+#: .\accounts\choices.py:18 .\accounts\models\UserProfile.py:55
 msgid "Normal"
 msgstr ""
 
@@ -31,7 +30,7 @@ msgstr ""
 #: .\accounts\templates\accounts\modals\forgot-password-popup-modal.html:21
 #: .\accounts\templates\accounts\modals\no-email-provided-popup-modal.html:39
 #: .\events\forms.py:214 .\home\forms.py:43
-#: .\organizations\models\Organization.py:219
+#: .\organizations\models\Organization.py:224
 msgid "Email"
 msgstr ""
 
@@ -82,8 +81,8 @@ msgstr ""
 msgid "User does not exist."
 msgstr ""
 
-#: .\accounts\models\Team.py:47 .\accounts\models\Team.py:125
-#: .\accounts\models\Team.py:126
+#: .\accounts\models\Team.py:47 .\accounts\models\Team.py:126
+#: .\accounts\models\Team.py:127
 msgid "Team"
 msgstr ""
 
@@ -91,33 +90,33 @@ msgstr ""
 msgid "Team Name"
 msgstr ""
 
-#: .\accounts\models\Team.py:54
+#: .\accounts\models\Team.py:55
 msgid "team"
 msgstr ""
 
-#: .\accounts\models\Team.py:55
+#: .\accounts\models\Team.py:56
 msgid "teams"
 msgstr ""
 
-#: .\accounts\models\Team.py:117 .\accounts\models\Team.py:118
+#: .\accounts\models\Team.py:118 .\accounts\models\Team.py:119
 msgid "Team Member"
 msgstr ""
 
-#: .\accounts\models\Team.py:131 .\organizations\models\OrganizationStaff.py:77
+#: .\accounts\models\Team.py:132 .\organizations\models\OrganizationStaff.py:77
 #: .\organizations\models\OrganizationStaff.py:78
 #: .\organizations\templates\organizations\modals\organization-staff-member-edit-modal.html:19
 msgid "Position"
 msgstr ""
 
-#: .\accounts\models\Team.py:132
+#: .\accounts\models\Team.py:133
 msgid "Team Member Position"
 msgstr ""
 
-#: .\accounts\models\Team.py:138
+#: .\accounts\models\Team.py:140
 msgid "team member"
 msgstr ""
 
-#: .\accounts\models\Team.py:139
+#: .\accounts\models\Team.py:141
 msgid "team members"
 msgstr ""
 
@@ -150,8 +149,8 @@ msgid "Admins of the upcoming Events on the Platform"
 msgstr ""
 
 #: .\accounts\models\UserPrivacy.py:83 .\accounts\models\UserPrivacy.py:84
-#: .\accounts\models\UserPrivacy.py:166 .\accounts\models\UserPrivacy.py:167
-#: .\accounts\models\UserPrivacy.py:302 .\accounts\models\UserPrivacy.py:303
+#: .\accounts\models\UserPrivacy.py:167 .\accounts\models\UserPrivacy.py:168
+#: .\accounts\models\UserPrivacy.py:304 .\accounts\models\UserPrivacy.py:305
 #: .\events\models\Participation.py:104
 msgid "User"
 msgstr ""
@@ -164,92 +163,92 @@ msgstr ""
 msgid "Hide my Profile from the Members' List"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:100 .\accounts\models\UserPrivacy.py:101
+#: .\accounts\models\UserPrivacy.py:101 .\accounts\models\UserPrivacy.py:102
 msgid "user privacy (general)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:176 .\accounts\models\UserPrivacy.py:178
-#: .\accounts\models\UserPrivacy.py:312 .\accounts\models\UserPrivacy.py:314
+#: .\accounts\models\UserPrivacy.py:177 .\accounts\models\UserPrivacy.py:179
+#: .\accounts\models\UserPrivacy.py:314 .\accounts\models\UserPrivacy.py:316
 msgid ""
 "Who can see my Profile Details (e.g. Avatar, Name, Bio, Gender, Birthday)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:184 .\accounts\models\UserPrivacy.py:186
-#: .\accounts\models\UserPrivacy.py:320 .\accounts\models\UserPrivacy.py:322
+#: .\accounts\models\UserPrivacy.py:185 .\accounts\models\UserPrivacy.py:187
+#: .\accounts\models\UserPrivacy.py:322 .\accounts\models\UserPrivacy.py:324
 msgid "Who can see my Contact Details (e.g. Address, Phone #, Email)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:193 .\accounts\models\UserPrivacy.py:195
-#: .\accounts\models\UserPrivacy.py:329 .\accounts\models\UserPrivacy.py:331
+#: .\accounts\models\UserPrivacy.py:194 .\accounts\models\UserPrivacy.py:196
+#: .\accounts\models\UserPrivacy.py:331 .\accounts\models\UserPrivacy.py:333
 msgid ""
 "Who can see the List of Events, I'm going to participate in (upcoming Events)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:201 .\accounts\models\UserPrivacy.py:203
-#: .\accounts\models\UserPrivacy.py:337 .\accounts\models\UserPrivacy.py:339
+#: .\accounts\models\UserPrivacy.py:202 .\accounts\models\UserPrivacy.py:204
+#: .\accounts\models\UserPrivacy.py:339 .\accounts\models\UserPrivacy.py:341
 msgid "Who can see the List of Events, I participated in (completed Events)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:210 .\accounts\models\UserPrivacy.py:212
-#: .\accounts\models\UserPrivacy.py:346 .\accounts\models\UserPrivacy.py:348
+#: .\accounts\models\UserPrivacy.py:211 .\accounts\models\UserPrivacy.py:213
+#: .\accounts\models\UserPrivacy.py:348 .\accounts\models\UserPrivacy.py:350
 msgid "Who can see the List of Events, I affiliated with "
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:219 .\accounts\models\UserPrivacy.py:221
-#: .\accounts\models\UserPrivacy.py:355 .\accounts\models\UserPrivacy.py:357
+#: .\accounts\models\UserPrivacy.py:220 .\accounts\models\UserPrivacy.py:222
+#: .\accounts\models\UserPrivacy.py:357 .\accounts\models\UserPrivacy.py:359
 msgid ""
 "Who can see the List of Participations, canceled by me (withdrawn "
 "Participations)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:227 .\accounts\models\UserPrivacy.py:230
-#: .\accounts\models\UserPrivacy.py:363 .\accounts\models\UserPrivacy.py:366
+#: .\accounts\models\UserPrivacy.py:228 .\accounts\models\UserPrivacy.py:231
+#: .\accounts\models\UserPrivacy.py:365 .\accounts\models\UserPrivacy.py:368
 msgid ""
 "Who can see the List of Participations, canceled by the Event Organizer/"
 "Admin (rejected Participations)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:236 .\accounts\models\UserPrivacy.py:237
+#: .\accounts\models\UserPrivacy.py:238 .\accounts\models\UserPrivacy.py:239
 msgid "user privacy (members)"
 msgstr ""
 
-#: .\accounts\models\UserPrivacy.py:372 .\accounts\models\UserPrivacy.py:373
+#: .\accounts\models\UserPrivacy.py:375 .\accounts\models\UserPrivacy.py:376
 msgid "user privacy (admins)"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:143 .\accounts\models\UserProfile.py:144
-#: .\events\models\Event.py:233 .\events\models\Event.py:234
-#: .\organizations\models\Organization.py:227
-#: .\organizations\models\Organization.py:228
+#: .\accounts\models\UserProfile.py:146 .\accounts\models\UserProfile.py:147
+#: .\events\models\Event.py:238 .\events\models\Event.py:239
+#: .\organizations\models\Organization.py:232
+#: .\organizations\models\Organization.py:233
 msgid "I will provide the Location later, if any."
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:150 .\events\models\Event.py:240
-#: .\organizations\models\Organization.py:234
+#: .\accounts\models\UserProfile.py:153 .\events\models\Event.py:245
+#: .\organizations\models\Organization.py:239
 msgid "Address"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:151
+#: .\accounts\models\UserProfile.py:154
 msgid "User Address"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:157 .\accounts\models\UserProfile.py:158
+#: .\accounts\models\UserProfile.py:160 .\accounts\models\UserProfile.py:161
 #: .\blog\models\Blog.py:149 .\blog\models\Blog.py:150
-#: .\events\models\Event.py:286 .\events\models\Event.py:287
-#: .\organizations\models\Organization.py:272
-#: .\organizations\models\Organization.py:273
+#: .\events\models\Event.py:291 .\events\models\Event.py:292
+#: .\organizations\models\Organization.py:277
+#: .\organizations\models\Organization.py:278
 msgid "I would like to allow Comments"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:161 .\accounts\models\UserProfile.py:162
+#: .\accounts\models\UserProfile.py:164 .\accounts\models\UserProfile.py:165
 msgid "I would like to receive Email Updates"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:171
+#: .\accounts\models\UserProfile.py:175
 msgid "user profile"
 msgstr ""
 
-#: .\accounts\models\UserProfile.py:172
+#: .\accounts\models\UserProfile.py:176
 msgid "user profiles"
 msgstr ""
 
@@ -317,7 +316,7 @@ msgstr ""
 
 #: .\accounts\templates\accounts\account-list.html:55
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:228
-#: .\accounts\templates\accounts\my-profile-details-info.html:168
+#: .\accounts\templates\accounts\my-profile-details-info.html:175
 msgid "Spotlight"
 msgstr ""
 
@@ -325,7 +324,7 @@ msgstr ""
 #: .\accounts\templates\accounts\foreign-profile-details-events.html:70
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:236
 #: .\accounts\templates\accounts\my-profile-details-events.html:71
-#: .\accounts\templates\accounts\my-profile-details-info.html:173
+#: .\accounts\templates\accounts\my-profile-details-info.html:180
 #: .\blog\templates\blog\post-list.html:92
 #: .\events\templates\events\event-category-list.html:45
 #: .\events\templates\events\event-list.html:72
@@ -496,7 +495,7 @@ msgstr ""
 
 #: .\accounts\templates\accounts\account-signup.html:129
 #: .\accounts\templates\accounts\foreign-profile-details-participations.html:36
-#: .\accounts\templates\accounts\my-profile-details-info.html:37
+#: .\accounts\templates\accounts\my-profile-details-info.html:44
 #: .\accounts\templates\accounts\my-profile-details-participations.html:46
 #: .\accounts\templates\accounts\my-profile-edit.html:180
 #: .\blog\templates\blog\post-create.html:113
@@ -685,7 +684,7 @@ msgstr ""
 #: .\accounts\templates\accounts\foreign-profile-details-events.html:32
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:200
 #: .\accounts\templates\accounts\my-profile-details-events.html:33
-#: .\accounts\templates\accounts\my-profile-details-info.html:139
+#: .\accounts\templates\accounts\my-profile-details-info.html:146
 #: .\events\templates\events\event-base.html:29
 #: .\events\templates\events\event-create.html:33
 #: .\events\templates\events\event-edit.html:34
@@ -708,13 +707,13 @@ msgid "Tag Cloud"
 msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:96
-#: .\accounts\templates\accounts\my-profile-details-info.html:57
+#: .\accounts\templates\accounts\my-profile-details-info.html:64
 msgid "Contact Information"
 msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:136
 #: .\accounts\templates\accounts\fragments\account-thumbnail.html:45
-#: .\accounts\templates\accounts\my-profile-details-info.html:62
+#: .\accounts\templates\accounts\my-profile-details-info.html:69
 #: .\events\templates\events\event-details-info.html:64
 #: .\events\templates\events\fragments\event-thumbnail-hor.html:127
 #: .\events\templates\events\fragments\event-thumbnail-vert.html:59
@@ -726,7 +725,7 @@ msgid "Location is not provided"
 msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:139
-#: .\accounts\templates\accounts\my-profile-details-info.html:65
+#: .\accounts\templates\accounts\my-profile-details-info.html:72
 #: .\events\templates\events\event-details-info.html:67
 #: .\events\templates\events\tabs\info-tab.html:43
 #: .\organizations\templates\organizations\organization-details-info.html:60
@@ -736,8 +735,8 @@ msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:159
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:171
-#: .\accounts\templates\accounts\my-profile-details-info.html:85
-#: .\accounts\templates\accounts\my-profile-details-info.html:86
+#: .\accounts\templates\accounts\my-profile-details-info.html:92
+#: .\accounts\templates\accounts\my-profile-details-info.html:93
 #: .\organizations\templates\organizations\organization-details-info.html:79
 #: .\organizations\templates\organizations\organization-details-info.html:81
 #: .\organizations\templates\organizations\organization-details-info.html:83
@@ -746,7 +745,7 @@ msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:188
 #: .\accounts\templates\accounts\fragments\account-thumbnail.html:56
-#: .\accounts\templates\accounts\my-profile-details-info.html:127
+#: .\accounts\templates\accounts\my-profile-details-info.html:134
 #: .\blog\templates\blog\fragments\post-thumbnail-hor.html:70
 #: .\blog\templates\blog\post-details-info.html:83
 #: .\events\templates\events\event-details-info.html:119
@@ -758,7 +757,7 @@ msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:188
 #: .\accounts\templates\accounts\fragments\account-thumbnail.html:56
-#: .\accounts\templates\accounts\my-profile-details-info.html:127
+#: .\accounts\templates\accounts\my-profile-details-info.html:134
 #: .\app\templates\app\fragments\comment-hor.html:26
 #: .\blog\templates\blog\fragments\post-thumbnail-hor.html:57
 #: .\blog\templates\blog\fragments\post-thumbnail-hor.html:70
@@ -784,7 +783,7 @@ msgid "ago"
 msgstr ""
 
 #: .\accounts\templates\accounts\foreign-profile-details-info.html:222
-#: .\accounts\templates\accounts\my-profile-details-info.html:162
+#: .\accounts\templates\accounts\my-profile-details-info.html:169
 #: .\accounts\templates\accounts\my-profile-edit.html:171
 #: .\accounts\templates\accounts\tabs\foreign-profile\info-tab.html:140
 #: .\events\templates\events\event-details-info.html:189
@@ -897,37 +896,37 @@ msgstr ""
 msgid "You must have a User Account to see more Details."
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:10
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:15
 msgid "Profile Settings"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:13
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:18
 #: .\accounts\templates\accounts\my-profile-edit.html:19
 msgid "Edit Profile"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:14
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:19
 #: .\accounts\templates\accounts\my-profile-privacy.html:6
 msgid "Privacy Settings"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:15
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:20
 msgid "Change Password"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:17
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:22
 #: .\accounts\templates\accounts\my-profile-delete.html:6
 msgid "Delete Profile"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:21
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:26
 #: .\events\templates\events\event-create.html:19
 #: .\events\templates\events\modals\event-create-modal.html:8
 #: .\organizations\templates\organizations\fragments\organization-media-status-breakdown.html:15
 msgid "Create Event"
 msgstr ""
 
-#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:22
+#: .\accounts\templates\accounts\fragments\my-profile-media-status-breakdown.html:33
 #: .\organizations\templates\organizations\organization-create.html:19
 #: .\organizations\templates\organizations\organization-create.old.html:9
 msgid "Create Organization"
@@ -1092,17 +1091,17 @@ msgstr ""
 msgid "Events List"
 msgstr ""
 
-#: .\accounts\templates\accounts\my-profile-details-info.html:58
+#: .\accounts\templates\accounts\my-profile-details-info.html:65
 msgid ""
 "This Information can only be seen by the Organizers of the Events you "
 "participate in."
 msgstr ""
 
-#: .\accounts\templates\accounts\my-profile-details-info.html:254
+#: .\accounts\templates\accounts\my-profile-details-info.html:261
 msgid "Welcome"
 msgstr ""
 
-#: .\accounts\templates\accounts\my-profile-details-info.html:259
+#: .\accounts\templates\accounts\my-profile-details-info.html:266
 #, python-format
 msgid ""
 "\n"
@@ -1120,7 +1119,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\accounts\templates\accounts\my-profile-details-info.html:275
+#: .\accounts\templates\accounts\my-profile-details-info.html:282
 #, python-format
 msgid ""
 "\n"
@@ -1131,7 +1130,7 @@ msgid ""
 "        "
 msgstr ""
 
-#: .\accounts\templates\accounts\my-profile-details-info.html:286
+#: .\accounts\templates\accounts\my-profile-details-info.html:293
 msgid "Let's go"
 msgstr ""
 
@@ -1496,229 +1495,198 @@ msgstr ""
 msgid "Actions"
 msgstr ""
 
-#: .\accounts\views.py:288
+#: .\accounts\views.py:285
 msgid "Sorry, you have entered wrong Email or Password"
 msgstr ""
 
-#: .\accounts\views.py:384
+#: .\accounts\views.py:381
 msgid "An Error has occurred."
 msgstr ""
 
-#: .\accounts\views.py:516
+#: .\accounts\views.py:513
 msgid "All Members"
 msgstr ""
 
 #: .\api\v1\accounts\views.py:74 .\api\v1\accounts\views.py:154
-#: .\api\v2\accounts\views.py:74 .\api\v2\accounts\views.py:154
 msgid "No Email provided."
 msgstr ""
 
-#: .\api\v1\accounts\views.py:101 .\api\v2\accounts\views.py:99
+#: .\api\v1\accounts\views.py:101
 msgid "Failed to update the Email."
 msgstr ""
 
-#: .\api\v1\accounts\views.py:105 .\api\v2\accounts\views.py:103
+#: .\api\v1\accounts\views.py:105
 msgid "Successfully updated the Email."
 msgstr ""
 
 #: .\api\v1\accounts\views.py:168 .\api\v1\accounts\views.py:206
-#: .\api\v2\accounts\views.py:169 .\api\v2\accounts\views.py:205
 msgid "Failed to send the Password Renewal Link."
 msgstr ""
 
-#: .\api\v1\accounts\views.py:173 .\api\v2\accounts\views.py:174
+#: .\api\v1\accounts\views.py:173
 msgid "User not found."
 msgstr ""
 
-#: .\api\v1\accounts\views.py:210 .\api\v2\accounts\views.py:209
+#: .\api\v1\accounts\views.py:210
 msgid "Successfully sent the Password Renewal Link."
 msgstr ""
 
-#: .\api\v1\app\views.py:87
+#: .\api\v1\app\views.py:89
 msgid "No Files attached."
 msgstr ""
 
-#: .\api\v1\app\views.py:289 .\api\v1\app\views.py:553
-#: .\api\v1\app\views.py:759 .\api\v2\app\views.py:150
+#: .\api\v1\app\views.py:356 .\api\v1\app\views.py:620
+#: .\api\v1\app\views.py:826
 msgid ""
 "Neither Account, nor Event, nor Organization, nor Place, nor Post ID "
 "provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:295 .\api\v2\app\views.py:156
+#: .\api\v1\app\views.py:362
 msgid "No Comment Text provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:312 .\api\v2\app\views.py:175
+#: .\api\v1\app\views.py:379
 msgid "Account not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:333 .\api\v1\app\views.py:586
-#: .\api\v1\app\views.py:797 .\api\v1\events\views.py:167
+#: .\api\v1\app\views.py:400 .\api\v1\app\views.py:653
+#: .\api\v1\app\views.py:864 .\api\v1\events\views.py:167
 #: .\api\v1\events\views.py:253 .\api\v1\events\views.py:368
-#: .\api\v1\invites\views.py:142 .\api\v2\app\views.py:199
-#: .\api\v2\events\views.py:187 .\api\v2\events\views.py:274
-#: .\api\v2\events\views.py:364 .\api\v2\events\views.py:492
-#: .\api\v2\events\views.py:587 .\api\v2\events\views.py:715
-#: .\api\v2\events\views.py:824 .\api\v2\events\views.py:926
-#: .\api\v2\events\views.py:1048 .\api\v2\events\views.py:1156
-#: .\api\v2\events\views.py:1285 .\api\v2\events\views.py:1408
-#: .\api\v2\invites\views.py:145
+#: .\api\v1\invites\views.py:142
 msgid "Event not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:354 .\api\v1\app\views.py:603
-#: .\api\v1\app\views.py:814 .\api\v1\invites\views.py:171
+#: .\api\v1\app\views.py:421 .\api\v1\app\views.py:670
+#: .\api\v1\app\views.py:881 .\api\v1\invites\views.py:171
 #: .\api\v1\organizations\views.py:515 .\api\v1\organizations\views.py:782
-#: .\api\v2\app\views.py:223 .\api\v2\app\views.py:506
-#: .\api\v2\app\views.py:771 .\api\v2\invites\views.py:174
-#: .\api\v2\organizations\views.py:429 .\api\v2\organizations\views.py:696
 msgid "Organization not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:368 .\api\v1\app\views.py:624
-#: .\api\v1\app\views.py:835 .\api\v2\app\views.py:240
+#: .\api\v1\app\views.py:435 .\api\v1\app\views.py:691
+#: .\api\v1\app\views.py:902
 msgid "Blog Post not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:377 .\api\v2\app\views.py:250
+#: .\api\v1\app\views.py:444
 msgid "Comments are not allowed."
 msgstr ""
 
-#: .\api\v1\app\views.py:399 .\api\v2\app\views.py:270
+#: .\api\v1\app\views.py:466
 msgid "Successfully added the Comment."
 msgstr ""
 
-#: .\api\v1\app\views.py:447 .\api\v2\app\views.py:318
+#: .\api\v1\app\views.py:514
 msgid "No Comment ID provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:456 .\api\v2\app\views.py:327
+#: .\api\v1\app\views.py:523
 msgid "Comment not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:463 .\api\v1\app\views.py:923
+#: .\api\v1\app\views.py:530 .\api\v1\app\views.py:990
 #: .\api\v1\events\views.py:158 .\api\v1\events\views.py:244
 #: .\api\v1\events\views.py:359 .\api\v1\home\views.py:91
 #: .\api\v1\organizations\views.py:200 .\api\v1\organizations\views.py:281
 #: .\api\v1\organizations\views.py:363 .\api\v1\organizations\views.py:439
 #: .\api\v1\organizations\views.py:505 .\api\v1\organizations\views.py:601
 #: .\api\v1\organizations\views.py:695 .\api\v1\organizations\views.py:773
-#: .\api\v2\app\views.py:334 .\api\v2\app\views.py:441
-#: .\api\v2\app\views.py:481 .\api\v2\app\views.py:489
-#: .\api\v2\app\views.py:544 .\api\v2\app\views.py:551
-#: .\api\v2\app\views.py:738 .\api\v2\app\views.py:745
-#: .\api\v2\app\views.py:876 .\api\v2\events\views.py:175
-#: .\api\v2\events\views.py:262 .\api\v2\events\views.py:352
-#: .\api\v2\events\views.py:480 .\api\v2\events\views.py:575
-#: .\api\v2\events\views.py:812 .\api\v2\events\views.py:914
-#: .\api\v2\events\views.py:1036 .\api\v2\events\views.py:1273
-#: .\api\v2\events\views.py:1396 .\api\v2\home\views.py:78
-#: .\api\v2\organizations\views.py:111 .\api\v2\organizations\views.py:193
-#: .\api\v2\organizations\views.py:275 .\api\v2\organizations\views.py:351
-#: .\api\v2\organizations\views.py:417 .\api\v2\organizations\views.py:513
-#: .\api\v2\organizations\views.py:604 .\api\v2\organizations\views.py:684
 msgid "You don't have Permissions to perform the Action."
 msgstr ""
 
-#: .\api\v1\app\views.py:470 .\api\v2\app\views.py:341
+#: .\api\v1\app\views.py:537
 msgid "Successfully removed the Comment."
 msgstr ""
 
-#: .\api\v1\app\views.py:559 .\api\v2\app\views.py:409
+#: .\api\v1\app\views.py:626
 msgid "No Complaint Text provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:569 .\api\v1\app\views.py:780
-#: .\api\v2\app\views.py:423
+#: .\api\v1\app\views.py:636 .\api\v1\app\views.py:847
 msgid "Member not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:576 .\api\v2\app\views.py:433
+#: .\api\v1\app\views.py:643
 msgid "You already complained on the Member."
 msgstr ""
 
-#: .\api\v1\app\views.py:593 .\api\v2\app\views.py:468
+#: .\api\v1\app\views.py:660
 msgid "You already complained on the event."
 msgstr ""
 
-#: .\api\v1\app\views.py:610 .\api\v2\app\views.py:516
+#: .\api\v1\app\views.py:677
 msgid "You already complained on the Organization."
 msgstr ""
 
-#: .\api\v1\app\views.py:631
+#: .\api\v1\app\views.py:698
 msgid "You already complained on the Post."
 msgstr ""
 
-#: .\api\v1\app\views.py:667 .\api\v2\app\views.py:591
+#: .\api\v1\app\views.py:734
 msgid "Successfully added the Complaint."
 msgstr ""
 
-#: .\api\v1\app\views.py:765
+#: .\api\v1\app\views.py:832
 msgid "Rating is not provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:770
+#: .\api\v1\app\views.py:837
 msgid "Review Text is not provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:787
+#: .\api\v1\app\views.py:854
 msgid "You already rated the Member."
 msgstr ""
 
-#: .\api\v1\app\views.py:804
+#: .\api\v1\app\views.py:871
 msgid "You already rated the Event."
 msgstr ""
 
-#: .\api\v1\app\views.py:821
+#: .\api\v1\app\views.py:888
 msgid "You already rated the Organization."
 msgstr ""
 
-#: .\api\v1\app\views.py:842
+#: .\api\v1\app\views.py:909
 msgid "You already rated the Post."
 msgstr ""
 
-#: .\api\v1\app\views.py:866 .\api\v2\app\views.py:815
+#: .\api\v1\app\views.py:933
 msgid "Successfully added the Rating."
 msgstr ""
 
-#: .\api\v1\app\views.py:909 .\api\v2\app\views.py:858
+#: .\api\v1\app\views.py:976
 msgid "No Rating ID provided."
 msgstr ""
 
-#: .\api\v1\app\views.py:918 .\api\v2\app\views.py:871
+#: .\api\v1\app\views.py:985
 msgid "Rating not found."
 msgstr ""
 
-#: .\api\v1\app\views.py:930 .\api\v2\app\views.py:883
+#: .\api\v1\app\views.py:997
 msgid "Successfully removed the Rating."
 msgstr ""
 
-#: .\api\v1\blog\views.py:73 .\api\v2\blog\views.py:73
-#: .\api\v2\events\views.py:90
+#: .\api\v1\blog\views.py:73
 msgid "No Year provided."
 msgstr ""
 
-#: .\api\v1\blog\views.py:78 .\api\v2\blog\views.py:78
-#: .\api\v2\events\views.py:95
+#: .\api\v1\blog\views.py:78
 msgid "No Month provided."
 msgstr ""
 
 #: .\api\v1\blog\views.py:140 .\api\v1\blog\views.py:204
-#: .\api\v2\blog\views.py:140 .\api\v2\blog\views.py:204
 msgid "Post ID is not provided."
 msgstr ""
 
 #: .\api\v1\blog\views.py:149 .\api\v1\blog\views.py:213
-#: .\api\v2\blog\views.py:149 .\api\v2\blog\views.py:213
 msgid "Post not found."
 msgstr ""
 
-#: .\api\v1\blog\views.py:164 .\api\v2\blog\views.py:164
+#: .\api\v1\blog\views.py:164
 msgid "Successfully published the Post."
 msgstr ""
 
-#: .\api\v1\blog\views.py:228 .\api\v2\blog\views.py:228
+#: .\api\v1\blog\views.py:228
 msgid "Successfully closed the Post."
 msgstr ""
 
@@ -1727,310 +1695,200 @@ msgid "No Year or Month provided."
 msgstr ""
 
 #: .\api\v1\events\views.py:145 .\api\v1\events\views.py:236
-#: .\api\v2\events\views.py:162 .\api\v2\events\views.py:249
-#: .\api\v2\events\views.py:339 .\api\v2\events\views.py:467
-#: .\api\v2\events\views.py:567
 msgid "Event ID is not provided."
 msgstr ""
 
-#: .\api\v1\events\views.py:150 .\api\v2\events\views.py:167
-#: .\api\v2\events\views.py:254 .\api\v2\events\views.py:344
-#: .\api\v2\events\views.py:472
+#: .\api\v1\events\views.py:150
 msgid "No Description Text provided."
 msgstr ""
 
-#: .\api\v1\events\views.py:184 .\api\v2\events\views.py:205
+#: .\api\v1\events\views.py:184
 msgid "Successfully published the Event."
 msgstr ""
 
-#: .\api\v1\events\views.py:294 .\api\v2\events\views.py:654
+#: .\api\v1\events\views.py:294
 msgid "Successfully posted the Participation."
 msgstr ""
 
-#: .\api\v1\events\views.py:341 .\api\v2\events\views.py:698
-#: .\api\v2\events\views.py:794 .\api\v2\events\views.py:901
-#: .\api\v2\events\views.py:1018 .\api\v2\events\views.py:1134
-#: .\api\v2\events\views.py:1255 .\api\v2\events\views.py:1378
+#: .\api\v1\events\views.py:341
 msgid "No Event ID provided."
 msgstr ""
 
-#: .\api\v1\events\views.py:346 .\api\v2\events\views.py:799
-#: .\api\v2\events\views.py:906 .\api\v2\events\views.py:1023
-#: .\api\v2\events\views.py:1260 .\api\v2\events\views.py:1383
+#: .\api\v1\events\views.py:346
 msgid "No Participation ID provided."
 msgstr ""
 
-#: .\api\v1\events\views.py:351 .\api\v2\events\views.py:703
-#: .\api\v2\events\views.py:804 .\api\v2\events\views.py:1028
+#: .\api\v1\events\views.py:351
 msgid "No Cancellation Text provided."
 msgstr ""
 
-#: .\api\v1\events\views.py:381 .\api\v2\events\views.py:728
-#: .\api\v2\events\views.py:837 .\api\v2\events\views.py:939
-#: .\api\v2\events\views.py:1061 .\api\v2\events\views.py:1169
-#: .\api\v2\events\views.py:1298 .\api\v2\events\views.py:1421
+#: .\api\v1\events\views.py:381
 msgid "Participation not found."
 msgstr ""
 
-#: .\api\v1\events\views.py:400 .\api\v2\events\views.py:856
+#: .\api\v1\events\views.py:400
 msgid "Successfully removed the Participant."
 msgstr ""
 
-#: .\api\v1\home\views.py:86 .\api\v2\home\views.py:73
+#: .\api\v1\home\views.py:86
 msgid "No FAQ ID provided."
 msgstr ""
 
-#: .\api\v1\home\views.py:100 .\api\v2\home\views.py:90
+#: .\api\v1\home\views.py:100
 msgid "FAQ not found."
 msgstr ""
 
-#: .\api\v1\home\views.py:107 .\api\v2\home\views.py:97
+#: .\api\v1\home\views.py:107
 msgid "Successfully removed the FAQ."
 msgstr ""
 
-#: .\api\v1\home\views.py:180 .\api\v2\home\views.py:157
+#: .\api\v1\home\views.py:180
 msgid "No Name, Email, Subject or Message provided."
 msgstr ""
 
-#: .\api\v1\home\views.py:229 .\api\v2\home\views.py:198
+#: .\api\v1\home\views.py:229
 msgid "Successfully sent the Message."
 msgstr ""
 
-#: .\api\v1\invites\views.py:94 .\api\v2\invites\views.py:97
+#: .\api\v1\invites\views.py:94
 msgid "No Invitee ID provided."
 msgstr ""
 
-#: .\api\v1\invites\views.py:102 .\api\v2\invites\views.py:102
+#: .\api\v1\invites\views.py:102
 msgid "Neither Event, nor Organization, nor Organization Group ID provided."
 msgstr ""
 
-#: .\api\v1\invites\views.py:107 .\api\v2\invites\views.py:107
+#: .\api\v1\invites\views.py:107
 msgid "No Invitation Text provided."
 msgstr ""
 
-#: .\api\v1\invites\views.py:116 .\api\v2\invites\views.py:119
+#: .\api\v1\invites\views.py:116
 msgid "Invitee not found."
 msgstr ""
 
 #: .\api\v1\invites\views.py:188 .\api\v1\organizations\views.py:614
-#: .\api\v1\organizations\views.py:708 .\api\v2\invites\views.py:191
-#: .\api\v2\organizations\views.py:526 .\api\v2\organizations\views.py:617
+#: .\api\v1\organizations\views.py:708
 msgid "Organization Group not found."
 msgstr ""
 
-#: .\api\v1\invites\views.py:217 .\api\v2\invites\views.py:220
+#: .\api\v1\invites\views.py:217
 msgid "Successfully sent the Invitation."
 msgstr ""
 
-#: .\api\v1\invites\views.py:263 .\api\v2\invites\views.py:266
+#: .\api\v1\invites\views.py:263
 msgid "No Kind provided."
 msgstr ""
 
-#: .\api\v1\invites\views.py:290 .\api\v2\invites\views.py:294
+#: .\api\v1\invites\views.py:290
 msgid "Successfully archived the Invitations."
 msgstr ""
 
 #: .\api\v1\invites\views.py:333 .\api\v1\invites\views.py:448
-#: .\api\v1\invites\views.py:536 .\api\v2\invites\views.py:337
-#: .\api\v2\invites\views.py:452 .\api\v2\invites\views.py:540
+#: .\api\v1\invites\views.py:536
 msgid "No Invite ID provided."
 msgstr ""
 
 #: .\api\v1\invites\views.py:346 .\api\v1\invites\views.py:466
-#: .\api\v1\invites\views.py:549 .\api\v2\invites\views.py:350
-#: .\api\v2\invites\views.py:470 .\api\v2\invites\views.py:553
+#: .\api\v1\invites\views.py:549
 msgid "Invite not found."
 msgstr ""
 
 #: .\api\v1\invites\views.py:351 .\api\v1\invites\views.py:471
-#: .\api\v1\invites\views.py:554 .\api\v2\invites\views.py:355
-#: .\api\v2\invites\views.py:475 .\api\v2\invites\views.py:558
+#: .\api\v1\invites\views.py:554
 msgid "Invite Status has been changed already."
 msgstr ""
 
-#: .\api\v1\invites\views.py:402 .\api\v2\invites\views.py:406
+#: .\api\v1\invites\views.py:402
 msgid "Successfully accepted the Invitation."
 msgstr ""
 
-#: .\api\v1\invites\views.py:453 .\api\v2\events\views.py:1388
-#: .\api\v2\invites\views.py:457
+#: .\api\v1\invites\views.py:453
 msgid "No Rejection Text provided."
 msgstr ""
 
-#: .\api\v1\invites\views.py:490 .\api\v2\invites\views.py:494
+#: .\api\v1\invites\views.py:490
 msgid "Successfully rejected the Invitation."
 msgstr ""
 
-#: .\api\v1\invites\views.py:572 .\api\v2\invites\views.py:576
+#: .\api\v1\invites\views.py:572
 msgid "Successfully revoked the Invitation."
 msgstr ""
 
 #: .\api\v1\organizations\views.py:176 .\api\v1\organizations\views.py:427
 #: .\api\v1\organizations\views.py:492 .\api\v1\organizations\views.py:765
-#: .\api\v2\organizations\views.py:89 .\api\v2\organizations\views.py:339
-#: .\api\v2\organizations\views.py:404 .\api\v2\organizations\views.py:676
 msgid "No Organization ID provided."
 msgstr ""
 
 #: .\api\v1\organizations\views.py:181 .\api\v1\organizations\views.py:273
 #: .\api\v1\organizations\views.py:355 .\api\v1\organizations\views.py:497
 #: .\api\v1\organizations\views.py:593 .\api\v1\organizations\views.py:687
-#: .\api\v2\organizations\views.py:94 .\api\v2\organizations\views.py:185
-#: .\api\v2\organizations\views.py:267 .\api\v2\organizations\views.py:409
-#: .\api\v2\organizations\views.py:505 .\api\v2\organizations\views.py:596
 msgid "No Payload provided."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:217 .\api\v2\organizations\views.py:129
+#: .\api\v1\organizations\views.py:217
 msgid "Successfully changed the Staff Members Order."
 msgstr ""
 
 #: .\api\v1\organizations\views.py:268 .\api\v1\organizations\views.py:350
-#: .\api\v2\organizations\views.py:180 .\api\v2\organizations\views.py:262
 msgid "No Organization/Member ID provided."
 msgstr ""
 
 #: .\api\v1\organizations\views.py:294 .\api\v1\organizations\views.py:376
-#: .\api\v2\organizations\views.py:206 .\api\v2\organizations\views.py:288
 msgid "Organization Staff Member not found."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:302 .\api\v2\organizations\views.py:214
+#: .\api\v1\organizations\views.py:302
 msgid "Successfully updated the Staff Member Information."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:382 .\api\v2\organizations\views.py:294
+#: .\api\v1\organizations\views.py:382
 msgid "Successfully removed the Staff Member."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:457 .\api\v2\organizations\views.py:369
+#: .\api\v1\organizations\views.py:457
 msgid "Successfully pulled out the Groups."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:537 .\api\v2\organizations\views.py:451
+#: .\api\v1\organizations\views.py:537
 msgid "Successfully created the Group."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:588 .\api\v2\organizations\views.py:500
+#: .\api\v1\organizations\views.py:588
 msgid "No Organization/Group ID provided."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:628 .\api\v2\organizations\views.py:540
+#: .\api\v1\organizations\views.py:628
 msgid "Successfully removed the Group."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:682 .\api\v2\organizations\views.py:591
+#: .\api\v1\organizations\views.py:682
 msgid "No Organization/Group/Member ID provided."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:716 .\api\v2\organizations\views.py:627
+#: .\api\v1\organizations\views.py:716
 msgid "Organization Group Member not found."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:724 .\api\v2\organizations\views.py:635
+#: .\api\v1\organizations\views.py:724
 msgid "Successfully removed the Group Member."
 msgstr ""
 
-#: .\api\v1\organizations\views.py:792 .\api\v2\organizations\views.py:706
+#: .\api\v1\organizations\views.py:792
 msgid ""
 "You have successfully subscribed to the Organization's Newsletters and "
 "Notifications."
 msgstr ""
 
-#: .\api\v1\serializers.py:43 .\api\v2\serializers.py:38
+#: .\api\v1\serializers.py:43
 msgid "User Account is disabled."
 msgstr ""
 
-#: .\api\v1\serializers.py:49 .\api\v2\serializers.py:44
+#: .\api\v1\serializers.py:49
 msgid "Unable to login with provided Credentials."
 msgstr ""
 
-#: .\api\v1\serializers.py:51 .\api\v2\serializers.py:46
+#: .\api\v1\serializers.py:51
 msgid "Must include \"username\" and \"password\""
-msgstr ""
-
-#: .\api\v2\app\views.py:404
-msgid "Neither Account, nor event, nor Organization, ID provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:458 .\api\v2\app\views.py:715
-msgid "event not found."
-msgstr ""
-
-#: .\api\v2\app\views.py:680
-msgid "Neither Event, nor Organizer ID provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:685
-msgid "Neither Event, nor Organizer Rating provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:690
-msgid "Neither Event, nor Organizer Review Text provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:696
-msgid "Organization Rating is not provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:701
-msgid "Organization Review Text is not provided."
-msgstr ""
-
-#: .\api\v2\app\views.py:725
-msgid "You already rated the event."
-msgstr ""
-
-#: .\api\v2\app\views.py:798
-msgid "Organizer not found."
-msgstr ""
-
-#: .\api\v2\events\views.py:295
-msgid "Successfully completed the Event."
-msgstr ""
-
-#: .\api\v2\events\views.py:422
-msgid "Successfully cloned the Event."
-msgstr ""
-
-#: .\api\v2\events\views.py:513
-msgid "Successfully closed the Event."
-msgstr ""
-
-#: .\api\v2\events\views.py:747
-msgid "Successfully withdrew the Participation."
-msgstr ""
-
-#: .\api\v2\events\views.py:970
-msgid "Successfully accepted the Participation Request."
-msgstr ""
-
-#: .\api\v2\events\views.py:1080
-msgid "Successfully rejected the Participation Request."
-msgstr ""
-
-#: .\api\v2\events\views.py:1139
-msgid "No Activity Text provided."
-msgstr ""
-
-#: .\api\v2\events\views.py:1144
-msgid "No Learning Text provided."
-msgstr ""
-
-#: .\api\v2\events\views.py:1205
-msgid "Successfully submitted the Experience Report."
-msgstr ""
-
-#: .\api\v2\events\views.py:1265
-msgid "No Acknowledgment Text provided."
-msgstr ""
-
-#: .\api\v2\events\views.py:1332
-msgid "Successfully accepted the Experience Report."
-msgstr ""
-
-#: .\api\v2\events\views.py:1440
-msgid "Successfully rejected the Experience Report."
 msgstr ""
 
 #: .\api\views.py:84
@@ -2213,11 +2071,11 @@ msgstr ""
 msgid "Feature Testers"
 msgstr ""
 
-#: .\app\models\Feature.py:171
+#: .\app\models\Feature.py:172
 msgid "feature"
 msgstr ""
 
-#: .\app\models\Feature.py:172
+#: .\app\models\Feature.py:173
 msgid "features"
 msgstr ""
 
@@ -2370,16 +2228,16 @@ msgid "Post Title"
 msgstr ""
 
 #: .\blog\forms.py:61 .\blog\models\Blog.py:131 .\events\forms.py:185
-#: .\events\models\Event.py:202 .\organizations\forms.py:96
-#: .\organizations\models\Organization.py:195
+#: .\events\models\Event.py:207 .\organizations\forms.py:96
+#: .\organizations\models\Organization.py:200
 msgid "Tags"
 msgstr ""
 
 #: .\blog\forms.py:66 .\blog\models\Blog.py:136 .\blog\models\Blog.py:137
-#: .\events\forms.py:190 .\events\models\Event.py:207
-#: .\events\models\Event.py:208 .\organizations\forms.py:102
-#: .\organizations\models\Organization.py:200
-#: .\organizations\models\Organization.py:201
+#: .\events\forms.py:190 .\events\models\Event.py:212
+#: .\events\models\Event.py:213 .\organizations\forms.py:102
+#: .\organizations\models\Organization.py:205
+#: .\organizations\models\Organization.py:206
 msgid "Hashtag"
 msgstr ""
 
@@ -2411,8 +2269,8 @@ msgstr ""
 msgid "Post Content"
 msgstr ""
 
-#: .\blog\models\Blog.py:132 .\events\models\Event.py:203
-#: .\organizations\models\Organization.py:196
+#: .\blog\models\Blog.py:132 .\events\models\Event.py:208
+#: .\organizations\models\Organization.py:201
 msgid "A comma-separated List of Tags."
 msgstr ""
 
@@ -2420,11 +2278,11 @@ msgstr ""
 msgid "Post Status"
 msgstr ""
 
-#: .\blog\models\Blog.py:155
+#: .\blog\models\Blog.py:156
 msgid "blog post"
 msgstr ""
 
-#: .\blog\models\Blog.py:156
+#: .\blog\models\Blog.py:157
 msgid "blog posts"
 msgstr ""
 
@@ -2652,7 +2510,7 @@ msgid "Veterans & Seniors"
 msgstr ""
 
 #: .\events\models\Category.py:164 .\events\models\Category.py:165
-#: .\events\models\Event.py:212
+#: .\events\models\Event.py:217
 #: .\events\templates\events\tabs\info-tab.html:116
 msgid "Category"
 msgstr ""
@@ -2681,87 +2539,87 @@ msgstr ""
 msgid "Category Image"
 msgstr ""
 
-#: .\events\models\Category.py:185
+#: .\events\models\Category.py:186
 msgid "category"
 msgstr ""
 
-#: .\events\models\Category.py:186
+#: .\events\models\Category.py:187
 msgid "categories"
 msgstr ""
 
-#: .\events\models\Event.py:65
+#: .\events\models\Event.py:70
 #: .\events\templates\events\fragments\event-media-status-breakdown.html:40
 msgid "Public"
 msgstr ""
 
-#: .\events\models\Event.py:66
+#: .\events\models\Event.py:71
 #: .\events\templates\events\fragments\event-media-status-breakdown.html:38
 msgid "Private"
 msgstr ""
 
-#: .\events\models\Event.py:178 .\home\models\Section.py:80
-#: .\organizations\models\Organization.py:171
+#: .\events\models\Event.py:183 .\home\models\Section.py:80
+#: .\organizations\models\Organization.py:176
 #: .\organizations\models\OrganizationGroup.py:59
 #: .\organizations\models\OrganizationStaff.py:57
 msgid "Author"
 msgstr ""
 
-#: .\events\models\Event.py:179
+#: .\events\models\Event.py:184
 msgid "Event Author"
 msgstr ""
 
-#: .\events\models\Event.py:213
+#: .\events\models\Event.py:218
 msgid "Event Category"
 msgstr ""
 
-#: .\events\models\Event.py:218
+#: .\events\models\Event.py:223
 msgid "Visibility"
 msgstr ""
 
-#: .\events\models\Event.py:219
+#: .\events\models\Event.py:224
 msgid "Event Visibility"
 msgstr ""
 
-#: .\events\models\Event.py:225
+#: .\events\models\Event.py:230
 msgid "Private URL"
 msgstr ""
 
-#: .\events\models\Event.py:226
+#: .\events\models\Event.py:231
 msgid "Event private URL"
 msgstr ""
 
-#: .\events\models\Event.py:241
+#: .\events\models\Event.py:246
 msgid "Event Location"
 msgstr ""
 
-#: .\events\models\Event.py:249 .\events\templates\events\event-create.html:164
+#: .\events\models\Event.py:254 .\events\templates\events\event-create.html:164
 #: .\events\templates\events\event-edit.html:191
 msgid "Date"
 msgstr ""
 
-#: .\events\models\Event.py:250
+#: .\events\models\Event.py:255
 msgid "Event Date"
 msgstr ""
 
-#: .\events\models\Event.py:260 .\organizations\models\Organization.py:245
+#: .\events\models\Event.py:265 .\organizations\models\Organization.py:250
 msgid "Followers"
 msgstr ""
 
-#: .\events\models\Event.py:261
+#: .\events\models\Event.py:266
 msgid "Event Followers"
 msgstr ""
 
-#: .\events\models\Event.py:267 .\organizations\models\Organization.py:252
+#: .\events\models\Event.py:272 .\organizations\models\Organization.py:257
 #: .\organizations\templates\organizations\organization-details-info.html:209
 #: .\organizations\templates\organizations\tabs\info-tab.html:271
 msgid "Subscribers"
 msgstr ""
 
-#: .\events\models\Event.py:268
+#: .\events\models\Event.py:273
 msgid "Event Subscribers"
 msgstr ""
 
-#: .\events\models\Event.py:278 .\organizations\models\OrganizationGroup.py:66
+#: .\events\models\Event.py:283 .\organizations\models\OrganizationGroup.py:66
 #: .\organizations\models\OrganizationGroup.py:67
 #: .\organizations\models\OrganizationStaff.py:64
 #: .\organizations\models\OrganizationStaff.py:65
@@ -2770,53 +2628,53 @@ msgstr ""
 msgid "Organization"
 msgstr ""
 
-#: .\events\models\Event.py:279
+#: .\events\models\Event.py:284
 msgid "Event Organization"
 msgstr ""
 
-#: .\events\models\Event.py:293
+#: .\events\models\Event.py:299
 msgid "event"
 msgstr ""
 
-#: .\events\models\Event.py:294
+#: .\events\models\Event.py:300
 msgid "events"
 msgstr ""
 
-#: .\events\models\Event.py:450 .\events\models\Event.py:493
-#: .\events\models\Event.py:539 .\events\models\Event.py:637
-#: .\events\models\Event.py:683 .\events\models\Event.py:726
-#: .\events\models\Event.py:770 .\events\models\Event.py:812
+#: .\events\models\Event.py:456 .\events\models\Event.py:499
+#: .\events\models\Event.py:545 .\events\models\Event.py:643
+#: .\events\models\Event.py:689 .\events\models\Event.py:732
+#: .\events\models\Event.py:776 .\events\models\Event.py:818
 #, python-format
 msgid "Dear, %(user)s."
 msgstr ""
 
-#: .\events\models\Event.py:454
+#: .\events\models\Event.py:460
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" Draft, was successfully "
 "created.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:497
+#: .\events\models\Event.py:503
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created.</"
 "p>"
 msgstr ""
 
-#: .\events\models\Event.py:543
+#: .\events\models\Event.py:549
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\" was successfully created, "
 "and you were added as a contact Person to it.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:586
+#: .\events\models\Event.py:592
 #, python-format
 msgid "The \"<a href=\"%(url)s\">%(name)s</a>\" recent Activity."
 msgstr ""
 
-#: .\events\models\Event.py:591
+#: .\events\models\Event.py:597
 #, python-format
 msgid ""
 "<p>Dear, %(user)s,</p><p>The Organization \"<a "
@@ -2826,19 +2684,19 @@ msgid ""
 "Activity Notifications.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:641
+#: .\events\models\Event.py:647
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was modified.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:687
+#: .\events\models\Event.py:693
 #, python-format
 msgid ""
 "<p>The Event \"<a href=\"%(url)s\">%(name)s</a>\", where you added as a "
 "contact Person, was modified.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:730
+#: .\events\models\Event.py:736
 #, python-format
 msgid ""
 "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was complete!</"
@@ -2847,14 +2705,46 @@ msgid ""
 "Experience Reports.</p>"
 msgstr ""
 
-#: .\events\models\Event.py:774
+#: .\events\models\Event.py:780
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was cloned!</p>"
 msgstr ""
 
-#: .\events\models\Event.py:816
+#: .\events\models\Event.py:822
 #, python-format
 msgid "<p>Your Event \"<a href=\"%(url)s\">%(name)s</a>\" was closed!</p>"
+msgstr ""
+
+#: .\events\models\Event.py:992
+msgid "You reached the maximum of {} Events per Day."
+msgstr ""
+
+#: .\events\models\Event.py:995
+msgid "You used {} of {} Events per Day."
+msgstr ""
+
+#: .\events\models\Event.py:1002
+msgid "You reached the maximum of {} Events per Week."
+msgstr ""
+
+#: .\events\models\Event.py:1005
+msgid "You used {} of {} Events per Week."
+msgstr ""
+
+#: .\events\models\Event.py:1012
+msgid "You reached the maximum of {} Events per Month."
+msgstr ""
+
+#: .\events\models\Event.py:1015
+msgid "You used {} of {} Events per Month."
+msgstr ""
+
+#: .\events\models\Event.py:1022
+msgid "You reached the maximum of {} Events per Year."
+msgstr ""
+
+#: .\events\models\Event.py:1025
+msgid "You used {} of {} Events per Year."
 msgstr ""
 
 #: .\events\models\Participation.py:45
@@ -2959,11 +2849,11 @@ msgstr ""
 msgid "Date of acknowledging of the Experience Report"
 msgstr ""
 
-#: .\events\models\Participation.py:197
+#: .\events\models\Participation.py:198
 msgid "participation"
 msgstr ""
 
-#: .\events\models\Participation.py:198
+#: .\events\models\Participation.py:199
 msgid "participations"
 msgstr ""
 
@@ -2971,11 +2861,11 @@ msgstr ""
 msgid "Quantity"
 msgstr ""
 
-#: .\events\models\Role.py:108
+#: .\events\models\Role.py:109
 msgid "role"
 msgstr ""
 
-#: .\events\models\Role.py:109
+#: .\events\models\Role.py:110
 msgid "roles"
 msgstr ""
 
@@ -3466,7 +3356,7 @@ msgstr ""
 msgid "There are no Members, waiting for Confirmation, at the moment"
 msgstr ""
 
-#: .\events\views.py:154
+#: .\events\views.py:152
 msgid "All Events"
 msgstr ""
 
@@ -3494,26 +3384,26 @@ msgstr ""
 msgid "Answer"
 msgstr ""
 
-#: .\home\models\FAQ.py:79
+#: .\home\models\FAQ.py:80
 msgid "frequently asked question"
 msgstr ""
 
-#: .\home\models\FAQ.py:80
+#: .\home\models\FAQ.py:81
 msgid "frequently asked questions"
 msgstr ""
 
 #: .\home\models\Partner.py:107 .\home\models\Partner.py:108
-#: .\organizations\forms.py:112 .\organizations\models\Organization.py:209
+#: .\organizations\forms.py:112 .\organizations\models\Organization.py:214
 #: .\organizations\templates\organizations\organization-details-info.html:81
 #: .\organizations\templates\organizations\tabs\info-tab.html:61
 msgid "Website"
 msgstr ""
 
-#: .\home\models\Partner.py:113
+#: .\home\models\Partner.py:114
 msgid "partner"
 msgstr ""
 
-#: .\home\models\Partner.py:114
+#: .\home\models\Partner.py:115
 msgid "partners"
 msgstr ""
 
@@ -3533,11 +3423,11 @@ msgstr ""
 msgid "Section Order (auto-incremented)"
 msgstr ""
 
-#: .\home\models\Section.py:96
+#: .\home\models\Section.py:97
 msgid "section"
 msgstr ""
 
-#: .\home\models\Section.py:97
+#: .\home\models\Section.py:98
 msgid "sections"
 msgstr ""
 
@@ -5040,11 +4930,11 @@ msgstr ""
 msgid "Archived for Invitee"
 msgstr ""
 
-#: .\invites\models\Invite.py:221
+#: .\invites\models\Invite.py:222
 msgid "invite"
 msgstr ""
 
-#: .\invites\models\Invite.py:222
+#: .\invites\models\Invite.py:223
 msgid "invites"
 msgstr ""
 
@@ -5119,7 +5009,7 @@ msgstr ""
 msgid "Embedded Video (Link)"
 msgstr ""
 
-#: .\organizations\forms.py:122 .\organizations\models\Organization.py:220
+#: .\organizations\forms.py:122 .\organizations\models\Organization.py:225
 msgid "Organization Email"
 msgstr ""
 
@@ -5127,47 +5017,79 @@ msgstr ""
 msgid "Reserved Word cannot be used as an Organization Name."
 msgstr ""
 
-#: .\organizations\models\Organization.py:172
+#: .\organizations\models\Organization.py:177
 msgid "Organization Author"
 msgstr ""
 
-#: .\organizations\models\Organization.py:210
+#: .\organizations\models\Organization.py:215
 msgid "Organization Website"
 msgstr ""
 
-#: .\organizations\models\Organization.py:214
+#: .\organizations\models\Organization.py:219
 #: .\organizations\templates\organizations\organization-details-info.html:83
 #: .\organizations\templates\organizations\tabs\info-tab.html:63
 msgid "Video"
 msgstr ""
 
-#: .\organizations\models\Organization.py:215
+#: .\organizations\models\Organization.py:220
 msgid "Organization Informational Video"
 msgstr ""
 
-#: .\organizations\models\Organization.py:235
+#: .\organizations\models\Organization.py:240
 msgid "Organization Address"
 msgstr ""
 
-#: .\organizations\models\Organization.py:246
+#: .\organizations\models\Organization.py:251
 msgid "Organization Followers"
 msgstr ""
 
-#: .\organizations\models\Organization.py:253
+#: .\organizations\models\Organization.py:258
 msgid "Organization Subscribers"
 msgstr ""
 
-#: .\organizations\models\Organization.py:264
-#: .\organizations\models\Organization.py:265
+#: .\organizations\models\Organization.py:269
+#: .\organizations\models\Organization.py:270
 msgid "Parent Organization"
 msgstr ""
 
-#: .\organizations\models\Organization.py:279
+#: .\organizations\models\Organization.py:285
 msgid "organization"
 msgstr ""
 
-#: .\organizations\models\Organization.py:280
+#: .\organizations\models\Organization.py:286
 msgid "organizations"
+msgstr ""
+
+#: .\organizations\models\Organization.py:582
+msgid "You reached the maximum of {} Organizations per Day."
+msgstr ""
+
+#: .\organizations\models\Organization.py:585
+msgid "You used {} of {} Organizations per Day."
+msgstr ""
+
+#: .\organizations\models\Organization.py:592
+msgid "You reached the maximum of {} Organizations per Week."
+msgstr ""
+
+#: .\organizations\models\Organization.py:595
+msgid "You used {} of {} Organizations per Week."
+msgstr ""
+
+#: .\organizations\models\Organization.py:602
+msgid "You reached the maximum of {} Organizations per Month."
+msgstr ""
+
+#: .\organizations\models\Organization.py:605
+msgid "You used {} of {} Organizations per Month."
+msgstr ""
+
+#: .\organizations\models\Organization.py:612
+msgid "You reached the maximum of {} Organizations per Year."
+msgstr ""
+
+#: .\organizations\models\Organization.py:615
+msgid "You used {} of {} Organizations per Year."
 msgstr ""
 
 #: .\organizations\models\OrganizationGroup.py:60

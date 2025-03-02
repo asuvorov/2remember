@@ -1,0 +1,20 @@
+[run]
+omit =
+    *__init__.py
+    *admin.py
+    *migrations/*
+    *settings/*
+    *tests/*
+source = .
+
+[report]
+fail_under = 90
+show_missing = True
+skip_covered = True
+skip_empty = True
+omit =
+    *__init__.py
+    *admin.py
+    *migrations/*
+    *settings/*
+    *tests/*
