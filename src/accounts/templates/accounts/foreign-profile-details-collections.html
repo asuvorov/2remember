@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "accounts/foreign-profile-base.html" %}
 
 {% load cache %}
 {% load i18n %}
@@ -7,11 +7,9 @@
     Input Parameters:
         :<request> - Request
 
-        :<collections> - List of Collections
-        :<page_title>  - Page Title
+        :<collections>      - List of Collections
         :<page_total>  - Total Number of Pages
         :<page_number> - Number of current Page
-        :<filter_form> - Filter Form
 {% endcomment %}
 
 {% get_current_language as LANGUAGE_CODE %}
@@ -30,16 +28,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'profile-view' account.uid %}">{{ account.profile.auth_name }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Collections" %}</li>
         </ol>
     </nav>
-</a>
+</div>
 {% endblock %}
 
-{% block header %}{% endblock %}
-
-{% block content %}
-<div id="collection-list" class="bg-body-tertiary p-3">
+{% block content%}
+<div id="foreign-profile-collections" class="bg-body-tertiary p-3">
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START CONTROLLERS -->
@@ -62,6 +60,8 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+
             <!-- Tag Cloud -->
             <section id="tag-cloud">
             {% cache 60 tag-cloud-collections LANGUAGE_CODE %}
@@ -79,42 +79,14 @@
     </div>
 </div>
 
-<!-- Script -->
+<!-- Modals -->
 
-<script>
-    /*************************************************************************/
-    /*** Submit Form                                                       ***/
-    /*************************************************************************/
-    $("a[name='submit']").click(function () {
-        $("#spinner").fadeIn("slow");
-        $("form#filter-collection-form").submit();
+<!-- Scripts -->
 
-        return true;
-    })
-
+<script type="text/javascript">
     /*************************************************************************/
-    /*** collection Category Toggle                                             ***/
+    /*** Global Variables                                                  ***/
     /*************************************************************************/
-    // $(".category-item").click(function (collection) {
-    //     var element = $(this);
-    //     var collection = window.collection || collection;
-    //     collection.prcollectionDefault();
-    //     var category_id = $(this).children().attr("category");
-    //     console.log(">>> CATEGORY ID:", category_id);
-    //     if (category_id === "") {
-    //         $(".collection-thumb-container").show("slow", function () {
-    //             fixFooter();
-    //         });
-    //     } else {
-    //         $(".collection-thumb-container[category!='" + category_id + "']").hide("slow", function () {
-    //             fixFooter();
-    //             $(".collection-thumb-container[category='" + category_id + "']").show("slow", function () {
-    //                 fixFooter();
-    //             });
-    //         });
-    //     }
-    // })
+    var element;
 </script>
 {% endblock %}
-
-{% block extra_content %}{% endblock %}

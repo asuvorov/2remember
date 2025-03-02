@@ -167,6 +167,13 @@
 
                 <hr>
 
+                <!-- START EVENT LOCATION -->
+                <section id="event-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  EVENT LOCATION -->
+
                 <!-- START EVENT ROLES -->
                 {% comment %}
                 <section id="event-roles">
@@ -174,13 +181,6 @@
                 </section>
                 {% endcomment %}
                 <!--  END  EVENT ROLES -->
-
-                <!-- START EVENT LOCATION -->
-                <section id="event-location">
-                    <h3>{% trans "Location" %}</h3>
-                    {% include "app/fragments/address.html" %}
-                </section>
-                <!--  END  EVENT LOCATION -->
 
                 <hr>
 
@@ -211,22 +211,6 @@
                     </div>
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
-
-                <!-- START EVENT APPLICATION -->
-                {% comment %}
-                <section id="event-application">
-                    <h3>{% trans "Application" %}</h3>
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT APPLICATION -->
-
-                <!-- START EVENT CONTACT PERSON -->
-                {% comment %}
-                <section id="event-contact-person">
-                    <h3>{% trans "Contact Person" %}</h3>
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT CONTACT PERSON -->
 
                 <!-- START EVENT SOCIAL LINKS -->
                 {% comment %}
@@ -419,16 +403,6 @@
             {% endif %}
         {% endfor %}
 
-        {% for field in nform %}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    new Noty({
-                        text: "{{ field.label }}: {{ error }}"
-                    }).show();
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-
         {% for form in formset_roles.forms %}
             {% for field in form %}
                 {% if field.errors %}
@@ -452,38 +426,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Contact Person UX                                             ***/
-        /*********************************************************************/
-        $("#alt_person_creds").hide();
-
-        var selected = $("input[type='radio']:checked");
-
-        if (selected.val() == "he") {
-            $("#alt_person_creds").show("slow");
-        }
-
-        $("#id_contact_0").click(function () {
-            $("#alt_person_creds").hide("slow");
-        });
-
-        $("#id_contact_1").click(function () {
-            $("#alt_person_creds").show("slow");
-        })
-
-        /*********************************************************************/
-        /*** Automatically accept Experience Reports UX                    ***/
-        /*********************************************************************/
-        $("#id_acceptance_text_div").hide();
-
-        if ($("#id_accept_automatically").prop("checked")) {
-            $("#id_acceptance_text_div").show("slow");
-        }
-
-        $("#id_accept_automatically").click(function () {
-            $("#id_acceptance_text_div").toggle("slow");
-        });
     });
 </script>
 {% endblock %}

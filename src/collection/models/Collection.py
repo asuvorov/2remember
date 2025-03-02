@@ -36,6 +36,11 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app import (
+    DAY_AGO,
+    WEEK_AGO,
+    MONTH_AGO,
+    YEAR_AGO)
 from app.models import (
     Visibility,
     visibility_choices)
@@ -506,3 +511,61 @@ class CollectionMixin:
             Q(author=self.user))
 
         return admin_collections
+
+    def check_collection_create_eligibilty(self):
+        """Check, if User is eligible to create an Collection."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        eligible = True
+        details = []
+
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        max_collections = subscription_plan["collections"]
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        collections = Collection.objects.all()
+
+        if max_collections["max_per_day"]:
+            count = collections.filter(created__gte=DAY_AGO).count()
+            if count >= max_collections["max_per_day"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Collections per Day.").format(
+                    max_collections["max_per_day"])))
+            else:
+                details.append((True, _("You used {} of {} Collections per Day.").format(
+                    count, max_collections["max_per_day"])))
+
+        if max_collections["max_per_week"]:
+            count = collections.filter(created__gte=WEEK_AGO).count()
+            if count >= max_collections["max_per_week"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} EveCollectionsnCollectionsts per Week.").format(
+                    max_collections["max_per_week"])))
+            else:
+                details.append((True, _("You used {} of {} Collections per Week.").format(
+                    count, max_collections["max_per_week"])))
+
+        if max_collections["max_per_month"]:
+            count = collections.filter(created__gte=MONTH_AGO).count()
+            if count >= max_collections["max_per_month"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Collections per Month.").format(
+                    max_collections["max_per_month"])))
+            else:
+                details.append((True, _("You used {} of {} Collections per Month.").format(
+                    count, max_collections["max_per_month"])))
+
+        if max_collections["max_per_year"]:
+            count = collections.filter(created__gte=YEAR_AGO).count()
+            if count >= max_collections["max_per_year"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} EvCollectionseCollectionsnts per Year.").format(
+                    max_collections["max_per_year"])))
+            else:
+                details.append((True, _("You used {} of {} Collections per Year.").format(
+                    count, max_collections["max_per_year"])))
+
+        return (eligible, details)

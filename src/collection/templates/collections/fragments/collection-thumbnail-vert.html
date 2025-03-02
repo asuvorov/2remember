@@ -1,0 +1,77 @@
+{% load cache %}
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collection> - Collection
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% cache 60 collection-thumbnail collection.slug LANGUAGE_CODE %}
+<div class="collection-thumbnail-vert card {% if collection.is_private %}card-private{% endif %} mb-3 shadow bg-body rounded" category="{{ collection.category|default:'' }}">
+    <a href="{% url 'collection-details' collection.slug %}">
+    {% if collection.preview %}
+        {% generateimage "common:medium_fill_wide" source=collection.preview -- alt=collection.title class='img-fluid' %}
+    {% else %}
+    {% endif %}
+    <!-- <img src="..." class="img-fluid rounded-start" alt="..."> -->
+    {% if collection.is_private %}
+        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">Private</span>
+    {% endif %}
+        <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"><i class="bi bi-calendar-event">&nbsp;{{ collection.events.count }}</i></span>
+    </a>
+
+    <div class="card-body">
+        <a href="{% url 'collection-details' collection.slug %}">
+            <h5 class="card-title">
+                {{ collection.title|truncatechars:50 }}
+
+            {% if collection.get_rating_avg > 0 %}
+                <div class="" style="color:orange;">
+                    <input id="id_collection_rating" name="collection_rating" type="hidden" class="rating" data-filled="bi bi-star" data-empty="bi bi-star-o" data-start="0" data-stop="5" data-step="1" disabled="disabled" value="{{ collection.get_rating_avg }}" />
+                </div>
+            {% endif %}
+            </h5>
+        </a>
+
+        <p class="card-text"><small class="text-muted">{{ collection.description|striptags|truncatechars:200 }}</small></p>
+        <p class="card-text">
+        {% if collection.tags.all and collection.hashtag %}
+            <i class="bi bi-tags"></i>{% for tag in collection.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}<br/>
+            <i class="bi bi-hash"></i>{{ collection.hashtag }}
+        {% elif collection.tags.all %}
+            <i class="bi bi-tags"></i>{% for tag in collection.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+        {% elif collection.hashtag %}
+            <i class="bi bi-hash"></i>{{ collection.hashtag }}>
+        {% endif %}
+        </p>
+
+        <p class="card-text">
+        {% if collection.author.profile.avatar %}
+            {% generateimage "header:thumbnail" source=collection.author.profile.avatar -- alt=collection.author.profile.auth_name %}
+        {% else %}
+            <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+        {% endif %}
+            <a href="{% url 'profile-view' collection.author.uid %}"> {{ collection.author.first_name }}</a> {{ collection.created|timesince }} {% trans "ago" %}
+        </p>
+    </div>
+
+    <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <small class="text-muted">
+                <i class="bi bi-feather"></i>{{ collection.comments_count }}
+                <span class="vert-delimiter">|</span>
+                <i class="bi bi-eye"></i>{{ collection.views_count }}
+
+                <br/>
+
+                {% trans "Last updated" %} {{ collection.modified|timesince }} {% trans "ago" %}
+            </small>
+        </p>
+    </div>
+</div>
+{% endcache %}

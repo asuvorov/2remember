@@ -1,0 +1,24 @@
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+{% endcomment %}
+
+<div class="row g-2">
+{% for collection in request.user.posted_collections.all|slice:":8" %}
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        {% include "collections/fragments/collection-thumbnail-vert.html" with collection=collection show_org=True %}
+    </div>
+{% empty %}
+    <div class="col-12">
+        <span class="badge text-bg-warning">{% trans "There are no posted Collections at the Moment" %}</span>
+    </div>
+{% endfor %}
+</div>
+
+<div class="row g-2">
+    <div class="col-md-4 offset-md-4">
+        <a class="btn btn-warning w-100 my-3" href="{% url 'my-profile-collections' %}">{% trans "SEE MORE" %} <i class="bi bi-chevron-double-right"></i></a>
+    </div>
+</div>
