@@ -5,3 +5,4 @@
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
 from . Feature import *
+from . choices import *

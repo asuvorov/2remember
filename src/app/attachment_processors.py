@@ -88,7 +88,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    subscription_plan = settings.SUBSCRIPTION_PLANS["BASIC"]
+    subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
 
     max_width = subscription_plan["attachments"]["images"]["max_width"]
     max_height = subscription_plan["attachments"]["images"]["max_height"]
@@ -216,7 +216,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                     content_type=content_type,
                     object_id=object_id)
                 attached_image.image.save(new_name, ContentFile(temp_img.read()), save=False)
-                attached_image.save()
+                attached_image.save(request=request)
 
             except (IOError, SyntaxError) as exc:
                 cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
@@ -255,6 +255,7 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
                 document=File(storage.open(tmp_file.file.name, "rb")),
                 content_type=content_type,
                 object_id=object_id)
+            attached_document.save(request=request)
 
             # -----------------------------------------------------------------
             # --- Save the Log.
@@ -275,17 +276,17 @@ def process(request, content_type, object_id, tmp_files, tmp_links):
     # --- Save URLs and Video URLs and pull their Titles.
     # -------------------------------------------------------------------------
     cprint(f"[---  INFO   ---] LINKS        : {tmp_links}", "cyan")
-    for link in tmp_links.split():
+    for link in tmp_links.replace(",", " ").split():
         url = validate_url(link)
 
         if get_youtube_video_id(link):
             AttachedVideoUrl.objects.create(
                 url=link,
                 content_type=content_type,
-                object_id=object_id)
+                object_id=object_id).save(request=request)
         elif url:
             AttachedUrl.objects.create(
                 url=url,
                 title=get_website_title(url) or "",
                 content_type=content_type,
-                object_id=object_id)
+                object_id=object_id).save(request=request)

@@ -138,6 +138,7 @@ TEMPLATES = [
                 "social_django.context_processors.login_redirect",
 
                 "accounts.context_processors.signin_form",
+                "accounts.context_processors.eligibility",
 
                 "events.context_processors.pb_event_choices",
                 "events.context_processors.pb_participation_choices",
@@ -218,12 +219,13 @@ INSTALLED_APPS = (
     "api",
     "app",
     "blog",
+    "collection",
     "events",
     "home",
     "invites",
     "organizations",
     "places",
-    # "tests",
+    "tests",
 )
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
@@ -241,7 +243,7 @@ CACHES = {
         # "LOCATION": "127.0.0.1:11211",
         "LOCATION": "unix:/tmp/memcached.sock",
         "OPTIONS": {
-            "MAX_ENTRIES":      1000,
+            # "MAX_ENTRIES":      1000,
             "no_delay":         True,
             "ignore_exc":       True,
             "max_pool_size":    4,
@@ -402,25 +404,35 @@ PAYPAL_SHARE_LINK = ("https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_r
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
 
+COLLECTION_TITLE_RESERVED_WORDS = [
+    "create", "edit",
+]
 EVENT_TITLE_RESERVED_WORDS = [
-    "near-you", "new", "dateless", "featured", "categories",
+    "create", "edit", "near-you", "new", "dateless", "featured", "categories",
 ]
 ORGANIZATION_TITLE_RESERVED_WORDS = [
-    "directory", "create",
+    "create", "edit", "directory", "create",
 ]
 
 SUBSCRIPTION_PLANS = {
     "DEV": {
         "fare": 0,  # Cents.
         "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
             "images": {
                 "max_width":            900,
                 "max_height":           600,
+                "max_file_size":        10485760,
                 "max_per_event":        5,
                 "max_per_organization": 5,
                 "quality":              80,
             },
-            "documents": {
+            "video": {
+                "max_file_size":        10485760,
                 "max_per_event":        2,
                 "max_per_organization": 2,
             },
@@ -435,32 +447,39 @@ SUBSCRIPTION_PLANS = {
         },
         "accounts": {},
         "events": {
-            "upon_request_only":    False,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    False,
         },
         "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    True,
         },
         "places": {},
     },
     "BASIC": {
         "fare": 0,  # Cents.
         "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
             "images": {
                 "max_width":            1600,
                 "max_height":           900,
+                "max_file_size":        10485760,
                 "max_per_event":        25,
                 "max_per_organization": 25,
                 "quality":              80,
             },
-            "documents": {
+            "video": {
+                "max_file_size":        10485760,
                 "max_per_event":        5,
                 "max_per_organization": 5,
             },
@@ -475,32 +494,39 @@ SUBSCRIPTION_PLANS = {
         },
         "accounts": {},
         "events": {
-            "upon_request_only":    False,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    False,
         },
         "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    True,
         },
         "places": {},
     },
     "TIER-1": {
         "fare": 0,  # Cents.
         "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
             "images": {
                 "max_width":            1920,
                 "max_height":           1080,
+                "max_file_size":        10485760,
                 "max_per_event":        25,
                 "max_per_organization": 25,
                 "quality":              90,
             },
-            "documents": {
+            "video": {
+                "max_file_size":        10485760,
                 "max_per_event":        5,
                 "max_per_organization": 5,
             },
@@ -515,22 +541,24 @@ SUBSCRIPTION_PLANS = {
         },
         "accounts": {},
         "events": {
-            "upon_request_only":    False,
             "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    False,
         },
         "organizations": {
-            "upon_request_only":    True,
-            "max_per_day":          0,
+            "max_per_day":          1,
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
+            "upon_request_only":    True,
         },
         "places": {},
     },
 }
+SUBSCRIPTION_PLAN_DEFAULT = "BASIC"
+
 #  720p – SD (1280 x 720)
 #            (1600 x 900)
 # 1080p – HD (1920 x 1080)
@@ -553,27 +581,16 @@ BOWER_INSTALLED_APPS = (
     "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
-    # "bootstrap-rating",
     # "bootstrap-tagsinput",
-    # "bx-slider.js",
-    # "equalheight",
     "jquery#3.7.1",
-    # "jquery.inputmask",
     "jquery-colorbox",
     "jquery-file-upload#10.32.0",
     "jquery-popup-overlay#1.6.0",
-    # "jquery-shorten-js",
-    # "jquery-sticky",
     "jquery-ui#1.12.1",
-    # "jt.timepicker",
     "less.js#4.2.0",
-    # "modernizr",
     "moment#2.30.1",
     "noty#3.1.4",
     "readmore-js",
-    # "seiyria-bootstrap-slider",
-    # "smooth-scroll.js",
-    # "tablesorter",
     "underscore#1.13.6",
 )
 
@@ -939,6 +956,9 @@ MAX_POSTS_PER_QUERY = 100
 
 MAX_EVENTS_PER_PAGE = 25
 MAX_EVENTS_PER_QUERY = 250
+
+MAX_COLLECTIONS_PER_PAGE = 25
+MAX_COLLECTIONS_PER_QUERY = 250
 
 MAX_ORGANIZATIONS_PER_PAGE = 25
 MAX_ORGANIZATIONS_PER_QUERY = 250
@@ -1307,9 +1327,6 @@ UPLOADER_SETTINGS = {
             "tiff": "image/tiff",
             "webp": "image/webp",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "documents": {
         "MIME_TYPES_MAP": {
@@ -1321,9 +1338,6 @@ UPLOADER_SETTINGS = {
             "rtf":  "application/rtf",
             "txt":  "text/plain",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "images": {
         "MIME_TYPES_MAP": {
@@ -1336,9 +1350,6 @@ UPLOADER_SETTINGS = {
             "tiff": "image/tiff",
             "webp": "image/webp",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "video": {
         "MIME_TYPES_MAP": {
@@ -1349,9 +1360,6 @@ UPLOADER_SETTINGS = {
             "ogv":  "video/ogg",
             "webm": "video/webm",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "audio": {
         "MIME_TYPES_MAP": {
@@ -1363,32 +1371,36 @@ UPLOADER_SETTINGS = {
             "wav":  "audio/wav",
             "weba": "audio/webm",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
-    }
+    },
 }
-
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
 SUPPORTED_DEFAULTS_STR_EXT =\
     ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
 SUPPORTED_DEFAULTS_STR_REG =\
     "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
 SUPPORTED_DOCUMENTS_STR_EXT =\
     ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
 SUPPORTED_DOCUMENTS_STR_REG =\
     "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
 SUPPORTED_IMAGES_STR_EXT =\
     ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
 SUPPORTED_IMAGES_STR_REG =\
     "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+# -------------------------------------------------------------------------------------------------
+SUPPORTED_VIDEO = [key for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_VIDEO_STR = ", ".join(SUPPORTED_VIDEO)
+SUPPORTED_VIDEO_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_VIDEO_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()])
 
 
 ###############################################################################

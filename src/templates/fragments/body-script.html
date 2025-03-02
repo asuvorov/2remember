@@ -26,7 +26,7 @@
     /*** Custom Scripts                                                    ***/
     /*************************************************************************/
     // ------------------------------------------------------------------------
-    // --- Fix Footer
+    // --- Fix Footer.
     //$('a[data-toggle="tab"]').on("shown.bs.tab", function (e) {
     //    fixFooter();
     //})
@@ -64,16 +64,14 @@
     /*** Bootstrap Plug-ins                                                ***/
     /*************************************************************************/
     // ------------------------------------------------------------------------
-    // --- Initialize Carousel
-    // $("#index-carousel").carousel({
-    //     interval:       5000
-    // })
-    // $("#twitter-carousel").carousel({
-    //     interval:       3000
-    // })
+    // --- Initialize Tooltips.
+    $(document).ready(function () {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    });
 
     // ------------------------------------------------------------------------
-    // --- Initialize Date Picker
+    // --- Initialize Date Picker.
     $("input[name='birth_day']").datepicker({
         dateFormat:     "mm/dd/yy",
         changeYear:     true,
@@ -88,7 +86,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // --- Initialize Max Length
+    // --- Initialize Max Length.
     $("input[maxlength]").maxlength({
         alwaysShow:         false,
         threshold:          25,
@@ -107,26 +105,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // --- Initialize Slider
-    // $(".slider").bootstrapSlider({
-    //     min:                1,
-    //     max:                16,
-    //     step:               1,
-    //     orientation:        "horizontal",       // "vertical" or "horizontal"
-    //     value:              8,
-    //     selection:          "before",           // "before", "after" or "none"
-    //     tooltip:            "show",             // "show", "hide", or "always"
-    //     tooltip_split:      false,
-    //     tooltip_position:   "top",              // "top"/"bottom", or and "left"/"right"
-    //     handle:             "round",            // "round", "square", "triangle" or "custom"
-    //     reversed:           false,
-    //     enabled:            true,
-    //     scale:              "linear",           // "linear" or  "logarithmic"
-    //     focus:              false
-    // });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Tags Input
+    // --- Initialize Tags Input.
     $("#id_tags").tagsinput("refresh");
 
     // ------------------------------------------------------------------------
@@ -141,7 +120,7 @@
     /*** jQuery Plugins                                                    ***/
     /*************************************************************************/
     // ------------------------------------------------------------------------
-    // --- Initialize Bootpag
+    // --- Initialize Bootpag.
     $("#page-selection").bootpag({
         total:          "{{ page_total }}",
         maxVisible:     5,
@@ -166,30 +145,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // --- Initialize BX-Slider
-    // $(".bxslider").bxSlider({
-    //     mode:                   "fade",
-    //     speed:                  500,
-    //     slideMargin:            5,
-    //     startSlide:             0,
-    //     randomStart:            false,
-    //     infiniteLoop:           true,
-    //     hideControlOnEnd:       false,
-    //     adaptiveHeight:         false,
-    //     adaptiveHeightSpeed:    500,
-
-    //     controls:               false,
-    //     //slideWidth: 300,
-    //     //minSlides:              2,
-    //     //maxSlides:              2,
-    //     //moveSlides:             2,
-    //     auto:                   true,
-    //     pause:                  3000,
-    //     autoStart:              true,
-    // });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Color Box
+    // --- Initialize Color Box.
     $(".gallery-photos").colorbox({
         rel:            "gallery-photos",
         transition:     "fade",
@@ -216,41 +172,7 @@
     });
 
     // ------------------------------------------------------------------------
-    // --- Initialize Equal Height
-    // function equalHeight(group) {
-    //     // --- Adjust Height of each Block
-    //     var tallest = 0;
-
-    //     group.each(function () {
-    //         thisHeight = $(this).height();
-
-    //         if (thisHeight > tallest) {
-    //             tallest = thisHeight;
-    //         }
-    //     });
-    //     group.height(tallest);
-    // }
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Input Mask
-    /*
-    $(document).ready(function () {
-        $("input[name='birth_day']").inputmask({
-            "alias":    "mm/dd/yyyy"
-        });
-        $("input[name='start_date']").inputmask({
-            "alias":    "mm/dd/yyyy"
-        });
-        $("input[name='start_time']").inputmask("99:99");
-        $("input[name='alt_person_email']").inputmask("email");
-        //$("input[name='alt_person_phone']").inputmask("+9{1,3}(9{3})9{3}-9{4}");
-        //$("input[name='phone_number']").inputmask("+9{1,3}(9{3})9{3}-9{4}");
-        //$("input[name='mobile_phone_number']").inputmask("+9{1,3}(9{3})9{3}-9{4}");
-    });
-    */
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Noty
+    // --- Initialize Noty.
     Noty.overrideDefaults({
         type:           "error",
         layout:         "topRight",
@@ -282,10 +204,10 @@
     });
 
     // ------------------------------------------------------------------------
-    // --- Initialize pop-up Overlays
+    // --- Initialize pop-up Overlays.
 
     // ------------------------------------------------------------------------
-    // --- Initialize Read more
+    // --- Initialize Read more.
     $("blockquote.readmore").readmore({
         speed:              100,
         collapsedHeight:    100,
@@ -299,45 +221,6 @@
         afterToggle:        function() {},
         blockProcessed:     function() {}
     });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Shorten
-    // $(".desc").shorten({
-    //     chars:      100,
-    //     more:       "<br/>more",
-    //     less:       "<br/>less",
-    //     ellipses:   "..."
-    // });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Smooth Scroll
-    // var scroll = new SmoothScroll("a[href='#welcome']", {
-    //     // Selectors
-    //     ignore:         "[data-scroll-ignore]",
-    //     header:         null,
-
-    //     // Speed & Easing
-    //     speed:          500,
-    //     offset:         0,
-    //     easing:         "easeInOutCubic",
-
-    //     // Callback API
-    //     before:         function () {
-    //         console.log(">>> INSIDE : `before`");
-    //     },
-    //     after:          function () {
-    //         console.log(">>> INSIDE : `after`");
-    //     }
-    // });
-
-    // ------------------------------------------------------------------------
-    // --- Initialize Time Picker
-    // $("input[name='start_time']").timepicker({
-    //     timeFormat:             "h:i A",
-    //     step:                   30,
-    //     forceRoundTime:         true,
-    //     closeOnWindowScroll:    true,
-    // });
 
     $(document).ready(function () {
         // --------------------------------------------------------------------

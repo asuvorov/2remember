@@ -17,16 +17,19 @@
                     <a class="nav-link{% if request.path|slice:'10' == '/accounts/' %} active{% endif %}" href="{% url 'account-list' %}">{% trans "Members" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link{% if request.path|slice:'12' == '/events/' %} active{% endif %}" href="{% url 'event-list' %}">{% trans "Events" %}</a>
+                    <a class="nav-link{% if request.path|slice:'8' == '/events/' %} active{% endif %}" href="{% url 'event-list' %}">{% trans "Events" %}</a>
                 </li>
-                <li class="nav-item {% if request.path|slice:'15' == '/places/' %} active {% endif %}">
+                <li class="nav-item">
+                    <a class="nav-link{% if request.path|slice:'13' == '/collections/' %} active{% endif %}" href="{% url 'collection-list' %}">{% trans "Collections" %}</a>
+                </li>
+                <li class="nav-item {% if request.path|slice:'8' == '/places/' %} active {% endif %}">
                     <a class="nav-link disabled" href="#" aria-disabled="true">{% trans "Places" %}</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link{% if request.path|slice:'15' == '/organizations/' %} active{% endif %}" href="{% url 'organization-list' %}">{% trans "Organizations" %}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link{% if request.path|slice:'15' == '/blog/' %} active{% endif %}" href="{% url 'post-list' %}">{% trans "Blog" %}</a>
+                    <a class="nav-link{% if request.path|slice:'6' == '/blog/' %} active{% endif %}" href="{% url 'post-list' %}">{% trans "Blog" %}</a>
                 </li>
 
             {% comment %}

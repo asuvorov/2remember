@@ -4,4 +4,4 @@
 
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
-from . Invite import *
+from invites.models.Invite import *

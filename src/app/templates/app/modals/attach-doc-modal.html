@@ -1,7 +1,7 @@
 {% load i18n %}
 
 <div class="modal fade" id="uploadDocumentsPopupModal" tabindex="-1" role="dialog" aria-labelledby="uploadDocumentsPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">{% trans "Upload Documents" %}</h5>
@@ -21,8 +21,8 @@
 
                     <p class="my-2">{% blocktrans %}Only Documents ({{ documents_str }}) are supported.{% endblocktrans %}</p>
 
-                    <div id="progress" class="progress" style="display:none;">
-                        <div class="progress-bar progress-bar-success progress-striped active"></div>
+                    <div id="progress" class="progress my-2" style="/*! display: none; */">
+                        <div class="progress-bar progress-bar-striped bg-info" role="progressbar"></div>
                     </div>
 
                     <div id="docs" class="docs"></div>

@@ -110,6 +110,7 @@ class Partner(BaseModel):
     objects = PartnerManager()
 
     class Meta:
+        app_label = "home"
         verbose_name = _("partner")
         verbose_name_plural = _("partners")
         ordering = [

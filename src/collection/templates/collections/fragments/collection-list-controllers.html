@@ -1,0 +1,15 @@
+{% load i18n %}
+{% load urls %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collections> - List of Collections
+{% endcomment %}
+
+<div class="controllers">
+{% if request.user.is_authenticated %}
+    <a class="btn btn-primary" href="{% url 'collection-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+{% endif %}
+</div>
