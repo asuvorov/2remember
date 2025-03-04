@@ -30,11 +30,6 @@ from .models import Collection
 class CreateEditCollectionForm(forms.ModelForm):
     """Create/edit Collection Form."""
 
-    events = forms.ModelMultipleChoiceField(
-        queryset=Event.objects.all(),
-        # widget=forms.CheckboxSelectMultiple
-        )
-
     def __init__(self, *args, **kwargs):
         """Docstring."""
         self.user = kwargs.pop("user", None)
@@ -72,13 +67,12 @@ class CreateEditCollectionForm(forms.ModelForm):
                     "placeholder":  _("Collection Description"),
                     "maxlength":    1000,
                 }),
-            # "events": forms.ModelMultipleChoiceField(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Collection Description"),
-            #         "maxlength":    1000,
-            #     },
-            #     queryset=Event.objects.all()),
+            "events": forms.SelectMultiple(
+                attrs={
+                    "class":        "form-control form-select",
+                    "multiple":     "multiple",
+                    "size":         "5",
+                }),
             # "category": forms.Select(
             #     attrs={
             #         "class":        "form-control form-select",

@@ -108,23 +108,17 @@
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.visibility.errors %}has-error{% endif %}">
+                        <div class="form-floating col-md-4 {% if form.visibility.errors %}has-error{% endif %}">
                             {{ form.visibility }}
                             <label for="id_visibility" class="form-label">{{ form.visibility.label }}{% if form.visibility.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.visibility.errors %}{% for error in form.visibility.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                        <div class="form-floating col-md-6 {% if form.events.errors %}has-error{% endif %}">
-                            {{ form.events }}
-                            <label for="id_events" class="form-label">{{ form.events.label }}{% if form.events.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <span class="help-block">{% if form.events.errors %}{% for error in form.events.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="form-floating col-md-4 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
                             <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                        <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
+                        <div class="form-floating col-md-4{% if form.hashtag.errors %}has-error{% endif %}">
                             {{ form.hashtag }}
                             <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
@@ -132,6 +126,22 @@
                     </div>
                 </section>
                 <!--  END  COLLECTION DESCRIPTION -->
+
+                <hr>
+
+                <!-- START COLLECTION EVENTS -->
+                <section id="collection-events">
+                    <h3>{% trans "Events" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="col-12 {% if form.events.errors %}has-error{% endif %}">
+                            <!-- <label for="id_events" class="form-label">{{ form.events.label }}{% if form.events.field.required %}<span class="asteriskField">*</span>{% endif %}</label> -->
+                            {{ form.events }}
+                            <span class="help-block">{% if form.events.errors %}{% for error in form.events.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  COLLECTION EVENTS -->
 
                 <hr>
 
