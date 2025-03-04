@@ -63,7 +63,7 @@ def access_private_event_fail(sender, request, obj, action, **kwargs):
     """Docstring."""
     cprint(f"    [--- INFO ---] REQUEST  : {request}\n"
            f"                   OBJ      : {obj}\n"
-           f"                   OBJ DATA : {obj.data}\n"
+           # f"                   OBJ DATA : {obj.data}\n"
            f"                   ACTION   : {action}", "cyan")
 
     if action != "access-private-event":
