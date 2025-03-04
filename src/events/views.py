@@ -447,7 +447,8 @@ def event_edit(request, slug, event=None):
     aform = AddressForm(
         request.POST or None,
         request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=event.address)
 
     # formset_social = SocialLinkFormSet(
