@@ -44,12 +44,6 @@ from ddcore.models import (
 # pylint: disable=import-error
 from accounts.models import UserProfile
 from api.auth import CsrfExemptSessionAuthentication
-# from api.v1.events.utils import (
-#     event_access_check_required,
-#     event_org_staff_member_required)
-# from api.v1.organizations.utils import (
-#     organization_access_check_required,
-#     organization_staff_member_required)
 from app import logconst
 from app.decorators import log_default
 from app.logformat import Format
@@ -93,6 +87,10 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        instance = None
+        instance_type = request.data.get("instance_type")
+        instance_id = request.data.get("instance_id")
+
         subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
         if request.user.is_staff:
             subscription_plan = settings.SUBSCRIPTION_PLANS["ADMIN"]
@@ -107,13 +105,6 @@ class TmpUploadViewSet(APIView):
         }
 
         cprint(f"[---  DUMP   ---] UPLOAD TYPE : {result}", "yellow")
-
-        # ---------------------------------------------------------------------
-        # --- Pull out cached Data.
-        # ---------------------------------------------------------------------
-        # upload_numbers = cache.get(f"upload_numbers_{request.user.uid}")
-        # if not upload_numbers:
-        #     cache.set(f"upload_numbers_{request.user.uid}", upload_numbers, 60)
 
         # ---------------------------------------------------------------------
         # --- START SANITIZING UPLOAD
@@ -140,6 +131,50 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Verify File Amount.
         # ---------------------------------------------------------------------
+        # --- Pull out cached Data.
+        # ---------------------------------------------------------------------
+        upload_numbers = cache.get(f"upload_numbers_{instance_type}_{instance_id}")
+        if not upload_numbers:
+            # -----------------------------------------------------------------
+            # --- Pull the Instance.
+            if instance_type == "event":
+                instance = get_object_or_None(Event, id=instance_id)
+            elif instance_type == "organization":
+                instance = get_object_or_None(Organization, id=instance_id)
+
+            if not instance:
+                return Response({
+                    "message":      _("Instance not found."),
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # -----------------------------------------------------------------
+            # --- Pull the Instance's saved and temporary Images.
+            saved_images = instance.image_count
+
+            # -----------------------------------------------------------------
+            # --- Pull the Instance's saved and temporary Documents.
+            saved_documents = instance.document_count
+
+            # -----------------------------------------------------------------
+            # --- Pull the Instance's saved and temporary Video.
+
+            # -----------------------------------------------------------------
+            # --- Prepare Payload.
+            upload_numbers = {
+                "images": {
+                    "saved_images": saved_images,
+                    "temp_images": temp_images,
+                    "total_images": total_images,
+                },
+                "documents": {
+                    "saved_documents": saved_documents,
+                    "temp_documents": temp_documents,
+                    "total_documents": total_documents,
+                },
+                "video": {},
+            }
+
+            cache.set(f"upload_numbers_{instance_type}_{instance_id}", upload_numbers, 60)
 
         # ---------------------------------------------------------------------
         # --- Verify File Size.
