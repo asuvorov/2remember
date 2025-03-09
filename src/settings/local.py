@@ -53,6 +53,7 @@ CACHE_MIDDLEWARE_ALIAS = config("CACHE_MIDDLEWARE_ALIAS", default="db")
 CACHE_MIDDLEWARE_SECONDS = config("CACHE_MIDDLEWARE_SECONDS", default=60)
 CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="local")
 
+
 ###############################################################################
 ### DJANGO LOGGING                                                          ###
 ###############################################################################
@@ -65,3 +66,6 @@ CACHE_MIDDLEWARE_KEY_PREFIX = config("CACHE_MIDDLEWARE_KEY_PREFIX", default="loc
 # COMPRESS_STORAGE = STATICFILES_STORAGE
 # COMPRESS_OFFLINE_MANIFEST_STORAGE = STATICFILES_STORAGE
 # COMPRESS_URL = STATIC_URL
+
+
+SUBSCRIPTION_PLAN_DEFAULT = "DEV"

@@ -8,6 +8,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
@@ -43,12 +44,6 @@ from ddcore.models import (
 # pylint: disable=import-error
 from accounts.models import UserProfile
 from api.auth import CsrfExemptSessionAuthentication
-# from api.v1.events.utils import (
-#     event_access_check_required,
-#     event_org_staff_member_required)
-# from api.v1.organizations.utils import (
-#     organization_access_check_required,
-#     organization_staff_member_required)
 from app import logconst
 from app.decorators import log_default
 from app.logformat import Format
@@ -71,8 +66,8 @@ class TmpUploadViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
-    # model = Comment
+    # serializer_class =
+    # model =
 
     error_1 = (f"Sorry, this Field only supports the following File Types:\n - "
                f"{settings.SUPPORTED_IMAGES_STR}\n\nYour File was not added.")
@@ -92,7 +87,14 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        # instance = None
+        # instance_type = request.data.get("instance_type")
+        # instance_id = request.data.get("instance_id")
+
         subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        if request.user.is_staff:
+            subscription_plan = settings.SUBSCRIPTION_PLANS["ADMIN"]
+
         tmp_file = TemporaryFile.objects.create(
             file=request.FILES["file"],
             name=request.FILES["file"].name)
@@ -108,8 +110,8 @@ class TmpUploadViewSet(APIView):
         # --- START SANITIZING UPLOAD
         # ---------------------------------------------------------------------
         # --- Verify File Type.
+        # ---------------------------------------------------------------------
         file_ext = tmp_file.file.name.split(".")[-1].lower()
-
         if file_ext in settings.SUPPORTED_IMAGES:
             media = "images"
         elif file_ext in settings.SUPPORTED_DOCUMENTS:
@@ -127,7 +129,56 @@ class TmpUploadViewSet(APIView):
             }, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
 
         # ---------------------------------------------------------------------
+        # --- Verify File Amount.
+        # ---------------------------------------------------------------------
+        # --- Pull out cached Data.
+        # ---------------------------------------------------------------------
+        # upload_numbers = cache.get(f"upload_numbers_{instance_type}_{instance_id}")
+        # if not upload_numbers:
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance.
+        #     if instance_type == "event":
+        #         instance = get_object_or_None(Event, id=instance_id)
+        #     elif instance_type == "organization":
+        #         instance = get_object_or_None(Organization, id=instance_id)
+
+        #     if not instance:
+        #         return Response({
+        #             "message":      _("Instance not found."),
+        #         }, status=status.HTTP_404_NOT_FOUND)
+
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Images.
+        #     saved_images = instance.image_count
+
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Documents.
+        #     saved_documents = instance.document_count
+
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Video.
+
+        #     # -----------------------------------------------------------------
+        #     # --- Prepare Payload.
+        #     upload_numbers = {
+        #         "images": {
+        #             "saved_images": saved_images,
+        #             "temp_images": temp_images,
+        #             "total_images": total_images,
+        #         },
+        #         "documents": {
+        #             "saved_documents": saved_documents,
+        #             "temp_documents": temp_documents,
+        #             "total_documents": total_documents,
+        #         },
+        #         "video": {},
+        #     }
+
+        #     cache.set(f"upload_numbers_{instance_type}_{instance_id}", upload_numbers, 60)
+
+        # ---------------------------------------------------------------------
         # --- Verify File Size.
+        # ---------------------------------------------------------------------
         if tmp_file.file.size > subscription_plan["attachments"][media]["max_file_size"]:
             cprint("[---  ERROR  ---] Upload - too large", "white", "on_red")
 
@@ -137,9 +188,6 @@ class TmpUploadViewSet(APIView):
             return Response({
                 "files":    [],
             }, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
-
-        # ---------------------------------------------------------------------
-        # --- TODO: Verify File Amount.
 
         # ---------------------------------------------------------------------
         # --- Save the Log.
@@ -172,11 +220,13 @@ class RemoveUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        instance = None
+
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"    [--- DUMP ---] UPLOAD TYPE : {upload_type}\n"
+               f"                   UPLOAD   ID : {upload_id}", "yellow")
 
         if (
                 upload_type and
@@ -188,30 +238,34 @@ class RemoveUploadViewSet(APIView):
             elif upload_type == "temp":
                 instance = get_object_or_None(TemporaryFile, id=upload_id)
 
-            if instance:
-                if (
-                        request.user == instance.created_by or
-                        request.user.is_superuser):
-                    try:
+            if (instance and (
+                    request.user == instance.created_by or
+                    request.user.is_superuser)):
+                try:
+                    if upload_type == "document":
+                        instance.document.delete()
+                    elif upload_type == "image":
+                        instance.image.delete()
+                    elif upload_type == "temp":
                         instance.file.delete()
-                    except Exception as exc:
-                        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                               f"                 {type(exc).__name__}\n"
-                               f"                 {str(exc)}", "white", "on_red")
+                except Exception as exc:
+                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                           f"                 {type(exc).__name__}\n"
+                           f"                 {str(exc)}", "white", "on_red")
 
-                        # -----------------------------------------------------
-                        # --- Logging.
-                        # -----------------------------------------------------
-                        logger.exception("", extra=Format.exception(
-                            exc=exc,
-                            request_id=request.request_id,
-                            log_extra={}))
+                    # -----------------------------------------------------
+                    # --- Logging.
+                    # -----------------------------------------------------
+                    logger.exception("", extra=Format.exception(
+                        exc=exc,
+                        request_id=request.request_id,
+                        log_extra={}))
 
-                    instance.delete()
+                instance.delete()
 
-                    return Response({
-                        "deleted":  True,
-                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "deleted":  True,
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 "deleted":  False,
@@ -240,11 +294,13 @@ class RemoveLinkViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
+        instance = None
+
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"    [--- DUMP ---] UPLOAD TYPE : {upload_type}\n"
+               f"                   UPLOAD   ID : {upload_id}", "yellow")
 
         if (
                 upload_type and
@@ -254,15 +310,14 @@ class RemoveLinkViewSet(APIView):
             elif upload_type == "video":
                 instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
 
-            if instance:
-                if (
-                        request.user == instance.created_by or
-                        request.user.is_superuser):
-                    instance.delete()
+            if (instance and (
+                    request.user == instance.created_by or
+                    request.user.is_superuser)):
+                instance.delete()
 
-                    return Response({
-                        "deleted":  True,
-                    }, status=status.HTTP_200_OK)
+                return Response({
+                    "deleted":  True,
+                }, status=status.HTTP_200_OK)
 
             return Response({
                 "deleted":  False,
