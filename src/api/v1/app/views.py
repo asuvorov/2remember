@@ -67,7 +67,7 @@ class TmpUploadViewSet(APIView):
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
     # serializer_class =
-    # model = Comment
+    # model =
 
     error_1 = (f"Sorry, this Field only supports the following File Types:\n - "
                f"{settings.SUPPORTED_IMAGES_STR}\n\nYour File was not added.")
@@ -87,9 +87,9 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
-        instance = None
-        instance_type = request.data.get("instance_type")
-        instance_id = request.data.get("instance_id")
+        # instance = None
+        # instance_type = request.data.get("instance_type")
+        # instance_id = request.data.get("instance_id")
 
         subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
         if request.user.is_staff:
@@ -133,48 +133,48 @@ class TmpUploadViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Pull out cached Data.
         # ---------------------------------------------------------------------
-        upload_numbers = cache.get(f"upload_numbers_{instance_type}_{instance_id}")
-        if not upload_numbers:
-            # -----------------------------------------------------------------
-            # --- Pull the Instance.
-            if instance_type == "event":
-                instance = get_object_or_None(Event, id=instance_id)
-            elif instance_type == "organization":
-                instance = get_object_or_None(Organization, id=instance_id)
+        # upload_numbers = cache.get(f"upload_numbers_{instance_type}_{instance_id}")
+        # if not upload_numbers:
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance.
+        #     if instance_type == "event":
+        #         instance = get_object_or_None(Event, id=instance_id)
+        #     elif instance_type == "organization":
+        #         instance = get_object_or_None(Organization, id=instance_id)
 
-            if not instance:
-                return Response({
-                    "message":      _("Instance not found."),
-                }, status=status.HTTP_404_NOT_FOUND)
+        #     if not instance:
+        #         return Response({
+        #             "message":      _("Instance not found."),
+        #         }, status=status.HTTP_404_NOT_FOUND)
 
-            # -----------------------------------------------------------------
-            # --- Pull the Instance's saved and temporary Images.
-            saved_images = instance.image_count
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Images.
+        #     saved_images = instance.image_count
 
-            # -----------------------------------------------------------------
-            # --- Pull the Instance's saved and temporary Documents.
-            saved_documents = instance.document_count
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Documents.
+        #     saved_documents = instance.document_count
 
-            # -----------------------------------------------------------------
-            # --- Pull the Instance's saved and temporary Video.
+        #     # -----------------------------------------------------------------
+        #     # --- Pull the Instance's saved and temporary Video.
 
-            # -----------------------------------------------------------------
-            # --- Prepare Payload.
-            upload_numbers = {
-                "images": {
-                    "saved_images": saved_images,
-                    "temp_images": temp_images,
-                    "total_images": total_images,
-                },
-                "documents": {
-                    "saved_documents": saved_documents,
-                    "temp_documents": temp_documents,
-                    "total_documents": total_documents,
-                },
-                "video": {},
-            }
+        #     # -----------------------------------------------------------------
+        #     # --- Prepare Payload.
+        #     upload_numbers = {
+        #         "images": {
+        #             "saved_images": saved_images,
+        #             "temp_images": temp_images,
+        #             "total_images": total_images,
+        #         },
+        #         "documents": {
+        #             "saved_documents": saved_documents,
+        #             "temp_documents": temp_documents,
+        #             "total_documents": total_documents,
+        #         },
+        #         "video": {},
+        #     }
 
-            cache.set(f"upload_numbers_{instance_type}_{instance_id}", upload_numbers, 60)
+        #     cache.set(f"upload_numbers_{instance_type}_{instance_id}", upload_numbers, 60)
 
         # ---------------------------------------------------------------------
         # --- Verify File Size.
