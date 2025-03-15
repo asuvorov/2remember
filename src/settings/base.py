@@ -412,7 +412,8 @@ ORGANIZATION_TITLE_RESERVED_WORDS = [
 
 SUBSCRIPTION_PLANS = {
     "DEV": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        5242800,
@@ -459,7 +460,8 @@ SUBSCRIPTION_PLANS = {
         "places": {},
     },
     "ADMIN": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        5242800,
@@ -501,12 +503,13 @@ SUBSCRIPTION_PLANS = {
             "max_per_week":         None,
             "max_per_month":        None,
             "max_per_year":         None,
-            "upon_request_only":    True,
+            "upon_request_only":    False,
         },
         "places": {},
     },
     "BASIC": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        5242800,
@@ -552,8 +555,57 @@ SUBSCRIPTION_PLANS = {
         },
         "places": {},
     },
+    "COURTESY": {
+        "description":  "",
+        "fare":         0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "images": {
+                "max_width":            1600,
+                "max_height":           900,
+                "max_file_size":        10485760,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        10485760,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "events": {
+            "max_per_day":          5,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          2,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "places": {},
+    },
     "TIER-1": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        5242800,

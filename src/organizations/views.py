@@ -181,9 +181,9 @@ def organization_directory(request):
 # === ORGANIZATION CREATE
 # ===
 # =============================================================================
-@organization_create_access_check_required
-@user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 @login_required
+@user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@organization_create_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
@@ -477,8 +477,8 @@ def organization_groups(request, slug):
 # === ORGANIZATION EDIT
 # ===
 # =============================================================================
-@organization_edit_access_check_required
 @login_required
+@organization_edit_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_edit(request, slug, organization=None):
     """Edit Organization."""
@@ -621,8 +621,8 @@ def organization_events(request, slug=None):
 # === ORGANIZATION POPULATE NEWSLETTER
 # ===
 # =============================================================================
-@organization_populate_newsletter_access_check_required
 @login_required
+@organization_populate_newsletter_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_populate_newsletter(request, slug, organization=None):
     """Organization, populate Newsletter."""

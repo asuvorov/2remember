@@ -599,9 +599,9 @@ class EditEventTest(GenericUserTestCase):
         # ---------------------------------------------------------------------
         # --- Test Response.
         # ---------------------------------------------------------------------
-        self.assertEqual(response.request["PATH_INFO"], self.url)
-        self.assertEqual(response.status_code, http.client.FORBIDDEN)
-        self.assertTemplateUsed(response, "error-pages/403.html")
+        self.assertEqual(response.request["PATH_INFO"], self.login_url)
+        self.assertEqual(response.status_code, http.client.OK)
+        self.assertTemplateUsed(response, "accounts/account-signin.html")
 
     def test_author_can_edit_event(self):
         """Author can edit Event."""

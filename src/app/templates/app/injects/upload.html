@@ -90,6 +90,13 @@
             sequentialUploads: true,
             recalculateProgress: true,
             progressInterval: 50,
+            formData: [{
+                "name": "instance_type",
+                "value": "{{ instance_type }}"
+            }, {
+                "name": "instance_uid",
+                "value": "{{ instance_uid }}"
+            }],
             done: function (e, data) {
                 console.log(">>> DONE");
                 // console.log(">>> e", e);
@@ -164,6 +171,13 @@
             sequentialUploads: true,
             recalculateProgress: true,
             progressInterval: 50,
+            formData: [{
+                "name": "instance_type",
+                "value": "{{ instance_type }}"
+            }, {
+                "name": "instance_uid",
+                "value": "{{ instance_uid }}"
+            }],
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
                     // --------------------------------------------------------
