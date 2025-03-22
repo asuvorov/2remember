@@ -28,7 +28,7 @@
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+            <li class="breadcrumb-item"><a href="{% url 'post-details' post.slug %}">{{ post.title }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
         </ol>
     </nav>
@@ -118,11 +118,6 @@
                 <!-- START POST CONTENT -->
                 <section id="post-content">
                     <h3>{% trans "Content" %}</h3>
-                    <div class="form-check text-start my-1">
-                        {{ form.allow_comments }}
-                        {{ form.allow_comments.label }}
-                    </div>
-
                     <div class="row g-3">
                         <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
                             {{ form.content }}

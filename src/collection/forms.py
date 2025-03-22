@@ -43,10 +43,11 @@ class CreateEditCollectionForm(forms.ModelForm):
         # self.fields["events"].initial = Event.objects.filter(author=self.user)
         self.fields["events"].queryset = Event.objects.filter(author=self.user)
 
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     class Meta:
         model = Collection

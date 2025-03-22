@@ -12,6 +12,7 @@
 ### Changes
 
 - Add the Reference to the User, created/modified the Attachment Object.
+- Improved `blog` App.
 - Upload Images and Documents Modals now are bigger and scrollable.
 
 ### Fix
