@@ -1,11 +1,11 @@
 {% load i18n %}
 
 <div class="modal fade" id="complaintAddPopupModal" tabindex="-1" role="dialog" aria-labelledby="complaintAddPopupModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" onClick="" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="complaintAddPopupModalLabel">{% trans "Add Complaint" %}</h4>
+                <h5 class="modal-title">{% trans "Add Complaint" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
             <div class="modal-body">
@@ -13,6 +13,7 @@
                     {% csrf_token %}
 
                     <input type="hidden" name="account_id" value="">
+                    <input type="hidden" name="collection_id" value="">
                     <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
 
@@ -39,8 +40,8 @@
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" onclick="complaint_add();">{% trans "Complain" %}</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" onclick="complaint_add()">{% trans "Complain" %}</button>
             </div>
         </div>
     </div>
@@ -53,11 +54,13 @@
     function complaint_add() {
         var complaint_text = $("#complaint-add-modal-form").find("textarea[name='complaint_text']").val();
         var account_id = $("#complaint-add-modal-form").find("input[name='account_id']").val();
+        var collection_id = $("#complaint-add-modal-form").find("input[name='collection_id']").val();
         var event_id = $("#complaint-add-modal-form").find("input[name='event_id']").val();
         var organization_id = $("#complaint-add-modal-form").find("input[name='organization_id']").val();
 
         $.post("{% url 'api-complaint-list' %}", {
             "account_id":           account_id,
+            "collection_id":        collection_id,
             "event_id":             event_id,
             "organization_id":      organization_id,
             "complaint_text":       complaint_text,

@@ -15,12 +15,11 @@
 
 ### Fix
 
-- Upload Images and Documents Modals now show correct Progress in the Progress Bar.
-
-### Fix
-
-- Fixed an Access to the Event editing.
-- Fixed the Organization Details Page, which didn't show the associated Events.
+- Access to the Event editing.
+- Calendar Datepicker Appearance.
+- Design Flaws for the hidden/visible Elements, depending on the Media (Screen Size).
+- Organization Details Page, which didn't show the associated Events.
+- Upload Images and Documents Modals now showing a correct Progress in the Progress Bar.
 
 # 0.4.0 (2024-08-10)
 
