@@ -46,6 +46,8 @@
             <form id="create-event-form" role="form" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
 
+                {{ form.media }}
+
                 <!-- START EVENT APPEARENCE -->
                 <section id="event-appearance">
                     <h3>{% trans "Appearance" %}</h3>
