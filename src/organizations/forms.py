@@ -135,6 +135,17 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 }),
             }
 
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        from termcolor import cprint
+        tags = self.cleaned_data["tags"]
+        cprint(f">>>>>>>>>>>>>>>>>>>>>>>>>>> {tags=}", "yellow")
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
+
+        return [" ".join(tags), ]
+
     def clean_title(self):
         """Clean `title` Field."""
         title = self.cleaned_data["title"]

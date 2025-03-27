@@ -16,6 +16,8 @@
                     <input type="hidden" name="collection_id" value="">
                     <input type="hidden" name="event_id" value="">
                     <input type="hidden" name="organization_id" value="">
+                    <input type="hidden" name="place_id" value="">
+                    <input type="hidden" name="post_id" value="">
 
                     <div class="alert alert-danger" role="alert">
                         <strong>
@@ -57,12 +59,16 @@
         var collection_id = $("#complaint-add-modal-form").find("input[name='collection_id']").val();
         var event_id = $("#complaint-add-modal-form").find("input[name='event_id']").val();
         var organization_id = $("#complaint-add-modal-form").find("input[name='organization_id']").val();
+        var place_id = $("#complaint-add-modal-form").find("input[name='place_id']").val();
+        var post_id = $("#complaint-add-modal-form").find("input[name='post_id']").val();
 
         $.post("{% url 'api-complaint-list' %}", {
             "account_id":           account_id,
             "collection_id":        collection_id,
             "event_id":             event_id,
             "organization_id":      organization_id,
+            "place_id":             place_id,
+            "post_id":              post_id,
             "complaint_text":       complaint_text,
             "csrfmiddlewaretoken":  $("#complaint-add-modal-form").find("input[name='csrfmiddlewaretoken']").val()
         }).done(function (data) {

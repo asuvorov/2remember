@@ -88,8 +88,10 @@
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}
                                 {% elif organization.tags.all %}
+                                    <br/>
                                     <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                 {% elif organization.hashtag %}
+                                    <br/>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}>
                                 {% endif %}
                                 </p>
