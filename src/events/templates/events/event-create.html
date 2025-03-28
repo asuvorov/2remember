@@ -185,51 +185,6 @@
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
 
-                <!-- START EVENT APPLICATION -->
-                {% comment %}
-                <section id="event-application">
-                    <h3>{% trans "Application" %}</h3>
-
-                    <div class="form-group">
-                    {% for choice in form.application %}
-                        <div class="radio radio-primary">
-                            {{ choice.tag }}
-                            <label for="{{ choice.id_for_label }}">{{ choice.choice_label }}</label>
-                        </div>
-                    {% endfor %}
-                    </div>
-
-                    <hr>
-
-                    <div class="checkbox checkbox-primary">
-                        {{ form.allow_reenter }}
-                        {{ form.allow_reenter.label_tag }}
-                    </div>
-
-                    <hr>
-
-                    <div class="checkbox checkbox-primary">
-                        {{ form.accept_automatically }}
-                        {{ form.accept_automatically.label_tag }}
-                    </div>
-                    <div id="id_acceptance_text_div" class="form-group {% if form.acceptance_text.errors %}has-error{% endif %}">
-                        {{ form.acceptance_text }}
-
-                        <span class="help-block">{% if form.acceptance_text.errors %}{% for error in form.acceptance_text.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                    </div>
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT APPLICATION -->
-
-                <!-- START EVENT CONTACT PERSON -->
-                {% comment %}
-                <section id="event-contact-person">
-                    <h3>{% trans "Contact Person" %}</h3>
-                    {% include "app/fragments/contact-person.html" %}
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT CONTACT PERSON -->
-
                 <!-- START EVENT SOCIAL LINKS -->
                 {% comment %}
                 <section id="event-social-links">
@@ -377,16 +332,6 @@
             {% endif %}
         {% endfor %}
 
-        {% for field in nform %}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    new Noty({
-                        text: "{{ field.label }}: {{ error }}"
-                    }).show();
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-
         {% for form in formset_roles.forms %}
             {% for field in form %}
                 {% if field.errors %}
@@ -410,51 +355,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Slider                                                        ***/
-        /*********************************************************************/
-        // var mySlider = $("input.slider");
-
-        // mySlider.on("slide", function (event) {
-        //     $("#currentSliderValue").text(event.value);
-        // });
-
-        // $("#currentSliderValue").text(
-        //     mySlider.bootstrapSlider("getValue")
-        // );
-
-        /*********************************************************************/
-        /*** Contact Person UX                                             ***/
-        /*********************************************************************/
-        $("#alt_person_creds").hide();
-
-        var selected = $("input[type='radio']:checked");
-
-        if (selected.val() == "he") {
-            $("#alt_person_creds").show("slow");
-        }
-
-        $("#id_contact_0").click(function () {
-            $("#alt_person_creds").hide("slow");
-        });
-
-        $("#id_contact_1").click(function () {
-            $("#alt_person_creds").show("slow");
-        })
-
-        /*********************************************************************/
-        /*** Automatically accept Experience Reports UX                    ***/
-        /*********************************************************************/
-        $("#id_acceptance_text_div").hide();
-
-        if ($("#id_accept_automatically").prop("checked")) {
-            $("#id_acceptance_text_div").show("slow");
-        }
-
-        $("#id_accept_automatically").click(function () {
-            $("#id_acceptance_text_div").toggle("slow");
-        });
     });
 </script>
 {% endblock %}

@@ -2,23 +2,14 @@
 (C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
 """
 
-import datetime
 import logging
 
-from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
-from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
-from django.core.paginator import (
-    EmptyPage,
-    PageNotAnInteger,
-    Paginator)
 from django.http import (
     Http404,
     HttpResponseForbidden,
@@ -29,29 +20,17 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from annoying.functions import get_object_or_None
 from termcolor import colored, cprint
-from url_tools.helper import UrlHelper
 
 from ddcore.Utilities import (
     get_client_ip,
     get_website_title,
     get_youtube_video_id,
     validate_url)
-from ddcore.models.Attachment import (
-    AttachedDocument,
-    AttachedImage,
-    AttachedUrl,
-    AttachedVideoUrl)
-from ddcore.models.SocialLink import SocialLink
 
 # pylint: disable=import-error
 from accounts.utils import is_profile_complete
-from app import attachment_processors
 from app.decorators import log_default
-from app.forms import (
-    AddressForm,
-    SocialLinkFormSet)
 from events.utils import get_event_list
 
 from .decorators import (

@@ -54,7 +54,8 @@ def post_create(request):
     # --- Prepare Form(s)
     # -------------------------------------------------------------------------
     form = CreateEditPostForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
 
     if request.method == "POST":
@@ -128,7 +129,8 @@ def post_edit(request, slug):
         raise Http404
 
     form = CreateEditPostForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=post)
 

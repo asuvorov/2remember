@@ -58,6 +58,13 @@ SUBSCRIPTION_PLANS = {
             },
         },
         "accounts": {},
+        "collections": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
         "events": {
             "max_per_day":          1,
             "max_per_week":         None,
@@ -105,6 +112,13 @@ SUBSCRIPTION_PLANS = {
             },
         },
         "accounts": {},
+        "collections": {
+            "max_per_day":          None,
+            "max_per_week":         2,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
         "events": {
             "max_per_day":          None,
             "max_per_week":         2,
@@ -152,6 +166,13 @@ SUBSCRIPTION_PLANS = {
             },
         },
         "accounts": {},
+        "collections": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        2,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
         "events": {
             "max_per_day":          None,
             "max_per_week":         None,
@@ -199,6 +220,13 @@ SUBSCRIPTION_PLANS = {
             },
         },
         "accounts": {},
+        "collections": {
+            "max_per_day":          None,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         2,
+            "upon_request_only":    False,
+        },
         "events": {
             "max_per_day":          None,
             "max_per_week":         None,

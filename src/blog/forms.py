@@ -34,11 +34,12 @@ class CreateEditPostForm(forms.ModelForm):
         self.fields["content"].required = True
 
         # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["content"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["content"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     class Meta:
         model = Post

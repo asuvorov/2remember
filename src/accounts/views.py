@@ -45,6 +45,7 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
+from collection.utils import get_collection_list
 from events.models import (
     Participation,
     ParticipationStatus)
@@ -657,6 +658,30 @@ def my_profile_participations(request):
 
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
+def my_profile_collections(request):
+    """My Profile Collections."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    collections, page_total, page_number = get_collection_list(request, author=request.user)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/my-profile-details-collections.html", {
+            "collections":  collections,
+            "page_total":   page_total,
+            "page_number":  page_number,
+        })
+
+
+@login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_events(request):
     """My Profile Events."""
     # -------------------------------------------------------------------------
@@ -1108,6 +1133,9 @@ def profile_participations(request, uid36):
     # -------------------------------------------------------------------------
     account.profile.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/foreign-profile-participations.html", {
             "account":                      account,
@@ -1115,6 +1143,42 @@ def profile_participations(request, uid36):
             "completed_participations":     completed_participations,
             "cancelled_participations":     cancelled_participations,
             "rejected_participations":      rejected_participations,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def profile_collections(request, uid36):
+    """Foreign Profile Collections."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the User Account.
+    # -------------------------------------------------------------------------
+    account = get_object_or_404(user_model, uid=uid36)
+    if account == request.user:
+        return HttpResponseRedirect(reverse("my-profile-view"))
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    collections, page_total, page_number = get_collection_list(request, author=account)
+
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    account.profile.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/foreign-profile-details-collections.html", {
+            "account":      account,
+            "collections":  collections,
+            "page_total":   page_total,
+            "page_number":  page_number,
         })
 
 

@@ -39,6 +39,12 @@
     </div>
 
 {% if request.user.is_authenticated %}
-    <a class="btn btn-primary {% if not create_event_eligible %}disabled{% endif %}" href="{% url 'event-create' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="{% for details in create_event_details %}{% if details.0 %}<i class='accept bi bi-check-lg'></i>{% else %}<i class='reject bi bi-x-lg'></i>{% endif %} {{ details.1 }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+    {% if create_event_eligible %}
+        <a class="btn btn-primary" href="{% url 'event-create' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="{% for details in create_event_details %}{% if details.0 %}<i class='accept bi bi-check-lg'></i>{% else %}<i class='reject bi bi-x-lg'></i>{% endif %} {{ details.1 }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+    {% else %}
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="{% for details in create_event_details %}{% if details.0 %}<i class='accept bi bi-check-lg'></i>{% else %}<i class='reject bi bi-x-lg'></i>{% endif %} {{ details.1 }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}">
+            <button class="btn btn-primary" type="button" disabled><i class="bi bi-plus-circle"></i> {% trans "Create" %}</button>
+        </span>
+    {% endif %}
 {% endif %}
 </div>

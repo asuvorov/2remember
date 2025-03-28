@@ -17,6 +17,8 @@ from termcolor import cprint
 from app.choices import (
     month_choices,
     day_of_month_choices)
+from events.models import Event
+
 from .models import Collection
 
 
@@ -38,15 +40,19 @@ class CreateEditCollectionForm(forms.ModelForm):
             pass
 
         # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        # self.fields["events"].initial = Event.objects.filter(author=self.user)
+        self.fields["events"].queryset = Event.objects.filter(author=self.user)
+
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     class Meta:
         model = Collection
         fields = [
-            "preview", "cover", "title", "description",  # "category",
+            "preview", "cover", "title", "description", "events",  # "category",
             "visibility", "tags", "hashtag", "allow_comments",
         ]
         widgets = {
@@ -61,6 +67,12 @@ class CreateEditCollectionForm(forms.ModelForm):
                     "class":        "form-control",
                     "placeholder":  _("Collection Description"),
                     "maxlength":    1000,
+                }),
+            "events": forms.SelectMultiple(
+                attrs={
+                    "class":        "form-control form-select",
+                    "multiple":     "multiple",
+                    "size":         "5",
                 }),
             # "category": forms.Select(
             #     attrs={
