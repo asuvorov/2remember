@@ -287,13 +287,23 @@ def event_details(request, slug, event=None):
     # --- Initials.
     # -------------------------------------------------------------------------
     is_admin = False
-    is_rated = False
-    is_complained = False
+    is_newly_created = False
 
     participation = None
 
     show_rate_form = False
     show_complain_form = False
+
+    # -------------------------------------------------------------------------
+    # --- Lookup for submitted Forms.
+    # -------------------------------------------------------------------------
+    if request.method == "POST":
+        # ---------------------------------------------------------------------
+        # --- Silent Refresh.
+        return HttpResponseRedirect(
+            reverse("event-details", kwargs={
+                "slug":     event.slug,
+            }))
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
@@ -305,18 +315,20 @@ def event_details(request, slug, event=None):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
+    if (
+            request.user.is_authenticated and
+            request.user != event.author):
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
         is_admin = is_event_admin(request.user, event)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Event.
-        is_rated = event.is_rated_by_user(request.user)
+        show_rate_form = not event.is_rated_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Event.
-        is_complained = event.is_complained_by_user(request.user)
+        show_complain_form = not event.is_complained_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
@@ -365,41 +377,20 @@ def event_details(request, slug, event=None):
         #     # --- If the Participation isn't found, return sign-up Form.
         #     if not is_admin:
         #         show_signup_form = True
-
-        # ---------------------------------------------------------------------
-        # --- Lookup for submitted Forms.
-        if request.method == "POST":
-            # -----------------------------------------------------------------
-            # --- Silent Refresh.
-            return HttpResponseRedirect(
-                reverse("event-details", kwargs={
-                    "slug":     event.slug,
-                }))
     else:
-        # ---------------------------------------------------------------------
-        # --- NOT authenticated Users are not allowed to view the Event
-        #     Details Page, if the Event is:
-        #     - Draft;
-        #     - Complete;
-        #     - Past due.
         pass
-        # if event.is_draft or event.is_happened or event.is_closed:
-        #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    # is_newly_created = False
+    if (
+            event.author == request.user and
+            event.is_newly_created):
+        is_newly_created = True
 
-    # if (
-    #         event.author == request.user and
-    #         event.status == EventStatus.UPCOMING and
-    #         event.is_newly_created):
-    #     is_newly_created = True
-
-    #     event.is_newly_created = False
-    #     event.save(request=request)
+        event.is_newly_created = False
+        event.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
@@ -417,7 +408,7 @@ def event_details(request, slug, event=None):
             "is_admin":             is_admin,
             "show_rate_form":       show_rate_form,
             "show_complain_form":   show_complain_form,
-            # "is_newly_created":             is_newly_created,
+            "is_newly_created":     is_newly_created,
             # "social_links":                 social_links,
         })
 

@@ -99,13 +99,14 @@ class CreateEditCollectionForm(forms.ModelForm):
                 }),
             }
 
-    def clean_duration(self):
-        """Clean `duration` Field."""
-        duration = self.cleaned_data["duration"]
-        if duration <= 0:
-            raise forms.ValidationError(_("Duration should be greater, than 0"))
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
 
-        return duration
+        return [" ".join(tags), ]
 
     def clean_title(self):
         """Clean `title` Field."""

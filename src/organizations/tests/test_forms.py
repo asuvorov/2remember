@@ -2,10 +2,27 @@
 (C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
+from django.contrib.auth import (
+    authenticate,
+    get_user_model,
+    login)
+from django.contrib.staticfiles import finders
+from django.core.files import File
+from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import (
     Client,
     TestCase,
     LiveServerTestCase)
+
+from termcolor import colored, cprint
+
+from organizations.forms import CreateEditOrganizationForm
+
+
+client = Client(
+    HTTP_USER_AGENT="Mozilla/5.0",
+    enforce_csrf_checks=True)
+user_model = get_user_model()
 
 
 # =============================================================================
@@ -17,448 +34,182 @@ class OrganizationCreateFormTestCase(TestCase):
 
     """Test Organization create Form."""
 
-    fixtures = []
+    fixtures = [
+        "test_accounts_users",
+        "test_accounts_profiles",
+    ]
 
     def setUp(self):
         """Constructor."""
         super().setUp()
 
-        self.url = reverse("organization-organizations")
-        self.login_url = reverse("signin")
-        self.data = {}
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.data = {
+            "title":            "Testing Organization",
+            "description":      "Description for the testing Organization",
+            "tags":             "testing,organization",
+            "hashtag":          "testing-organization",
+            "addressless":      False,
+            "parent":           None,
+            "is_hidden":        False,
+            "website":          None,
+            "video":            None,
+            "email":            None,
+            "allow_comments":   True,
+        }
+        self.files = {
+            "preview":  SimpleUploadedFile(
+                            "challenge-test.jpg",
+                            File(open(finders.find("tests/challenge-test.jpg"), "rb")).read(),
+                            content_type="multipart/form-data"),
+            "cover":    SimpleUploadedFile(
+                            "challenge-test.jpg",
+                            File(open(finders.find("tests/challenge-test.jpg"), "rb")).read(),
+                            content_type="multipart/form-data")
+        }
 
     def tearDown(self):
         """Destructor."""
         super().tearDown()
 
-    def test_create_event_success(self):
-        """Challenge create. Success."""
-        cprint("[---  INFO   ---] Test Challenge create. Success...", "cyan")
+    def test_organization_create_success_no_avatars(self):
+        """Organization successfully created: No Avatars."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
+        # --- Prepare and send Request.
+        # ---------------------------------------------------------------------
+        form = CreateEditOrganizationForm(
+            data=self.data,
+            files={},
+            user=self.admin)
 
         # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                "start_date":           "2017-12-31",
-                "start_time":           "00:00",
-                "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
+        # --- Test Response.
+        # ---------------------------------------------------------------------
+        self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
+
+    def test_organization_create_success_scenarios(self):
+        """Organization successfully created Scenarios."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        scenarios = [{
+            "description":  None,
+        }, {
+            "tags":         None,
+        }, {
+            "hashtag":      None,
+        }]
 
         # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+        # --- Prepare and send Request, and test Response.
+        # ---------------------------------------------------------------------
+        for scenario in scenarios:
+            form = CreateEditOrganizationForm(
+                data={
+                    **self.data,
+                    **scenario,
+                },
+                files=self.files,
+                user=self.admin)
+            self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
 
-        self.assertTrue(
-            form.is_valid())
-
-        # self.assertEqual(form.clean_id_number(),"0000528989")
-        # self.assertIn(u"Invalid Action",form.errors["__all__"])
-
-    def test_create_event_no_avatar(self):
-        """Challenge create. No Avatar."""
-        cprint("[---  INFO   ---] Test Challenge create. No Avatar...", "cyan")
+    def test_organization_create_success_tags_scenarios(self):
+        """Organization successfully created: Tags Scenarios."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        scenarios = [
+            ("apple ball cat", ["apple ball cat"]),                     # No Commas, so Space-delimited.
+            ("apple, ball cat", ["apple", "ball cat"]),                 # Comma present, so Comma-delimited.
+            ("\"apple, ball\" cat dog", ["apple, ball", "cat", "dog"]), # All Commas are quoted, so Space-delimited.
+            ("\"apple, ball\", cat dog", ["apple, ball", "cat dog"]),   # Contains an unquoted Comma, so Comma-delimited.
+            ("apple \"ball cat\" dog", ["apple", "ball cat", "dog"]),   # No Commas, so Space-delimited.
+            ("\"apple\" \"ball dog", ["apple ball dog"]),               # Unclosed double Quote is ignored.
+            ("\"apple ball cat\"", ["apple ball cat"]),
+        ]
 
         # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
+        # --- Prepare and send Request, and test Response.
+        # ---------------------------------------------------------------------
+        for scenario in scenarios:
+            form = CreateEditOrganizationForm(
+                data={
+                    **self.data,
+                    "tags":     scenario[0],
+                },
+                files=self.files,
+                user=self.admin)
+            self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
+            self.assertCountEqual(form.cleaned_data["tags"], scenario[1], msg=colored(scenario[0], "white", "on_red"))
+
+
+    def test_organization_create_profanity_check_scenarios(self):
+        """Organization create Profanity Check."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        scenarios = [{
+            "title":        "sh!t",
+        }, {
+            "description":  "sh!t",
+        }, {
+            "tags":         "sh!t",
+        }, {
+            "hashtag":      "sh!t",
+        }]
 
         # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                "start_date":           "2017-12-31",
-                "start_time":           "00:00",
-                "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                # "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
+        # --- Prepare and send Request, and test Response.
+        # ---------------------------------------------------------------------
+        for scenario in scenarios:
+            form = CreateEditOrganizationForm(
+                data={
+                    **self.data,
+                    **scenario,
+                },
+                files=self.files,
+                user=self.admin)
+            self.assertTrue(form.is_valid(), msg=colored(scenario, "white", "on_red"))
 
         # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
+        # --- Prepare and send Request, and test Response.
+        # ---------------------------------------------------------------------
+        for scenario in scenarios:
+            form = CreateEditOrganizationForm(
+                data={
+                    **self.data,
+                    **scenario,
+                },
+                files=self.files,
+                user=self.john)
+            self.assertFalse(form.is_valid(), msg=colored(scenario, "white", "on_red"))
 
-        self.assertFalse(
-            form.is_valid())
 
-    def test_create_event_no_name_no_description(self):
-        """Challenge create. No Name, no Description."""
-        cprint("[---  INFO   ---] Test Challenge create. No Name, no Description...", "cyan")
+    def test_organization_create_failure_scenarios(self):
+        """Organization failed to be created Scenarios."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        scenarios = [{
+            "title":    None,
+        }]
 
         # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
-
+        # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                # "name":                 "Testing Challenge #1",
-                # "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                "start_date":           "2017-12-31",
-                "start_time":           "00:00",
-                "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
-
-        # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
-
-        self.assertFalse(
-            form.is_valid())
-        self.assertIn(
-            "name",
-            form.errors.as_json())
-        self.assertNotIn(
-            "description",
-            form.errors.as_json())
-
-    def test_create_event_no_tags(self):
-        """Challenge create. No Tags."""
-        cprint("[---  INFO   ---] Test Challenge create. No Tags...", "cyan")
-
-        # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
-
-        # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                # "tags":                 "testing,challenge",
-                # "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                "start_date":           "2017-12-31",
-                "start_time":           "00:00",
-                "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
-
-        # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
-
-        self.assertTrue(
-            form.is_valid())
-        self.assertNotIn(
-            "tags",
-            form.errors.as_json())
-        self.assertNotIn(
-            "hashtag",
-            form.errors.as_json())
-
-    def test_create_event_dateless(self):
-        """Challenge create. Dateless."""
-        cprint("[---  INFO   ---] Test Challenge create. Dateless...", "cyan")
-
-        # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
-
-        # ---------------------------------------------------------------------
-        # --- Successful
-        # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.DATELESS,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                # "start_date":           "2017-12-31",
-                # "start_time":           "00:00",
-                # "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
-
-        # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
-
-        self.assertTrue(
-            form.is_valid())
-
-        # --- Save Form
-        instance = form.save()
-
-        self.assertEqual(
-            instance.recurrence,
-            RECURRENCE.DATELESS)
-
-        self.assertIn(
-            MONTH.NONE,
-            instance.month)
-        self.assertIn(
-            DAY_OF_WEEK.NONE,
-            instance.day_of_week)
-        self.assertIn(
-            "0",
-            instance.day_of_month)
-
-        self.assertIsNone(instance.start_date)
-        self.assertIsNone(instance.start_time)
-
-        self.assertIsNotNone(instance.start_tz)
-
-    def test_create_event_once(self):
-        """Challenge create. Once. Success."""
-        cprint("[---  INFO   ---] Test Challenge create. Once...", "cyan")
-
-        # ---------------------------------------------------------------------
-        # --- Log in
-        result = client.login(
-            username=self.test_user_1.username,
-            password="test"
-        )
-
-        # ---------------------------------------------------------------------
-        # --- Successful
-        # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                "start_date":           "2017-12-31",
-                "start_time":           "00:00",
-                "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
-
-        # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
-
-        self.assertTrue(
-            form.is_valid())
-
-        # --- Save Form
-        instance = form.save()
-
-        self.assertEqual(
-            instance.recurrence,
-            RECURRENCE.ONCE)
-
-        self.assertIn(
-            MONTH.NONE,
-            instance.month)
-        self.assertIn(
-            DAY_OF_WEEK.NONE,
-            instance.day_of_week)
-        self.assertIn(
-            "0",
-            instance.day_of_month)
-
-        self.assertIsNotNone(instance.start_date)
-        self.assertIsNotNone(instance.start_time)
-
-        self.assertIsNotNone(instance.start_tz)
-
-        # ---------------------------------------------------------------------
-        # --- No Date/Time
-        # ---------------------------------------------------------------------
-        # --- Send Request
-        form = CreateEditChallengeForm(
-            data={
-                "name":                 "Testing Challenge #1",
-                "description":          "Description for the testing Challenge #1",
-                "category":             CHALLENGE_CATEGORY.ANIMALS,
-                "tags":                 "testing,challenge",
-                "hashtag":              "testing-challenge",
-                "duration":             8,
-                "addressless":          False,
-                "is_alt_person":        False,
-                "contact":              "me",
-                "alt_person_fullname":  "",
-                "alt_person_email":     "",
-                "alt_person_phone":     "",
-                "recurrence":           RECURRENCE.ONCE,
-                "month":                MONTH.NONE,
-                "day_of_week":          DAY_OF_WEEK.NONE,
-                "day_of_month":         "0",
-                # "start_date":           "2017-12-31",
-                # "start_time":           "00:00",
-                # "start_tz":             "America/Los_Angeles",
-                "organization":         None,
-                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
-                "allow_reenter":        True,
-                "accept_automatically": True,
-                "acceptance_text":      "Great Job",
-            },
-            files={
-                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
-            },
-            user=self.test_user_1,
-            )
-
-        # ---------------------------------------------------------------------
-        # --- Test Response
-        form.is_valid()
-        cprint("[--- ERRORS ---] %s" % form.errors.as_json(), "white", "on_red")
-
-        self.assertFalse(
-            form.is_valid())
+        for scenario in scenarios:
+            form = CreateEditOrganizationForm(
+                data={
+                    **self.data,
+                    **scenario,
+                },
+                files=self.files,
+                user=self.admin)
+            self.assertFalse(form.is_valid(), msg=colored(scenario, "white", "on_red"))

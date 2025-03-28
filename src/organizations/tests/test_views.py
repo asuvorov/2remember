@@ -17,7 +17,7 @@ from django.test import (
 from django.urls import reverse
 
 from rest_framework.test import APIClient
-from termcolor import colored
+from termcolor import colored, cprint
 
 from events.models import Event
 from organizations.models import Organization
@@ -206,6 +206,11 @@ class ViewPublicOrganizationTest(GenericUserTestCase):
         self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
         self.assertEqual(response.context["organization"], self.organization)
+        self.assertFalse(response.context["show_rate_form"])
+        self.assertFalse(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
+        self.assertFalse(response.context["is_staff_member"])
+        self.assertFalse(response.context["is_subscribed"])
 
     def test_author_can_view_organization(self):
         """Author can view public Organization."""
@@ -227,6 +232,11 @@ class ViewPublicOrganizationTest(GenericUserTestCase):
         self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
         self.assertEqual(response.context["organization"], self.organization)
+        self.assertFalse(response.context["show_rate_form"])
+        self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["is_newly_created"])
+        self.assertFalse(response.context["is_staff_member"])
+        self.assertFalse(response.context["is_subscribed"])
 
     def test_non_author_can_view_organization(self):
         """Non-Author can view public Organization."""
@@ -248,6 +258,11 @@ class ViewPublicOrganizationTest(GenericUserTestCase):
         self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
         self.assertEqual(response.context["organization"], self.organization)
+        self.assertTrue(response.context["show_rate_form"])
+        self.assertTrue(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
+        self.assertFalse(response.context["is_staff_member"])
+        self.assertFalse(response.context["is_subscribed"])
 
     def test_admin_can_view_organization(self):
         """Admin can view public Organization."""
@@ -269,6 +284,11 @@ class ViewPublicOrganizationTest(GenericUserTestCase):
         self.assertTemplateUsed(response, "organizations/organization-details-info.html")
 
         self.assertEqual(response.context["organization"], self.organization)
+        self.assertTrue(response.context["show_rate_form"])
+        self.assertTrue(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
+        self.assertFalse(response.context["is_staff_member"])
+        self.assertFalse(response.context["is_subscribed"])
 
 
 class ViewPrivateOrganizationTest(GenericUserTestCase):

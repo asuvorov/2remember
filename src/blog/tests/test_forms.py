@@ -16,8 +16,8 @@ from django.test import (
 
 from termcolor import colored, cprint
 
-from app.models import Visibility
-from events.forms import CreateEditEventForm
+from blog.forms import CreateEditPostForm
+from blog.models import PostStatus
 
 
 client = Client(
@@ -28,12 +28,12 @@ user_model = get_user_model()
 
 # =============================================================================
 # ===
-# === TEST EVENT CREATE FORM
+# === TEST POST CREATE FORM
 # ===
 # =============================================================================
-class EventCreateFormTestCase(TestCase):
+class PostCreateFormTestCase(TestCase):
 
-    """Test Event create Form."""
+    """Test Post create Form."""
 
     fixtures = [
         "test_accounts_users",
@@ -49,14 +49,12 @@ class EventCreateFormTestCase(TestCase):
         self.jane = user_model.objects.get(username="jane")
 
         self.data = {
-            "title":            "Testing Event",
-            "description":      "Description for the testing Event",
-            "category":         None,
-            "visibility":       Visibility.PUBLIC,
-            "tags":             "testing,event",
-            "hashtag":          "testing-event",
-            "addressless":      False,
-            "organization":     None,
+            "title":            "Testing Post",
+            "description":      "Description for the testing Post",
+            "content":          "<html></html>",
+            "status":           PostStatus.DRAFT,
+            "tags":             "testing,post",
+            "hashtag":          "testing-post",
             "allow_comments":   True,
         }
         self.files = {
@@ -74,8 +72,8 @@ class EventCreateFormTestCase(TestCase):
         """Destructor."""
         super().tearDown()
 
-    def test_event_create_success_no_avatars(self):
-        """Event successfully created: No Avatars."""
+    def test_post_create_success_no_avatars(self):
+        """Post successfully created: No Avatars."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -83,7 +81,7 @@ class EventCreateFormTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Prepare and send Request.
         # ---------------------------------------------------------------------
-        form = CreateEditEventForm(
+        form = CreateEditPostForm(
             data=self.data,
             files={},
             user=self.admin)
@@ -93,15 +91,13 @@ class EventCreateFormTestCase(TestCase):
         # ---------------------------------------------------------------------
         self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
 
-    def test_event_create_success_scenarios(self):
-        """Event successfully created Scenarios."""
+    def test_post_create_success_scenarios(self):
+        """Post successfully created Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
         scenarios = [{
             "description":  None,
-        }, {
-            "visibility":   Visibility.PRIVATE,
         }, {
             "tags":         None,
         }, {
@@ -112,7 +108,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditPostForm(
                 data={
                     **self.data,
                     **scenario,
@@ -121,8 +117,8 @@ class EventCreateFormTestCase(TestCase):
                 user=self.admin)
             self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
 
-    def test_event_create_success_tags_scenarios(self):
-        """Event successfully created: Tags Scenarios."""
+    def test_post_create_success_tags_scenarios(self):
+        """Post successfully created: Tags Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -140,7 +136,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditPostForm(
                 data={
                     **self.data,
                     "tags":     scenario[0],
@@ -150,8 +146,8 @@ class EventCreateFormTestCase(TestCase):
             self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
             self.assertCountEqual(form.cleaned_data["tags"], scenario[1], msg=colored(scenario[0], "white", "on_red"))
 
-    def test_event_create_profanity_check_scenarios(self):
-        """Event create Profanity Check."""
+    def test_post_create_profanity_check_scenarios(self):
+        """Post create Profanity Check."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -159,6 +155,8 @@ class EventCreateFormTestCase(TestCase):
             "title":        "sh!t",
         }, {
             "description":  "sh!t",
+        }, {
+            "content":      "sh!t",
         }, {
             "tags":         "sh!t",
         }, {
@@ -169,7 +167,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditPostForm(
                 data={
                     **self.data,
                     **scenario,
@@ -182,7 +180,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditPostForm(
                 data={
                     **self.data,
                     **scenario,
@@ -191,22 +189,22 @@ class EventCreateFormTestCase(TestCase):
                 user=self.john)
             self.assertFalse(form.is_valid(), msg=colored(scenario, "white", "on_red"))
 
-    def test_event_create_failure_scenarios(self):
-        """Event failed to be created Scenarios."""
+    def test_post_create_failure_scenarios(self):
+        """Post failed to be created Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
         scenarios = [{
             "title":        None,
         }, {
-            "visibility":   None,
+            "content":      None,
         }]
 
         # ---------------------------------------------------------------------
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditPostForm(
                 data={
                     **self.data,
                     **scenario,

@@ -17,7 +17,8 @@ from django.test import (
 from termcolor import colored, cprint
 
 from app.models import Visibility
-from events.forms import CreateEditEventForm
+from collection.forms import CreateEditCollectionForm
+from events.models import Event
 
 
 client = Client(
@@ -28,16 +29,17 @@ user_model = get_user_model()
 
 # =============================================================================
 # ===
-# === TEST EVENT CREATE FORM
+# === TEST COLLECTION CREATE FORM
 # ===
 # =============================================================================
-class EventCreateFormTestCase(TestCase):
+class CollectionCreateFormTestCase(TestCase):
 
-    """Test Event create Form."""
+    """Test Collection create Form."""
 
     fixtures = [
         "test_accounts_users",
         "test_accounts_profiles",
+        "test_events",
     ]
 
     def setUp(self):
@@ -48,15 +50,15 @@ class EventCreateFormTestCase(TestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
+        self.event= Event.objects.first()
+
         self.data = {
-            "title":            "Testing Event",
-            "description":      "Description for the testing Event",
-            "category":         None,
+            "title":            "Testing Collection",
+            "description":      "Description for the testing Collection",
+            "events":           None,
             "visibility":       Visibility.PUBLIC,
-            "tags":             "testing,event",
-            "hashtag":          "testing-event",
-            "addressless":      False,
-            "organization":     None,
+            "tags":             "testing,collection",
+            "hashtag":          "testing-collection",
             "allow_comments":   True,
         }
         self.files = {
@@ -74,8 +76,8 @@ class EventCreateFormTestCase(TestCase):
         """Destructor."""
         super().tearDown()
 
-    def test_event_create_success_no_avatars(self):
-        """Event successfully created: No Avatars."""
+    def test_collection_create_success_no_avatars(self):
+        """Collection successfully created: No Avatars."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -83,7 +85,7 @@ class EventCreateFormTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Prepare and send Request.
         # ---------------------------------------------------------------------
-        form = CreateEditEventForm(
+        form = CreateEditCollectionForm(
             data=self.data,
             files={},
             user=self.admin)
@@ -93,13 +95,15 @@ class EventCreateFormTestCase(TestCase):
         # ---------------------------------------------------------------------
         self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
 
-    def test_event_create_success_scenarios(self):
-        """Event successfully created Scenarios."""
+    def test_collection_create_success_scenarios(self):
+        """Collection successfully created Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
         scenarios = [{
             "description":  None,
+        }, {
+            "events":       [self.event],
         }, {
             "visibility":   Visibility.PRIVATE,
         }, {
@@ -112,7 +116,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditCollectionForm(
                 data={
                     **self.data,
                     **scenario,
@@ -121,8 +125,8 @@ class EventCreateFormTestCase(TestCase):
                 user=self.admin)
             self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
 
-    def test_event_create_success_tags_scenarios(self):
-        """Event successfully created: Tags Scenarios."""
+    def test_collection_create_success_tags_scenarios(self):
+        """Collection successfully created: Tags Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -140,7 +144,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditCollectionForm(
                 data={
                     **self.data,
                     "tags":     scenario[0],
@@ -150,8 +154,8 @@ class EventCreateFormTestCase(TestCase):
             self.assertTrue(form.is_valid(), msg=colored(form.errors, "white", "on_red"))
             self.assertCountEqual(form.cleaned_data["tags"], scenario[1], msg=colored(scenario[0], "white", "on_red"))
 
-    def test_event_create_profanity_check_scenarios(self):
-        """Event create Profanity Check."""
+    def test_collection_create_profanity_check_scenarios(self):
+        """Collection create Profanity Check."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -169,7 +173,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditCollectionForm(
                 data={
                     **self.data,
                     **scenario,
@@ -182,7 +186,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditCollectionForm(
                 data={
                     **self.data,
                     **scenario,
@@ -191,8 +195,8 @@ class EventCreateFormTestCase(TestCase):
                 user=self.john)
             self.assertFalse(form.is_valid(), msg=colored(scenario, "white", "on_red"))
 
-    def test_event_create_failure_scenarios(self):
-        """Event failed to be created Scenarios."""
+    def test_collection_create_failure_scenarios(self):
+        """Collection failed to be created Scenarios."""
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
@@ -206,7 +210,7 @@ class EventCreateFormTestCase(TestCase):
         # --- Prepare and send Request, and test Response.
         # ---------------------------------------------------------------------
         for scenario in scenarios:
-            form = CreateEditEventForm(
+            form = CreateEditCollectionForm(
                 data={
                     **self.data,
                     **scenario,
