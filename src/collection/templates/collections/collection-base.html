@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collection> - Collection
+{% endcomment %}
+
+{% block title %}{% trans "Collection" %} "{{ collection.title }}" - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'collection-list' %}">{% trans "Collections" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ collection.title }}</li>
+        </ol>
+    </nav>
+</a>
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_content %}
+    {% include "app/fragments/instance-images-script.html" with instance=collection %}
+{% endblock %}

@@ -40,6 +40,9 @@ from app import (
     WEEK_AGO,
     MONTH_AGO,
     YEAR_AGO)
+from app.models import (
+    Visibility,
+    visibility_choices)
 from invites.models import Invite
 # from events.choices import EventStatus
 # from events.models import Event
