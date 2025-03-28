@@ -198,7 +198,7 @@ class Organization(
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
-        help_text=_("A comma-separated List of Tags."))
+        help_text=_("A Comma-separated List of Tags.<br/>If you plan to add only one Tag, that consists of multiple Words, it is recommended to wrap the Tag in Quotes, e.g. \"<b><i>This is multi-word Tag\"</i></b>."))
     hashtag = models.CharField(
         db_index=True,
         max_length=80, null=True, blank=True,
