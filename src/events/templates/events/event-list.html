@@ -44,11 +44,15 @@
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START CONTROLLERS -->
-            {% include "events/fragments/event-list-controllers.html" %}
+            <section id="/event-list-controllers" class="position-relative">
+                {% include "events/fragments/event-list-controllers.html" %}
+            </section>
             <!--  END  CONTROLLERS -->
 
             <!-- START FILTER FORM -->
-            {% include "events/fragments/event-list-filter-form.html" %}
+            <section id="event-list-filter-form" class="position-relative">
+                {% include "events/fragments/event-list-filter-form.html" %}
+            </section>
             <!--  END  FILTER FORM -->
 
             <!-- START EVENTS -->

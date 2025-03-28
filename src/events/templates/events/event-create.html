@@ -312,16 +312,6 @@
             {% endif %}
         {% endfor %}
 
-        {% for field in nform %}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    new Noty({
-                        text: "{{ field.label }}: {{ error }}"
-                    }).show();
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-
         {% for form in formset_roles.forms %}
             {% for field in form %}
                 {% if field.errors %}
@@ -345,51 +335,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Slider                                                        ***/
-        /*********************************************************************/
-        // var mySlider = $("input.slider");
-
-        // mySlider.on("slide", function (event) {
-        //     $("#currentSliderValue").text(event.value);
-        // });
-
-        // $("#currentSliderValue").text(
-        //     mySlider.bootstrapSlider("getValue")
-        // );
-
-        /*********************************************************************/
-        /*** Contact Person UX                                             ***/
-        /*********************************************************************/
-        $("#alt_person_creds").hide();
-
-        var selected = $("input[type='radio']:checked");
-
-        if (selected.val() == "he") {
-            $("#alt_person_creds").show("slow");
-        }
-
-        $("#id_contact_0").click(function () {
-            $("#alt_person_creds").hide("slow");
-        });
-
-        $("#id_contact_1").click(function () {
-            $("#alt_person_creds").show("slow");
-        })
-
-        /*********************************************************************/
-        /*** Automatically accept Experience Reports UX                    ***/
-        /*********************************************************************/
-        $("#id_acceptance_text_div").hide();
-
-        if ($("#id_accept_automatically").prop("checked")) {
-            $("#id_acceptance_text_div").show("slow");
-        }
-
-        $("#id_accept_automatically").click(function () {
-            $("#id_acceptance_text_div").toggle("slow");
-        });
     });
 </script>
 {% endblock %}

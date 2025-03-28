@@ -62,10 +62,11 @@ class CreateEditEventForm(forms.ModelForm):
         self.fields["start_date"].required = False
 
         # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     start_date = forms.DateField(
         input_formats=[

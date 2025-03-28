@@ -199,6 +199,15 @@
 
             <hr>
 
+            <!-- START PROFILE COLLECTIONS -->
+            <section id="profile-collections">
+                <h3>{% trans "Collections" %}</h3>
+                {% include "accounts/fragments/foreign-profile-collection-list.html" %}
+            </section>
+            <!--  END  PROFILE COLLECTIONS -->
+
+            <hr>
+
             <!-- START PROFILE COMMENTS -->
             <section id="profile-comments">
                 {% include "app/fragments/instance-comments.html" with instance=account.profile %}

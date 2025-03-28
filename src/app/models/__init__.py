@@ -5,3 +5,4 @@
 # pylint: disable=wildcard-import
 # pylint: disable=unused-wildcard-import
 from app.models.Feature import *
+from app.models.choices import *

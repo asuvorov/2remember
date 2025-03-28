@@ -44,6 +44,9 @@ from app import (
     WEEK_AGO,
     MONTH_AGO,
     YEAR_AGO)
+from app.models import (
+    Visibility,
+    visibility_choices)
 from invites.models import Invite
 from organizations.models import Organization
 from privateurl.models import PrivateUrl
@@ -63,13 +66,6 @@ from .Category import (
 # -----------------------------------------------------------------------------
 # --- Event Model Choices.
 # -----------------------------------------------------------------------------
-Visibility = enum(
-    PUBLIC="0",
-    PRIVATE="1")
-visibility_choices = [
-    (Visibility.PUBLIC,     _("Public")),
-    (Visibility.PRIVATE,    _("Private")),
-]
 
 
 # -----------------------------------------------------------------------------

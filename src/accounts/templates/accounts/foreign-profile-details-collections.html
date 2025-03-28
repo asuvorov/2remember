@@ -1,0 +1,92 @@
+{% extends "accounts/foreign-profile-base.html" %}
+
+{% load cache %}
+{% load i18n %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collections>      - List of Collections
+        :<page_total>  - Total Number of Pages
+        :<page_number> - Number of current Page
+{% endcomment %}
+
+{% get_current_language as LANGUAGE_CODE %}
+
+{% block title %}{% trans "Collections List" %} - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'account-list' %}">{% trans "Members" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'profile-view' account.uid %}">{{ account.profile.auth_name }}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Collections" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block content%}
+<div id="foreign-profile-collections" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <!-- START CONTROLLERS -->
+            <section id="collection-list-controllers" class="position-relative">
+                {% include "collections/fragments/collection-list-controllers.html" %}
+            </section>
+            <!--  END  CONTROLLERS -->
+
+            <!-- START FILTER FORM -->
+            <section id="collection-list-filter-form" class="position-relative">
+                {% include "collections/fragments/collection-list-filter-form.html" %}
+            </section>
+            <!--  END  FILTER FORM -->
+
+            <!-- START COLLECTIONS -->
+            <section id="collection-list-grouper" class="position-relative">
+                {% include "collections/fragments/collection-list.html" %}
+            </section>
+            <!--  END  COLLECTIONS -->
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <!-- Media -->
+
+            <!-- Tag Cloud -->
+            <section id="tag-cloud">
+            {% cache 60 tag-cloud-collections LANGUAGE_CODE %}
+                <h4>{% trans "Tag Cloud" %}</h4>
+                {% include "collections/fragments/collection-list-tag-cloud.html" %}
+            {% endcache %}
+            </section>
+
+            <!-- Sponsored Links -->
+            <section id="sponsored-links">
+                <h4>{% trans "Sponsored Links" %}</h4>
+                {% include "app/fragments/sponsored-links-side.html" %}
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Modals -->
+
+<!-- Scripts -->
+
+<script type="text/javascript">
+    /*************************************************************************/
+    /*** Global Variables                                                  ***/
+    /*************************************************************************/
+    var element;
+</script>
+{% endblock %}

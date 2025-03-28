@@ -2,6 +2,7 @@
 
 ### New
 
+- Added a `collection` App for creating the Collections of Events.
 - Added `parent` Organization Field to the Organization Model.
 - Added sending Email to the Team from the "Contact Us" Page.
 - Added the Features Feature for toggling the new testable Features.
@@ -11,6 +12,7 @@
 ### Changes
 
 - Add the Reference to the User, created/modified the Attachment Object.
+- Improved `blog` App.
 - Upload Images and Documents Modals now are bigger and scrollable.
 
 ### Fix

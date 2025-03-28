@@ -38,14 +38,19 @@
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START CONTROLLERS -->
-            {% include "organizations/fragments/organization-list-controllers.html" %}
+            <section id="organization-list-controllers" class="position-relative">
+                {% include "organizations/fragments/organization-list-controllers.html" %}
+            </section>
             <!--  END  CONTROLLERS -->
 
             <!-- START FILTER FORM -->
+            <section id="organization-list-filter-form" class="position-relative">
+                {% include "organizations/fragments/organization-list-filter-form.html" %}
+            </section>
             <!--  END  FILTER FORM -->
 
             <!-- START ORGANIZATIONS -->
-            <section id="event-list-grouper" class="position-relative">
+            <section id="organization-list-grouper" class="position-relative">
                 {% include "organizations/fragments/organization-list.html" %}
             </section>
             <!--  END  ORGANIZATIONS -->
