@@ -85,9 +85,9 @@
                             <label for="id_visibility" class="form-label">{{ form.visibility.label }}{% if form.visibility.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.visibility.errors %}{% for error in form.visibility.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                        <div class="form-floating col-md-4 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-4 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-4{% if form.hashtag.errors %}has-error{% endif %}">
