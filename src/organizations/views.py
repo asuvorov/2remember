@@ -294,10 +294,11 @@ def organization_details(request, slug, organization=None):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    is_complained = False
-    show_complain_form = False
-
+    is_newly_created = False
     is_staff_member = False
+
+    show_rate_form = False
+    show_complain_form = False
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -342,11 +343,16 @@ def organization_details(request, slug, organization=None):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
+    if (
+            request.user.is_authenticated and
+            request.user != organization.author):
+        # ---------------------------------------------------------------------
+        # --- Check, if the User has already rated the Event.
+        show_rate_form = not organization.is_rated_by_user(request.user)
+
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
-        is_complained = organization.is_complained_by_user(request.user)
-        show_complain_form = not is_complained
+        show_complain_form = not organization.is_complained_by_user(request.user)
 
         # if not is_complained:
         #     # -----------------------------------------------------------------
@@ -373,12 +379,9 @@ def organization_details(request, slug, organization=None):
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    is_newly_created = False
     if (
             organization.author == request.user and
-            organization.is_newly_created and
-            not organization.is_hidden and
-            not organization.is_deleted):
+            organization.is_newly_created):
         is_newly_created = True
 
         organization.is_newly_created = False
@@ -404,17 +407,18 @@ def organization_details(request, slug, organization=None):
     # -------------------------------------------------------------------------
     return render(
         request, "organizations/organization-details-info.html", {
-            "organization":             organization,
-            "meta":                     organization.as_meta(request),
+            "organization":         organization,
+            "meta":                 organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
-            "phone_numbers":            phone_numbers,
-            "social_links":             social_links,
-            "twitter_acc":              twitter_acc,
-            "show_complain_form":       show_complain_form,
-            "is_newly_created":         is_newly_created,
-            "is_staff_member":          is_staff_member,
-            "is_subscribed":            is_subscribed,
+            "phone_numbers":        phone_numbers,
+            "social_links":         social_links,
+            "twitter_acc":          twitter_acc,
+            "show_rate_form":       show_rate_form,
+            "show_complain_form":   show_complain_form,
+            "is_newly_created":     is_newly_created,
+            "is_staff_member":      is_staff_member,
+            "is_subscribed":        is_subscribed,
         })
 
 

@@ -19,9 +19,8 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 from termcolor import colored
 
-from events.models import (
-    Event,
-    Visibility)
+from app.models import Visibility
+from events.models import Event
 from organizations.models import Organization
 from tests import GenericUserTestCase
 
@@ -359,6 +358,7 @@ class ViewPublicEventTest(GenericUserTestCase):
         self.assertFalse(response.context["is_admin"])
         self.assertFalse(response.context["show_rate_form"])
         self.assertFalse(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
 
     def test_author_can_view_event(self):
         """Author can view public Event."""
@@ -381,9 +381,10 @@ class ViewPublicEventTest(GenericUserTestCase):
 
         self.assertEqual(response.context["event"], self.event)
         self.assertIsNone(response.context["participation"])
-        self.assertTrue(response.context["is_admin"])
+        self.assertFalse(response.context["is_admin"])
         self.assertFalse(response.context["show_rate_form"])
         self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["is_newly_created"])
 
     def test_non_author_can_view_event(self):
         """Non-Author can view public Event."""
@@ -407,8 +408,9 @@ class ViewPublicEventTest(GenericUserTestCase):
         self.assertEqual(response.context["event"], self.event)
         self.assertIsNone(response.context["participation"])
         self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["show_rate_form"])
+        self.assertTrue(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
 
     def test_admin_can_view_event(self):
         """Admin can view public Event."""
@@ -432,8 +434,9 @@ class ViewPublicEventTest(GenericUserTestCase):
         self.assertEqual(response.context["event"], self.event)
         self.assertIsNone(response.context["participation"])
         self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["show_rate_form"])
+        self.assertTrue(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
 
 
 class ViewPrivateEventTest(GenericUserTestCase):
@@ -503,9 +506,10 @@ class ViewPrivateEventTest(GenericUserTestCase):
 
         self.assertEqual(response.context["event"], self.event)
         self.assertIsNone(response.context["participation"])
-        self.assertTrue(response.context["is_admin"])
+        self.assertFalse(response.context["is_admin"])
         self.assertFalse(response.context["show_rate_form"])
         self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["is_newly_created"])
 
     def test_non_author_cannot_view_event(self):
         """Non-Author CANNOT view private Event."""
@@ -548,8 +552,9 @@ class ViewPrivateEventTest(GenericUserTestCase):
         self.assertEqual(response.context["event"], self.event)
         self.assertIsNone(response.context["participation"])
         self.assertFalse(response.context["is_admin"])
-        self.assertFalse(response.context["show_rate_form"])
-        self.assertFalse(response.context["show_complain_form"])
+        self.assertTrue(response.context["show_rate_form"])
+        self.assertTrue(response.context["show_complain_form"])
+        self.assertFalse(response.context["is_newly_created"])
 
 
 # =============================================================================

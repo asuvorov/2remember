@@ -13,6 +13,7 @@ from django.utils.translation import gettext_lazy as _
 import pendulum
 
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 from djangoformsetjs.utils import formset_media_js
 from profanity.validators import validate_is_profane
 from taggit.forms import TagWidget
@@ -41,13 +42,14 @@ class CreateEditEventForm(forms.ModelForm):
         """Docstring."""
         self.user = kwargs.pop("user", None)
         self.organization_uids = kwargs.pop("organization_uids", None)
-        # self.tz_name = kwargs.pop("tz_name", None)
 
         super().__init__(*args, **kwargs)
 
         if self.instance and self.instance.id:
             pass
 
+        # ---------------------------------------------------------------------
+        # --- TODO: Get QuerySet of the Organizations, where User is a Staff Member.
         if self.organization_uids:
             try:
                 self.fields["organization"].initial =\
@@ -56,51 +58,8 @@ class CreateEditEventForm(forms.ModelForm):
                 print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
 
         # ---------------------------------------------------------------------
-        # --- Get QuerySet of the Organizations, where User is a Staff Member.
-        # --- FIXME
-        # organizations = self.user.profile.staff_member_organizations.order_by("name")
-        # self.fields["organization"].required = False
-
-        # if organizations:
-        #     self.fields["organization"].queryset = organizations
-        #     # self.fields["organization"].initial = organizations[0]
-
-        #     if self.organization_ids:
-        #         try:
-        #             self.fields["organization"].initial = organizations.filter(
-        #                 id__in=self.organization_ids)[0]
-        #         except Exception as exc:
-        #             print(f"### EXCEPTION : {type(exc).__name__} : {str(exc)}")
-        # else:
-        #     self.fields["organization"].widget = \
-        #         self.fields["organization"].hidden_widget()
-
-        # ---------------------------------------------------------------------
-        # --- Contact Person.
-        # --- FIXME
-        # self.contact_choices = [
-        #     ("me", _("Me (%s)") % self.user.email),
-        #     ("he", _("Affiliate different Person")),
-        # ]
-        # self.fields["contact"].choices = self.contact_choices
-        # self.fields["contact"].initial = "me"
-
-        # if self.instance and self.instance.is_alt_person:
-        #     self.fields["contact"].initial = "he"
-
-        # ---------------------------------------------------------------------
         # --- Date/Time.
         self.fields["start_date"].required = False
-        # self.fields["start_time"].required = False
-
-        # ---------------------------------------------------------------------
-        # --- Time Zone.
-        # self.fields["start_tz"].required = False
-
-        # if self.tz_name:
-        #     self.fields["start_tz"].initial = self.tz_name
-        # else:
-        #     self.fields["start_tz"].initial = settings.TIME_ZONE
 
         # ---------------------------------------------------------------------
         if not self.user.is_staff:
@@ -109,29 +68,13 @@ class CreateEditEventForm(forms.ModelForm):
             self.fields["tags"].validators = [validate_is_profane]
             self.fields["hashtag"].validators = [validate_is_profane]
 
-    # contact = forms.ChoiceField(widget=forms.RadioSelect())
     start_date = forms.DateField(
         input_formats=[
             "%Y-%m-%d",     # "2006-10-25"
             "%m/%d/%Y",     # "10/25/2006"
             "%m/%d/%y",     # "10/25/06"
         ],
-        widget=forms.DateInput(
-            format="%m/%d/%Y",
-            attrs={
-                "class":        "form-control",
-            }))
-    # start_time = forms.TimeField(
-    #     input_formats=[
-    #         "%H:%M",
-    #         "%I:%M%p",
-    #         "%I:%M %p"
-    #     ],
-    #     widget=forms.TimeInput(
-    #         format="%H:%M",
-    #         attrs={
-    #             "class":        "form-control",
-    #         }))
+        widget=DatePickerInput())
 
     tmp_files = forms.ModelMultipleChoiceField(
         widget=forms.widgets.MultipleHiddenInput,
@@ -149,14 +92,7 @@ class CreateEditEventForm(forms.ModelForm):
         model = Event
         fields = [
             "preview", "cover", "title", "description", "category", "visibility",
-            "tags", "hashtag",
-            # "duration",
-            "addressless",
-            # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
-            "start_date", # "start_time", "start_tz",
-            "organization",
-            # "application", "allow_reenter",
-            # "accept_automatically", "acceptance_text",
+            "tags", "hashtag", "addressless", "start_date", "organization",
             "allow_comments",
         ]
         widgets = {
@@ -184,6 +120,7 @@ class CreateEditEventForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Tags"),
+                    "data-role":    "tagsinput",
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -191,49 +128,13 @@ class CreateEditEventForm(forms.ModelForm):
                     "placeholder":  _("Hashtag"),
                     "maxlength":    80,
                 }),
-            "duration": forms.TextInput(
-                attrs={
-                    "class":        "form-control slider",
-                }),
             "addressless": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
                 }),
-            "is_alt_person": forms.CheckboxInput(
-                attrs={
-                    "class":        "form-check-input",
-                }),
-            "alt_person_fullname": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Full Name"),
-                    "maxlength":    80,
-                }),
-            "alt_person_email": forms.EmailInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Email"),
-                    "maxlength":    80,
-                }),
-            "alt_person_phone": forms.TextInput(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Phone Number"),
-                }),
-            "start_tz": forms.Select(
-                attrs={
-                    "class":        "form-control form-select",
-                }),
             "organization": forms.Select(
                 attrs={
                     "class":        "form-control form-select",
-                }),
-            "application": forms.RadioSelect(),
-            "acceptance_text": forms.Textarea(
-                attrs={
-                    "class":        "form-control",
-                    "placeholder":  _("Write the Feedback here..."),
-                    "maxlength":    1000,
                 }),
             "allow_comments": forms.CheckboxInput(
                 attrs={
@@ -241,13 +142,14 @@ class CreateEditEventForm(forms.ModelForm):
                 }),
             }
 
-    def clean_duration(self):
-        """Clean `duration` Field."""
-        duration = self.cleaned_data["duration"]
-        if duration <= 0:
-            raise forms.ValidationError(_("Duration should be greater, than 0"))
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
 
-        return duration
+        return [" ".join(tags), ]
 
     def clean_title(self):
         """Clean `title` Field."""
@@ -260,44 +162,6 @@ class CreateEditEventForm(forms.ModelForm):
 
     def clean(self):
         """Clean."""
-        # ---------------------------------------------------------------------
-        # --- Validate `alt_person` Fields
-        # --- FIXME
-        # if self.cleaned_data["contact"] == "me":
-        #     self.cleaned_data["is_alt_person"] = False
-        # else:
-        #     self.cleaned_data["is_alt_person"] = True
-
-        #     if not self.cleaned_data["alt_person_fullname"]:
-        #         self._errors["alt_person_fullname"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_fullname"]
-
-        #     if not self.cleaned_data["alt_person_email"]:
-        #         self._errors["alt_person_email"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_email"]
-
-        #     if (
-        #             "alt_person_phone" in self.cleaned_data and
-        #             not self.cleaned_data["alt_person_phone"]):
-        #         self._errors["alt_person_phone"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_phone"]
-
-        # ---------------------------------------------------------------------
-        # --- Validate `accept_automatically` Field
-        # --- FIXME
-        # if (
-        #         self.cleaned_data["accept_automatically"] and
-        #         not self.cleaned_data["acceptance_text"]):
-        #     self._errors["acceptance_text"] = self.error_class([_("This Field is required.")])
-
-        #     del self.cleaned_data["acceptance_text"]
-
         return self.cleaned_data
 
     def save(self, commit=True):

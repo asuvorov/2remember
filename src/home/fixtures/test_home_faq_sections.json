@@ -1,0 +1,10 @@
+[
+    {
+        "pk":       1,
+        "model":    "home.Section",
+        "fields":   {
+            "title":        "Events",
+            "order":        1
+        }
+    }
+]

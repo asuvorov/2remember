@@ -79,7 +79,7 @@ setup(
         # "djangorestframework-jsonp==1.0.2",
         "django-admin-rangefilter==0.12.4",
         "django-admin-sortable2==2.1.10",
-        # "django-bootstrap3-datetimepicker==2.2.3",
+        "django-bootstrap-datepicker-plus==5.0.5",
         "django-bower==5.2.0",
         "django-compressor==4.4",
         "django-cors-headers-4.4.0",

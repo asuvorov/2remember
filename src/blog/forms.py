@@ -60,6 +60,7 @@ class CreateEditPostForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Tags"),
+                    "data-role":    "tagsinput",
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -72,6 +73,15 @@ class CreateEditPostForm(forms.ModelForm):
                     "class":        "form-check-input",
                 }),
             }
+
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
+
+        return [" ".join(tags), ]
 
     def clean(self):
         """Docstring."""

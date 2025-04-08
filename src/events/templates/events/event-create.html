@@ -41,10 +41,28 @@
 
 {% block content %}
 <div id="event-create" class="bg-body-tertiary p-3">
+    <div class="row d-block d-sm-block d-md-none">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% blocktrans %}
+                You can create your Event here. If you have any Questions, don't hesitate to <a href="mailto:{{ EMAIL_SUPPORT }}">contact Support</a>.
+            {% endblocktrans %}
+            </div>
+
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "After creating the Event, you will be redirected to the Details Page, where you can attach additional Materials (e.g. Images, Documents, Links, etc.)" %}
+            </div>
+        </div>
+    </div>
+
     <div class="row g-2">
         <div class="col-md-9">
             <form id="create-event-form" role="form" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+
+                {{ form.media }}
 
                 <!-- START EVENT APPEARENCE -->
                 <section id="event-appearance">
@@ -99,9 +117,9 @@
                             <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6{% if form.hashtag.errors %}has-error{% endif %}">
@@ -109,30 +127,6 @@
                             <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-
-                    {% comment %}
-                        <div class="form-group {% if form.duration.errors %}has-error{% endif %}">
-                            <label class="form-label">{{ form.duration.label }}{% if form.duration.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div>
-                                {{ form.duration }}
-                                <span id="currentSliderValue"></span> hours
-                            </div>
-
-                            <span class="help-block">{% if form.duration.errors %}{% for error in form.duration.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                    {% if not form.organization.is_hidden %}
-                        <div class="form-group {% if form.organization.errors %}has-error{% endif %}">
-                            <label class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div class="input-group">
-                                {{ form.organization }}
-                                <div class="input-group-addon"><i class="bi bi-university"></i></div>
-                            </div>
-
-                            <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endif %}
-                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT DESCRIPTION -->
@@ -162,25 +156,11 @@
                     <h3>{% trans "Date" %}</h3>
 
                     <div class="row g-2">
-                    {% comment %}
-                        <div class="form-floating col-md-4 {% if form.start_tz.errors %}has-error{% endif %}">
-                            {{ form.start_tz }}
-                            <label for="id_start_tz" class="form-label">{{ form.start_tz.label }}{% if form.start_tz.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <span class="help-block">{% if form.start_tz.errors %}{% for error in form.start_tz.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endcomment %}
-                        <div class="form-floating col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
-                            {{ form.start_date }}
+                        <div class="col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
                             <label for="id_start_date" class="form-label">{{ form.start_date.label }}{% if form.start_date.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            {{ form.start_date }}
                             <span class="help-block">{% if form.start_date.errors %}{% for error in form.start_date.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                    {% comment %}
-                        <div class="form-floating col-md-4 {% if form.start_time.errors %}has-error{% endif %}">
-                            {{ form.start_time }}
-                            <label for="id_start_time" class="form-label">{{ form.start_time.label }}{% if form.start_time.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <span class="help-block">{% if form.start_time.errors %}{% for error in form.start_time.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
@@ -219,7 +199,7 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <section>
+            <section id="alerts" class="d-none d-sm-none d-md-block">
                 <h4>{% trans "Tips" %}</h4>
 
                 <div class="alert alert-info">

@@ -10,6 +10,7 @@ from django.forms.utils import ErrorList
 from django.utils.translation import gettext_lazy as _
 
 from annoying.functions import get_object_or_None
+from bootstrap_datepicker_plus.widgets import DatePickerInput
 # from captcha.fields import CaptchaField
 from passwords.fields import PasswordField
 from profanity.validators import validate_is_profane
@@ -192,12 +193,12 @@ class UserProfileForm(forms.ModelForm):
 
     # captcha = CaptchaField()
     birth_day = forms.DateField(
-        input_formats=("%m/%d/%Y",),
-        widget=forms.DateInput(
-            format="%m/%d/%Y",
-            attrs={
-                "class":    "form-control",
-            }))
+        input_formats=[
+            "%Y-%m-%d",     # "2006-10-25"
+            "%m/%d/%Y",     # "10/25/2006"
+            "%m/%d/%y",     # "10/25/06"
+        ],
+        widget=DatePickerInput())
 
     class Meta:
         model = UserProfile
@@ -223,10 +224,10 @@ class UserProfileForm(forms.ModelForm):
                     "class":        "form-control form-select",
                     "aria-label":   _("Select Gender..."),
                 }),
-            "birth_day": forms.DateInput(
-                attrs={
-                    "class":        "form-control",
-                }),
+            # "birth_day": forms.DateInput(
+            #     attrs={
+            #         "class":        "form-control",
+            #     }),
             "allow_comments": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
@@ -309,14 +310,12 @@ class UserProfileEditForm(forms.ModelForm):
                 "readonly":     True,
             }))
     birth_day = forms.DateField(
-        required=False,
-        input_formats=("%m/%d/%Y",),
-        widget=forms.DateInput(
-            format="%m/%d/%Y",
-            attrs={
-                "class":    "form-control",
-                # "type":     "date",
-            }))
+        input_formats=[
+            "%Y-%m-%d",     # "2006-10-25"
+            "%m/%d/%Y",     # "10/25/2006"
+            "%m/%d/%y",     # "10/25/06"
+        ],
+        widget=DatePickerInput())
 
     class Meta:
         model = UserProfile
@@ -341,11 +340,11 @@ class UserProfileEditForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control form-select",
                 }),
-            "birth_day": forms.DateInput(
-                attrs={
-                    "class":        "form-control",
-                    # "type":         "date",
-                }),
+            # "birth_day": forms.DateInput(
+            #     attrs={
+            #         "class":        "form-control",
+            #         # "type":         "date",
+            #     }),
             "allow_comments": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",

@@ -30,19 +30,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
-        # self.contact_choices = [
-        #     # ("no", _("None")),
-        #     ("me", _("Me (%s)") % (self.user.email)),
-        #     ("he", _("Affiliate different Person")),
-        # ]
-        # self.fields["contact"].choices = self.contact_choices
-        # self.fields["contact"].initial = "me"
-
-        # if (
-        #         self.instance and
-        #         self.instance.is_alt_person):
-        #     self.fields["contact"].initial = "he"
-
         # ---------------------------------------------------------------------
         # --- Modify Fields.
         self.fields["is_hidden"].help_text = _(
@@ -135,6 +122,15 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "class":        "form-check-input",
                 }),
             }
+
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
+
+        return [" ".join(tags), ]
 
     def clean_title(self):
         """Clean `title` Field."""

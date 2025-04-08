@@ -1,3 +1,12 @@
 """
 (C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
+
+# pylint: disable=wildcard-import
+# pylint: disable=unused-wildcard-import
+from accounts.tests.test_decorators import *
+from accounts.tests.test_filters import *
+from accounts.tests.test_forms import *
+from accounts.tests.test_receivers import *
+from accounts.tests.test_utils import *
+from accounts.tests.test_views import *

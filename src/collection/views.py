@@ -137,51 +137,47 @@ def collection_details(request, slug, collection=None):
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    is_rated = False
-    is_complained = False
     is_newly_created = False
 
     show_rate_form = False
     show_complain_form = False
 
     # -------------------------------------------------------------------------
+    # --- Lookup for submitted Forms.
+    # -------------------------------------------------------------------------
+    if request.method == "POST":
+        # ---------------------------------------------------------------------
+        # --- Silent Refresh.
+        return HttpResponseRedirect(
+            reverse("collection-details", kwargs={
+                "slug":     collection.slug,
+            }))
+
+    # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Collection.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
+    if (
+            request.user.is_authenticated and
+            request.user != collection.author):
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Collection.
-        is_rated = collection.is_rated_by_user(request.user)
-        if not is_rated:
-            show_rate_form = True
+        show_rate_form = not collection.is_rated_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Collection.
-        is_complained = collection.is_complained_by_user(request.user)
-        if not is_complained:
-            show_complain_form = True
-
-        # ---------------------------------------------------------------------
-        # --- Lookup for submitted Forms.
-        if request.method == "POST":
-            # -----------------------------------------------------------------
-            # --- Silent Refresh.
-            return HttpResponseRedirect(
-                reverse("collection-details", kwargs={
-                    "slug":     collection.slug,
-                }))
+        show_complain_form = not collection.is_complained_by_user(request.user)
 
     # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    # if (
-    #         collection.author == request.user and
-    #         collection.status == collectionStatus.UPCOMING and
-    #         collection.is_newly_created):
-    #     is_newly_created = True
+    if (
+            collection.author == request.user and
+            collection.is_newly_created):
+        is_newly_created = True
 
-    #     collection.is_newly_created = False
-    #     collection.save(request=request)
+        collection.is_newly_created = False
+        collection.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
