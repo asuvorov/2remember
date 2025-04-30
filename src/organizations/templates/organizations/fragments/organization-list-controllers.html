@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load urls %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<organizations> - List of Organizations
+{% endcomment %}
+
+<div class="controllers">
+    <a class="btn btn-secondary" data-toggle="collapse" href="#collapse-organization-filter" aria-expanded="false" aria-controls="collapse-organization-filter"><i class="bi bi-filter"></i> {% trans "Filter" %}</a>
+    <a class="btn btn-link" href="{% url 'organization-directory' %}">{% trans "Directory" %}</a>
+{% if request.user.is_authenticated %}
+    {% if create_organization_eligible %}
+        <a class="btn btn-primary" href="{% url 'organization-create' %}" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="{% for details in create_organization_details %}{% if details.0 %}<i class='accept bi bi-check-lg'></i>{% else %}<i class='reject bi bi-x-lg'></i>{% endif %} {{ details.1 }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
+    {% else %}
+        <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-html="true" data-bs-title="{% for details in create_organization_details %}{% if details.0 %}<i class='accept bi bi-check-lg'></i>{% else %}<i class='reject bi bi-x-lg'></i>{% endif %} {{ details.1 }}{% if not forloop.last %}<br/>{% endif %}{% endfor %}">
+            <button class="btn btn-primary" type="button" disabled><i class="bi bi-plus-circle"></i> {% trans "Create" %}</button>
+        </span>
+    {% endif %}
+{% endif %}
+</div>

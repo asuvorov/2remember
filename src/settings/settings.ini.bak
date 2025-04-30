@@ -10,16 +10,17 @@
 # -----------------------------------------------------------------------------
 ENVIRONMENT=local
 DJANGO_SETTINGS_MODULE=settings.local
+DEBUG=true
 
 CACHE_MIDDLEWARE_ALIAS=redis
 CACHE_MIDDLEWARE_SECONDS=60
 CACHE_MIDDLEWARE_KEY_PREFIX=local
 
 DB_ENGINE=django.db.backends.mysql
-DB_NAME=toremember
-DB_USER=root
-DB_PASSWORD=root
-DB_HOST=db
+DB_NAME=2remember
+DB_USER=ubuntu
+DB_PASSWORD=ubuntu
+DB_HOST=localhost
 DB_PORT=3306
 
 SECURE_SSL_REDIRECT=false
@@ -42,7 +43,7 @@ EMAIL_USE_TLS=
 EMAIL_USE_SSL=
 EMAIL_SSL_CERTFILE=
 EMAIL_SSL_KEYFILE=
-EMAIL_TIMEOUT=
+EMAIL_TIMEOUT=5
 
 SENDGRID_API_KEY=
 
@@ -54,3 +55,11 @@ STRIPE_DEBUG=true
 STRIPE_DEFAULT_PLAN=
 STRIPE_PUBLIC_KEY=
 STRIPE_SECRET_KEY=
+
+# -----------------------------------------------------------------------------
+X_TWITTER_PROJECT_ID=
+X_TWITTER_BEARER_TOKEN=
+X_TWITTER_CONSUMER_KEY=
+X_TWITTER_CONSUMER_SECRET=
+X_TWITTER_ACCESS_KEY=
+X_TWITTER_ACCESS_SECRET=

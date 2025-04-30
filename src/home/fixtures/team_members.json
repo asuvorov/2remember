@@ -3,7 +3,7 @@
         "model":        "accounts.teammember",
         "pk":           1,
         "fields": {
-            "user":         "17615b57-cfa9-41e5-a8cb-7fa79e0d03fc",
+            "user":         1,
             "team":         1,
             "position":     "CEO, CTO, Lead Developer",
             "order":        1,

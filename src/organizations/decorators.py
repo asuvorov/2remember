@@ -1,7 +1,8 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
+from django.core.exceptions import PermissionDenied
 from django.db.models import Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404
@@ -9,6 +10,139 @@ from django.shortcuts import get_object_or_404
 from .models import (
     Organization,
     OrganizationStaff)
+
+
+def organization_create_access_check_required(func):
+    """Restrict Access to create the Organization."""
+    def _check(request, *args, **kwargs):
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Organization.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        if not request.user.is_staff:
+            eligible, details = request.user.profile.check_organization_create_eligibilty()
+            if not eligible:
+                raise PermissionDenied
+
+        # ---------------------------------------------------------------------
+        # --- Return from the Decorator.
+        # ---------------------------------------------------------------------
+        return func(request, *args, **kwargs)
+
+    return _check
+
+
+def organization_view_access_check_required(func):
+    """Restrict Access to view the Organization Details."""
+    def _check(request, *args, **kwargs):
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        slug = kwargs.get("slug", "")
+        organization_uid = request.POST.get("organization_uid", "")
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Organization.
+        # ---------------------------------------------------------------------
+        if slug:
+            organization = get_object_or_404(Organization, slug=slug)
+        elif organization_uid:
+            organization = get_object_or_404(Organization, uid=organization_uid)
+        else:
+            raise Http404
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        if (
+                organization.is_private and
+                not request.user.is_staff and
+                not organization.is_author(request)):
+            raise PermissionDenied
+
+        # ---------------------------------------------------------------------
+        # --- Return from the Decorator.
+        # ---------------------------------------------------------------------
+        return func(request, *args, organization=organization, **kwargs)
+
+    return _check
+
+
+def organization_edit_access_check_required(func):
+    """Restrict Access to edit the Organization Details."""
+    def _check(request, *args, **kwargs):
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        slug = kwargs.get("slug", "")
+        organization_uid = request.POST.get("organization_uid", "")
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Organization.
+        # ---------------------------------------------------------------------
+        if slug:
+            organization = get_object_or_404(Organization, slug=slug)
+        elif organization_uid:
+            organization = get_object_or_404(Organization, uid=organization_uid)
+        else:
+            raise Http404
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        if (
+                not request.user.is_staff and
+                not organization.is_author(request)):
+            raise PermissionDenied
+
+        # ---------------------------------------------------------------------
+        # --- Return from the Decorator.
+        # ---------------------------------------------------------------------
+        return func(request, *args, organization=organization, **kwargs)
+
+    return _check
+
+
+def organization_populate_newsletter_access_check_required(func):
+    """Restrict Access to populate the Organization's Newsletter."""
+    def _check(request, *args, **kwargs):
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        slug = kwargs.get("slug", "")
+        organization_uid = request.POST.get("organization_uid", "")
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Organization.
+        # ---------------------------------------------------------------------
+        if slug:
+            organization = get_object_or_404(Organization, slug=slug)
+        elif organization_uid:
+            organization = get_object_or_404(Organization, uid=organization_uid)
+        else:
+            raise Http404
+
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        if (
+                not request.user.is_staff and
+                not organization.is_author(request)):
+            raise PermissionDenied
+
+        # ---------------------------------------------------------------------
+        # --- Return from the Decorator.
+        # ---------------------------------------------------------------------
+        return func(request, *args, organization=organization, **kwargs)
+
+    return _check
 
 
 def organization_staff_member_required(func):
@@ -32,8 +166,7 @@ def organization_staff_member_required(func):
                         "organization_id", flat=True
                     )),
                 slug=slug,
-                is_deleted=False,
-            )
+                is_deleted=False)
         elif organization_id:
             organization = get_object_or_404(
                 Organization,
@@ -44,8 +177,7 @@ def organization_staff_member_required(func):
                         "organization_id", flat=True
                     )),
                 id=organization_id,
-                is_deleted=False,
-            )
+                is_deleted=False)
         else:
             raise Http404
 
@@ -86,8 +218,7 @@ def organization_access_check_required(func):
                         is_hidden=True,
                     ),
                     slug=slug,
-                    is_deleted=False,
-                )
+                    is_deleted=False)
             else:
                 organization = get_object_or_404(
                     Organization,
@@ -114,8 +245,7 @@ def organization_access_check_required(func):
                         is_hidden=True,
                     ),
                     id=organization_id,
-                    is_deleted=False,
-                )
+                    is_deleted=False)
             else:
                 organization = get_object_or_404(
                     Organization,

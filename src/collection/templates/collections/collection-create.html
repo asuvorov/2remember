@@ -1,0 +1,215 @@
+{% extends "base.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load compress %}
+{% load imagekit %}
+{% load formset_tags %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<form> - Collection Form
+{% endcomment %}
+
+{% block title %}{% trans "Create Collection" %} - {{ block.super }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
+
+{% block important_message %}{% endblock %}
+
+{% block breadcrumbs %}
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-3 bg-body-tertiary">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'collection-list' %}">{% trans "Collections" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Create" %}</li>
+        </ol>
+    </nav>
+</div>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block content %}
+<div id="collection-create" class="bg-body-tertiary p-3">
+    <div class="row g-2">
+        <div class="col-md-9">
+            <form id="create-collection-form" role="form" action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- START COLLECTION APPEARENCE -->
+                <section id="collection-appearance">
+                    <h3>{% trans "Appearance" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="col-md-6">
+                            <label for="id_preview" class="form-label">{% trans "Upload Preview Image" %}</label>
+                            <input id="id_preview" name="preview" class="form-control" type="file" accept="{{ images_str_ext }}">
+                            <span class="help-block">{% if form.preview.errors %}{% for error in form.preview.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_cover" class="form-label">{% trans "Upload Cover Image" %}</label>
+                            <input id="id_cover" name="cover" class="form-control" type="file" accept="{{ images_str_ext }}">
+                            <span class="help-block">{% if form.cover.errors %}{% for error in form.cover.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  COLLECTION APPEARENCE -->
+
+                <hr>
+
+                <!-- START COLLECTION DESCRIPTION -->
+                <section id="collection-description">
+                    <h3>{% trans "Description" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="form-floating col-12 {% if form.title.errors %}has-error{% endif %}">
+                            {{ form.title }}
+                            <label for="id_title" class="form-label">{{ form.title.label }}{% if form.title.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.title.errors %}{% for error in form.title.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-12 {% if form.description.errors %}has-error{% endif %}">
+                            {{ form.description }}
+                            <label for="id_description" class="form-label">{{ form.description.label }}{% if form.description.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-md-4 {% if form.visibility.errors %}has-error{% endif %}">
+                            {{ form.visibility }}
+                            <label for="id_visibility" class="form-label">{{ form.visibility.label }}{% if form.visibility.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.visibility.errors %}{% for error in form.visibility.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="col-md-4 {% if form.tags.errors %}has-error{% endif %}">
+                            {{ form.tags }}
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
+                            <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                        <div class="form-floating col-md-4{% if form.hashtag.errors %}has-error{% endif %}">
+                            {{ form.hashtag }}
+                            <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  COLLECTION DESCRIPTION -->
+
+                <hr>
+
+                <!-- START COLLECTION EVENTS -->
+                <section id="collection-events">
+                    <h3>{% trans "Events" %}</h3>
+
+                    <div class="row g-2">
+                        <div class="col-12 {% if form.events.errors %}has-error{% endif %}">
+                            <!-- <label for="id_events" class="form-label">{{ form.events.label }}{% if form.events.field.required %}<span class="asteriskField">*</span>{% endif %}</label> -->
+                            {{ form.events }}
+                            <span class="help-block">{% if form.events.errors %}{% for error in form.events.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  COLLECTION EVENTS -->
+
+                <hr>
+
+                <!-- START COLLECTION COMPLETE -->
+                <section id="collection-complete">
+                    <h3>{% trans "Complete" %}</h3>
+                    <div class="form-check text-start my-1">
+                        {{ form.allow_comments }}
+                        {{ form.allow_comments.label }}
+                    </div>
+                    <p>{% trans "You have successfully completed all Steps." %}</p>
+
+                    <div class="row">
+                        <div class="col-12 feature">
+                            <a href="#" name="collection-create" class="collection-create">
+                                <span><i class="flaticon-rounded25"></i></span>
+                                <p>{% trans "Create this Collection" %}</p>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+                <!--  END  COLLECTION COMPLETE -->
+            </form>
+        </div>
+
+        <div id="tips" class="col-md-3 right-sidebar">
+            <section>
+                <h4>{% trans "Tips" %}</h4>
+
+                <div class="alert alert-info">
+                {% blocktrans %}
+                    You can create your Collection here. If you have any Questions, don't hesitate to <a href="mailto:{{ EMAIL_SUPPORT }}">contact Support</a>.
+                {% endblocktrans %}
+                </div>
+
+                <div class="alert alert-success">
+                    {% trans "After creating the Collection, you will be redirected to the Details Page, where you can attach additional Materials (e.g. Images, Documents, Links, etc.)" %}
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script>
+    /*************************************************************************/
+    /*** Form Submitting                                                   ***/
+    /*************************************************************************/
+    $("a[name='collection-create']").click(function () {
+        // --------------------------------------------------------------------
+        // --- Check, if Preview and Cover Input are NOT empty.
+        // if ($("#id_preview").get(0).files.length === 0 || $("#id_cover").get(0).files.length === 0) {
+        //     alert("Please, select the Preview and Cover Images.");
+
+        //     return false;
+        // }
+
+        /*** DATE FORMAT *****************************************************/
+        var $input = $("input[name='start_date']");
+        var val = $input.val();
+
+        if (val) {
+            var valMoment = moment(val);
+            var isMoment = moment.isMoment(valMoment);
+
+            if (isMoment) {
+                $input.attr("type", "text");
+                $input.val(valMoment.format("MM/DD/YYYY"));
+            }
+        }
+        /*********************************************************************/
+
+        var form = $("form#create-collection-form");
+
+        $("#spinner").fadeIn("slow");
+
+        form.append("<input type='hidden' name='collection-create' value='Create this Event' />");
+        form.submit();
+
+        return true;
+    })
+
+    $(document).ready(function () {
+        /*********************************************************************/
+        /*** Iterate Form Fields Errors                                    ***/
+        /*********************************************************************/
+        {% for field in form %}
+            {% if field.errors %}
+                {% for error in field.errors %}
+                    new Noty({
+                        text: "{{ field.label }}: {{ error }}"
+                    }).show();
+                {% endfor %}
+            {% endif %}
+        {% endfor %}
+    });
+</script>
+{% endblock %}
+
+{% block extra_content %}{% endblock %}

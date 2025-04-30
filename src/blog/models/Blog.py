@@ -1,11 +1,10 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
 
 from django.conf import settings
-from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models
@@ -130,7 +129,7 @@ class Post(
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
-        help_text=_("A comma-separated List of Tags."))
+        help_text=_("A Comma-separated List of Tags.<br/>If you plan to add only one Tag, that consists of multiple Words, it is recommended to wrap the Tag in Quotes, e.g. \"<b><i>This is multi-word Tag\"</i></b>."))
     hashtag = models.CharField(
         db_index=True,
         max_length=80, null=True, blank=True,
@@ -153,6 +152,7 @@ class Post(
     objects = PostManager()
 
     class Meta:
+        app_label = "blog"
         verbose_name = _("blog post")
         verbose_name_plural = _("blog posts")
         ordering = ["-created", ]
@@ -232,10 +232,7 @@ class Post(
 
     def public_url(self, request=None):
         """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
 
         url = reverse(
             "post-details", kwargs={
@@ -268,31 +265,27 @@ class Post(
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Preview Images is:
+        # --- The Path for uploading Cover/Preview Images is:
         #
+        #            MEDIA_ROOT/blog/<id>/covers/<filename>
         #            MEDIA_ROOT/blog/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Blog Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Blog looks like:
         #
+        #            MEDIA_ROOT/blog/None/covers/<filename>
         #            MEDIA_ROOT/blog/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Preview File in the Path;
-        #     2. Assign the Preview File Content to the Blog Preview Object;
-        #     3. Save the Blog Instance. Now the Preview Image in the
+        #     1. Open the Cover/Preview File in the Path;
+        #     2. Assign the Cover/Preview File Content to the Blog Cover/Preview Object;
+        #     3. Save the Blog Instance. Now the Cover/Preview Image in the
         #        correct Path;
-        #     4. Delete previous Preview File;
+        #     4. Delete previous Cover/Preview File;
         #
         try:
             if created:
@@ -303,6 +296,13 @@ class Post(
 
                 storage.delete(preview.file.name)
 
+        except Exception as exc:
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
+
+        try:
+            if created:
                 # -------------------------------------------------------------
                 cover = File(storage.open(self.cover.file.name, "rb"))
 

@@ -4,9 +4,22 @@
 {% load i18n %}
 {% load twitter_tag %}
 
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<features>     - List of Features.
+        :<timeline_qs>  - Timeline Queryset.
+{% endcomment %}
+
 {% get_current_language as LANGUAGE_CODE %}
 
 {% block title %}{{ block.super }}{% endblock %}
+
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
 {% block important_message %}
 <div class="alert alert-warning alert-dismissible fade d-flex align-items-center show mb-md-0" role="alert" style="border-radius:0;">
@@ -17,8 +30,8 @@
 </div>
 {% endblock %}
 
-{% block breadcrumbs %}
-{% endblock %}
+{% block breadcrumbs %}{% endblock %}
+{% block header %}{% endblock %}
 
 <!-- START CAROUSEL -->
 {% block carousel %}
@@ -80,7 +93,7 @@
             </p>
             <div class="d-grid gap-2 d-md-flex justify-content-md-start">
                 <a href="https://github.com/asuvorov" class="btn btn-github d-flex gap-2 align-items-center"><i class="bi bi-github"></i> GitHub</a>
-                <a href="https://www.linkedin.com/in/artem-suvorov-810bbb40" class="btn btn-linkedin d-flex gap-2 align-items-center"><i class="bi bi-linkedin"></i> LinkedIn</a>
+                <a href="https://www.linkedin.com/in/artemsuvorov" class="btn btn-linkedin d-flex gap-2 align-items-center"><i class="bi bi-linkedin"></i> LinkedIn</a>
                 <a href="{% url 'open-to-hire' %}" class="btn btn-warning d-flex gap-2 align-items-center">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
             </div>
         </div>
@@ -185,7 +198,60 @@
         </div>
     </div>
 </div>
+{% endcache %}
 <!--  END  TWITTER FEED -->
+
+<hr class="featurette-divider">
+
+<!-- START FEATURES -->
+{% cache 3600 index-features LANGUAGE_CODE %}
+<div id="index-features" class="mb-6">
+    <div class="row g-2" align="center">
+        <div class="col-12 header">
+            <h2>{% trans "Development" %}</h2>
+        </div>
+
+        <div class="col-12 table-responsive">
+            <table class="table table-sm table-hover table-success table-striped">
+                <caption>List of testable Features</caption>
+                <thead>
+                    <tr>
+                        <th scope="col">Feature</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">URL</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for feature in features %}
+                    <tr>
+                        <th scope="row">{{ feature.title }}</th>
+                        <td>{{ feature.description|default:"N/A" }}</td>
+                        <td>{{ feature.url_tag }}</td>
+                        <td><span class="{{ feature.stat_status_badge_class }}">{{ feature.stat_status_name }}</span></td>
+                        <td>
+                        {% comment %}
+                        {% if feature.is_beta_tester request is True %}
+                            <span class="badge text-bg-success">You were selected as a Beta Tester</span>
+                        {% elif feature.is_beta_tester request is False %}
+                            <span class="badge text-bg-secondary">You were not selected as a Beta Tester</span>
+                        {% endif %}
+                        {% endcomment %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <div class="col-12">
+                        <span class="badge text-bg-warning">{% trans "There are no testable Features at the Moment" %}</span>
+                    </div>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endcache %}
+<!--  END  FEATURES -->
 
 <!-- START SCRIPT -->
 <script>
@@ -194,6 +260,7 @@
     //-------------------------------------------------------------------------
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?"http":"https";if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document, "script", "twitter-wjs");
 </script>
-{% endcache %}
 <!--  END  SCRIPT -->
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

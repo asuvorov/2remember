@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -26,6 +26,8 @@ from django.urls import reverse
 from django.utils.translation import gettext as _
 from django.views.decorators.csrf import csrf_exempt
 
+import papertrail
+
 from termcolor import cprint
 
 from ddcore.models import (
@@ -33,11 +35,8 @@ from ddcore.models import (
     SocialLink,
     UserLogin)
 from ddcore.Utilities import (
-    make_json_cond,
-    # render_to_pdf,
-)
-
-import papertrail
+    get_client_ip,
+    make_json_cond)
 
 # pylint: disable=import-error
 from app.decorators import log_default
@@ -46,6 +45,7 @@ from app.forms import (
     PhoneForm,
     PhoneFormSet,
     SocialLinkFormSet)
+from collection.utils import get_collection_list
 from events.models import (
     Participation,
     ParticipationStatus)
@@ -70,7 +70,6 @@ from .models import (
 from .utils import (
     get_account_list_with_privacy,
     get_admin_events,
-    get_participations_intersection,
     is_profile_complete)
 
 
@@ -120,6 +119,8 @@ def account_signup(request):
 
             # -----------------------------------------------------------------
             # --- Create User Profile.
+            request.user = user
+
             profile = pform.save(commit=False)
             profile.user = user
             profile.save(request=request)
@@ -130,7 +131,7 @@ def account_signup(request):
             # UserPrivacyMembers.objects.create(user=user)
             # UserPrivacyAdmins.objects.create(user=user)
 
-            uidb36 = str(user.id)  # int_to_base36(user.id)
+            uidb36 = str(user.uid)  # int_to_base36(user.id)
             token = token_generator.make_token(user)
 
             # domain_name = request.get_host()
@@ -171,7 +172,7 @@ def account_signup_confirm(request, uidb36=None, token=None):
     assert uidb36 is not None and token is not None
 
     try:
-        user = user_model.objects.get(id=uidb36)
+        user = user_model.objects.get(uid=uidb36)
     except (ValueError, user_model.DoesNotExist):
         user = None
 
@@ -202,11 +203,11 @@ def account_signup_confirm(request, uidb36=None, token=None):
         # ---------------------------------------------------------------------
         # --- Save the Log.
 
-        return HttpResponseRedirect(
-            reverse("my-profile-edit"))
+        return HttpResponseRedirect(reverse("my-profile-edit"))
 
     # -------------------------------------------------------------------------
     # --- Save the Log.
+    # -------------------------------------------------------------------------
 
     return render(
         request,
@@ -268,6 +269,20 @@ def account_signin(request):
 
                 return HttpResponseRedirect(reverse("my-profile-view"))
 
+            # -----------------------------------------------------------------
+            # --- Save the Log.
+            papertrail.log(
+                event_type="user-log-in-attempt",
+                message="User tried to log-in",
+                data={
+                    "username":     data["username"],
+                    "password":     data["password"],
+                    "geo_data":     request.geo_data,
+                    "ip_addr":      get_client_ip(request),
+                },
+                # timestamp=timezone.now(),
+                targets={})
+
             form.add_non_field_error(_("Sorry, you have entered wrong Email or Password"))
 
         # ---------------------------------------------------------------------
@@ -309,7 +324,7 @@ def password_forgot(request):
     if request.method == "POST":
         if form.is_valid():
             user = user_model.objects.get(email=form.cleaned_data["email"])
-            uidb36 = str(user.id)  # int_to_base36(user.id)
+            uidb36 = str(user.uid)  # int_to_base36(user.id)
             token = token_generator.make_token(user)
 
             # domain_name = request.get_host()
@@ -350,7 +365,7 @@ def password_renew(request, uidb36=None, token=None):
 
     try:
         user_id = uidb36  # base36_to_int(uidb36)
-        user = user_model.objects.get(id=user_id)
+        user = user_model.objects.get(uid=user_id)
     except (ValueError, user_model.DoesNotExist):
         user = None
 
@@ -575,14 +590,13 @@ def my_profile_view(request):
     # --- Prepare Response.
     # -------------------------------------------------------------------------
     show_no_email_popup_modal = False
-
     if (
             not request.user.email and
             "show_no_email_popup_modal" not in request.COOKIES):
         show_no_email_popup_modal = True
 
     response = HttpResponse(render(
-        request, "accounts/my-profile-info.html", {
+        request, "accounts/my-profile-details-info.html", {
             "meta":                         profile.as_meta(request),
             "created_organizations":        created_organizations,
             # "related_organizations":        related_organizations,
@@ -644,6 +658,30 @@ def my_profile_participations(request):
 
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
+def my_profile_collections(request):
+    """My Profile Collections."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    collections, page_total, page_number = get_collection_list(request, author=request.user)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/my-profile-details-collections.html", {
+            "collections":  collections,
+            "page_total":   page_total,
+            "page_number":  page_number,
+        })
+
+
+@login_required
+@log_default(my_logger=logger, cls_or_self=False)
 def my_profile_events(request):
     """My Profile Events."""
     # -------------------------------------------------------------------------
@@ -653,14 +691,15 @@ def my_profile_events(request):
     # -------------------------------------------------------------------------
     # --- Process Request.
     # -------------------------------------------------------------------------
-    events, page_total, page_number = get_event_list(request, author=request.user)
+    events, dateless, page_total, page_number = get_event_list(request, author=request.user)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/my-profile-events.html", {
+        request, "accounts/my-profile-details-events.html", {
             "events":       events,
+            "dateless":     dateless,
             "page_total":   page_total,
             "page_number":  page_number,
         })
@@ -684,7 +723,8 @@ def my_profile_edit(request):
         instance=request.user.profile.address)
 
     formset_phone = PhoneFormSet(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         queryset=Phone.objects.filter(
             content_type=ContentType.objects.get_for_model(request.user.profile),
             object_id=request.user.profile.id))
@@ -846,7 +886,7 @@ def my_profile_privacy(request):
 # ===
 # =============================================================================
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_view(request, user_id):
+def profile_view(request, uid36):
     """Foreign Profile Info."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -858,7 +898,7 @@ def profile_view(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(user_model, pk=user_id)
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -893,8 +933,6 @@ def profile_view(request, user_id):
             # -----------------------------------------------------------------
             # --- Check, if the registered User participated in the same
             #     Event(s), as the Account.
-            # if len(get_participations_intersection(request.user, account)) > 0:
-            #     show_complain_form = True
             show_complain_form = True
 
     # -------------------------------------------------------------------------
@@ -981,7 +1019,7 @@ def profile_view(request, user_id):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/foreign-profile-info.html", {
+        request, "accounts/foreign-profile-details-info.html", {
             "account":                  account,
             "meta":                     account.profile.as_meta(request),
             "created_organizations":    created_organizations,
@@ -993,7 +1031,7 @@ def profile_view(request, user_id):
 
 
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_participations(request, user_id):
+def profile_participations(request, uid36):
     """Foreign Profile Participations."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -1002,10 +1040,7 @@ def profile_participations(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
-
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
         return HttpResponseRedirect(
             reverse("my-profile-view"))
@@ -1036,14 +1071,12 @@ def profile_participations(request, user_id):
                     )),
                 event__organization__is_hidden=True,
             ),
-            user=account,
-        )
+            user=account)
     else:
         participations = Participation.objects.filter(
             Q(event__organization=None) |
             Q(event__organization__is_hidden=False),
-            user=account,
-        )
+            user=account)
 
     # -------------------------------------------------------------------------
     # --- Get QuerySet of upcoming Events (Participations).
@@ -1100,6 +1133,9 @@ def profile_participations(request, user_id):
     # -------------------------------------------------------------------------
     account.profile.increase_views_count(request)
 
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
     return render(
         request, "accounts/foreign-profile-participations.html", {
             "account":                      account,
@@ -1111,7 +1147,43 @@ def profile_participations(request, user_id):
 
 
 @log_default(my_logger=logger, cls_or_self=False)
-def profile_events(request, user_id):
+def profile_collections(request, uid36):
+    """Foreign Profile Collections."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
+    # --- Retrieve the User Account.
+    # -------------------------------------------------------------------------
+    account = get_object_or_404(user_model, uid=uid36)
+    if account == request.user:
+        return HttpResponseRedirect(reverse("my-profile-view"))
+
+    # -------------------------------------------------------------------------
+    # --- Process Request.
+    # -------------------------------------------------------------------------
+    collections, page_total, page_number = get_collection_list(request, author=account)
+
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    account.profile.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "accounts/foreign-profile-details-collections.html", {
+            "account":      account,
+            "collections":  collections,
+            "page_total":   page_total,
+            "page_number":  page_number,
+        })
+
+
+@log_default(my_logger=logger, cls_or_self=False)
+def profile_events(request, uid36):
     """Foreign Profile Events."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -1120,17 +1192,14 @@ def profile_events(request, user_id):
     # -------------------------------------------------------------------------
     # --- Retrieve the User Account.
     # -------------------------------------------------------------------------
-    account = get_object_or_404(
-        user_model,
-        pk=user_id)
+    account = get_object_or_404(user_model, uid=uid36)
     if account == request.user:
-        return HttpResponseRedirect(
-            reverse("my-profile-view"))
+        return HttpResponseRedirect(reverse("my-profile-view"))
 
     # -------------------------------------------------------------------------
     # --- Process Request.
     # -------------------------------------------------------------------------
-    events, page_total, page_number = get_event_list(request, author=account)
+    events, dateless, page_total, page_number = get_event_list(request, author=account)
 
     # -------------------------------------------------------------------------
     # --- Return Response.
@@ -1179,9 +1248,10 @@ def profile_events(request, user_id):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "accounts/foreign-profile-events.html", {
+        request, "accounts/foreign-profile-details-events.html", {
             "account":      account,
             "events":       events,
+            "dateless":     dateless,
             "page_total":   page_total,
             "page_number":  page_number,
         })

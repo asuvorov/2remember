@@ -8,9 +8,12 @@
 
 #------------------------------------------------------------------------------
 # --- "#"
-git+https://github.com/asuvorov/ddaemon-core-python.git@v0.3.0
+ddaemon-core-python==0.5.1
+ddaemon-django-papertrail==0.1.3
+ddaemon-django-private-url==0.1.0
 
 # APScheduler==3.9.1
+Pillow
 
 #------------------------------------------------------------------------------
 # --- "A"
@@ -30,7 +33,7 @@ djangorestframework==3.15.1
 # --- "django-*"
 django-admin-rangefilter==0.12.4
 django-admin-sortable2==2.1.10
-# django-bootstrap3-datetimepicker==2.2.3
+django-bootstrap-datepicker-plus==5.0.5
 django-bower==5.2.0
 django-compressor==4.4
 django-cors-headers==4.4.0
@@ -48,6 +51,7 @@ django-passwords==0.3.12
 django-profanity-filter==0.2.1
 django-rosetta==0.10.0
 # django-secure==1.0.2
+# django-sendgrid-v5
 # django-simple-captcha==0.5.17
 # django-sslserver==0.22
 django-static-fontawesome==6.5.2.0
@@ -83,6 +87,7 @@ gunicorn==23.0.0
 
 #------------------------------------------------------------------------------
 # --- "L"
+# localstack==3.7.2
 lxml==5.2.1
 
 #------------------------------------------------------------------------------
@@ -91,6 +96,7 @@ mysqlclient==2.2.4
 
 #------------------------------------------------------------------------------
 # --- "N"
+newrelic==9.13.0
 
 #------------------------------------------------------------------------------
 # --- "O"
@@ -98,6 +104,8 @@ mysqlclient==2.2.4
 #------------------------------------------------------------------------------
 # --- "P"
 pymemcache==4.0.0
+pytest-django==4.9.0
+pytest-mock==3.14.0
 pytz==2024.1
 
 # -----------------------------------------------------------------------------
@@ -111,7 +119,8 @@ pytz==2024.1
 
 # -----------------------------------------------------------------------------
 # --- "S"
-# sendgrid-django==4.2.0
+selenium==4.25.0
+sendgrid==6.11.0
 sentry-sdk[django]==2.7.1
 social-auth-app-django==5.4.2
 
@@ -126,6 +135,7 @@ social-auth-app-django==5.4.2
 
 #------------------------------------------------------------------------------
 # --- "W"
+webdriver-manager==4.0.2
 whitenoise==6.6.0
 
 #------------------------------------------------------------------------------

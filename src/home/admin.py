@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -43,6 +43,7 @@ class FAQInline(admin.TabularInline):
     extra = 1
 
 
+@admin.register(Section)
 class SectionAdmin(SortableAdminMixin, admin.ModelAdmin):
     """Section Admin."""
 
@@ -98,14 +99,12 @@ class SectionAdmin(SortableAdminMixin, admin.ModelAdmin):
             db_field, **kwargs)
 
 
-admin.site.register(Section, SectionAdmin)
-
-
 # =============================================================================
 # ===
 # === FAQ ADMIN
 # ===
 # =============================================================================
+@admin.register(FAQ)
 class FAQAdmin(admin.ModelAdmin):
     """FAQ Admin."""
 
@@ -152,14 +151,12 @@ class FAQAdmin(admin.ModelAdmin):
     ]
 
 
-admin.site.register(FAQ, FAQAdmin)
-
-
 # =============================================================================
 # ===
 # === PARTNER ADMIN
 # ===
 # =============================================================================
+@admin.register(Partner)
 class PartnerAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Partner Admin."""
 
@@ -210,6 +207,3 @@ class PartnerAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "avatar_image_tag",
         "created", "modified",
     ]
-
-
-admin.site.register(Partner, PartnerAdmin)

@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import logging
@@ -54,7 +54,8 @@ def post_create(request):
     # --- Prepare Form(s)
     # -------------------------------------------------------------------------
     form = CreateEditPostForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user)
 
     if request.method == "POST":
@@ -110,7 +111,7 @@ def post_details(request, slug):
     # --- Return Response.
     # -------------------------------------------------------------------------
     return render(
-        request, "blog/post-details.html", {
+        request, "blog/post-details-info.html", {
             "post":     post,
             "meta":     post.as_meta(request),
         })
@@ -128,7 +129,8 @@ def post_edit(request, slug):
         raise Http404
 
     form = CreateEditPostForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=post)
 

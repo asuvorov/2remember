@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -22,6 +22,7 @@ from .models import Post
 # === POST ADMIN
 # ===
 # =============================================================================
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Post Admin."""
 
@@ -112,6 +113,3 @@ class PostAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "post-closed",
         ),
     }
-
-
-admin.site.register(Post, PostAdmin)

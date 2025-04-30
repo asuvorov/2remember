@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "events/event-base.html" %}
 
 {% load i18n %}
 {% load static %}
@@ -19,11 +19,12 @@
 
 {% block title %}{% trans "Edit Event" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -37,6 +38,8 @@
     </nav>
 </a>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="event-edit" class="bg-body-tertiary p-3">
@@ -55,6 +58,8 @@
         <div class="col-md-9">
             <form id="edit-event-form" role="form" action="" method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
+
+                {{ form.media }}
 
                 <!-- START EVENT APPEARENCE -->
                 <section id="event-appearance">
@@ -124,9 +129,9 @@
                             <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
@@ -134,35 +139,18 @@
                             <label for="id_hash_tag" class="form-label">{{ form.hashtag.label }}{% if form.hashtag.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.hashtag.errors %}{% for error in form.hashtag.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-
-                    {% comment %}
-                        <div class="form-group {% if form.duration.errors %}has-error{% endif %}">
-                            <label class="form-label">{{ form.duration.label }}{% if form.duration.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div>
-                                {{ form.duration }}
-                                <span id="currentSliderValue"></span> hours
-                            </div>
-
-                            <span class="help-block">{% if form.duration.errors %}{% for error in form.duration.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-
-                    {% if not form.organization.is_hidden %}
-                        <div class="form-group {% if form.organization.errors %}has-error{% endif %}">
-                            <label class="form-label">{{ form.organization.label }}{% if form.organization.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <div class="input-group">
-                                {{ form.organization }}
-                                <div class="input-group-addon"><i class="bi bi-university"></i></div>
-                            </div>
-
-                            <span class="help-block">{% if form.organization.errors %}{% for error in form.organization.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endif %}
-                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT DESCRIPTION -->
 
                 <hr>
+
+                <!-- START EVENT LOCATION -->
+                <section id="event-location">
+                    <h3>{% trans "Location" %}</h3>
+                    {% include "app/fragments/address.html" %}
+                </section>
+                <!--  END  EVENT LOCATION -->
 
                 <!-- START EVENT ROLES -->
                 {% comment %}
@@ -172,13 +160,6 @@
                 {% endcomment %}
                 <!--  END  EVENT ROLES -->
 
-                <!-- START EVENT LOCATION -->
-                <section id="event-location">
-                    <h3>{% trans "Location" %}</h3>
-                    {% include "app/fragments/address.html" %}
-                </section>
-                <!--  END  EVENT LOCATION -->
-
                 <hr>
 
                 <!-- START EVENT TIME AND PLACE -->
@@ -186,44 +167,14 @@
                     <h3>{% trans "Date" %}</h3>
 
                     <div class="row g-2">
-                    {% comment %}
-                        <div class="form-floating col-md-4 {% if form.start_tz.errors %}has-error{% endif %}">
-                            {{ form.start_tz }}
-                            <label for="id_start_tz" class="form-label">{{ form.start_tz.label }}{% if form.start_tz.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <span class="help-block">{% if form.start_tz.errors %}{% for error in form.start_tz.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endcomment %}
-                        <div class="form-floating col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
-                            {{ form.start_date }}
+                        <div class="col-md-4 {% if form.start_date.errors %}has-error{% endif %}">
                             <label for="id_start_date" class="form-label">{{ form.start_date.label }}{% if form.start_date.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            {{ form.start_date }}
                             <span class="help-block">{% if form.start_date.errors %}{% for error in form.start_date.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
-                    {% comment %}
-                        <div class="form-floating col-md-4 {% if form.start_time.errors %}has-error{% endif %}">
-                            {{ form.start_time }}
-                            <label for="id_start_time" class="form-label">{{ form.start_time.label }}{% if form.start_time.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
-                            <span class="help-block">{% if form.start_time.errors %}{% for error in form.start_time.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
-                        </div>
-                    {% endcomment %}
                     </div>
                 </section>
                 <!--  END  EVENT TIME AND PLACE -->
-
-                <!-- START EVENT APPLICATION -->
-                {% comment %}
-                <section id="event-application">
-                    <h3>{% trans "Application" %}</h3>
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT APPLICATION -->
-
-                <!-- START EVENT CONTACT PERSON -->
-                {% comment %}
-                <section id="event-contact-person">
-                    <h3>{% trans "Contact Person" %}</h3>
-                </section>
-                {% endcomment %}
-                <!--  END  EVENT CONTACT PERSON -->
 
                 <!-- START EVENT SOCIAL LINKS -->
                 {% comment %}
@@ -271,7 +222,7 @@
                         <hr>
                         <h4>{% trans "Images" %}</h4>
                         <div class="gallery">
-                        {% for img in event.get_image_list.all %}
+                        {% for img in event.image_list.all %}
                             <div class="gallery-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                 <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
@@ -283,7 +234,7 @@
                         <hr>
                         <h4>{% trans "Documents" %}</h4>
                         <div class="gallery">
-                        {% for doc in event.get_document_list.all %}
+                        {% for doc in event.document_list.all %}
                             <div class="documents-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                 <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
@@ -296,7 +247,7 @@
                         <hr>
                         <h4>{% trans "Links" %}</h4>
                         <div class="gallery">
-                        {% for url in event.get_url_list.all %}
+                        {% for url in event.url_list.all %}
                             <div class="links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                 <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
@@ -309,7 +260,7 @@
                         <hr>
                         <h4>{% trans "Video Links" %}</h4>
                         <div class="gallery">
-                        {% for video_url in event.get_video_url_list.all %}
+                        {% for video_url in event.video_url_list.all %}
                             <div class="video-links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                 <a href="{{ video_url.url }}">{{ video_url.url }}</a>
@@ -416,16 +367,6 @@
             {% endif %}
         {% endfor %}
 
-        {% for field in nform %}
-            {% if field.errors %}
-                {% for error in field.errors %}
-                    new Noty({
-                        text: "{{ field.label }}: {{ error }}"
-                    }).show();
-                {% endfor %}
-            {% endif %}
-        {% endfor %}
-
         {% for form in formset_roles.forms %}
             {% for field in form %}
                 {% if field.errors %}
@@ -449,56 +390,6 @@
                 {% endif %}
             {% endfor %}
         {% endfor %}
-
-        /*********************************************************************/
-        /*** Slider                                                        ***/
-        /*********************************************************************/
-        // var mySlider = $("input.slider");
-
-        // mySlider.bootstrapSlider("setValue", {{ event.duration }});
-        // mySlider.on("slide", function (event) {
-        //     $("#currentSliderValue").text(event.value);
-        // });
-
-        // $("#currentSliderValue").text(
-        //     mySlider.bootstrapSlider("getValue")
-        // );
-
-        /*********************************************************************/
-        /*** Contact Person UX                                             ***/
-        /*********************************************************************/
-        $("#alt_person_creds").hide();
-
-        var selected = $("input[type='radio']:checked");
-
-        if (selected.val() == "he") {
-            $("#alt_person_creds").show("slow");
-        }
-
-        $("#id_contact_0").click(function () {
-            $("#alt_person_creds").hide("slow");
-        });
-
-        $("#id_contact_1").click(function () {
-            $("#alt_person_creds").show("slow");
-        })
-
-        /*********************************************************************/
-        /*** Automatically accept Experience Reports UX                    ***/
-        /*********************************************************************/
-        $("#id_acceptance_text_div").hide();
-
-        if ($("#id_accept_automatically").prop("checked")) {
-            $("#id_acceptance_text_div").show("slow");
-        }
-
-        $("#id_accept_automatically").click(function () {
-            $("#id_acceptance_text_div").toggle("slow");
-        });
     });
 </script>
-{% endblock %}
-
-{% block extra_content %}
-    {% include "app/fragments/instance-images-script.html" with instance=event %}
 {% endblock %}

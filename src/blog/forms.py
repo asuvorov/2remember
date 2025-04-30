@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django import forms
@@ -34,11 +34,12 @@ class CreateEditPostForm(forms.ModelForm):
         self.fields["content"].required = True
 
         # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["content"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["content"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     class Meta:
         model = Post
@@ -59,6 +60,7 @@ class CreateEditPostForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Tags"),
+                    "data-role":    "tagsinput",
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -71,6 +73,15 @@ class CreateEditPostForm(forms.ModelForm):
                     "class":        "form-check-input",
                 }),
             }
+
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
+
+        return [" ".join(tags), ]
 
     def clean(self):
         """Docstring."""

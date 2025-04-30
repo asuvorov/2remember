@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.urls import re_path
@@ -8,6 +8,13 @@ from . import views
 
 
 urlpatterns = [
+    # -------------------------------------------------------------------------
+    # --- Autocomplete.
+    # -------------------------------------------------------------------------
+    re_path(r"^autocomplete/$",
+        views.autocomplete_organization_list,
+        name="autocomplete-organization-list"),
+
     # -------------------------------------------------------------------------
     # --- Organizations.
     # -------------------------------------------------------------------------

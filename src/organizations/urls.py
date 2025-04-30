@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.urls import re_path
@@ -40,6 +40,9 @@ urlpatterns = [
     re_path(r"^(?P<slug>[\w_-]+)/edit/$",
         views.organization_edit,
         name="organization-edit"),
+    re_path(r"^(?P<slug>[\w_-]+)/events/$",
+        views.organization_events,
+        name="organization-events"),
     re_path(r"^(?P<slug>[\w_-]+)/populate/$",
         views.organization_populate_newsletter,
         name="organization-populate-newsletter"),

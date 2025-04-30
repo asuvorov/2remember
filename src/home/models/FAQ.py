@@ -1,11 +1,10 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
 
 from django.conf import settings
-from django.contrib.sitemaps import ping_google
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -51,7 +50,8 @@ class FAQ(BaseModel):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE)
+        on_delete=models.SET_NULL,
+        null=True, blank=True,)
     section = models.ForeignKey(
         Section,
         db_index=True,
@@ -76,6 +76,7 @@ class FAQ(BaseModel):
     objects = FAQManager()
 
     class Meta:
+        app_label = "home"
         verbose_name = _("frequently asked question")
         verbose_name_plural = _("frequently asked questions")
         ordering = ["-created", ]
@@ -95,12 +96,8 @@ class FAQ(BaseModel):
 
     def post_save(self, created, **kwargs):
         """Docstring."""
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # ---------------------------------------------------------------------
+        # --- FIXME: Ping Google.
 
     def pre_delete(self, **kwargs):
         """Docstring."""

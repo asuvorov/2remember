@@ -1,10 +1,9 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
 import logging
-import mimetypes
 
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -43,24 +42,18 @@ from ddcore.models import (
 
 # pylint: disable=import-error
 from accounts.models import UserProfile
-from accounts.utils import get_participations_intersection
 from api.auth import CsrfExemptSessionAuthentication
-# from api.v1.api_events.utils import (
+# from api.v1.events.utils import (
 #     event_access_check_required,
 #     event_org_staff_member_required)
-# from api.v1.api_organizations.utils import (
+# from api.v1.organizations.utils import (
 #     organization_access_check_required,
 #     organization_staff_member_required)
 from app import logconst
 from app.decorators import log_default
 from app.logformat import Format
 from blog.models import Post
-from events.models import (
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus
-    )
+from events.models import Event
 from organizations.models import Organization
 
 
@@ -85,6 +78,8 @@ class TmpUploadViewSet(APIView):
                f"{settings.SUPPORTED_IMAGES_STR}\n\nYour File was not added.")
     error_2 = (f"Sorry, this Field only supports the following File Types:\n - "
                f"{settings.SUPPORTED_DOCUMENTS_STR}\n\nYour File was not added.")
+    error_3 = (f"Sorry, this Field only supports the following File Types:\n - "
+               f"{settings.SUPPORTED_VIDEO_STR}\n\nYour File was not added.")
 
     @log_default(my_logger=logger)
     def post(self, request):
@@ -94,22 +89,60 @@ class TmpUploadViewSet(APIView):
                 "message":      _("No Files attached."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # --- TODO: Verify File Size.
-        # --- TODO: Verify File Type.
-
+        # ---------------------------------------------------------------------
+        # --- INITIALS
+        # ---------------------------------------------------------------------
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
         tmp_file = TemporaryFile.objects.create(
             file=request.FILES["file"],
             name=request.FILES["file"].name)
-
         result = {
             "tmp_file_id":      tmp_file.id,
             "tmp_file_name":    tmp_file.file.name,
             "tmp_file_size":    tmp_file.file.size,
-            "tmp_file_type":    mimetypes.guess_type(tmp_file.file.name)[0] or "image/png",
         }
 
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {result}", "yellow")
+
         # ---------------------------------------------------------------------
-        # --- Logging.
+        # --- START SANITIZING UPLOAD
+        # ---------------------------------------------------------------------
+        # --- Verify File Type.
+        file_ext = tmp_file.file.name.split(".")[-1].lower()
+
+        if file_ext in settings.SUPPORTED_IMAGES:
+            media = "images"
+        elif file_ext in settings.SUPPORTED_DOCUMENTS:
+            media = "documents"
+        elif file_ext in settings.SUPPORTED_VIDEO:
+            media = "video"
+        else:
+            cprint("[---  ERROR  ---] Upload - unsupported Type", "white", "on_red")
+
+            # -----------------------------------------------------------------
+            # --- Save the Log
+
+            return Response({
+                "files":    [],
+            }, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+        # ---------------------------------------------------------------------
+        # --- Verify File Size.
+        if tmp_file.file.size > subscription_plan["attachments"][media]["max_file_size"]:
+            cprint("[---  ERROR  ---] Upload - too large", "white", "on_red")
+
+            # -----------------------------------------------------------------
+            # --- Save the Log
+
+            return Response({
+                "files":    [],
+            }, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+
+        # ---------------------------------------------------------------------
+        # --- TODO: Verify File Amount.
+
+        # ---------------------------------------------------------------------
+        # --- Save the Log.
         # ---------------------------------------------------------------------
         logger.info("REQUEST", extra=Format.api_detailed_info(
             log_type=logconst.LOG_VAL_TYPE_API_REQUEST,
@@ -130,21 +163,24 @@ class RemoveUploadViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
-    # model = Comment
+    # serializer_class =
+    # model =
 
     @log_default(my_logger=logger)
     def post(self, request):
         """Remove uploaded File."""
-        found = False
-
+        # ---------------------------------------------------------------------
+        # --- INITIALS
+        # ---------------------------------------------------------------------
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}", "yellow")
-        cprint(f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
+               f"                  UPLOAD   ID : {upload_id}", "yellow")
 
-        if upload_type and upload_id:
+        if (
+                upload_type and
+                upload_id):
             if upload_type == "document":
                 instance = get_object_or_None(AttachedDocument, id=upload_id)
             elif upload_type == "image":
@@ -153,28 +189,37 @@ class RemoveUploadViewSet(APIView):
                 instance = get_object_or_None(TemporaryFile, id=upload_id)
 
             if instance:
-                try:
-                    instance.file.delete()
-                except Exception as exc:
-                    cprint(f"###" * 27, "white", "on_red")
-                    cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`: "
-                           f"{type(exc).__name__} : {str(exc)}",
-                           "white", "on_red")
+                if (
+                        request.user == instance.created_by or
+                        request.user.is_superuser):
+                    try:
+                        instance.file.delete()
+                    except Exception as exc:
+                        cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                               f"                 {type(exc).__name__}\n"
+                               f"                 {str(exc)}", "white", "on_red")
 
-                    # ---------------------------------------------------------
-                    # --- Logging.
-                    # ---------------------------------------------------------
-                    logger.exception("", extra=Format.exception(
-                        exc=exc,
-                        request_id=request.request_id,
-                        log_extra={}))
+                        # -----------------------------------------------------
+                        # --- Logging.
+                        # -----------------------------------------------------
+                        logger.exception("", extra=Format.exception(
+                            exc=exc,
+                            request_id=request.request_id,
+                            log_extra={}))
 
-                instance.delete()
-                found = True
+                    instance.delete()
+
+                    return Response({
+                        "deleted":  True,
+                    }, status=status.HTTP_200_OK)
+
+            return Response({
+                "deleted":  False,
+            }, status=status.HTTP_403_FORBIDDEN)
 
         return Response({
-            "deleted":  found,
-        }, status=status.HTTP_200_OK)
+            "deleted":  False,
+        }, status=status.HTTP_404_NOT_FOUND)
 
 
 remove_upload = RemoveUploadViewSet.as_view()
@@ -186,33 +231,46 @@ class RemoveLinkViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = CommentSerializer
-    # model = Comment
+    # serializer_class =
+    # model =
 
     @log_default(my_logger=logger)
     def post(self, request):
         """Remove Link."""
-        found = False
-
+        # ---------------------------------------------------------------------
+        # --- INITIALS
+        # ---------------------------------------------------------------------
         upload_type = request.data.get("type")
         upload_id = request.data.get("id")
 
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}", "yellow")
-        cprint(f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
+               f"                  UPLOAD   ID : {upload_id}", "yellow")
 
-        if upload_type and upload_id:
+        if (
+                upload_type and
+                upload_id):
             if upload_type == "regular":
                 instance = get_object_or_None(AttachedUrl, id=upload_id)
             elif upload_type == "video":
                 instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
 
             if instance:
-                instance.delete()
-                found = True
+                if (
+                        request.user == instance.created_by or
+                        request.user.is_superuser):
+                    instance.delete()
+
+                    return Response({
+                        "deleted":  True,
+                    }, status=status.HTTP_200_OK)
+
+            return Response({
+                "deleted":  False,
+            }, status=status.HTTP_403_FORBIDDEN)
 
         return Response({
-            "deleted":  found,
-        }, status=status.HTTP_200_OK)
+            "deleted":  False,
+        }, status=status.HTTP_404_NOT_FOUND)
 
 
 remove_link = RemoveLinkViewSet.as_view()
@@ -249,8 +307,8 @@ class CommentListViewSet(APIView):
                 Example Payload:
 
                     {
-                        "event_id":         1,
-                        "comment_text":     "Comment Text"
+                        "event_id":     1,
+                        "comment_text": "Comment Text"
                     }
 
         Returns
@@ -260,8 +318,8 @@ class CommentListViewSet(APIView):
                 Example Payload:
 
                     {
-                        "message":          "Successfully added the Comment.",
-                        "comment":          "",
+                        "message":      "Successfully added the Comment.",
+                        "comment":      "",
                     }
 
         Raises
@@ -278,12 +336,12 @@ class CommentListViewSet(APIView):
         post_id = request.data.get("post_id", "")
         comment_text = request.data.get("comment_text", "")
 
-        cprint(f"[---  DUMP   ---] ACCOUNT      ID : {account_id}", "yellow")
-        cprint(f"                  EVENT        ID : {event_id}", "yellow")
-        cprint(f"                  ORGANIZATION ID : {organization_id}", "yellow")
-        cprint(f"                  PLACE        ID : {place_id}", "yellow")
-        cprint(f"                  POST         ID : {post_id}", "yellow")
-        cprint(f"                  COMMENT    TEXT : {comment_text}", "yellow")
+        cprint(f"[---  DUMP   ---] ACCOUNT      ID : {account_id}\n"
+               f"                  EVENT        ID : {event_id}\n"
+               f"                  ORGANIZATION ID : {organization_id}\n"
+               f"                  PLACE        ID : {place_id}\n"
+               f"                  POST         ID : {post_id}\n"
+               f"                  COMMENT    TEXT : {comment_text}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Verify Request.
@@ -308,8 +366,6 @@ class CommentListViewSet(APIView):
         # --- Retrieve the Account (Profile).
         # ---------------------------------------------------------------------
         if account_id:
-            cprint("[---   LOG   ---] Going to retrieve the Account (Profile)", "green")
-
             # -----------------------------------------------------------------
             # --- FIXME: Check the Rights.
             # -----------------------------------------------------------------
@@ -323,14 +379,10 @@ class CommentListViewSet(APIView):
                     "message":      _("Account not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            cprint("[---  INFO   ---] FOUND ACCOUNT (PROFILE) : %s" % obj, "cyan")
-
         # ---------------------------------------------------------------------
         # --- Retrieve the Event.
         # ---------------------------------------------------------------------
         if event_id:
-            cprint("[---   LOG   ---] Going to retrieve the Event", "green")
-
             # -----------------------------------------------------------------
             # --- FIXME: Check the Rights.
             # -----------------------------------------------------------------
@@ -348,14 +400,10 @@ class CommentListViewSet(APIView):
                     "message":      _("Event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            cprint("[---  INFO   ---] FOUND EVENT : %s" % obj, "cyan")
-
         # ---------------------------------------------------------------------
         # --- Retrieve the Organization.
         # ---------------------------------------------------------------------
         if organization_id:
-            cprint("[---   LOG   ---] Going to retrieve the Organization", "green")
-
             # -----------------------------------------------------------------
             # --- FIXME: Check the Rights
             # -----------------------------------------------------------------
@@ -373,8 +421,6 @@ class CommentListViewSet(APIView):
                     "message":      _("Organization not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            cprint("[---  INFO   ---] FOUND ORGANIZATION : %s" % obj, "cyan")
-
         # ---------------------------------------------------------------------
         # --- Retrieve the Place.
         # ---------------------------------------------------------------------
@@ -383,14 +429,11 @@ class CommentListViewSet(APIView):
         # --- Retrieve the Post.
         # ---------------------------------------------------------------------
         if post_id:
-            cprint("[---   LOG   ---] Going to retrieve the Blog Post", "green")
-
             obj = get_object_or_None(Post, id=post_id)
             if not obj:
                 return Response({
                     "message":      _("Blog Post not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
-            cprint("[---  INFO   ---] FOUND BLOG POST : %s" % obj, "cyan")
 
         # ---------------------------------------------------------------------
         # --- Create Comment.
@@ -415,7 +458,9 @@ class CommentListViewSet(APIView):
             }
             rendered = template.render(context)
         except Exception as exc:
-            print(f"EXCEPTION {str(exc)}")
+            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+                   f"                 {type(exc).__name__}\n"
+                   f"                 {str(exc)}", "white", "on_red")
 
         return Response({
             "message":      _("Successfully added the Comment."),
@@ -450,7 +495,7 @@ class CommentDetailsViewSet(APIView):
                 Example Payload:
 
                     {
-                        "message":          "Successfully removed the Comment."
+                        "message":      "Successfully removed the Comment."
                     }
 
         Raises
@@ -514,25 +559,36 @@ class ComplaintListViewSet(APIView):
     def post(self, request):
         """POST: Complaint create.
 
-            Receive:
+        Parameters
+        ----------
+        account_id          :int
+        event_id            :int
+        organization_id     :int
+        place_id            :int
+        post_id             :int
 
-                account_id              :uint:
-                event_id            :uint:
-                organization_id         :uint:
-                post_id                 :uint:
+        complaint_text      :str
 
-                complaint_text          :str:
+                Example Payload:
 
-            Return:
+                    {
+                        "event_id":         1,
+                        "complaint_text":   "Complaint Text"
+                    }
 
-                status                  200/400/404/500
+        Returns
+        -------
+                            :dict
 
-            Example Payload:
+                Example Payload:
 
-                {
-                    "event_id":         1,
-                    "complaint_text":       "Complaint Text"
-                }
+                    {
+                        "message":          "Successfully added the Complaint.",
+                    }
+
+        Raises
+        ------
+
         """
         # ---------------------------------------------------------------------
         # --- Retrieve Data from the Request
@@ -540,19 +596,29 @@ class ComplaintListViewSet(APIView):
         account_id = request.data.get("account_id", "")
         event_id = request.data.get("event_id", "")
         organization_id = request.data.get("organization_id", "")
+        place_id = request.data.get("place_id", "")
+        post_id = request.data.get("post_id", "")
         complaint_text = request.data.get("complaint_text", "")
 
-        cprint("[---  DUMP   ---] ACCOUNT      ID : %s" % account_id, "yellow")
-        cprint("[---  DUMP   ---] EVENT        ID : %s" % event_id, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZATION ID : %s" % organization_id, "yellow")
-        cprint("[---  DUMP   ---] COMPLAINT  TEXT : %s" % complaint_text, "yellow")
+        cprint(f"[---  DUMP   ---] ACCOUNT      ID : {account_id}\n"
+               f"                  EVENT        ID : {event_id}\n"
+               f"                  ORGANIZATION ID : {organization_id}\n"
+               f"                  PLACE        ID : {place_id}\n"
+               f"                  POST         ID : {post_id}\n"
+               f"                  COMPLAINT  TEXT : {complaint_text}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Verify Request.
         # ---------------------------------------------------------------------
-        if not account_id and not event_id and not organization_id:
+        if (
+                not account_id and
+                not event_id and
+                not organization_id and
+                not place_id and
+                not post_id):
             return Response({
-                "message":      _("Neither Account, nor event, nor Organization, ID provided."),
+                "message":  _("Neither Account, nor Event, nor Organization, "
+                              "nor Place, nor Post ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
         if not complaint_text:
@@ -561,148 +627,94 @@ class ComplaintListViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the Account
+        # --- Retrieve the Account.
         # ---------------------------------------------------------------------
         if account_id:
-            account = get_object_or_None(User, id=account_id)
-            if not account:
+            obj = get_object_or_None(User, id=account_id)
+            if not obj:
                 return Response({
-                    "message":      _("Member not found."),
+                    "message":  _("Member not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
-            # --- Check, if the User has already complained to the Account
-            is_complained = account.profile.is_complained_by_user(request.user)
-
-            if is_complained:
+            # --- Check, if the User has already complained to the Account.
+            if obj.profile.is_complained_by_user(request.user):
                 return Response({
                     "message":      _("You already complained on the Member."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # -----------------------------------------------------------------
-            # --- Check, if the registered User participated in the same
-            #     event(s), as the Account.
-            if len(get_participations_intersection(request.user, account)) <= 0:
-                return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            content_type = ContentType.objects.get_for_model(account.profile)
-            object_id = account.profile.id
-
         # ---------------------------------------------------------------------
-        # --- Retrieve the event
+        # --- Retrieve the event.
         # ---------------------------------------------------------------------
         if event_id:
-            event = get_object_or_None(Event, id=event_id)
-            if not event:
+            obj = get_object_or_None(Event, id=event_id)
+            if not obj:
                 return Response({
-                    "message":      _("event not found."),
+                    "message":  _("Event not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
-            # --- Check, if the User has already complained to the Account
-            is_complained = event.is_complained_by_user(request.user)
-
-            if is_complained:
+            # --- Check, if the User has already complained to the Account.
+            if obj.is_complained_by_user(request.user):
                 return Response({
                     "message":      _("You already complained on the event."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # -----------------------------------------------------------------
-            # --- Check, if the registered User participated in the event.
-            participation = get_object_or_None(
-                Participation,
-                user=request.user,
-                event=event)
-
-            if not participation:
-                return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            if (
-                    not participation.is_waiting_for_selfreflection and
-                    not participation.is_waiting_for_acknowledgement and
-                    not participation.is_acknowledged):
-                return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            content_type = ContentType.objects.get_for_model(event)
-            object_id = event.id
-
         # ---------------------------------------------------------------------
-        # --- Retrieve the Organization
+        # --- Retrieve the Organization.
         # ---------------------------------------------------------------------
         if organization_id:
-            organization = get_object_or_None(Organization, id=organization_id)
-            if not organization:
+            obj = get_object_or_None(Organization, id=organization_id)
+            if not obj:
                 return Response({
                     "message":      _("Organization not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
             # --- Check, if the User has already complained to the Organization.
-            is_complained = organization.is_complained_by_user(request.user)
-
-            if is_complained:
+            if obj.is_complained_by_user(request.user):
                 return Response({
                     "message":      _("You already complained on the Organization."),
                 }, status=status.HTTP_400_BAD_REQUEST)
 
-            # -----------------------------------------------------------------
-            # --- Retrieve User's Participations to the Organization's
-            #     events.
-            completed_events = event.objects.filter(
-                organization=organization,
-                status=EventStatus.COMPLETE)
-
-            event_ids = completed_events.values_list("pk", flat=True)
-
-            try:
-                participation = Participation.objects.filter(
-                    user=request.user,
-                    event__pk__in=event_ids,
-                    status__in=[
-                        ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                        ParticipationStatus.ACKNOWLEDGED,
-                        ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
-                    ]
-                ).latest("pk")
-
-                if not participation:
-                    return Response({
-                        "message":      _("You don't have Permissions to perform the Action."),
-                    }, status=status.HTTP_400_BAD_REQUEST)
-
-            except Participation.DoesNotExist:
-                cprint("[--- WARNING ---] Entry does not exist", "yellow")
-
-                return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            content_type = ContentType.objects.get_for_model(organization)
-            object_id = organization.id
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Place.
+        # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Create Complaint
+        # --- Retrieve the Post.
+        # ---------------------------------------------------------------------
+        if post_id:
+            obj = get_object_or_None(Post, id=post_id)
+            if not obj:
+                return Response({
+                    "message":      _("Blog Post not found."),
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # -----------------------------------------------------------------
+            # --- Check, if the User has already complained to the Post.
+            if obj.is_complained_by_user(request.user):
+                return Response({
+                    "message":      _("You already complained on the Post."),
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        # ---------------------------------------------------------------------
+        # --- Create Complaint.
         # ---------------------------------------------------------------------
         complaint = Complaint.objects.create(
             user=request.user,
             text=complaint_text,
-            content_type=content_type,
-            object_id=object_id)
+            content_type=ContentType.objects.get_for_model(obj),
+            object_id=obj.id)
         complaint.save()
 
         # ---------------------------------------------------------------------
-        # --- Send Email Notifications
+        # --- Send Email Notifications.
         # ---------------------------------------------------------------------
         complaint.email_notify_admins_complaint_created(request)
 
         # ---------------------------------------------------------------------
-        # --- Save the Log
+        # --- Save the Log.
         # ---------------------------------------------------------------------
         # papertrail.log(
         #     event_type="complaint-created",
@@ -744,203 +756,178 @@ class RatingListViewSet(APIView):
     def post(self, request):
         """POST: Rating create.
 
-            Receive:
+        Parameters
+        ----------
+        account_id          :int
+        event_id            :int
+        organization_id     :int
+        place_id            :int
+        post_id             :int
 
-                event_id                :uint:
-                organization_id             :uint:
-                organizer_id                :uint:
+        author_rating       :int
+        rating              :int
 
-                event_rating            :int:
-                organization_rating         :int:
-                organizer_rating            :int:
+        review_text         :str
 
-                event_review_text       :str:
-                organization_review_text    :str:
-                organizer_review_text       :str:
+                Example Payload:
 
-            Return:
+                    {
+                        "event_id":     1,
+                        "rating":       5,
+                        "review_text":  "Event Review Text"
+                    }
 
-                status                  200/400/404/500
+        Returns
+        -------
+                            :dict
 
-            Example Payload:
+                Example Payload:
 
-                {
-                    "event_id":                 1,
-                    "organization_id":              1,
-                    "organizer_id":                 1,
-                    "event_rating":             5,
-                    "organization_rating":          3,
-                    "organizer_rating":             4,
-                    "event_review_text":        "event Review Text",
-                    "organization_review_text":     "Organization Review Text",
-                    "organizer_review_text":        "Organizer Review Text"
-                }
+                    {
+                        "message":      "Successfully added the Complaint.",
+                    }
+
+        Raises
+        ------
+
         """
+
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request
+        # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
+        account_id = request.data.get("account_id", "")
         event_id = request.data.get("event_id", "")
         organization_id = request.data.get("organization_id", "")
-        organizer_id = request.data.get("organizer_id", "")
+        place_id = request.data.get("place_id", "")
+        post_id = request.data.get("post_id", "")
+        author_rating = request.data.get("author_rating", "")
+        rating = request.data.get("rating", "")
+        review_text = request.data.get("review_text", "")
 
-        event_rating = request.data.get("event_rating", "")
-        organization_rating = request.data.get("organization_rating", "")
-        organizer_rating = request.data.get("organizer_rating", "")
-
-        event_review_text = request.data.get("event_review_text", "")
-        organization_review_text = request.data.get("organization_review_text", "")
-        organizer_review_text = request.data.get("organizer_review_text", "")
-
-        cprint("[---  DUMP   ---] EVENT            ID : %s" % event_id, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZATION     ID : %s" % organization_id, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZER        ID : %s" % organizer_id, "yellow")
-
-        cprint("[---  DUMP   ---] EVENT        RATING : %s" % event_rating, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZATION RATING : %s" % organization_rating, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZER    RATING : %s" % organizer_rating, "yellow")
-
-        cprint("[---  DUMP   ---] EVENT        REVIEW : %s" % event_review_text, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZATION REVIEW : %s" % organization_review_text, "yellow")
-        cprint("[---  DUMP   ---] ORGANIZER    REVIEW : %s" % organizer_review_text, "yellow")
+        cprint(f"[---  DUMP   ---] ACCOUNT      ID : {account_id}\n"
+               f"                  EVENT        ID : {event_id}\n"
+               f"                  ORGANIZATION ID : {organization_id}\n"
+               f"                  PLACE        ID : {place_id}\n"
+               f"                  POST         ID : {post_id}\n"
+               f"                  AUTHOR   RATING : {author_rating}\n"
+               f"                           RATING : {rating}\n"
+               f"                  REVIEW     TEXT : {review_text}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Verify Request.
         # ---------------------------------------------------------------------
-        if not event_id and not organizer_id:
+        if (
+                not account_id and
+                not event_id and
+                not organization_id and
+                not place_id and
+                not post_id):
             return Response({
-                "message":      _("Neither Event, nor Organizer ID provided."),
+                "message":  _("Neither Account, nor Event, nor Organization, "
+                              "nor Place, nor Post ID provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not event_rating and not organizer_rating:
+        if not rating:
             return Response({
-                "message":      _("Neither Event, nor Organizer Rating provided."),
+                "message":  _("Rating is not provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        if not event_review_text and not organizer_review_text:
+        if not review_text:
             return Response({
-                "message":      _("Neither Event, nor Organizer Review Text provided."),
+                "message":  _("Review Text is not provided."),
             }, status=status.HTTP_400_BAD_REQUEST)
-
-        if organization_id:
-            if not organization_rating:
-                return Response({
-                    "message":      _("Organization Rating is not provided."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            if not organization_review_text:
-                return Response({
-                    "message":      _("Organization Review Text is not provided."),
-                }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and rate the event
+        # --- Retrieve the Account.
         # ---------------------------------------------------------------------
-        if event_id:
-            event = get_object_or_None(
-                event,
-                id=event_id,
-            )
-
-            if not event:
+        if account_id:
+            obj = get_object_or_None(User, id=account_id)
+            if not obj:
                 return Response({
-                    "message":      _("event not found."),
+                    "message":  _("Member not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
-            # --- Check, if the User has already rated the event.
-            is_rated = event.is_rated_by_user(
-                request.user)
-
-            if is_rated:
+            # --- Check, if the User has already rated the Account.
+            if obj.profile.is_rated_by_user(request.user):
                 return Response({
-                    "message":      _("You already rated the event."),
+                    "message":      _("You already rated the Member."),
                 }, status=status.HTTP_400_BAD_REQUEST)
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Event.
+        # ---------------------------------------------------------------------
+        if event_id:
+            obj = get_object_or_None(Event, id=event_id)
+            if not obj:
+                return Response({
+                    "message":  _("Event not found."),
+                }, status=status.HTTP_404_NOT_FOUND)
 
             # -----------------------------------------------------------------
-            # --- Check the Permission
-            participation = get_object_or_None(
-                Participation,
-                user=request.user,
-                event=event,
-            )
-
-            if not participation:
+            # --- Check, if the User has already rated the Account.
+            if obj.is_rated_by_user(request.user):
                 return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
+                    "message":      _("You already rated the Event."),
                 }, status=status.HTTP_400_BAD_REQUEST)
-
-            if (
-                    not participation.is_waiting_for_acknowledgement and
-                    not participation.is_acknowledged):
-                return Response({
-                    "message":      _("You don't have Permissions to perform the Action."),
-                }, status=status.HTTP_400_BAD_REQUEST)
-
-            content_type = ContentType.objects.get_for_model(event)
-            object_id = event.id
-
-            rating, created = Rating.objects.get_or_create(
-                author=request.user,
-                content_type=content_type,
-                object_id=object_id,
-            )
-            rating.rating = int(event_rating)
-            rating.review_text = event_review_text
-            rating.save()
 
         # ---------------------------------------------------------------------
-        # --- Retrieve and rate the Organization
+        # --- Retrieve the Organization.
         # ---------------------------------------------------------------------
         if organization_id:
-            organization = get_object_or_None(
-                Organization,
-                id=organization_id,
-            )
-
-            if not organization:
+            obj = get_object_or_None(Organization, id=organization_id)
+            if not obj:
                 return Response({
                     "message":      _("Organization not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            content_type = ContentType.objects.get_for_model(organization)
-            object_id = organization.id
-
-            if event.organization == organization:
-                rating, created = Rating.objects.get_or_create(
-                    author=request.user,
-                    content_type=content_type,
-                    object_id=object_id,
-                )
-                rating.rating = int(organization_rating)
-                rating.review_text = organization_review_text
-                rating.save()
-
-        # ---------------------------------------------------------------------
-        # --- Retrieve and rate the Organizer
-        # ---------------------------------------------------------------------
-        if organizer_id:
-            organizer = get_object_or_None(
-                User,
-                id=organizer_id,
-            )
-
-            if not organizer:
+            # -----------------------------------------------------------------
+            # --- Check, if the User has already rated the Organization.
+            if obj.is_rated_by_user(request.user):
                 return Response({
-                    "message":      _("Organizer not found."),
+                    "message":      _("You already rated the Organization."),
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Place.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Post.
+        # ---------------------------------------------------------------------
+        if post_id:
+            obj = get_object_or_None(Post, id=post_id)
+            if not obj:
+                return Response({
+                    "message":      _("Blog Post not found."),
                 }, status=status.HTTP_404_NOT_FOUND)
 
-            content_type = ContentType.objects.get_for_model(organizer.profile)
-            object_id = organizer.profile.id
+            # -----------------------------------------------------------------
+            # --- Check, if the User has already rated the Post.
+            if obj.is_rated_by_user(request.user):
+                return Response({
+                    "message":      _("You already rated the Post."),
+                }, status=status.HTTP_400_BAD_REQUEST)
 
-            if event.author == organizer:
-                rating, created = Rating.objects.get_or_create(
-                    author=request.user,
-                    content_type=content_type,
-                    object_id=object_id,
-                )
-                rating.rating = int(organizer_rating)
-                rating.review_text = organizer_review_text
-                rating.save()
+        # ---------------------------------------------------------------------
+        # --- Create Rating.
+        # ---------------------------------------------------------------------
+        rating, created = Rating.objects.get_or_create(
+            author=request.user,
+            rating=int(rating),
+            review_text=review_text,
+            content_type=obj,
+            object_id=obj.id)
+        rating.save()
+
+        if author_rating:
+            rating, created = Rating.objects.get_or_create(
+                author=request.user,
+                rating=int(author_rating),
+                review_text=review_text,
+                content_type=obj.author,
+                object_id=obj.author.id)
+            rating.save()
 
         return Response({
             "message":      _("Successfully added the Rating."),
@@ -992,11 +979,7 @@ class RatingDetailsViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Rating
         # ---------------------------------------------------------------------
-        rating = get_object_or_None(
-            Rating,
-            pk=rating_id,
-        )
-
+        rating = get_object_or_None(Rating, pk=rating_id)
         if not rating:
             return Response({
                 "message":      _("Rating not found."),
@@ -1011,7 +994,7 @@ class RatingDetailsViewSet(APIView):
         rating.save()
 
         return Response({
-            "message":      _("Successfully removed the Rating."),
+            "message":  _("Successfully removed the Rating."),
         }, status=status.HTTP_200_OK)
 
 

@@ -25,7 +25,7 @@
     {% if event.is_private %}
         <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-warning">Private</span>
     {% endif %}
-        <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"><i class="bi bi-camera">0</i><br/><i class="bi bi-camera">0</i></span>
+        <span class="position-absolute top-0 end-0 translate-middle badge rounded-pill bg-success"><i class="bi bi-camera">&nbsp;{{ event.image_count }}</i></span>
     </a>
 
     <div class="card-body">
@@ -76,16 +76,16 @@
         {% else %}
             <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
         {% endif %}
-            <a href="{% url 'profile-view' event.author_id %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
+            <a href="{% url 'profile-view' event.author.uid %}"> {{ event.author.first_name }}</a> {{ event.created|timesince }} {% trans "ago" %}
         </p>
     </div>
 
     <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <small class="text-muted">
-                <i class="bi bi-feather"></i>{{ event.get_comments_count }}
+                <i class="bi bi-feather"></i>{{ event.comments_count }}
                 <span class="vert-delimiter">|</span>
-                <i class="bi bi-eye"></i>{{ event.get_views_count }}
+                <i class="bi bi-eye"></i>{{ event.views_count }}
 
                 <br/>
 

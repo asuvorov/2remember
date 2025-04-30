@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django import forms
@@ -30,19 +30,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
         if self.instance and self.instance.id:
             pass
 
-        # self.contact_choices = [
-        #     # ("no", _("None")),
-        #     ("me", _("Me (%s)") % (self.user.email)),
-        #     ("he", _("Affiliate different Person")),
-        # ]
-        # self.fields["contact"].choices = self.contact_choices
-        # self.fields["contact"].initial = "me"
-
-        # if (
-        #         self.instance and
-        #         self.instance.is_alt_person):
-        #     self.fields["contact"].initial = "he"
-
         # ---------------------------------------------------------------------
         # --- Modify Fields.
         self.fields["is_hidden"].help_text = _(
@@ -51,10 +38,11 @@ class CreateEditOrganizationForm(forms.ModelForm):
             "for its Events.")
 
         # ---------------------------------------------------------------------
-        self.fields["title"].validators = [validate_is_profane]
-        self.fields["description"].validators = [validate_is_profane]
-        self.fields["tags"].validators = [validate_is_profane]
-        self.fields["hashtag"].validators = [validate_is_profane]
+        if not self.user.is_staff:
+            self.fields["title"].validators = [validate_is_profane]
+            self.fields["description"].validators = [validate_is_profane]
+            self.fields["tags"].validators = [validate_is_profane]
+            self.fields["hashtag"].validators = [validate_is_profane]
 
     # contact = forms.ChoiceField(widget=forms.RadioSelect())
 
@@ -74,8 +62,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
         model = Organization
         fields = [
             "preview", "cover", "title", "description", "tags", "hashtag",
-            "addressless", "is_hidden", "website", "video", "email",
-            # "is_alt_person", "alt_person_fullname", "alt_person_email", "alt_person_phone",
+            "addressless", "parent", "is_hidden", "website", "video", "email",
             "allow_comments",
         ]
         widgets = {
@@ -95,7 +82,7 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 attrs={
                     "class":        "form-control",
                     "placeholder":  _("Tags"),
-                    # "data-role":    "tagsinput",
+                    "data-role":    "tagsinput",
                 }),
             "hashtag": forms.TextInput(
                 attrs={
@@ -107,10 +94,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
                 attrs={
                     "class":        "form-check-input",
                 }),
-            # "is_alt_person": forms.CheckboxInput(
-            #     attrs={
-            #         "class":        "form-check-input",
-            #     }),
             "website": forms.URLInput(
                 attrs={
                     "class":        "form-control",
@@ -127,28 +110,27 @@ class CreateEditOrganizationForm(forms.ModelForm):
                     "placeholder":  _("Organization Email"),
                     "maxlength":    100,
                 }),
-            # "alt_person_fullname": forms.TextInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Full Name"),
-            #         "maxlength":    80,
-            #     }),
-            # "alt_person_email": forms.EmailInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Email"),
-            #         "maxlength":    100,
-            #     }),
-            # "alt_person_phone": forms.TextInput(
-            #     attrs={
-            #         "class":        "form-control",
-            #         "placeholder":  _("Phone Number"),
-            #     }),
+            "parent": forms.Select(
+                attrs={
+                    "class":        "form-control form-select autocomplete",
+                    "autocomplete": "on",
+                    "placeholder":  "Start typing a Name...",
+                    # "onclick":      "$(this).select();",
+                }),
             "allow_comments": forms.CheckboxInput(
                 attrs={
                     "class":        "form-check-input",
                 }),
             }
+
+    def clean_tags(self):
+        """Clean `tags` Field."""
+        tags = self.cleaned_data["tags"]
+        for tag in tags:
+            if len(tag.split(" ")) > 1:
+                return tags
+
+        return [" ".join(tags), ]
 
     def clean_title(self):
         """Clean `title` Field."""
@@ -162,33 +144,6 @@ class CreateEditOrganizationForm(forms.ModelForm):
 
     def clean(self):
         """Clean."""
-        # ---------------------------------------------------------------------
-        # --- Validate `alt_person` Fields.
-        # if self.cleaned_data["contact"] == "me":
-        #     self.cleaned_data["is_alt_person"] = False
-        # else:
-        #     self.cleaned_data["is_alt_person"] = True
-
-        #     if not self.cleaned_data["alt_person_fullname"]:
-        #         self._errors["alt_person_fullname"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_fullname"]
-
-        #     if not self.cleaned_data["alt_person_email"]:
-        #         self._errors["alt_person_email"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_email"]
-
-        #     if (
-        #             "alt_person_phone" in self.cleaned_data and
-        #             not self.cleaned_data["alt_person_phone"]):
-        #         self._errors["alt_person_phone"] = self.error_class(
-        #             [_("This Field is required.")])
-
-        #         del self.cleaned_data["alt_person_phone"]
-
         return self.cleaned_data
 
     def save(self, commit=True):

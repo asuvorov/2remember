@@ -5,8 +5,8 @@
 {% get_current_language as LANGUAGE_CODE %}
 
 {% cache 3600 footer LANGUAGE_CODE %}
-<div class="container">
-    <footer class="py-5">
+<footer>
+    <div class="container py-5">
         <div class="row">
             <div class="col-6 col-md-2 mb-3">
                 <h5>{% trans "Terms &amp; Conditions" %}</h5>
@@ -51,7 +51,7 @@
         <div class="d-flex flex-column flex-sm-row justify-content-between py-4 my-4 border-top">
             <!-- <p class="float-end"><a href="#">Back to Top</a></p> -->
             <p>
-                Copyright &copy; 2017–2024 &middot; 2Remember &middot; {{ product_version_num|safe }}<br/>
+                Copyright &copy; 2017–2025 &middot; 2Remember &middot; {{ product_version_num|safe }}<br/>
                 <a href="/humans.txt"><img alt="humans.txt" src="{% static 'img/humans-txt-logo.png' %}" width="150" alt="2Remember Platform." /></a>
             </p>
             <ul class="list-unstyled d-flex">
@@ -72,8 +72,9 @@
                 <li class="mx-3"><img src="{{ STATIC_URL }}img/engine-logos/uwsgi.png" height="20" alt="uwsgi" /></li>
                 <li class="mx-3"><img src="{{ STATIC_URL }}img/engine-logos/django.png" height="20" alt="django" /></li>
                 <li class="mx-3"><img src="{{ STATIC_URL }}img/engine-logos/drf.png" height="20" alt="django-rest-framework" /></li>
+                <li class="mx-3"><img src="{{ STATIC_URL }}img/engine-logos/sentry.png" height="20" alt="sentry" /></li>
             </ul>
         </div>
-    </footer>
-</div>
+    </div>
+</footer>
 {% endcache %}

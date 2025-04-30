@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -97,6 +97,7 @@ class UserPrivacyGeneral(BaseModel):
     objects = UserPrivacyGeneralManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("user privacy (general)")
         verbose_name_plural = _("user privacy (general)")
         ordering = [
@@ -129,7 +130,7 @@ class UserPrivacyGeneral(BaseModel):
 
 # =============================================================================
 # ===
-# === USER PRIVACY Members MODEL
+# === USER PRIVACY MEMBERS MODEL
 # ===
 # =============================================================================
 
@@ -233,6 +234,7 @@ class UserPrivacyMembers(BaseModel):
     objects = UserPrivacyMembersManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("user privacy (members)")
         verbose_name_plural = _("user privacy (members)")
         ordering = [
@@ -369,6 +371,7 @@ class UserPrivacyAdmins(BaseModel):
     objects = UserPrivacyAdminsManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("user privacy (admins)")
         verbose_name_plural = _("user privacy (admins)")
         ordering = [

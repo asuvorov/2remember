@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "blog/post-base.html" %}
 
 {% load i18n %}
 {% load static %}
@@ -15,11 +15,12 @@
 
 {% block title %}{% trans "Edit Post" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -27,12 +28,14 @@
         <ol class="breadcrumb p-3 bg-body-tertiary">
             <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
             <li class="breadcrumb-item"><a href="{% url 'post-list' %}">{% trans "Blog" %}</a></li>
-            <li class="breadcrumb-item active" aria-current="page">{{ post.title }}</li>
+            <li class="breadcrumb-item"><a href="{% url 'post-details' post.slug %}">{{ post.title }}</a></li>
             <li class="breadcrumb-item active" aria-current="page">{% trans "Edit" %}</li>
         </ol>
     </nav>
 </a>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="post-edit" class="bg-body-tertiary p-3">
@@ -96,9 +99,9 @@
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
@@ -115,11 +118,6 @@
                 <!-- START POST CONTENT -->
                 <section id="post-content">
                     <h3>{% trans "Content" %}</h3>
-                    <div class="form-check text-start my-1">
-                        {{ form.allow_comments }}
-                        {{ form.allow_comments.label }}
-                    </div>
-
                     <div class="row g-3">
                         <div class="form-floating col-12 {% if form.content.errors %}has-error{% endif %}">
                             {{ form.content }}
@@ -173,8 +171,4 @@
         return true;
     })
 </script>
-{% endblock %}
-
-{% block extra_content %}
-    {% include "app/fragments/instance-images-script.html" with instance=post %}
 {% endblock %}

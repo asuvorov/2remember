@@ -13,8 +13,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
 from django.core.paginator import (
     EmptyPage,
     PageNotAnInteger,
@@ -29,8 +27,7 @@ from django.shortcuts import (
 from django.urls import reverse
 from django.utils.translation import gettext as _
 
-from annoying.functions import get_object_or_None
-from termcolor import colored, cprint
+from termcolor import cprint
 from url_tools.helper import UrlHelper
 
 from ddcore.Utilities import (
@@ -43,28 +40,28 @@ from ddcore.models.Attachment import (
     AttachedImage,
     AttachedUrl,
     AttachedVideoUrl)
-from ddcore.models.SocialLink import SocialLink
+# from ddcore.models.SocialLink import SocialLink
 
 # pylint: disable=import-error
 from accounts.utils import (
     is_event_admin,
     is_profile_complete)
+from app import attachment_processors
 from app.decorators import log_default
 from app.forms import (
     AddressForm,
     SocialLinkFormSet)
 
-from .decorators import event_access_check_required
+from .decorators import (
+    event_create_access_check_required,
+    event_edit_access_check_required,
+    event_view_access_check_required)
 from .forms import (
     CreateEditEventForm,
     FilterEventForm)
 from .models import (
     Category,
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus,
-    )
+    Event)
 from .utils import get_event_list
 
 
@@ -88,7 +85,7 @@ def event_list(request):
     #     status=EventStatus.UPCOMING,
     #     start_date__gte=datetime.date.today(),
     #
-    events, page_total, page_number = get_event_list(request)
+    events, dateless, page_total, page_number = get_event_list(request)
 
     # -------------------------------------------------------------------------
     # --- Events near.
@@ -151,6 +148,7 @@ def event_list(request):
     return render(
         request, "events/event-list.html", {
             "events":       events,
+            "dateless":     dateless,
             "page_title":   _("All Events"),
             "page_total":   page_total,
             "page_number":  page_number,
@@ -182,8 +180,9 @@ def event_category_list(request):
 # === EVENT CREATE
 # ===
 # =============================================================================
-@login_required
+@event_create_access_check_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_create(request):
     """Create the Event."""
@@ -196,21 +195,19 @@ def event_create(request):
     # -------------------------------------------------------------------------
     # --- Retrieve the Data from the GET Request.
     # -------------------------------------------------------------------------
-    organization_ids = map(int, query_dict.get("organization", []))
-
-    tz_name = request.session.get("django_timezone")
+    organization_uids = list(map(str, query_dict.get("organization", [])))
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
-        organization_ids=organization_ids,
-        # tz_name=tz_name
-        )
+        organization_uids=organization_uids)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         required=False,
         # required=not request.POST.get("addressless", False),
         country_code=request.geo_data["country_code"])
@@ -282,28 +279,31 @@ def event_create(request):
 # === EVENT DETAILS
 # ===
 # =============================================================================
-# @event_access_check_required
+@event_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def event_details(request, slug):
+def event_details(request, slug, event=None):
     """Event Details."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
     is_admin = False
-    is_rated = False
-    is_complained = False
+    is_newly_created = False
+
     participation = None
-    show_withdraw_form = False
-    show_signup_form = False
-    show_selfreflection_form = False
-    show_not_participated_form = False
+
     show_rate_form = False
     show_complain_form = False
 
     # -------------------------------------------------------------------------
-    # --- Retrieve the Event.
+    # --- Lookup for submitted Forms.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(Event, slug=slug)
+    if request.method == "POST":
+        # ---------------------------------------------------------------------
+        # --- Silent Refresh.
+        return HttpResponseRedirect(
+            reverse("event-details", kwargs={
+                "slug":     event.slug,
+            }))
 
     # -------------------------------------------------------------------------
     # --- Retrieve the Event Social Links.
@@ -315,23 +315,20 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may sign up to the Event.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
+    if (
+            request.user.is_authenticated and
+            request.user != event.author):
         # ---------------------------------------------------------------------
         # --- Check, if the User is a Event Admin.
-        is_admin = is_event_admin(
-            request.user,
-            event)
-
-        # if event.is_closed and not is_admin:
-        #     raise Http404
+        is_admin = is_event_admin(request.user, event)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already rated the Event.
-        is_rated = event.is_rated_by_user(request.user)
+        show_rate_form = not event.is_rated_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Event.
-        is_complained = False  # FIXME event.is_complained_by_user(request.user)
+        show_complain_form = not event.is_complained_by_user(request.user)
 
         # ---------------------------------------------------------------------
         # --- Retrieve User's Participation to the Event.
@@ -380,41 +377,20 @@ def event_details(request, slug):
         #     # --- If the Participation isn't found, return sign-up Form.
         #     if not is_admin:
         #         show_signup_form = True
-
-        # ---------------------------------------------------------------------
-        # --- Lookup for submitted Forms.
-        if request.method == "POST":
-            # -----------------------------------------------------------------
-            # --- Silent Refresh.
-            return HttpResponseRedirect(
-                reverse("event-details", kwargs={
-                    "slug":     event.slug,
-                }))
     else:
-        # ---------------------------------------------------------------------
-        # --- NOT authenticated Users are not allowed to view the Event
-        #     Details Page, if the Event is:
-        #     - Draft;
-        #     - Complete;
-        #     - Past due.
         pass
-        # if event.is_draft or event.is_happened or event.is_closed:
-        #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    # is_newly_created = False
+    if (
+            event.author == request.user and
+            event.is_newly_created):
+        is_newly_created = True
 
-    # if (
-    #         event.author == request.user and
-    #         event.status == EventStatus.UPCOMING and
-    #         event.is_newly_created):
-    #     is_newly_created = True
-
-    #     event.is_newly_created = False
-    #     event.save(request=request)
+        event.is_newly_created = False
+        event.save(request=request)
 
     # -------------------------------------------------------------------------
     # --- Increment Views Counter.
@@ -426,17 +402,13 @@ def event_details(request, slug):
     # -------------------------------------------------------------------------
     return render(
         request, "events/event-details-info.html", {
-            "event":                        event,
-            "meta":                         event.as_meta(request),
-            "participation":                participation,
-            "is_admin":                     is_admin,
-            "show_withdraw_form":           show_withdraw_form,
-            "show_signup_form":             show_signup_form,
-            "show_selfreflection_form":     show_selfreflection_form,
-            "show_not_participated_form":   show_not_participated_form,
-            "show_rate_form":               show_rate_form,
-            "show_complain_form":           show_complain_form,
-            # "is_newly_created":             is_newly_created,
+            "event":                event,
+            "meta":                 event.as_meta(request),
+            "participation":        participation,
+            "is_admin":             is_admin,
+            "show_rate_form":       show_rate_form,
+            "show_complain_form":   show_complain_form,
+            "is_newly_created":     is_newly_created,
             # "social_links":                 social_links,
         })
 
@@ -446,40 +418,34 @@ def event_details(request, slug):
 # === EVENT EDIT
 # ===
 # =============================================================================
+@event_edit_access_check_required
 @login_required
 @log_default(my_logger=logger, cls_or_self=False)
-def event_edit(request, slug):
+def event_edit(request, slug, event=None):
     """Edit Event."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    event = get_object_or_404(Event, slug=slug)
-    if not event.is_author(request):
-        raise PermissionDenied
-
-    # -------------------------------------------------------------------------
-    # --- Completed or closed (deleted) Events cannot be modified.
-    # -------------------------------------------------------------------------
-    # if (
-    #         event.is_complete or
-    #         event.is_closed):
-    #     raise Http404
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
     # -------------------------------------------------------------------------
     form = CreateEditEventForm(
-        request.POST or None, request.FILES or None,
+        request.POST or None,
+        request.FILES or None,
         user=request.user,
         instance=event)
     aform = AddressForm(
-        request.POST or None, request.FILES or None,
-        required=not request.POST.get("addressless", False),
+        request.POST or None,
+        request.FILES or None,
+        required=False,
+        # required=not request.POST.get("addressless", False),
         instance=event.address)
 
     # formset_social = SocialLinkFormSet(
-    #     request.POST or None, request.FILES or None,
-    #     prefix="socials",
+    #     request.POST or None,
+    #     request.FILES or None,
+    #     # prefix="socials",
     #     queryset=SocialLink.objects.filter(
     #         content_type=ContentType.objects.get_for_model(event),
     #         object_id=event.id))
@@ -491,7 +457,7 @@ def event_edit(request, slug):
 
         if (
                 form.is_valid() and
-                aform.is_valid()):
+                aform.is_valid()):  # and
                 # formset_social.is_valid()):
             form.save()
             form.save_m2m()
@@ -501,56 +467,22 @@ def event_edit(request, slug):
 
             # -----------------------------------------------------------------
             # --- Save Social Links.
+            # SocialLink.objects.filter(
+            #     content_type=ContentType.objects.get_for_model(event),
+            #     object_id=event.id
+            #     ).delete()
             # social_links = formset_social.save(commit=True)
             # for social_link in social_links:
             #     social_link.content_type = ContentType.objects.get_for_model(event)
             #     social_link.object_id = event.id
             #     social_link.save()
 
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Event Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1]
-
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
-
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(event),
-                        object_id=event.id)
+            attachment_processors.process(
+                request=request,
+                content_type=ContentType.objects.get_for_model(event),
+                object_id=event.id,
+                tmp_files=form.cleaned_data["tmp_files"],
+                tmp_links=request.POST["tmp_links"])
 
             # -----------------------------------------------------------------
             # --- Send Email Notification(s).

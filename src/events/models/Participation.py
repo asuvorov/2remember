@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -10,20 +10,9 @@ from django.utils.translation import gettext_lazy as _
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
-from ddcore.models import (
-    Address,
-    AttachmentMixin,
-    BaseModel,
-    CommentMixin,
-    ComplaintMixin,
-    RatingMixin,
-    TitleSlugDescriptionBaseModel,
-    ViewMixin)
+from ddcore.models import BaseModel
 
-from .Event import (
-    Event,
-    # EventStatus
-    )
+from .Event import Event
 from .Role import Role
 
 
@@ -77,30 +66,24 @@ class ParticipationManager(models.Manager):
 
     def confirmed(self):
         """Return all confirmed Participations."""
-        return self.filter(
-            status__in=[
-                ParticipationStatus.CONFIRMED,
-                ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                ParticipationStatus.ACKNOWLEDGED,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
-            ]
-        )
+        return self.filter(status__in=[
+            ParticipationStatus.CONFIRMED,
+            ParticipationStatus.WAITING_FOR_SELFREFLECTION,
+            ParticipationStatus.ACKNOWLEDGED,
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
+        ])
 
     def waiting_for_confirmation(self):
         """Return all waiting for Confirmation Participations."""
-        return self.filter(
-            status__in=[
-                ParticipationStatus.WAITING_FOR_CONFIRMATION
-            ]
-        )
+        return self.filter(status__in=[
+            ParticipationStatus.WAITING_FOR_CONFIRMATION,
+        ])
 
     def waiting_for_acknowledgement(self):
         """Return all waiting for Acknowledgment Participations."""
-        return self.filter(
-            status__in=[
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT
-            ]
-        )
+        return self.filter(status__in=[
+            ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
+        ])
 
 
 # -----------------------------------------------------------------------------
@@ -111,7 +94,8 @@ class Participation(BaseModel):
     """Participation Model."""
 
     # -------------------------------------------------------------------------
-    # --- Related Objects
+    # --- Related Objects.
+    # -------------------------------------------------------------------------
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -129,14 +113,15 @@ class Participation(BaseModel):
     role = models.ForeignKey(
         Role,
         db_index=True,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
-        on_delete=models.CASCADE,
         related_name="role_participations",
         verbose_name=_("Role"),
         help_text=_("Role, if applicable"))
 
     # -------------------------------------------------------------------------
-    # --- Status
+    # --- Status.
+    # -------------------------------------------------------------------------
     status = models.CharField(
         max_length=2,
         choices=participation_status_choices,
@@ -145,7 +130,8 @@ class Participation(BaseModel):
         help_text=_("Participation Status"))
 
     # -------------------------------------------------------------------------
-    # --- Significant Texts
+    # --- Significant Texts.
+    # -------------------------------------------------------------------------
     application_text = models.TextField(
         null=True, blank=True,
         verbose_name=_("Application Text"),
@@ -172,7 +158,8 @@ class Participation(BaseModel):
         help_text=_("Acknowledgement Text"))
 
     # -------------------------------------------------------------------------
-    # --- Significant Dates
+    # --- Significant Dates.
+    # -------------------------------------------------------------------------
     date_created = models.DateField(
         db_index=True,
         auto_now_add=True,
@@ -207,6 +194,7 @@ class Participation(BaseModel):
     objects = ParticipationManager()
 
     class Meta:
+        app_label = "events"
         verbose_name = _("participation")
         verbose_name_plural = _("participations")
         ordering = ["-date_created", ]
@@ -632,73 +620,10 @@ class Participation(BaseModel):
     def post_delete(self, **kwargs):
         """Docstring."""
 
+
 # -----------------------------------------------------------------------------
 # --- Participation Model Mixin.
 # -----------------------------------------------------------------------------
 @autoconnect
 class ParticipationMixin:
     """Participation Mixin Class."""
-
-    # -------------------------------------------------------------------------
-    # --- Participations
-    @property
-    def get_upcoming_participations(self):
-        """Return List of upcoming Participations."""
-        upcoming_participations = Participation.objects.filter(
-            user=self.user,
-            event__status=EventStatus.UPCOMING,
-            status__in=[
-                ParticipationStatus.CONFIRMED,
-                ParticipationStatus.WAITING_FOR_CONFIRMATION,
-            ]
-        )
-
-        return upcoming_participations
-
-    @property
-    def get_completed_participations(self):
-        """Return List of completed Participations."""
-        completed_participations = Participation.objects.filter(
-            user=self.user,
-            event__status=EventStatus.COMPLETE,
-            status__in=[
-                ParticipationStatus.WAITING_FOR_SELFREFLECTION,
-                ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                ParticipationStatus.ACKNOWLEDGED,
-            ]
-        )
-
-        return completed_participations
-
-    @property
-    def get_cancelled_participations(self):
-        """Return List of canceled Participations."""
-        cancelled_participations = Participation.objects.filter(
-            user=self.user,
-            event__status__in=[
-                EventStatus.UPCOMING,
-                EventStatus.COMPLETE,
-            ],
-            status__in=[
-                ParticipationStatus.CANCELLED_BY_USER,
-            ]
-        )
-
-        return cancelled_participations
-
-    @property
-    def get_rejected_participations(self):
-        """Return List of rejected Participation."""
-        rejected_participations = Participation.objects.filter(
-            user=self.user,
-            event__status__in=[
-                EventStatus.UPCOMING,
-                EventStatus.COMPLETE,
-            ],
-            status__in=[
-                ParticipationStatus.CONFIRMATION_DENIED,
-                ParticipationStatus.CANCELLED_BY_ADMIN,
-            ]
-        )
-
-        return rejected_participations

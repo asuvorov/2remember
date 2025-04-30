@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -8,7 +8,6 @@ import uuid
 
 from django.conf import settings
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models
@@ -23,13 +22,14 @@ from meta.models import ModelMeta
 # from phonenumber_field.modelfields import PhoneNumberField
 from taggit.managers import TaggableManager
 from termcolor import cprint
-from timezone_field import TimeZoneField
 
 from ddcore import enum
 from ddcore.Decorators import autoconnect
 from ddcore.SendgridUtil import send_templated_email
 from ddcore.models import (
     Address,
+    AttachedDocument,
+    AttachedImage,
     AttachmentMixin,
     CommentMixin,
     ComplaintMixin,
@@ -39,8 +39,17 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from app import (
+    DAY_AGO,
+    WEEK_AGO,
+    MONTH_AGO,
+    YEAR_AGO)
+from app.models import (
+    Visibility,
+    visibility_choices)
 from invites.models import Invite
 from organizations.models import Organization
+from privateurl.models import PrivateUrl
 
 from .Category import (
     event_category_choices,
@@ -57,13 +66,6 @@ from .Category import (
 # -----------------------------------------------------------------------------
 # --- Event Model Choices.
 # -----------------------------------------------------------------------------
-Visibility = enum(
-    PUBLIC="0",
-    PRIVATE="1")
-visibility_choices = [
-    (Visibility.PUBLIC,     _("Public")),
-    (Visibility.PRIVATE,    _("Private")),
-]
 
 
 # -----------------------------------------------------------------------------
@@ -98,6 +100,7 @@ def event_cover_directory_path(instance, filename):
     return f"events/{instance.id}/covers/{fname}"
 
 
+@autoconnect
 class Event(
         ModelMeta, TitleSlugDescriptionBaseModel,
         AttachmentMixin, CommentMixin, ComplaintMixin, RatingMixin, ViewMixin):
@@ -105,42 +108,47 @@ class Event(
 
     Attributes
     ----------
-    uid                     : str       UUID.
+    uid                     : str       Event UUID.
 
     author                  : obj       Event Author.
     preview                 : obj       Event Preview Image.
     preview_thumbnail       : obj       Event Preview Image Thumbnail.
     cover                   : obj       Event Cover Image.
 
-    title                   : str       Title Field.
-    slug                    : str       Slug Field, populated from Title Field.
-    description             : str       Description Field.
+    title                   : str       Event Title.
+    slug                    : str       Event Slug, populated from Title Field.
+    description             : str       Event Description.
 
-    tags
-    hashtag
-    category
-    visibility
-    private_url             : str       Private URL.
+    tags                    : obj       Event Tags List.
+    hashtag                 : str       Event Hashtag.
+    category                : str       Event Category.
+    visibility              : str       Event Visibility.
+    private_url             : str       Event Private URL.
 
     addressless             : bool      Is addressless?
-    address                 : obj       Profile Address.
+    address                 : obj       Event Address.
 
     start_date              : datetime  Event Date.
+
+    followers               : obj       Event Followers.
+    subscribers             : obj       Event Subscribers.
+    organization            : obj       Event Organization.
+
     custom_data             : dict      Custom Data JSON Field.
 
-    followers
-    subscribers
-    organization
-
     allow_comments          : bool      Allow Comments?
-    is_hidden               : bool      Is hidden?
     is_newly_created        : bool      Is newly created?
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
 
     created_by              : obj       User, created  the Object.
     modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
 
     created                 : datetime  Timestamp the Object has been created.
     modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
 
     Methods
     -------
@@ -193,7 +201,7 @@ class Event(
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
-        help_text=_("A comma-separated List of Tags."))
+        help_text=_("A Comma-separated List of Tags.<br/>If you plan to add only one Tag, that consists of multiple Words, it is recommended to wrap the Tag in Quotes, e.g. \"<b><i>This is multi-word Tag\"</i></b>."))
     hashtag = models.CharField(
         db_index=True,
         max_length=80, null=True, blank=True,
@@ -210,8 +218,11 @@ class Event(
         choices=visibility_choices, default=Visibility.PUBLIC,
         verbose_name=_("Visibility"),
         help_text=_("Event Visibility"))
-    private_url = models.URLField(
-        max_length=255, null=True, blank=True,
+    private_url = models.ForeignKey(
+        PrivateUrl,
+        db_index=True,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         verbose_name=_("Private URL"),
         help_text=_("Event private URL"))
 
@@ -225,7 +236,7 @@ class Event(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("Event Location"))
@@ -238,23 +249,10 @@ class Event(
         null=True, blank=True,
         verbose_name=_("Date"),
         help_text=_("Event Date"))
-    # start_time = models.TimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Time"),
-    #     help_text=_("Event Start Time"))
-    # start_tz = TimeZoneField(
-    #     default=settings.TIME_ZONE,
-    #     verbose_name=_("Timezone"),
-    #     help_text=_("Event Timezone"))
-    # start_date_time_tz = models.DateTimeField(
-    #     db_index=True,
-    #     null=True, blank=True,
-    #     verbose_name=_("Start Date/Time with TZ"),
-    #     help_text=_("Event Start Date/Time with TZ"))
 
     # -------------------------------------------------------------------------
-    # --- Followers.
+    # --- Followers & Subscribers.
+    # -------------------------------------------------------------------------
     followers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -262,9 +260,6 @@ class Event(
         related_name="event_followers",
         verbose_name=_("Followers"),
         help_text=_("Event Followers"))
-
-    # -------------------------------------------------------------------------
-    # --- Subscribers.
     subscribers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -274,30 +269,13 @@ class Event(
         help_text=_("Event Subscribers"))
 
     # -------------------------------------------------------------------------
-    # --- Contact Person. Author by default.
-    # -------------------------------------------------------------------------
-    # is_alt_person = models.BooleanField(default=False)
-    # alt_person_fullname = models.CharField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Full Name"),
-    #     help_text=_("Event Contact Person full Name"))
-    # alt_person_email = models.EmailField(
-    #     max_length=80, null=True, blank=True,
-    #     verbose_name=_("Email"),
-    #     help_text=_("Event Contact Person Email"))
-    # alt_person_phone = PhoneNumberField(
-    #     null=True, blank=True,
-    #     verbose_name=_("Phone Number"),
-    #     help_text=_("Please, use the International Format, e.g. +1-202-555-0114."))
-
-    # -------------------------------------------------------------------------
     # --- Related Organization.
     # -------------------------------------------------------------------------
     organization = models.ForeignKey(
         Organization,
         null=True, blank=True,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         verbose_name=_("Organization"),
         help_text=_("Event Organization"))
 
@@ -308,13 +286,12 @@ class Event(
         default=True,
         verbose_name=_("I would like to allow Comments"),
         help_text=_("I would like to allow Comments"))
-
-    is_hidden = models.BooleanField(default=False)
     is_newly_created = models.BooleanField(default=True)
 
     class Meta:
         """Meta."""
 
+        app_label = "events"
         verbose_name = _("event")
         verbose_name_plural = _("events")
         ordering = ["-created", ]
@@ -421,32 +398,47 @@ class Event(
     # --- Methods.
     # -------------------------------------------------------------------------
     def save(self, *args, **kwargs):
-        """Docstring."""
+        """Save."""
         super().save(*args, **kwargs)
 
     def public_url(self, request=None):
-        """Docstring."""
-        if request:
-            domain_name = request.get_host()
-        else:
-            domain_name = settings.DOMAIN_NAME
-
+        """Generate and return the public URL."""
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
         url = reverse(
             "event-details", kwargs={
                 "slug":     self.slug,
             })
-        event_link = f"http://{domain_name}{url}"
 
-        return event_link
+        return f"http://{domain_name}{url}"
+
+    def get_private_url(self, request=None):
+        """Generate and return the private URL."""
+        if not self.private_url:
+            private_url = PrivateUrl.create(
+                action="access-private-event",
+                user=None,
+                data={
+                    "uid":      self.uid,
+                    "slug":     self.slug,
+                },
+                hits_limit=0,  # Unlimited Hits.
+                expire=None,
+                auto_delete=True,
+                token_size=None,
+                replace=True)
+            self.private_url = private_url
+            self.save()
+
+        domain_name = request.get_host() if request else settings.DOMAIN_NAME
+
+        return f"http://{domain_name}{self.private_url.get_absolute_url()}"
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""
-        url = reverse(
+        return reverse(
             "event-details", kwargs={
                 "slug":     self.slug,
             })
-
-        return url
 
     def is_author(self, request):
         """Docstring."""
@@ -476,7 +468,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_draft.txt",
                 "context":  {
-                    "user":             self.author,
+                    "user":         self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -519,7 +511,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_created.txt",
                 "context":  {
-                    "user":             self.author,
+                    "user":         self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -663,7 +655,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_modified_adm.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -709,7 +701,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_modified_alt.txt",
                 "context":  {
-                    "user":             self.alt_person_fullname,
+                    "user":         self.alt_person_fullname,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -753,7 +745,7 @@ class Event(
             template_text={
                 "name":     "events/emails/event_complete.txt",
                 "context":  {
-                    "admin":            self.author,
+                    "admin":        self.author,
                     "event":        self,
                     "event_link":   self.public_url(request),
                 },
@@ -878,31 +870,27 @@ class Event(
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google
-        try:
-            ping_google()
-        except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
-        # --- The Path for uploading Preview Images is:
+        # --- The Path for uploading Cover/Preview Images is:
         #
+        #            MEDIA_ROOT/events/<id>/covers/<filename>
         #            MEDIA_ROOT/events/<id>/previews/<filename>
         #
         # --- As long as the uploading Path is being generated before
         #     the Event Instance gets assigned with the unique ID,
         #     the uploading Path for the brand new Event looks like:
         #
+        #            MEDIA_ROOT/events/None/covers/<filename>
         #            MEDIA_ROOT/events/None/previews/<filename>
         #
         # --- To fix this:
-        #     1. Open the Preview File in the Path;
-        #     2. Assign the Preview File Content to the Event Preview Object;
-        #     3. Save the Event Instance. Now the Preview Image in the
+        #     1. Open the Cover/Preview File in the Path;
+        #     2. Assign the Cover/Preview File Content to the Event Cover/Preview Object;
+        #     3. Save the Event Instance. Now the Cover/Preview Image in the
         #        correct Path;
-        #     4. Delete previous Preview File;
+        #     4. Delete previous Cover/Preview File;
         #
         try:
             if created:
@@ -913,6 +901,14 @@ class Event(
 
                 storage.delete(preview.file.name)
 
+        except Exception as exc:
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
+
+        try:
+            if created:
                 # -------------------------------------------------------------
                 cover = File(storage.open(self.cover.file.name, "rb"))
 
@@ -922,22 +918,25 @@ class Event(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
     def pre_delete(self, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Remove related Invites, if any.
+        # --- Remove related Objects, if any.
         try:
-            content_type = ContentType.objects.get_for_model(self)
-
-            related_invites = Invite.objects.filter(
-                content_type=content_type,
-                object_id=self.id)
-
-            related_invites.delete()
+            Invite.objects.filter(
+                content_type=ContentType.objects.get_for_model(self),
+                object_id=self.id).delete()
+            AttachedImage.objects.filter(
+                content_type=ContentType.objects.get_for_model(self),
+                object_id=self.id).delete()
+            AttachedDocument.objects.filter(
+                content_type=ContentType.objects.get_for_model(self),
+                object_id=self.id).delete()
 
         except Exception as exc:
             cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
@@ -966,58 +965,60 @@ class EventMixin:
 
         return admin_events
 
-    @property
-    def get_admin_events_action_required(self):
-        """Return List of the Events which require Action."""
-        from .Participation import (
-            Participation,
-            ParticipationStatus)
+    def check_event_create_eligibilty(self):
+        """Check, if User is eligible to create an Event."""
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+        eligible = True
+        details = []
 
-        admin_events = self.get_admin_events().order_by("start_date")
+        subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
+        max_events = subscription_plan["events"]
 
-        admin_events_action_required = admin_events.filter(
-            Q(
-                pk__in=Participation.objects.filter(
-                    status__in=[
-                        ParticipationStatus.WAITING_FOR_CONFIRMATION,
-                        ParticipationStatus.WAITING_FOR_ACKNOWLEDGEMENT,
-                    ]
-                ).values_list(
-                    "event_id", flat=True
-                )
-            ) |
-            Q(
-                start_date__lt=datetime.date.today(),
-                status=EventStatus.UPCOMING,
-            )
-        )
+        # ---------------------------------------------------------------------
+        # --- Perform Checks.
+        # ---------------------------------------------------------------------
+        events = Event.objects.all()
 
-        return admin_events_action_required
+        if max_events["max_per_day"]:
+            count = events.filter(created__gte=DAY_AGO).count()
+            if count >= max_events["max_per_day"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Events per Day.").format(
+                    max_events["max_per_day"])))
+            else:
+                details.append((True, _("You used {} of {} Events per Day.").format(
+                    count, max_events["max_per_day"])))
 
-    @property
-    def get_admin_events_upcoming(self):
-        """Return List of upcoming Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
+        if max_events["max_per_week"]:
+            count = events.filter(created__gte=WEEK_AGO).count()
+            if count >= max_events["max_per_week"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Events per Week.").format(
+                    max_events["max_per_week"])))
+            else:
+                details.append((True, _("You used {} of {} Events per Week.").format(
+                    count, max_events["max_per_week"])))
 
-        admin_events_upcoming = admin_events.filter(
-            Q(start_date__gte=datetime.date.today()) |
-            Q(recurrence=Recurrence.DATELESS),
-            status=EventStatus.UPCOMING)
+        if max_events["max_per_month"]:
+            count = events.filter(created__gte=MONTH_AGO).count()
+            if count >= max_events["max_per_month"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Events per Month.").format(
+                    max_events["max_per_month"])))
+            else:
+                details.append((True, _("You used {} of {} Events per Month.").format(
+                    count, max_events["max_per_month"])))
 
-        return admin_events_upcoming
+        if max_events["max_per_year"]:
+            count = events.filter(created__gte=YEAR_AGO).count()
+            if count >= max_events["max_per_year"]:
+                eligible = False
+                details.append((False, _("You reached the maximum of {} Events per Year.").format(
+                    max_events["max_per_year"])))
+            else:
+                details.append((True, _("You used {} of {} Events per Year.").format(
+                    count, max_events["max_per_year"])))
 
-    @property
-    def get_admin_events_completed(self):
-        """Return List of completed Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
-        admin_events_completed = admin_events.filter(status=EventStatus.COMPLETE)
-
-        return admin_events_completed
-
-    @property
-    def get_admin_events_draft(self):
-        """Return List of draft Events."""
-        admin_events = self.get_admin_events().order_by("start_date")
-        admin_events_draft = admin_events.filter(status=EventStatus.DRAFT)
-
-        return admin_events_draft
+        return (eligible, details)

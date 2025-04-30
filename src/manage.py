@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 #!/usr/bin/env python
@@ -8,7 +8,15 @@ import sys
 
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
+    try:
+        command = sys.argv[1]
+    except IndexError:
+        command = "help"
+
+    if command == "test":
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.testing")
+    else:
+        os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.local")
 
     from djangobower.management.base import BaseBowerCommand
     BaseBowerCommand.requires_system_checks = []

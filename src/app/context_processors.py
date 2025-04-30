@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -15,6 +15,8 @@ def pb_settings(request):
     return {
         "product_version_num":  settings.PRODUCT_VERSION_NUM,
         "ENVIRONMENT":          settings.ENVIRONMENT,
+        "EMAIL_SENDER":         settings.EMAIL_SENDER,
+        "EMAIL_SUPPORT":        settings.EMAIL_SUPPORT,
     }
 
 
@@ -48,4 +50,8 @@ def pb_supported_media(request):
         "images_str":           settings.SUPPORTED_IMAGES_STR,
         "images_str_ext":       settings.SUPPORTED_IMAGES_STR_EXT,
         "images_str_reg":       settings.SUPPORTED_IMAGES_STR_REG,
+        "video":                settings.SUPPORTED_VIDEO,
+        "video_str":            settings.SUPPORTED_VIDEO_STR,
+        "video_str_ext":        settings.SUPPORTED_VIDEO_STR_EXT,
+        "video_str_reg":        settings.SUPPORTED_VIDEO_STR_REG,
     }

@@ -1,5 +1,28 @@
 # X.Y.Z (YYYY-MM-DD)
 
+### New
+
+- Added a `collection` App for creating the Collections of Events.
+- Added `parent` Organization Field to the Organization Model.
+- Added sending Email to the Team from the "Contact Us" Page.
+- Added the Features Feature for toggling the new testable Features.
+- Added a View for the dateless Events.
+- Verify uploaded File Size on the Go.
+
+### Changes
+
+- Add the Reference to the User, created/modified the Attachment Object.
+- Improved `blog` App.
+- Upload Images and Documents Modals now are bigger and scrollable.
+
+### Fix
+
+- Access to the Event editing.
+- Calendar Datepicker Appearance.
+- Design Flaws for the hidden/visible Elements, depending on the Media (Screen Size).
+- Organization Details Page, which didn't show the associated Events.
+- Upload Images and Documents Modals now showing a correct Progress in the Progress Bar.
+
 # 0.4.0 (2024-08-10)
 
 ### New

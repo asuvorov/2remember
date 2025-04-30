@@ -1,0 +1,25 @@
+"""
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
+"""
+
+import django_filters
+
+from .models import Collection
+
+
+class CollectionFilter(django_filters.FilterSet):
+    """Collection Filter."""
+    title = django_filters.CharFilter(lookup_expr="icontains")
+    year = django_filters.NumberFilter(
+        name="start_date",
+        lookup_expr="year")
+    month = django_filters.NumberFilter(
+        name="start_date",
+        lookup_expr="month")
+    day = django_filters.NumberFilter(
+        name="start_date",
+        lookup_expr="day")
+
+    class Meta:
+        model = Collection
+        fields = ["title", ]

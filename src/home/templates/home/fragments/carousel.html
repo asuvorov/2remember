@@ -10,10 +10,23 @@
         <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
         <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <button type="button" data-bs-target="#my-carousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
     </div>
 
     <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="5000">
+            <img src="{{ STATIC_URL }}img/cyhdm-322.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
+            <div class="container">
+                <div class="carousel-caption text-start">
+                    <h1>{% trans "RIP, Jora the Pomeranian" %}</h1>
+                    <h3>{% trans "08.27.2013 - 03.18.2025" %}</h3>
+                    <p class="lead">{% trans "I thank my God in all my Remembrance of you" %} <i>({% trans "Philippians 1:3" %})</i></p>
+                    <p><a class="btn btn-lg btn-primary" href="https://2remember.live/collections/in-memoriam/">{% trans "Celebrate the Life" %}</a></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="carousel-item" data-bs-interval="5000">
             <img src="{{ STATIC_URL }}img/DSC02177.jpg" class="d-block w-100" alt="2Remember Platform - Collect and share your Memories Hassle-Free." />
             <div class="container">
                 <div class="carousel-caption text-start">

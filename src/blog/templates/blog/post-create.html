@@ -14,11 +14,12 @@
 
 {% block title %}{% trans "Create Post" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -31,6 +32,8 @@
     </nav>
 </a>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div id="post-create" class="bg-body-tertiary p-3">
@@ -77,9 +80,9 @@
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label for="id_tags" class="form-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
@@ -194,3 +197,5 @@
     });
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

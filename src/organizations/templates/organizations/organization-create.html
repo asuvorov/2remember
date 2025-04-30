@@ -18,11 +18,12 @@
 
 {% block title %}{% trans "Create Organization" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -36,8 +37,26 @@
 </div>
 {% endblock %}
 
+{% block header %}{% endblock %}
+
 {% block content %}
 <div id="organization-create" class="bg-body-tertiary p-3">
+    <div class="row d-block d-sm-block d-md-none">
+        <div class="col-12">
+            <div class="alert alert-info alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            {% blocktrans %}
+                You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:{{ EMAIL_SUPPORT }}">contact Support</a>.
+            {% endblocktrans %}
+            </div>
+
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                {% trans "After creating the Organization, you will be redirected to the Details Page, where you can attach related Images, Documents and Links." %}
+            </div>
+        </div>
+    </div>
+
     <div class="row g-2">
         <div class="col-md-9">
             <form id="create-organization-form" role="form" action="" method="POST" enctype="multipart/form-data">
@@ -80,9 +99,9 @@
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label class="control-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
@@ -105,6 +124,12 @@
                             {{ form.email }}
                             <label class="control-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-12 {% if form.parent.errors %}has-error{% endif %}">
+                            {{ form.parent }}
+                            <label for="id_parent" class="form-label">{{ form.parent.label }}{% if form.parent.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.parent.errors %}{% for error in form.parent.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
                     {% comment %}
@@ -183,12 +208,12 @@
         </div>
 
         <div id="tips" class="col-md-3 right-sidebar">
-            <section>
+            <section id="alerts" class="d-none d-sm-none d-md-block">
                 <h4>{% trans "Tips" %}</h4>
 
                 <div class="alert alert-info">
                 {% blocktrans %}
-                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:support@2remember.live">contact Support</a>.
+                    You can create your Organization here. If you have any questions, don't hesitate to <a href="mailto:{{ EMAIL_SUPPORT }}">contact Support</a>.
                 {% endblocktrans %}
                 </div>
 
@@ -203,6 +228,30 @@
 <!-- Scripts -->
 
 <script>
+    /*************************************************************************/
+    /*** Autocomplete                                                      ***/
+    /*************************************************************************/
+    $(function () {
+        $("#id_parent").autocomplete({
+            source:     "{% url 'autocomplete-organization-list' %}",
+            minLength:  3,
+            delay:      500,
+            select:     function (event, ui) {
+                console.log(">>> ID    :", ui.item.id);
+                console.log(">>> UUID  :", ui.item.uuid);
+                console.log(">>> LABEL :", ui.item.label);
+                console.log(">>> VALUE :", ui.item.value);
+
+                $("#hidden-invitee-id").val(ui.item.uuid);
+            }
+        }).data("ui-autocomplete")._renderItem = function(ul, item) {
+            return $("<li></li>")
+                .data("item.autocomplete", item)
+                .append("<a><img src='" + item.avatar + "' width='30' height='30' /> " + item.label + "<br></a>")
+                .appendTo(ul);
+        };
+    });
+
     /*************************************************************************/
     /*** Form Submitting                                                   ***/
     /*************************************************************************/
@@ -290,3 +339,5 @@
     });
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

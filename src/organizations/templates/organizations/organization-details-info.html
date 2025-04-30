@@ -1,4 +1,4 @@
-{% extends "organizations/organization-details-base.html" %}
+{% extends "organizations/organization-base.html" %}
 
 {% load cache %}
 {% load i18n %}
@@ -8,7 +8,7 @@
     Input Parameters:
         :<request> - Request
 
-        :<organization>
+        :<organization> - Organization
 {% endcomment %}
 
 {% get_current_language as LANGUAGE_CODE %}
@@ -63,10 +63,9 @@
                                     {% endif %}
                                 {% endif %}
 
-                                    <br/>
-
                                     <!-- PHONE NUMBERS -->
                                 {% if phone_numbers %}
+                                    <br/>
                                     {% for phone_number in phone_numbers %}
                                         <i class="{{ phone_number.stat_phone_type_icon }}"></i>{{ phone_number.phone_number }}{% if phone_number.phone_number_ext %} (ext.{{ phone_number.phone_number_ext }}){% endif %}
                                     {% if not forloop.last %}
@@ -83,26 +82,39 @@
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-film"></i>{% if organization.video %}<a href="{{ organization.video }}">{% trans "Video" %}</a>{% else %}<span class="badge text-bg-warning">{% trans "Not provided" %}</span>{% endif %}
 
-                                    <br/>
-
                                 {% if organization.tags.all and organization.hashtag %}
+                                    <br/>
                                     <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                     <span class="vert-delimiter">|</span>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}
                                 {% elif organization.tags.all %}
+                                    <br/>
                                     <i class="bi bi-tags"></i>{% for tag in organization.tags.all %}<a href="?tag={{ tag.id }}">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
                                 {% elif organization.hashtag %}
+                                    <br/>
                                     <i class="bi bi-hash"></i>{{ organization.hashtag }}>
                                 {% endif %}
                                 </p>
 
-                            {% if organization.author.profile.avatar %}
-                                {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
-                            {% else %}
-                                <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
+                            {% if organization.parent %}
+                                <p class="card-text">
+                                {% if organization.parent.preview %}
+                                    {% generateimage "header:thumbnail" source=organization.parent.preview -- alt=organization.parent.title %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.parent.title }}" />
+                                {% endif %}
+                                    <a href="{% url 'organization-details' organization.parent.slug %}">{{ organization.parent.title }}</a>
+                                </p>
                             {% endif %}
-                                <a href="{% url 'profile-view' organization.author_id %}">{{ organization.author.first_name }}</a>
-                                {{ organization.created|timesince }} {% trans "ago" %}
+
+                                <p class="card-text">
+                                {% if organization.author.profile.avatar %}
+                                    {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
+                                {% else %}
+                                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.author.profile.auth_name }}" />
+                                {% endif %}
+                                    <a href="{% url 'profile-view' organization.author.uid %}">{{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -112,9 +124,9 @@
                             <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                                 <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                                     <small class="text-muted">
-                                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
+                                        <i class="bi bi-feather"></i>{{ organization.comments_count }}
                                         <span class="vert-delimiter">|</span>
-                                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}<br/>
+                                        <i class="bi bi-eye"></i>{{ organization.views_count }}<br/>
                                         {% trans "Last updated" %} {{ organization.modified|timesince }} {% trans "ago" %}
                                     </small>
                                 </p>
@@ -124,6 +136,13 @@
                 </div>
             </section>
             <!--  END  ORGANIZATION CARD -->
+
+            <!-- START ORGANIZATION EVENTS -->
+            <section id="organization-events">
+                <h3>{% trans "Events" %}</h3>
+                {% include "organizations/fragments/organization-event-list.html" %}
+            </section>
+            <!--  END  ORGANIZATION EVENTS -->
 
             <!-- START ORGANIZATION ATTACHMENTS -->
             <section id="organization-attachments">
@@ -149,7 +168,11 @@
             <!-- Link to Page -->
             <section>
                 <h4>{% trans "Link to this Page" %}</h4>
-                <input class="link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                <div class="input-group mb-3">
+                    <a id="button-addon1" class="btn btn-primary" type="button" href="#" alt="Copy Link"><i class="bi bi-copy"></i></a>
+                    <a id="button-addon1" class="btn btn-success" type="button" href="#" alt="Share Link"><i class="bi bi-share"></i></a>
+                    <input class="form-control link-to-page" type="text" readonly="readonly" onclick="$(this).select();" value="{{ request.build_absolute_uri }}" />
+                </div>
             </section>
 
             <!-- Social Links -->

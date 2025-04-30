@@ -14,7 +14,7 @@
 
 {% get_current_language as LANGUAGE_CODE %}
 
-{% block title %}{% trans "Create Organization" %} - {{ block.super }}{% endblock %}
+{% block title %}{% trans "Organizations List" %} - {{ block.super }}{% endblock %}
 
 {% block extra_style %}
 {% endblock %}
@@ -38,19 +38,19 @@
     <div class="row g-2">
         <div class="col-md-9">
             <!-- START CONTROLLERS -->
-            <section class="controllers">
-                <a class="btn btn-link" href="{% url 'organization-directory' %}">{% trans "Directory" %}</a>
-            {% if request.user.is_authenticated %}
-                <a class="btn btn-primary" href="{% url 'organization-create' %}"><i class="bi bi-plus-circle"></i> {% trans "Create" %}</a>
-            {% endif %}
+            <section id="organization-list-controllers" class="position-relative">
+                {% include "organizations/fragments/organization-list-controllers.html" %}
             </section>
             <!--  END  CONTROLLERS -->
 
             <!-- START FILTER FORM -->
+            <section id="organization-list-filter-form" class="position-relative">
+                {% include "organizations/fragments/organization-list-filter-form.html" %}
+            </section>
             <!--  END  FILTER FORM -->
 
             <!-- START ORGANIZATIONS -->
-            <section id="event-list-grouper" class="position-relative">
+            <section id="organization-list-grouper" class="position-relative">
                 {% include "organizations/fragments/organization-list.html" %}
             </section>
             <!--  END  ORGANIZATIONS -->

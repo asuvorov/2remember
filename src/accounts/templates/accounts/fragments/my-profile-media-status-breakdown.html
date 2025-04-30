@@ -3,6 +3,11 @@
 {% comment %}
     Input Parameters:
         :<request> - Request
+
+        <create_event_eligible>        - Eligibility to create Event
+        <create_event_details>         - Eligibility to create Event Details
+        <create_organization_eligible> - Eligibility to create Organization
+        <create_organization_details>  - Eligibility to create Organization Details
 {% endcomment %}
 
 <div class="btn-group w-100 mb-2" role="group">
@@ -18,8 +23,31 @@
     </ul>
 </div>
 
+<a class="btn btn-primary w-100 mb-2 {% if not create_event_eligible %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="bi bi-wrench"></i> {% trans "Create Event" %}</a>
+<p>
+{% for details in create_event_details %}
+    {% if details.0 %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %} {{ details.1 }}<br/>
+{% endfor %}
+</p>
+
+<a class="btn btn-primary w-100 mb-2 {% if not create_collection_eligible %}disabled{% endif %}" href="{% url 'collection-create' %}"><i class="bi bi-wrench"></i> {% trans "Create Collection" %}</a>
+<p>
+{% for details in create_collection_details %}
+    {% if details.0 %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %} {{ details.1 }}<br/>
+{% endfor %}
+</p>
+
+<a class="btn btn-primary w-100 {% if not create_organization_eligible %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="bi bi-building-o"></i> {% trans "Create Organization" %}</a>
+<p>
+{% for details in create_organization_details %}
+    {% if details.0 %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %} {{ details.1 }}<br/>
+{% endfor %}
+</p>
+
+{% comment %}
 <a class="btn btn-primary w-100 mb-2 {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'event-create' %}"><i class="bi bi-wrench"></i> {% trans "Create Event" %}</a>
 <a class="btn btn-primary w-100 {% if not request.user.profile.is_completed %}disabled{% endif %}" href="{% url 'organization-create' %}"><i class="bi bi-building-o"></i> {% trans "Create Organization" %}</a>
+{% endcomment %}
 
 <hr>
 

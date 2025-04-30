@@ -8,11 +8,12 @@
 
 {% block title %}{% trans "Contact us" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -24,6 +25,8 @@
     </nav>
 </div>
 {% endblock %}
+
+{% block header %}{% endblock %}
 
 {% block content %}
 <div class="alert alert-warning mb-md-3" role="alert">
@@ -72,7 +75,7 @@
                     <h4>{% trans "Contact Info" %}</h4>
 
                     <p><i class="bi bi-pin-map"></i>&nbsp;Los Angeles, CA 90028, USA</p>
-                    <p><i class="bi bi-envelope"></i>&nbsp;<a href="mailto:support@2remember.live">support@2remember.live</a></p>
+                    <p><i class="bi bi-envelope"></i>&nbsp;<a href="mailto:{{ EMAIL_SUPPORT }}">{{ EMAIL_SUPPORT }}</a></p>
                     <p><i class="bi bi-telephone"></i>&nbsp;<a href="tel:(562) 606-6760">+1 (562) 606-6760</a></p>
                 </div>
 
@@ -181,3 +184,5 @@
     })
 </script>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

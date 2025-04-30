@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "organizations/organization-base.html" %}
 
 {% load i18n %}
 {% load static %}
@@ -17,12 +17,6 @@
 {% endcomment %}
 
 {% block title %}{% trans "Edit Organization" %} - {{ block.super }}{% endblock %}
-
-{% block extra_style %}
-{% endblock %}
-
-{% block extra_script %}
-{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -96,9 +90,9 @@
                             <span class="help-block">{% if form.description.errors %}{% for error in form.description.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
-                        <div class="form-floating col-md-6 {% if form.tags.errors %}has-error{% endif %}">
+                        <div class="col-md-6 {% if form.tags.errors %}has-error{% endif %}">
                             {{ form.tags }}
-                            <label class="control-label">{{ form.tags.label }}{% if form.tags.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <p class="help"><small class="text-muted">{{ form.tags.help_text|safe }}</small></p>
                             <span class="help-block">{% if form.tags.errors %}{% for error in form.tags.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
                         <div class="form-floating col-md-6 {% if form.hashtag.errors %}has-error{% endif %}">
@@ -121,6 +115,12 @@
                             {{ form.email }}
                             <label class="control-label">{{ form.email.label }}{% if form.email.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
                             <span class="help-block">{% if form.email.errors %}{% for error in form.email.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
+                        </div>
+
+                        <div class="form-floating col-12 {% if form.parent.errors %}has-error{% endif %}">
+                            {{ form.parent }}
+                            <label for="id_parent" class="form-label">{{ form.parent.label }}{% if form.parent.field.required %}<span class="asteriskField">*</span>{% endif %}</label>
+                            <span class="help-block">{% if form.parent.errors %}{% for error in form.parent.errors %}&nbsp;{{ error }}{% endfor %}{% endif %}</span>
                         </div>
 
                     {% comment %}
@@ -212,7 +212,7 @@
                         <hr>
                         <h4>{% trans "Images" %}</h4>
                         <div class="gallery">
-                        {% for img in organization.get_image_list.all %}
+                        {% for img in organization.image_list.all %}
                             <div class="gallery-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ img.id }}, 'image', event);"></i>
                                 <a class="gallery-photos" href="{{ MEDIA_URL }}{{ img.image }}" title="">{% generateimage "common:thumbnail" source=img.image -- alt=img.name %}</a>
@@ -224,7 +224,7 @@
                         <hr>
                         <h4>{% trans "Documents" %}</h4>
                         <div class="gallery">
-                        {% for doc in organization.get_document_list.all %}
+                        {% for doc in organization.document_list.all %}
                             <div class="documents-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedFile({{ doc.id }}, 'document', event);"></i>
                                 <a href="{{ MEDIA_URL }}{{ doc.document }}" target="_blank">{{ doc.name }}</a>
@@ -237,7 +237,7 @@
                         <hr>
                         <h4>{% trans "Links" %}</h4>
                         <div class="gallery">
-                        {% for url in organization.get_url_list.all %}
+                        {% for url in organization.url_list.all %}
                             <div class="links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ url.id }}, 'regular', event);"></i>
                                 <a href="{{ url.url }}" target="_blank">{% if url.title %}{{ url.title }}{% else %}{{ url.url }}{% endif %}</a>
@@ -250,7 +250,7 @@
                         <hr>
                         <h4>{% trans "Video Links" %}</h4>
                         <div class="gallery">
-                        {% for video_url in organization.get_video_url_list.all %}
+                        {% for video_url in organization.video_url_list.all %}
                             <div class="video-links-container">
                                 <i class="bi bi-x-circle" onclick="removeAttachedLink({{ video_url.id }}, 'video', event);"></i>
                                 <a href="{{ video_url.url }}">{{ video_url.url }}</a>
@@ -384,8 +384,4 @@
         })
     });
 </script>
-{% endblock %}
-
-{% block extra_content %}
-    {% include "app/fragments/instance-images-script.html" with instance=organization %}
 {% endblock %}

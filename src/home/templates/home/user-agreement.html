@@ -4,11 +4,12 @@
 
 {% block title %}{% trans "User Agreement" %} - {{ block.super }}{% endblock %}
 
-{% block extra_style %}
-{% endblock %}
+{% block extra_meta %}{% endblock %}
+{% block extra_style %}{% endblock %}
+{% block extra_script %}{% endblock %}
+{% block extra_head %}{% endblock %}
 
-{% block extra_script %}
-{% endblock %}
+{% block important_message %}{% endblock %}
 
 {% block breadcrumbs %}
 <div class="container">
@@ -21,6 +22,8 @@
 </div>
 {% endblock %}
 
+{% block header %}{% endblock %}
+
 {% block content %}
 <div id="user-agreement" class="bg-body-tertiary p-3">
     <div class="row">
@@ -30,3 +33,5 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_content %}{% endblock %}

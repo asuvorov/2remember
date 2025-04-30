@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -14,6 +14,7 @@ from .models import Invite
 # === INVITE ADMIN
 # ===
 # =============================================================================
+@admin.register(Invite)
 class InviteAdmin(admin.ModelAdmin):
     """Invite Admin."""
 
@@ -91,6 +92,3 @@ class InviteAdmin(admin.ModelAdmin):
             "invite-revoked",
         ),
     }
-
-
-admin.site.register(Invite, InviteAdmin)

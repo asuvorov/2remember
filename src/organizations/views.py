@@ -1,11 +1,10 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import inspect
 import logging
 
-from django.conf import settings
 from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
@@ -13,8 +12,6 @@ from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
-from django.core.files import File
-from django.core.files.storage import default_storage as storage
 # from django.db.models import Q
 from django.http import (
     HttpResponseForbidden,
@@ -41,22 +38,21 @@ from ddcore.Utilities import (
 
 # pylint: disable=import-error
 from accounts.utils import is_profile_complete
+from app import attachment_processors
 from app.decorators import log_default
 from app.forms import (
     AddressForm,
     CreateNewsletterForm,
     PhoneFormSet,
     SocialLinkFormSet)
-from events.models import (
-    Event,
-    # EventStatus,
-    # Participation,
-    # ParticipationStatus
-    )
+from events.models import Event
+from events.utils import get_event_list
 
-# from .decorators import (
-#     organization_access_check_required,
-#     organization_staff_member_required)
+from .decorators import (
+    organization_create_access_check_required,
+    organization_view_access_check_required,
+    organization_edit_access_check_required,
+    organization_populate_newsletter_access_check_required)
 from .forms import CreateEditOrganizationForm
 from .models import (
     Organization,
@@ -75,6 +71,10 @@ logger = logging.getLogger(__name__)
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_list(request):
     """List of the all Organizations."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
     # -------------------------------------------------------------------------
     # --- Retrieve the Organizations with the Organization Privacy Settings:
     #     1. Organization is set to Public;
@@ -127,6 +127,10 @@ def organization_list(request):
 def organization_directory(request):
     """Organization Directory."""
     # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
+
+    # -------------------------------------------------------------------------
     # --- Retrieve the Organizations with the Organization Privacy Settings:
     #     1. Organization is set to Public;
     #     2. Organization is set to Private, and:
@@ -177,19 +181,15 @@ def organization_directory(request):
 # === ORGANIZATION CREATE
 # ===
 # =============================================================================
-@login_required
+@organization_create_access_check_required
 @user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@login_required
 @log_default(my_logger=logger, cls_or_self=False)
 def organization_create(request):
     """Create Organization."""
-    cprint("***" * 27, "green")
-    cprint("*** INSIDE `%s`" % inspect.stack()[0][3], "green")
-    cprint("***" * 27, "green")
-    cprint("[---  DUMP   ---] REQUEST          : %s" % request, "yellow")
-    cprint("[---  DUMP   ---] REQUEST CTYPE    : %s" % request.content_type, "yellow")
-    cprint("[---  DUMP   ---] REQUEST GET      : %s" % request.GET, "yellow")
-    cprint("[---  DUMP   ---] REQUEST POST     : %s" % request.POST, "yellow")
-    cprint("[---  DUMP   ---] REQUEST FILES    : %s" % request.FILES, "yellow")
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -234,7 +234,6 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Phone Numbers.
             phone_numbers = formset_phone.save(commit=True)
-            cprint(f"                  {phone_numbers=}", "yellow")
             for phone_number in phone_numbers:
                 phone_number.content_type = ContentType.objects.get_for_model(organization)
                 phone_number.object_id = organization.id
@@ -243,7 +242,6 @@ def organization_create(request):
             # -----------------------------------------------------------------
             # --- Save Social Links.
             social_links = formset_social.save(commit=True)
-            cprint(f"                  {social_links=}", "yellow")
             for social_link in social_links:
                 social_link.content_type = ContentType.objects.get_for_model(organization)
                 social_link.object_id = organization.id
@@ -289,22 +287,18 @@ def organization_create(request):
 # === ORGANIZATION DETAILS
 # ===
 # =============================================================================
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_details(request, slug=None):
+def organization_details(request, slug, organization=None):
     """Organization Details."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
-    is_complained = False
-    show_complain_form = False
-
+    is_newly_created = False
     is_staff_member = False
 
-    # -------------------------------------------------------------------------
-    # --- Retrieve the Organization.
-    # -------------------------------------------------------------------------
-    organization = get_object_or_404(Organization, slug=slug)
+    show_rate_form = False
+    show_complain_form = False
 
     # -------------------------------------------------------------------------
     # --- Check, if User is an Organization Staff Member.
@@ -337,7 +331,6 @@ def organization_details(request, slug=None):
     social_links = SocialLink.objects.filter(
         content_type=ContentType.objects.get_for_model(organization),
         object_id=organization.id)
-
     for social_link in social_links:
         if social_link.social_app == SocialApp.TWITTER:
             try:
@@ -350,11 +343,16 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     # --- Only authenticated Users may complain to the Organization.
     # -------------------------------------------------------------------------
-    if request.user.is_authenticated:
+    if (
+            request.user.is_authenticated and
+            request.user != organization.author):
+        # ---------------------------------------------------------------------
+        # --- Check, if the User has already rated the Event.
+        show_rate_form = not organization.is_rated_by_user(request.user)
+
         # ---------------------------------------------------------------------
         # --- Check, if the User has already complained to the Organization.
-        is_complained = organization.is_complained_by_user(request.user)
-        show_complain_form = not is_complained
+        show_complain_form = not organization.is_complained_by_user(request.user)
 
         # if not is_complained:
         #     # -----------------------------------------------------------------
@@ -381,12 +379,9 @@ def organization_details(request, slug=None):
     # --- Is newly created?
     #     If so, show the pop-up Overlay.
     # -------------------------------------------------------------------------
-    is_newly_created = False
     if (
             organization.author == request.user and
-            organization.is_newly_created and
-            not organization.is_hidden and
-            not organization.is_deleted):
+            organization.is_newly_created):
         is_newly_created = True
 
         organization.is_newly_created = False
@@ -412,23 +407,24 @@ def organization_details(request, slug=None):
     # -------------------------------------------------------------------------
     return render(
         request, "organizations/organization-details-info.html", {
-            "organization":             organization,
-            "meta":                     organization.as_meta(request),
+            "organization":         organization,
+            "meta":                 organization.as_meta(request),
             # "upcoming_events":          upcoming_events,
             # "completed_events":         completed_events,
-            "phone_numbers":            phone_numbers,
-            "social_links":             social_links,
-            "twitter_acc":              twitter_acc,
-            "show_complain_form":       show_complain_form,
-            "is_newly_created":         is_newly_created,
-            "is_staff_member":          is_staff_member,
-            "is_subscribed":            is_subscribed,
+            "phone_numbers":        phone_numbers,
+            "social_links":         social_links,
+            "twitter_acc":          twitter_acc,
+            "show_rate_form":       show_rate_form,
+            "show_complain_form":   show_complain_form,
+            "is_newly_created":     is_newly_created,
+            "is_staff_member":      is_staff_member,
+            "is_subscribed":        is_subscribed,
         })
 
 
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_staff(request, slug=None):
+def organization_staff(request, slug):
     """Organization Staff."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -453,9 +449,9 @@ def organization_staff(request, slug=None):
         })
 
 
-# @organization_access_check_required
+@organization_view_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_groups(request, slug=None):
+def organization_groups(request, slug):
     """Organization Groups."""
     # -------------------------------------------------------------------------
     # --- Initials.
@@ -485,14 +481,14 @@ def organization_groups(request, slug=None):
 # === ORGANIZATION EDIT
 # ===
 # =============================================================================
+@organization_edit_access_check_required
 @login_required
-# @organization_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_edit(request, slug=None):
+def organization_edit(request, slug, organization=None):
     """Edit Organization."""
-    organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).
@@ -523,6 +519,10 @@ def organization_edit(request, slug=None):
             object_id=organization.id))
 
     if request.method == "POST":
+        cprint(f"[---  DUMP   ---] {form.is_valid()=}", "yellow")
+        cprint(f"                  {aform.is_valid()=}", "yellow")
+        cprint(f"                  {formset_social.is_valid()=}", "yellow")
+
         if (
                 form.is_valid() and
                 aform.is_valid() and
@@ -554,50 +554,12 @@ def organization_edit(request, slug=None):
                 social_link.object_id = organization.id
                 social_link.save()
 
-            # -----------------------------------------------------------------
-            # --- Move temporary Files to real Organization Images/Documents.
-            cprint(f"[---  INFO   ---] FILES          : {form.cleaned_data['tmp_files']}", "cyan")
-            for tmp_file in form.cleaned_data["tmp_files"]:
-                file_ext = tmp_file.file.name.split(".")[-1]
-
-                cprint(f"[---  INFO   ---] TMP  FILE      : {tmp_file}", "cyan")
-                cprint(f"[---  INFO   ---] EXT  FILE      : {file_ext}", "cyan")
-
-                cprint(f"[---  INFO   ---] FILE IN IMGS   : {file_ext in settings.SUPPORTED_IMAGES}", "cyan")
-                cprint(f"[---  INFO   ---] FILE IN DOCS   : {file_ext in settings.SUPPORTED_DOCUMENTS}", "cyan")
-
-                if file_ext in settings.SUPPORTED_IMAGES:
-                    AttachedImage.objects.create(
-                        name=tmp_file.name,
-                        image=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-                elif file_ext in settings.SUPPORTED_DOCUMENTS:
-                    AttachedDocument.objects.create(
-                        name=tmp_file.name,
-                        document=File(storage.open(tmp_file.file.name, "rb")),
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-
-                tmp_file.delete()
-
-            # -----------------------------------------------------------------
-            # --- Save URLs and Video URLs and pull their Titles.
-            cprint(f"[---  INFO   ---] LINKS          : {request.POST['tmp_links']}", "cyan")
-            for link in request.POST["tmp_links"].split():
-                url = validate_url(link)
-
-                if get_youtube_video_id(link):
-                    AttachedVideoUrl.objects.create(
-                        url=link,
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
-                elif url:
-                    AttachedUrl.objects.create(
-                        url=url,
-                        title=get_website_title(url) or "",
-                        content_type=ContentType.objects.get_for_model(organization),
-                        object_id=organization.id)
+            attachment_processors.process(
+                request=request,
+                content_type=ContentType.objects.get_for_model(organization),
+                object_id=organization.id,
+                tmp_files=form.cleaned_data["tmp_files"],
+                tmp_links=request.POST["tmp_links"])
 
             # -----------------------------------------------------------------
             # --- Send Email Notifications.
@@ -628,20 +590,49 @@ def organization_edit(request, slug=None):
 
 # =============================================================================
 # ===
-# === ORGANIZATION POPULATE NEWSLETTER
+# === ORGANIZATION EVENTS
 # ===
 # =============================================================================
-@login_required
-# @organization_staff_member_required
 @log_default(my_logger=logger, cls_or_self=False)
-def organization_populate_newsletter(request, slug=None):
-    """Organization, populate Newsletter."""
+def organization_events(request, slug=None):
+    """Organization Events List."""
     # -------------------------------------------------------------------------
     # --- Initials.
     # -------------------------------------------------------------------------
     organization = get_object_or_404(Organization, slug=slug)
-    if not organization.is_author(request):
-        raise PermissionDenied
+    events, dateless, page_total, page_number = get_event_list(request, organization=organization)
+
+    # -------------------------------------------------------------------------
+    # --- Increment Views Counter.
+    # -------------------------------------------------------------------------
+    organization.increase_views_count(request)
+
+    # -------------------------------------------------------------------------
+    # --- Return Response.
+    # -------------------------------------------------------------------------
+    return render(
+        request, "organizations/organization-details-events.html", {
+            "organization": organization,
+            "events":       events,
+            "dateless":     dateless,
+            "page_total":   page_total,
+            "page_number":  page_number,
+        })
+
+
+# =============================================================================
+# ===
+# === ORGANIZATION POPULATE NEWSLETTER
+# ===
+# =============================================================================
+@organization_populate_newsletter_access_check_required
+@login_required
+@log_default(my_logger=logger, cls_or_self=False)
+def organization_populate_newsletter(request, slug, organization=None):
+    """Organization, populate Newsletter."""
+    # -------------------------------------------------------------------------
+    # --- Initials.
+    # -------------------------------------------------------------------------
 
     # -------------------------------------------------------------------------
     # --- Prepare Form(s).

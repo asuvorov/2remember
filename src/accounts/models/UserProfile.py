@@ -1,9 +1,9 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
+import inspect
 
 from django.conf import settings
-from django.contrib.sitemaps import ping_google
 from django.core.files import File
 from django.core.files.storage import default_storage as storage
 from django.db import models
@@ -27,13 +27,16 @@ from ddcore.models import (
 from ddcore.uuids import get_unique_filename
 
 # pylint: disable=import-error
+from collection.models import CollectionMixin
 from events.models import (
     EventMixin,
     # ParticipationMixin
     )
-# from organizations.models import (
-#     OrganizationStaffMixin,
-#     OrganizationGroupMixin)
+from organizations.models import (
+    # OrganizationStaffMixin,
+    # OrganizationGroupMixin
+    OrganizationMixin,
+    )
 
 
 # =============================================================================
@@ -73,9 +76,9 @@ def user_cover_directory_path(instance, filename):
 
 @autoconnect
 class UserProfile(
-        ModelMeta, UserProfileBase, CommentMixin, ComplaintMixin, EventMixin,
-        # ParticipationMixin,
-        # OrganizationGroupMixin, OrganizationStaffMixin,
+        ModelMeta, UserProfileBase, CollectionMixin, CommentMixin, ComplaintMixin,
+        EventMixin,  # ParticipationMixin,
+        OrganizationMixin,  # OrganizationGroupMixin, OrganizationStaffMixin,
         RatingMixin, ViewMixin):
     """User Profile Model.
 
@@ -93,17 +96,23 @@ class UserProfile(
     address                 : obj       Profile Address.
 
     birth_day               : datetime  Profile Birthday.
+
     custom_data             : dict      Custom Data JSON Field.
 
     allow_comments          : bool      Allow Comments?
     receive_newsletters     : bool      Receive Newsletters?
     is_newly_created        : bool      Is newly created?
+    is_hidden               : bool      Is Object hidden?
+    is_private              : bool      Is Object private?
+    is_deleted              : bool      Is Object deleted?
 
-    created_by              : obj       User, created   the Object.
-    modified_by             : obj       User, modified  the Object.
+    created_by              : obj       User, created  the Object.
+    modified_by             : obj       User, modified the Object.
+    deleted_by              : obj       User, deleted  the Object.
 
     created                 : datetime  Timestamp the Object has been created.
     modified                : datetime  Timestamp the Object has been modified.
+    deleted                 : datetime  Timestamp the Object has been deleted.
 
     Methods
     -------
@@ -139,7 +148,7 @@ class UserProfile(
     address = models.ForeignKey(
         Address,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True, blank=True,
         verbose_name=_("Address"),
         help_text=_("User Address"))
@@ -162,6 +171,7 @@ class UserProfile(
     # objects = UserProfileManager()
 
     class Meta:
+        app_label = "accounts"
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
         ordering = [
@@ -291,7 +301,7 @@ class UserProfile(
 
         url = reverse(
             "profile-view", kwargs={
-                "user_id":  self.user_id,
+                "uid36":    self.user.uid,
             })
         profile_link = f"http://{domain_name}{url}"
 
@@ -299,12 +309,10 @@ class UserProfile(
 
     def get_absolute_url(self):
         """Method to be called by Django Sitemap Framework."""
-        url = reverse(
+        return reverse(
             "profile-view", kwargs={
-                "user_id":  self.user_id,
+                "uid36":    self.user.uid,
             })
-
-        return url
 
     def email_notify_signup_confirmation(self, request=None, url=None):
         """Send Notification to the User."""
@@ -357,15 +365,7 @@ class UserProfile(
     def post_save(self, created, **kwargs):
         """Docstring."""
         # ---------------------------------------------------------------------
-        # --- Ping Google.
-        try:
-            ping_google()
-        except Exception as exc:
-            # -----------------------------------------------------------------
-            # --- Logging.
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+        # --- FIXME: Ping Google.
 
         # ---------------------------------------------------------------------
         # --- The Path for uploading Avatar Images is:
@@ -394,7 +394,14 @@ class UserProfile(
 
                 storage.delete(avatar.file.name)
 
-                # -------------------------------------------------------------
+        except Exception as exc:
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
+
+        try:
+            if created:
                 cover = File(storage.open(self.cover.file.name, "rb"))
 
                 self.cover = cover
@@ -403,9 +410,10 @@ class UserProfile(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
     def pre_delete(self, **kwargs):
         """Docstring."""

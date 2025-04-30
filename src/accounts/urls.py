@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.urls import re_path
@@ -44,6 +44,9 @@ urlpatterns = [
     # re_path(r"^my-profile/participations/$",
     #     views.my_profile_participations,
     #     name="my-profile-participations"),
+    re_path(r"^my-profile/collections/$",
+        views.my_profile_collections,
+        name="my-profile-collections"),
     re_path(r"^my-profile/events/$",
         views.my_profile_events,
         name="my-profile-events"),
@@ -61,13 +64,16 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Foreign Profile.
     # -------------------------------------------------------------------------
-    re_path(r"^profile/(?P<user_id>[\w_-]+)/$",
+    re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/$",
         views.profile_view,
         name="profile-view"),
-    # re_path(r"^profile/(?P<user_id>[\w_-]+)/participations/$",
+    # re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/participations/$",
     #     views.profile_participations,
     #     name="profile-participations"),
-    re_path(r"^profile/(?P<user_id>[\w_-]+)/events/$",
+    re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/collections/$",
+        views.profile_collections,
+        name="profile-collections"),
+    re_path(r"^profile/(?P<uid36>[0-9A-Fa-f]{8}(-[0-9A-Fa-f]{4}){3}-[0-9A-Fa-f]{12})/events/$",
         views.profile_events,
         name="profile-events"),
 

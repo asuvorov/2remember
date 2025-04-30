@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -35,6 +35,7 @@ sitemaps = {
 
 urlpatterns = [
     re_path(r"", include("social_django.urls", namespace="social")),
+    re_path(r"", include(("privateurl.urls", "privateurl"), namespace="privateurl")),
     re_path(r"^ckeditor/", include("ckeditor_uploader.urls")),
     re_path(r"^grappelli/", include("grappelli.urls")),
     re_path(r"^admin/", admin.site.urls),
@@ -51,8 +52,9 @@ urlpatterns = [
     re_path(r"^api/", include("api.urls")),
     re_path(r"^app/", include("app.urls")),
     re_path(r"^blog/", include("blog.urls")),
+    re_path(r"^collections/", include("collection.urls")),
     re_path(r"^events/", include("events.urls")),
-    re_path(r"^home/", include("home.urls")),
+    # re_path(r"^home/", include("home.urls")),
     re_path(r"^invites/", include("invites.urls")),
     re_path(r"^organizations/", include("organizations.urls")),
     re_path(r"^places/", include("places.urls")),

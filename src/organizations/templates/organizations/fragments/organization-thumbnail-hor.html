@@ -50,13 +50,24 @@
                 {% endif %}
                 </p>
 
+            {% if organization.parent %}
+                <p class="card-text">
+                {% if organization.parent.preview %}
+                    {% generateimage "header:thumbnail" source=organization.parent.preview -- alt=organization.parent.title %}
+                {% else %}
+                    <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="{{ organization.parent.title }}" />
+                {% endif %}
+                    <a href="{% url 'organization-details' organization.parent.slug %}">{{ organization.parent.title }}</a>
+                </p>
+            {% endif %}
+
                 <p class="card-text">
                 {% if organization.author.profile.avatar %}
                     {% generateimage "header:thumbnail" source=organization.author.profile.avatar -- alt=organization.author.profile.auth_name %}
                 {% else %}
                     <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
                 {% endif %}
-                    <a href="{% url 'profile-view' organization.author_id %}"> {{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
+                    <a href="{% url 'profile-view' organization.author.uid %}"> {{ organization.author.first_name }}</a> {{ organization.created|timesince }} {% trans "ago" %}
                 </p>
             </div>
         </div>
@@ -67,9 +78,9 @@
             <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                     <small class="text-muted">
-                        <i class="bi bi-feather"></i>{{ organization.get_comments_count }}
+                        <i class="bi bi-feather"></i>{{ organization.comments_count }}
                         <span class="vert-delimiter">|</span>
-                        <i class="bi bi-eye"></i>{{ organization.get_views_count }}
+                        <i class="bi bi-eye"></i>{{ organization.views_count }}
 
                         <br/>
 

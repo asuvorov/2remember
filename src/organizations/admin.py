@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -93,6 +93,7 @@ class EventInline(admin.TabularInline):
 # -----------------------------------------------------------------------------
 # --- Organization Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Organization)
 class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     """Organization Admin."""
 
@@ -112,14 +113,22 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
         ("", {
             "classes":  (""),
             "fields":   (
+                ("id", "uid"),
                 "author",
-                "title",
-                "organization_url",
                 ("preview", "preview_image_tag"),
                 ("cover", "cover_image_tag"),
+                ("title", "organization_url"),
                 "description",
                 "custom_data",
                 # "subscribers",
+            ),
+        }),
+        ("Relations", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("followers", "subscribers", "parent"),
             ),
         }),
         ("Tags", {
@@ -146,21 +155,12 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
                 ("website", "video", "email"),
             ),
         }),
-        # ("Contact Person", {
-        #     "classes":  (
-        #         "grp-collapse grp-open",
-        #     ),
-        #     "fields":   (
-        #         "is_alt_person",
-        #         ("alt_person_fullname", "alt_person_email", "alt_person_phone",),
-        #     ),
-        # }),
         ("Flags", {
             "classes":  (
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("allow_comments", "is_newly_created", "is_hidden", "is_deleted"),
+                ("allow_comments", "is_newly_created", "is_hidden", "is_private", "is_deleted"),
             ),
         }),
         ("Significant Dates", {
@@ -177,7 +177,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
     list_display = [
         "id", "title", "author",
         "preview_image_tag", "cover_image_tag",
-        "addressless", "allow_comments", "is_newly_created", "is_hidden", "is_deleted",
+        "addressless", "allow_comments", "is_newly_created", "is_hidden", "is_private", "is_deleted",
         "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
@@ -192,6 +192,7 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
         "title", "author",
     ]
     readonly_fields = [
+        "id", "uid",
         "preview_image_tag", "cover_image_tag", "organization_url",
         "created", "modified",
     ]
@@ -228,9 +229,6 @@ class OrganizationAdmin(SortableAdminBase, admin.ModelAdmin, ImagesAdminMixin):
             "complaint-deleted",
         ),
     }
-
-
-admin.site.register(Organization, OrganizationAdmin)
 
 
 # =============================================================================
@@ -303,6 +301,3 @@ admin.site.register(Organization, OrganizationAdmin)
 #             "invite-revoked",
 #         ),
 #     }
-
-
-# admin.site.register(OrganizationGroup, OrganizationGroupAdmin)

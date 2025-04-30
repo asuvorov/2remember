@@ -86,7 +86,7 @@
 
                         <td>
                         {% with instance.member.profile as profile %}
-                            <a href="{% url 'profile-view' instance.member.id %}">
+                            <a href="{% url 'profile-view' instance.member.uid %}">
                             {% if profile.avatar %}
                                 {% generateimage "common:thumbnail" source=profile.avatar -- alt=profile.auth_name %}
                             {% else %}
@@ -98,7 +98,7 @@
 
                         <td>
                             <h4>
-                                <a href="{% url 'profile-view' instance.member.id %}">{{ instance.member.get_full_name }}</a>
+                                <a href="{% url 'profile-view' instance.member.uid %}">{{ instance.member.get_full_name }}</a>
                             </h4>
                             <strong id="position">{{ instance.position|default:"N/A" }}</strong>
                             <blockquote>

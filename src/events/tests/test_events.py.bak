@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import datetime
@@ -28,24 +28,27 @@ from rest_framework.test import (
     APITestCase)
 from termcolor import colored, cprint
 
-from events.choices import (
-    EVENT_STATUS, event_status_choices,
-    EVENT_MODE, application_choices,
-    EVENT_CATEGORY, event_category_choices,
-    EVENT_CATEGORY_COLORS, event_category_colors,
-    EVENT_CATEGORY_ICONS, event_category_icons,
+from blog.forms import CreateEditPostForm
+from blog.models import Post
+
+from challenges.choices import (
+    CHALLENGE_STATUS, challenge_status_choices,
+    CHALLENGE_MODE, application_choices,
+    CHALLENGE_CATEGORY, challenge_category_choices,
+    CHALLENGE_COLORS, challenge_category_colors,
+    CHALLENGE_ICONS, challenge_category_icons,
     PARTICIPATION_REMOVE_MODE,
     PARTICIPATION_STATUS, participation_status_choices,
     RECURRENCE, recurrence_choices,
     MONTH, month_choices,
     DAY_OF_WEEK, day_of_week_choices,
     day_of_month_choices)
-from events.forms import (
-    CreateEditEventForm,
+from challenges.forms import (
+    CreateEditChallengeForm,
     RoleForm,
     RoleFormSet)
-from events.models import (
-    Event,
+from challenges.models import (
+    Challenge,
     Role,
     Participation)
 from organizations.models import (
@@ -73,12 +76,12 @@ client = Client(
 # === MODELS
 # ===
 # =============================================================================
-class EventCreateModelTestCase(TestCase):
+class ChallengeCreateModelTestCase(TestCase):
 
-    """Event create Test Case.
+    """Challenge create Test Case.
 
         COVERS:
-                Create Event    (default)
+                Create Challenge    (default)
                                     without Author
                                     without Name
                                     without Avatar
@@ -86,7 +89,7 @@ class EventCreateModelTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts_users.json",
+        "test_accounts.json",
         "test_core_addr_acc.json",
         "test_core_addr_org.json",
         "test_organizations_private.json",
@@ -96,7 +99,7 @@ class EventCreateModelTestCase(TestCase):
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > MODELS > CREATE", "green")
+        cprint("*** TEST > CHALLENGES > MODELS > CREATE", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
@@ -117,17 +120,17 @@ class EventCreateModelTestCase(TestCase):
         self.test_public_org_2 = Organization.objects.get(id=32)
         self.test_public_org_4 = Organization.objects.get(id=34)
 
-    def test_event_defaults(self):
-        """Event create. Defaults."""
-        cprint("[---  INFO   ---] Event create. Defaults...", "cyan")
+    def test_challenge_defaults(self):
+        """Challenge create. Defaults."""
+        cprint("[---  INFO   ---] Challenge create. Defaults...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        event = Event.objects.create(
+        challenge = Challenge.objects.create(
             author=self.test_user_1,
             # avatar=,
-            name="Event #1",
-            # description="Description of the Event #1",
+            name="Challenge #1",
+            # description="Description of the Challenge #1",
             # slug=,
             # tags=,
             # hashtag=,
@@ -160,124 +163,122 @@ class EventCreateModelTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Test Response
         self.assertEqual(
-            event.author,
+            challenge.author,
             self.test_user_1,
             colored("[---  ERROR  ---] Wrong Author", "white", "on_red"))
 
         self.assertIsNotNone(
-            event.name,
+            challenge.name,
             colored("[---  ERROR  ---] Wrong Name", "white", "on_red"))
         self.assertIsNone(
-            event.description,
+            challenge.description,
             colored("[---  ERROR  ---] Wrong default Value of Description", "white", "on_red"))
         self.assertIsNotNone(
-            event.slug,
+            challenge.slug,
             colored("[---  ERROR  ---] Wrong Slug", "white", "on_red"))
 
         """
         self.assertIsNone(
-            event.tags,
+            challenge.tags,
             colored("[---  ERROR  ---] Wrong default Value of Tags", "white", "on_red"))
         """
         self.assertIsNone(
-            event.hashtag,
+            challenge.hashtag,
             colored("[---  ERROR  ---] Wrong default Value of Hashtag", "white", "on_red"))
         self.assertIsNone(
-            event.category,
+            challenge.category,
             colored("[---  ERROR  ---] Wrong default Value of Category", "white", "on_red"))
 
         self.assertEqual(
-            event.status,
-            EVENT_STATUS.UPCOMING,
+            challenge.status,
+            CHALLENGE_STATUS.UPCOMING,
             colored("[---  ERROR  ---] Wrong default Value of Status", "white", "on_red"))
         self.assertEqual(
-            event.application,
-            EVENT_MODE.FREE_FOR_ALL,
+            challenge.application,
+            CHALLENGE_MODE.FREE_FOR_ALL,
             colored("[---  ERROR  ---] Wrong default Value of Application", "white", "on_red"))
 
         self.assertFalse(
-            event.addressless,
+            challenge.addressless,
             colored("[---  ERROR  ---] Wrong default Value of Addressless", "white", "on_red"))
         self.assertIsNone(
-            event.address,
+            challenge.address,
             colored("[---  ERROR  ---] Wrong default Value of Address", "white", "on_red"))
 
         self.assertEqual(
-            event.duration,
+            challenge.duration,
             1,
             colored("[---  ERROR  ---] Wrong default Value of Duration", "white", "on_red"))
 
         self.assertEqual(
-            event.recurrence,
+            challenge.recurrence,
             RECURRENCE.ONCE,
             colored("[---  ERROR  ---] Wrong default Value of Recurrence", "white", "on_red"))
         self.assertIsNone(
-            event.month,
+            challenge.month,
             colored("[---  ERROR  ---] Wrong default Value of Month", "white", "on_red"))
         self.assertIsNone(
-            event.day_of_week,
+            challenge.day_of_week,
             colored("[---  ERROR  ---] Wrong default Value of Day of Week", "white", "on_red"))
         self.assertIsNone(
-            event.day_of_month,
+            challenge.day_of_month,
             colored("[---  ERROR  ---] Wrong default Value of Day of Month", "white", "on_red"))
 
         """
         self.assertIsNone(
-            event.start_date,
+            challenge.start_date,
             colored("[---  ERROR  ---] Wrong default Value of Start Date", "white", "on_red"))
         self.assertIsNone(
-            event.start_time,
+            challenge.start_time,
             colored("[---  ERROR  ---] Wrong default Value of Start Time", "white", "on_red"))
         self.assertEqual(
-            event.start_tz,
+            challenge.start_tz,
             settings.TIME_ZONE,
             colored("[---  ERROR  ---] Wrong default Value of Start TZ", "white", "on_red"))
         self.assertIsNone(
-            event.start_date_time_tz,
+            challenge.start_date_time_tz,
             colored("[---  ERROR  ---] Wrong default Value of Start Date/Time with TZ", "white", "on_red"))
         """
 
         self.assertFalse(
-            event.is_alt_person,
+            challenge.is_alt_person,
             colored("[---  ERROR  ---] Wrong default Value of Alt Person", "white", "on_red"))
         self.assertIsNone(
-            event.alt_person_fullname,
-            colored("[---  ERROR  ---] Wrong default Value of Alt Person full Name",
-                    "white", "on_red"))
+            challenge.alt_person_fullname,
+            colored("[---  ERROR  ---] Wrong default Value of Alt Person full Name", "white", "on_red"))
         self.assertIsNone(
-            event.alt_person_email,
+            challenge.alt_person_email,
             colored("[---  ERROR  ---] Wrong default Value of Alt Person Email", "white", "on_red"))
         self.assertIsNone(
-            event.alt_person_phone,
+            challenge.alt_person_phone,
             colored("[---  ERROR  ---] Wrong default Value of Alt Person Phone", "white", "on_red"))
 
         self.assertIsNone(
-            event.organization,
+            challenge.organization,
             colored("[---  ERROR  ---] Wrong default Value of Organization", "white", "on_red"))
 
         self.assertIsNone(
-            event.closed_reason,
+            challenge.closed_reason,
             colored("[---  ERROR  ---] Wrong default Value of closed Reason", "white", "on_red"))
 
         self.assertTrue(
-            event.is_newly_created,
+            challenge.is_newly_created,
             colored("[---  ERROR  ---] Wrong default Value of newly created", "white", "on_red"))
 
         self.assertTrue(
-            event.allow_reenter,
+            challenge.allow_reenter,
             colored("[---  ERROR  ---] Wrong default Value of allow Reenter", "white", "on_red"))
 
         self.assertFalse(
-            event.accept_automatically,
-            colored("[---  ERROR  ---] Wrong default Value of accept automatically",
-                    "white", "on_red"))
+            challenge.accept_automatically,
+            colored("[---  ERROR  ---] Wrong default Value of accept automatically", "white", "on_red"))
         self.assertIsNone(
-            event.acceptance_text,
+            challenge.acceptance_text,
             colored("[---  ERROR  ---] Wrong default Value of Acceptance Text", "white", "on_red"))
 
-    def test_event_wo_author(self):
-        """Event create. Without Author."""
-        cprint("[---  INFO   ---] Event create. Without Author...", "cyan")
+    def test_challenge_wo_author(self):
+        """Challenge create. Without Author."""
+        cprint("[---  INFO   ---] Challenge create. Without Author...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -285,16 +286,16 @@ class EventCreateModelTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Test Response
         with self.assertRaises(IntegrityError):
-            Event.objects.create(
+            Challenge.objects.create(
                 # author=self.test_user_1,
                 # avatar=,
-                name="Event #1",
+                name="Challenge #1",
                 )
 
     @unittest.skip("Skip the Test")
-    def test_event_wo_name(self):
-        """Event create. Without Name."""
-        cprint("[---  INFO   ---] Event create. Without Name...", "cyan")
+    def test_challenge_wo_name(self):
+        """Challenge create. Without Name."""
+        cprint("[---  INFO   ---] Challenge create. Without Name...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -302,16 +303,16 @@ class EventCreateModelTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Test Response
         with self.assertRaises(IntegrityError):
-            Event.objects.create(
+            Challenge.objects.create(
                 author=self.test_user_1,
                 # avatar=,
-                # name="Event #1",
+                # name="Challenge #1",
                 )
 
     @unittest.skip("Skip the Test")
-    def test_event_wo_avatar(self):
-        """Event create. Without Avatar."""
-        cprint("[---  INFO   ---] Event create. Without Avatar...", "cyan")
+    def test_challenge_wo_avatar(self):
+        """Challenge create. Without Avatar."""
+        cprint("[---  INFO   ---] Challenge create. Without Avatar...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -319,29 +320,29 @@ class EventCreateModelTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Test Response
         with self.assertRaises(IntegrityError):
-            Event.objects.create(
+            Challenge.objects.create(
                 author=self.test_user_1,
                 # avatar=,
-                name="Event #1",
+                name="Challenge #1",
                 )
 
-    def test_event_w_organization(self):
-        """Event create. With Organization."""
-        cprint("[---  INFO   ---] Event create. With Organization...", "cyan")
+    def test_challenge_w_organization(self):
+        """Challenge create. With Organization."""
+        cprint("[---  INFO   ---] Challenge create. With Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        event = Event.objects.create(
+        challenge = Challenge.objects.create(
             author=self.test_user_1,
             # avatar=,
-            name="Event #1",
+            name="Challenge #1",
             organization=self.test_private_org_1,
             )
 
         # ---------------------------------------------------------------------
         # --- Test Response
         self.assertEqual(
-            event.organization,
+            challenge.organization,
             self.test_private_org_1,
             colored("[---  ERROR  ---] Wrong Organization", "white", "on_red"))
 
@@ -351,30 +352,30 @@ class EventCreateModelTestCase(TestCase):
 # === VIEWS
 # ===
 # =============================================================================
-class EventListViewTestCase(TestCase):
+class ChallengeListViewTestCase(TestCase):
 
-    """Event List Test Case.
+    """Challenge List Test Case.
 
         COVERS:
-                USER                        EVENT
+                USER                        CHALLENGE
                 --------------------------- -----------------------------------
                 NOT logged in
 
-                    Logged in               Upcoming Event of pub Org
-                                            Auth  of Event of prv Org
+                    Logged in               Upcoming Chl of pub Org
+                                            Auth  of Chl of prv Org
                                             Staff Member or prv Org
                                             Group Member of prv Org
-                                            Auth  of Event &  Staff Member of prv Org
-                                            Auth  of Event &  Group Member of prv Org
+                                            Auth  of Chl &  Staff Member of prv Org
+                                            Auth  of Chl &  Group Member of prv Org
     """
 
     fixtures = [
-        "test_accounts_users.json",
-        "test_events_completed.json",
-        "test_events_dateless.json",
-        "test_events_draft.json",
-        "test_events_pastdue.json",
-        "test_events_upcoming.json",
+        "test_accounts.json",
+        "test_challenges_completed.json",
+        "test_challenges_dateless.json",
+        "test_challenges_draft.json",
+        "test_challenges_pastdue.json",
+        "test_challenges_upcoming.json",
         "test_core_addr_acc.json",
         "test_core_addr_chl.json",
         "test_core_addr_org.json",
@@ -385,14 +386,14 @@ class EventListViewTestCase(TestCase):
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > VIEWS > LIST", "green")
+        cprint("*** TEST > CHALLENGES > VIEWS > LIST", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
 
         # ---------------------------------------------------------------------
         # --- Initials
-        self.url = reverse("event-list")
+        self.url = reverse("challenge-list")
 
         # --- Users
         self.test_author_1 = User.objects.get(id=1)
@@ -401,24 +402,24 @@ class EventListViewTestCase(TestCase):
         self.test_user_2 = User.objects.get(id=2)
         self.test_user_4 = User.objects.get(id=4)
 
-        # --- Events
-        self.test_draft_event_11 = Event.objects.get(id=211)
-        self.test_draft_event_21 = Event.objects.get(id=221)
+        # --- Challenges
+        self.test_draft_event_11 = Challenge.objects.get(id=211)
+        self.test_draft_event_21 = Challenge.objects.get(id=221)
 
-        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
-        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+        self.test_upcoming_private_event_12 = Challenge.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Challenge.objects.get(id=232)
 
-        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
-        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+        self.test_upcoming_public_event_22 = Challenge.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Challenge.objects.get(id=242)
 
-        self.test_completed_event_13 = Event.objects.get(id=213)
-        self.test_completed_event_23 = Event.objects.get(id=223)
+        self.test_completed_event_13 = Challenge.objects.get(id=213)
+        self.test_completed_event_23 = Challenge.objects.get(id=223)
 
-        self.test_pastdue_event_24 = Event.objects.get(id=224)
-        self.test_pastdue_event_44 = Event.objects.get(id=244)
+        self.test_pastdue_event_24 = Challenge.objects.get(id=224)
+        self.test_pastdue_event_44 = Challenge.objects.get(id=244)
 
-        self.test_dateless_event_15 = Event.objects.get(id=215)
-        self.test_dateless_event_25 = Event.objects.get(id=225)
+        self.test_dateless_event_15 = Challenge.objects.get(id=215)
+        self.test_dateless_event_25 = Challenge.objects.get(id=225)
 
         # --- Organizations
         self.test_private_org_1 = Organization.objects.get(id=31)
@@ -428,8 +429,8 @@ class EventListViewTestCase(TestCase):
         self.test_public_org_4 = Organization.objects.get(id=34)
 
     def test_user_not_logged_in(self):
-        """Event List. User NOT logged in."""
-        cprint("[---  INFO   ---] Test Event List. User NOT logged in...", "cyan")
+        """Challenge List. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Challenge List. User NOT logged in...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -439,7 +440,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -458,29 +459,29 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False),
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
 
-        for event in response.context["events"]:
-            if event.organization:
+        for challenge in response.context["challenges"]:
+            if challenge.organization:
                 self.assertFalse(
-                    event.organization.is_hidden,
-                    colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+                    challenge.organization.is_hidden,
+                    colored("[---  ERROR  ---] Wrong Status of the Challenge", "white", "on_red"))
 
     def test_user_logged_in(self):
-        """Event List. User logged in. Simple Case."""
-        cprint("[---  INFO   ---] Test Event List. User logged in. Simple Case...", "cyan")
+        """Challenge List. User logged in. Simple Case."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in. Simple Case...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -498,7 +499,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -517,29 +518,28 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False),
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
 
-        for event in response.context["events"]:
+        for challenge in response.context["challenges"]:
             self.assertFalse(
-                event.organization.is_hidden,
-                colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+                challenge.organization.is_hidden,
+                colored("[---  ERROR  ---] Wrong Status of the Challenge", "white", "on_red"))
 
     def test_user_logged_in_and_author_of_private_org(self):
-        """Event List. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Author of the private "
-               "Organization...", "cyan")
+        """Challenge List. User logged in, and the Author of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Author of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -557,7 +557,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -576,34 +576,32 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_1,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_12,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
-        """Event List. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Staff Member of the "
-               "private Organization...", "cyan")
+        """Challenge List. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -629,7 +627,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -648,34 +646,32 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_32,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_group_member_of_private_org(self):
-        """Event List. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Group Member of the "
-               "private Organization...", "cyan")
+        """Challenge List. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -703,7 +699,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -722,34 +718,32 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_32,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
-        """Event List. User logged in, and Author and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and Author and the Staff "
-               "Member of the private Organization...", "cyan")
+        """Challenge List. User logged in, and Author and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and Author and the Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -775,7 +769,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -794,12 +788,12 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
@@ -810,27 +804,24 @@ class EventListViewTestCase(TestCase):
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_12,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_32,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_author_and_group_member_of_private_org(self):
-        """Event List. User logged in, and Author the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and Author the Group Member of "
-               "the private Organization...", "cyan")
+        """Challenge List. User logged in, and Author the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and Author the Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -858,7 +849,7 @@ class EventListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -877,12 +868,12 @@ class EventListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
@@ -893,48 +884,46 @@ class EventListViewTestCase(TestCase):
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
             ).exclude(
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_12,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
         self.assertIn(
             self.test_upcoming_private_event_32,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
 
-class EventDatelessListViewTestCase(TestCase):
+class ChallengeDatelessListViewTestCase(TestCase):
 
-    """Event List Test Case.
+    """Challenge List Test Case.
 
         COVERS:
-                USER                        EVENT
+                USER                        CHALLENGE
                 --------------------------- -----------------------------------
                 NOT logged in
 
-                    Logged in               Dateless Event of pub Org
-                                            Auth  of Event of prv Org
+                    Logged in               Dateless Chl of pub Org
+                                            Auth  of Chl of prv Org
                                             Staff Member or prv Org
                                             Group Member of prv Org
-                                            Auth  of Event &  Staff Member of prv Org
-                                            Auth  of Event &  Group Member of prv Org
+                                            Auth  of Chl &  Staff Member of prv Org
+                                            Auth  of Chl &  Group Member of prv Org
     """
 
     fixtures = [
-        "test_accounts_users.json",
-        "test_events_completed.json",
-        "test_events_dateless.json",
-        "test_events_draft.json",
-        "test_events_pastdue.json",
-        "test_events_upcoming.json",
+        "test_accounts.json",
+        "test_challenges_completed.json",
+        "test_challenges_dateless.json",
+        "test_challenges_draft.json",
+        "test_challenges_pastdue.json",
+        "test_challenges_upcoming.json",
         "test_core_addr_acc.json",
         "test_core_addr_chl.json",
         "test_core_addr_org.json",
@@ -945,14 +934,14 @@ class EventDatelessListViewTestCase(TestCase):
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > VIEWS > LIST", "green")
+        cprint("*** TEST > CHALLENGES > VIEWS > LIST", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
 
         # ---------------------------------------------------------------------
         # --- Initials
-        self.url = reverse("event-dateless-list")
+        self.url = reverse("challenge-dateless-list")
 
         # --- Users
         self.test_author_1 = User.objects.get(id=1)
@@ -961,24 +950,24 @@ class EventDatelessListViewTestCase(TestCase):
         self.test_user_2 = User.objects.get(id=2)
         self.test_user_4 = User.objects.get(id=4)
 
-        # --- Events
-        self.test_draft_event_11 = Event.objects.get(id=211)
-        self.test_draft_event_21 = Event.objects.get(id=221)
+        # --- Challenges
+        self.test_draft_event_11 = Challenge.objects.get(id=211)
+        self.test_draft_event_21 = Challenge.objects.get(id=221)
 
-        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
-        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+        self.test_upcoming_private_event_12 = Challenge.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Challenge.objects.get(id=232)
 
-        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
-        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+        self.test_upcoming_public_event_22 = Challenge.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Challenge.objects.get(id=242)
 
-        self.test_completed_event_13 = Event.objects.get(id=213)
-        self.test_completed_event_23 = Event.objects.get(id=223)
+        self.test_completed_event_13 = Challenge.objects.get(id=213)
+        self.test_completed_event_23 = Challenge.objects.get(id=223)
 
-        self.test_pastdue_event_24 = Event.objects.get(id=224)
-        self.test_pastdue_event_44 = Event.objects.get(id=244)
+        self.test_pastdue_event_24 = Challenge.objects.get(id=224)
+        self.test_pastdue_event_44 = Challenge.objects.get(id=244)
 
-        self.test_dateless_event_15 = Event.objects.get(id=215)
-        self.test_dateless_event_25 = Event.objects.get(id=225)
+        self.test_dateless_event_15 = Challenge.objects.get(id=215)
+        self.test_dateless_event_25 = Challenge.objects.get(id=225)
 
         # --- Organizations
         self.test_private_org_1 = Organization.objects.get(id=31)
@@ -988,8 +977,8 @@ class EventDatelessListViewTestCase(TestCase):
         self.test_public_org_4 = Organization.objects.get(id=34)
 
     def test_user_not_logged_in(self):
-        """Event List. User NOT logged in."""
-        cprint("[---  INFO   ---] Test Event List. User NOT logged in...", "cyan")
+        """Challenge List. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Challenge List. User NOT logged in...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -999,7 +988,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1018,28 +1007,28 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False),
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
 
-        for event in response.context["events"]:
-            if event.organization:
+        for challenge in response.context["challenges"]:
+            if challenge.organization:
                 self.assertFalse(
-                    event.organization.is_hidden,
-                    colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+                    challenge.organization.is_hidden,
+                    colored("[---  ERROR  ---] Wrong Status of the Challenge", "white", "on_red"))
 
     def test_user_logged_in(self):
-        """Event List. User logged in. Simple Case."""
-        cprint("[---  INFO   ---] Test Event List. User logged in. Simple Case...", "cyan")
+        """Challenge List. User logged in. Simple Case."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in. Simple Case...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1057,7 +1046,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1076,28 +1065,27 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False),
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
 
-        for event in response.context["events"]:
+        for challenge in response.context["challenges"]:
             self.assertFalse(
-                event.organization.is_hidden,
-                colored("[---  ERROR  ---] Wrong Status of the Event", "white", "on_red"))
+                challenge.organization.is_hidden,
+                colored("[---  ERROR  ---] Wrong Status of the Challenge", "white", "on_red"))
 
     def test_user_logged_in_and_author_of_private_org(self):
-        """Event List. User logged in, and the Author of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Author of the private "
-               "Organization...", "cyan")
+        """Challenge List. User logged in, and the Author of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Author of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1115,7 +1103,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1134,33 +1122,31 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_1,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_15,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
-        """Event List. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Staff Member of the "
-               "private Organization...", "cyan")
+        """Challenge List. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1186,7 +1172,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1205,33 +1191,31 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_1,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_15,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_group_member_of_private_org(self):
-        """Event List. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and the Group Member of the "
-               "private Organization...", "cyan")
+        """Challenge List. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and the Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1259,7 +1243,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1278,33 +1262,31 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
                     author=self.test_author_1,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_15,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_author_and_staff_member_of_private_org(self):
-        """Event List. User logged in, and Author and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and Author and the Staff "
-               "Member of the private Organization...", "cyan")
+        """Challenge List. User logged in, and Author and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and Author and the Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1330,7 +1312,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1349,12 +1331,12 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
@@ -1365,26 +1347,23 @@ class EventDatelessListViewTestCase(TestCase):
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_15,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_25,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
     def test_user_logged_in_and_author_and_group_member_of_private_org(self):
-        """Event List. User logged in, and Author the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event List. User logged in, and Author the Group Member of "
-               "the private Organization...", "cyan")
+        """Challenge List. User logged in, and Author the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge List. User logged in, and Author the Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1412,7 +1391,7 @@ class EventDatelessListViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["events"], "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["challenges"], "yellow")
         # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
         # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
         # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
@@ -1431,12 +1410,12 @@ class EventDatelessListViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_list.html",
+            "challenges/challenge_list.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            len(response.context["events"]),
-            len(Event.objects.filter(
+            len(response.context["challenges"]),
+            len(Challenge.objects.filter(
                 Q(organization=None) |
                 Q(organization__is_hidden=False) |
                 Q(
@@ -1447,29 +1426,27 @@ class EventDatelessListViewTestCase(TestCase):
                     author=self.test_author_3,
                     organization__is_hidden=True,
                 ),
-                status=EVENT_STATUS.UPCOMING,
+                status=CHALLENGE_STATUS.UPCOMING,
                 start_date__gte=datetime.date.today(),
                 recurrence=RECURRENCE.DATELESS,
             )),
-            colored("[---  ERROR  ---] Wrong Amount of Events returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Amount of Challenges returned", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_15,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
         self.assertIn(
             self.test_dateless_event_25,
-            response.context["events"],
-            colored("[---  ERROR  ---] Target Event is not returned in the List",
-                    "white", "on_red"))
+            response.context["challenges"],
+            colored("[---  ERROR  ---] Target Challenge is not returned in the List", "white", "on_red"))
 
 
-class EventCreateViewTestCase(TestCase):
+class ChallengeCreateViewTestCase(TestCase):
 
-    """Event create Test Case.
+    """Challenge create Test Case.
 
         COVERS:
-                USER                        EVENT
+                USER                        CHALLENGE
                 --------------------------- -----------------------------------
                 NOT logged in
 
@@ -1477,21 +1454,21 @@ class EventCreateViewTestCase(TestCase):
     """
 
     fixtures = [
-        "test_accounts_users.json",
+        "test_accounts.json",
         "test_core_addr_acc.json",
     ]
 
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > VIEWS > CREATE", "green")
+        cprint("*** TEST > CHALLENGES > VIEWS > CREATE", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
 
         # ---------------------------------------------------------------------
         # --- Initials
-        self.url = reverse("event-create")
+        self.url = reverse("challenge-create")
         self.login_url = reverse("login")
 
         # --- Users
@@ -1501,8 +1478,8 @@ class EventCreateViewTestCase(TestCase):
         self.test_user_4 = User.objects.get(id=4)
 
     def test_user_not_logged_in(self):
-        """Event create. User NOT logged in."""
-        cprint("[---  INFO   ---] Test Event create. User NOT logged in...", "cyan")
+        """Challenge create. User NOT logged in."""
+        cprint("[---  INFO   ---] Test Challenge create. User NOT logged in...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
@@ -1512,13 +1489,12 @@ class EventCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1557,8 +1533,8 @@ class EventCreateViewTestCase(TestCase):
                 "[---  ERROR  ---] Wrong Status Code...")
 
     def test_user_logged_in(self):
-        """Event create. User logged in."""
-        cprint("[---  INFO   ---] Test Event create. User logged in...", "cyan")
+        """Challenge create. User logged in."""
+        cprint("[---  INFO   ---] Test Challenge create. User logged in...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1576,13 +1552,12 @@ class EventCreateViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1596,43 +1571,43 @@ class EventCreateViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_create.html",
+            "challenges/challenge_create.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
 
-class EventDetailsViewTestCase(TestCase):
+class ChallengeDetailsViewTestCase(TestCase):
 
-    """Event Details Test Case.
+    """Challenge Details Test Case.
 
         COVERS:
-                USER                        EVENT
+                USER                        CHALLENGE
                 --------------------------- -----------------------------------
-                NOT logged in               Upcoming Event of pub Org
-                                            Upcoming Event of prv Org
-                                            Draft    Event
-                                            Complete Event
-                                            Past due Event
-                                            Dateless Event
+                NOT logged in               Upcoming Chl of pub Org
+                                            Upcoming Chl of prv Org
+                                            Draft    Chl
+                                            Complete Chl
+                                            Past due Chl
+                                            Dateless Chl
 
-                    Logged in               Upcoming Event of pub Org
-                                            Upcoming Event of pub Org, waiting   4  Conf
-                                            Upcoming Event of pub Org, confirmed
-                                            Upcoming Event of pub Org, canceled  by Adm
-                                            Upcoming Event of pub Org, canceled  by Usr,    reenter
-                                            Upcoming Event of pub Org, canceled  by Usr, NO reenter
-                                            Upcoming Event of pub Org, waiting   4  selfreflection
-                                            Upcoming Event of pub Org, waiting   4  acknowledgment
-                                            Upcoming Event of pub Org, acknowledged
+                    Logged in               Upcoming Chl of pub Org
+                                            Upcoming Chl of pub Org, waiting   4  Conf
+                                            Upcoming Chl of pub Org, confirmed
+                                            Upcoming Chl of pub Org, canceled  by Adm
+                                            Upcoming Chl of pub Org, canceled  by Usr,    reenter
+                                            Upcoming Chl of pub Org, canceled  by Usr, NO reenter
+                                            Upcoming Chl of pub Org, waiting   4  selfreflection
+                                            Upcoming Chl of pub Org, waiting   4  acknowledgment
+                                            Upcoming Chl of pub Org, acknowledged
     """
 
     fixtures = [
-        "test_accounts_users.json",
+        "test_accounts.json",
         "test_accounts_privacy_basic.json",
-        "test_events_completed.json",
-        "test_events_dateless.json",
-        "test_events_draft.json",
-        "test_events_pastdue.json",
-        "test_events_upcoming.json",
+        "test_challenges_completed.json",
+        "test_challenges_dateless.json",
+        "test_challenges_draft.json",
+        "test_challenges_pastdue.json",
+        "test_challenges_upcoming.json",
         "test_core_addr_acc.json",
         "test_core_addr_chl.json",
         "test_core_addr_org.json",
@@ -1643,7 +1618,7 @@ class EventDetailsViewTestCase(TestCase):
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > VIEWS > DETAILS", "green")
+        cprint("*** TEST > CHALLENGES > VIEWS > DETAILS", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
@@ -1658,24 +1633,24 @@ class EventDetailsViewTestCase(TestCase):
         self.test_user_2 = User.objects.get(id=2)
         self.test_user_4 = User.objects.get(id=4)
 
-        # --- Events
-        self.test_draft_event_11 = Event.objects.get(id=211)
-        self.test_draft_event_21 = Event.objects.get(id=221)
+        # --- Challenges
+        self.test_draft_event_11 = Challenge.objects.get(id=211)
+        self.test_draft_event_21 = Challenge.objects.get(id=221)
 
-        self.test_upcoming_private_event_12 = Event.objects.get(id=212)
-        self.test_upcoming_private_event_32 = Event.objects.get(id=232)
+        self.test_upcoming_private_event_12 = Challenge.objects.get(id=212)
+        self.test_upcoming_private_event_32 = Challenge.objects.get(id=232)
 
-        self.test_upcoming_public_event_22 = Event.objects.get(id=222)
-        self.test_upcoming_public_event_42 = Event.objects.get(id=242)
+        self.test_upcoming_public_event_22 = Challenge.objects.get(id=222)
+        self.test_upcoming_public_event_42 = Challenge.objects.get(id=242)
 
-        self.test_completed_event_13 = Event.objects.get(id=213)
-        self.test_completed_event_23 = Event.objects.get(id=223)
+        self.test_completed_event_13 = Challenge.objects.get(id=213)
+        self.test_completed_event_23 = Challenge.objects.get(id=223)
 
-        self.test_pastdue_event_24 = Event.objects.get(id=224)
-        self.test_pastdue_event_44 = Event.objects.get(id=244)
+        self.test_pastdue_event_24 = Challenge.objects.get(id=224)
+        self.test_pastdue_event_44 = Challenge.objects.get(id=244)
 
-        self.test_dateless_event_15 = Event.objects.get(id=215)
-        self.test_dateless_event_25 = Event.objects.get(id=225)
+        self.test_dateless_event_15 = Challenge.objects.get(id=215)
+        self.test_dateless_event_25 = Challenge.objects.get(id=225)
 
         # --- Organizations
         self.test_private_org_1 = Organization.objects.get(id=31)
@@ -1685,13 +1660,12 @@ class EventDetailsViewTestCase(TestCase):
         self.test_public_org_4 = Organization.objects.get(id=34)
 
     def test_user_not_logged_in_event_of_public_org(self):
-        """Event Details. User NOT logged in. Event of the public Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event of the public "
-               "Organization...", "cyan")
+        """Challenge Details. User NOT logged in. Challenge of the public Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge of the public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_22.slug,
             })
         data = {}
@@ -1700,13 +1674,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1720,13 +1693,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_22,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertIsNone(
             response.context["participation"],
             colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
@@ -1741,24 +1714,21 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_not_logged_in_event_of_private_org(self):
-        """Event Details. User NOT logged in. Event of the private Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event of the private "
-               "Organization...", "cyan")
+        """Challenge Details. User NOT logged in. Challenge of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_private_event_12.slug,
             })
         data = {}
@@ -1767,13 +1737,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1791,12 +1760,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_draft(self):
-        """Event Details. User NOT logged in. Event Draft."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event Draft...", "cyan")
+        """Challenge Details. User NOT logged in. Challenge Draft."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge Draft...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_draft_event_21.slug,
             })
         data = {}
@@ -1805,13 +1774,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1829,13 +1797,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_completed(self):
-        """Event Details. User NOT logged in. Event completed."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event completed...",
-               "cyan")
+        """Challenge Details. User NOT logged in. Challenge completed."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge completed...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_completed_event_23.slug,
             })
         data = {}
@@ -1844,13 +1811,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1868,13 +1834,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_pastdue(self):
-        """Event Details. User NOT logged in. Event past due."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event past due...",
-               "cyan")
+        """Challenge Details. User NOT logged in. Challenge past due."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge past due...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_pastdue_event_24.slug,
             })
         data = {}
@@ -1883,13 +1848,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1907,13 +1871,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_dateless(self):
-        """Event Details. User NOT logged in. Event dateless."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event dateless...",
-               "cyan")
+        """Challenge Details. User NOT logged in. Challenge dateless."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge dateless...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_dateless_event_25.slug,
             })
         data = {}
@@ -1923,13 +1886,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -1943,13 +1905,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_dateless_event_25,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertIsNone(
             response.context["participation"],
             colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
@@ -1964,20 +1926,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org(self):
-        """Event Details. User logged in. Event of the public Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -1989,7 +1948,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_42.slug,
             })
         data = {}
@@ -1998,13 +1957,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2018,13 +1976,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_42,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertIsNone(
             response.context["participation"],
             colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
@@ -2039,20 +1997,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_waiting(self):
-        """Event Details. User logged in. Event of the public Organization. Participation waiting for Confirmation."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Participation waiting for Confirmation...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Participation waiting for Confirmation."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Participation waiting for Confirmation...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2063,17 +2018,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_2,
-            event=self.test_upcoming_public_event_42,
+            challenge=self.test_upcoming_public_event_42,
             # role=,
             status=PARTICIPATION_STATUS.WAITING_FOR_CONFIRMATION,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_42.slug,
             })
         data = {}
@@ -2082,13 +2037,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2102,13 +2056,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_42,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2124,20 +2078,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_confirmed(self):
-        """Event Details. User logged in. Event of the public Organization. Participation confirmed."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Participation confirmed...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Participation confirmed."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Participation confirmed...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2148,17 +2099,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_2,
-            event=self.test_upcoming_public_event_42,
+            challenge=self.test_upcoming_public_event_42,
             # role=,
             status=PARTICIPATION_STATUS.CONFIRMED,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_42.slug,
             })
         data = {}
@@ -2167,13 +2118,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2187,13 +2137,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_42,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2209,20 +2159,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_canceled_by_admin(self):
-        """Event Details. User logged in. Event of the public Organization. Participation canceled by Admin."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Participation canceled by Admin...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by Admin."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by Admin...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2233,17 +2180,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_2,
-            event=self.test_upcoming_public_event_42,
+            challenge=self.test_upcoming_public_event_42,
             # role=,
             status=PARTICIPATION_STATUS.CANCELLED_BY_ADMIN,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_42.slug,
             })
         data = {}
@@ -2252,13 +2199,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2272,13 +2218,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_42,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2294,20 +2240,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_canceled_by_user_reenter_allowed(self):
-        """Event Details. User logged in. Event of the public Organization. Participation canceled by User. Reenter allowed."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Participation canceled by User. Reenter allowed...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by User. Reenter allowed."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by User. Reenter allowed...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2318,17 +2261,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_2,
-            event=self.test_upcoming_public_event_42,
+            challenge=self.test_upcoming_public_event_42,
             # role=,
             status=PARTICIPATION_STATUS.CANCELLED_BY_USER,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_42.slug,
             })
         data = {}
@@ -2337,13 +2280,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2357,13 +2299,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_42,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2379,20 +2321,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_canceled_by_user_reenter_not_allowed(self):
-        """Event Details. User logged in. Event of the public Organization. Participation canceled by User. Reenter NOT allowed."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Participation canceled by User. Reenter NOT allowed...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by User. Reenter NOT allowed."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Participation canceled by User. Reenter NOT allowed...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2403,17 +2342,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_4,
-            event=self.test_upcoming_public_event_22,
+            challenge=self.test_upcoming_public_event_22,
             # role=,
             status=PARTICIPATION_STATUS.CANCELLED_BY_USER,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_22.slug,
             })
         data = {}
@@ -2422,13 +2361,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2442,13 +2380,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_22,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2464,20 +2402,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_waiting_for_selfreflection(self):
-        """Event Details. User logged in. Event of the public Organization. Waiting for Selfreflection."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Waiting for Selfreflection...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Waiting for Selfreflection."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Waiting for Selfreflection...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2488,17 +2423,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_4,
-            event=self.test_upcoming_public_event_22,
+            challenge=self.test_upcoming_public_event_22,
             # role=,
             status=PARTICIPATION_STATUS.WAITING_FOR_SELFREFLECTION,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_22.slug,
             })
         data = {}
@@ -2507,13 +2442,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2527,13 +2461,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_22,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2549,20 +2483,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertTrue(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertTrue(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertTrue(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_waiting_for_acknowledgment(self):
-        """Event Details. User logged in. Event of the public Organization. Waiting for Acknowledgment."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Waiting for Acknowledgment...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Waiting for Acknowledgment."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Waiting for Acknowledgment...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2573,17 +2504,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_4,
-            event=self.test_upcoming_public_event_22,
+            challenge=self.test_upcoming_public_event_22,
             # role=,
             status=PARTICIPATION_STATUS.WAITING_FOR_ACKNOWLEDGEMENT,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_22.slug,
             })
         data = {}
@@ -2592,13 +2523,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2612,13 +2542,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_22,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2634,20 +2564,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertTrue(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_public_org_acknowledged(self):
-        """Event Details. User logged in. Event of the public Organization. Acknowledged."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the public "
-               "Organization. Acknowledged...", "cyan")
+        """Challenge Details. User logged in. Challenge of the public Organization. Acknowledged."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the public Organization. Acknowledged...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2658,17 +2585,17 @@ class EventDetailsViewTestCase(TestCase):
         # cprint("[---  DUMP   ---] LOGIN            : %s" % result, "yellow")
 
         # ---------------------------------------------------------------------
-        # --- Make User a Participant of the Event
+        # --- Make User a Participant of the Challenge
         participation = Participation.objects.create(
             user=self.test_user_4,
-            event=self.test_upcoming_public_event_22,
+            challenge=self.test_upcoming_public_event_22,
             # role=,
             status=PARTICIPATION_STATUS.ACKNOWLEDGED,
         )
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_public_event_22.slug,
             })
         data = {}
@@ -2677,13 +2604,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2697,13 +2623,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_public_event_22,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertEqual(
             response.context["participation"],
             participation,
@@ -2719,20 +2645,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertTrue(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_event_of_private_org(self):
-        """Event Details. User logged in. Event of the Private Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event of the Private "
-               "Organization...", "cyan")
+        """Challenge Details. User logged in. Challenge of the Private Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge of the Private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2744,7 +2667,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_private_event_12.slug,
             })
         data = {}
@@ -2753,13 +2676,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2779,8 +2701,8 @@ class EventDetailsViewTestCase(TestCase):
     # TODO
 
     def test_user_logged_in_event_draft(self):
-        """Event Details. User logged in. Event Draft."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event Draft...", "cyan")
+        """Challenge Details. User logged in. Challenge Draft."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge Draft...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2792,7 +2714,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_draft_event_21.slug,
             })
         data = {}
@@ -2801,13 +2723,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2825,8 +2746,8 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_logged_in_event_completed(self):
-        """Event Details. User logged in. Event completed."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. Event completed...", "cyan")
+        """Challenge Details. User logged in. Challenge completed."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. Challenge completed...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2838,7 +2759,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_completed_event_23.slug,
             })
         data = {}
@@ -2847,13 +2768,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2871,13 +2791,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_pastdue(self):
-        """Event Details. User NOT logged in. Event past due."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event past due...",
-               "cyan")
+        """Challenge Details. User NOT logged in. Challenge past due."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge past due...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_pastdue_event_24.slug,
             })
         data = {}
@@ -2886,13 +2805,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2910,13 +2828,12 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
     def test_user_not_logged_in_event_dateless(self):
-        """Event Details. User NOT logged in. Event dateless."""
-        cprint("[---  INFO   ---] Test Event Details. User NOT logged in. Event dateless...",
-               "cyan")
+        """Challenge Details. User NOT logged in. Challenge dateless."""
+        cprint("[---  INFO   ---] Test Challenge Details. User NOT logged in. Challenge dateless...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_dateless_event_25.slug,
             })
         data = {}
@@ -2926,13 +2843,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -2946,13 +2862,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_dateless_event_25,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertIsNone(
             response.context["participation"],
             colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
@@ -2967,12 +2883,10 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
@@ -2980,9 +2894,8 @@ class EventDetailsViewTestCase(TestCase):
     # TODO
 
     def test_user_logged_in_and_author_of_upcoming_chl(self):
-        """Event Details. User logged in, and the Author of the upcoming Event."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Author of the "
-               "upcoming Event...", "cyan")
+        """Challenge Details. User logged in, and the Author of the upcoming Challenge."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in, and the Author of the upcoming Challenge...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -2995,7 +2908,7 @@ class EventDetailsViewTestCase(TestCase):
         # ---------------------------------------------------------------------
         # --- Send Request
         data = {}
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_upcoming_private_event_12.slug,
             })
         response = client.get(
@@ -3003,13 +2916,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -3023,13 +2935,13 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
-            response.context["event"],
+            response.context["challenge"],
             self.test_upcoming_private_event_12,
-            colored("[---  ERROR  ---] Wrong Event returned", "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong Challenge returned", "white", "on_red"))
         self.assertIsNone(
             response.context["participation"],
             colored("[---  ERROR  ---] Wrong Participation returned", "white", "on_red"))
@@ -3044,20 +2956,17 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong `show_signup_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_selfreflection_form"],
-            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_selfreflection_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_not_participated_form"],
-            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned",
-                    "white", "on_red"))
+            colored("[---  ERROR  ---] Wrong `show_not_participated_form` returned", "white", "on_red"))
         self.assertFalse(
             response.context["show_rate_form"],
             colored("[---  ERROR  ---] Wrong `show_rate_form` returned", "white", "on_red"))
 
     def test_user_logged_in_and_staff_member_of_private_org(self):
-        """Event Details. User logged in, and the Staff Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Staff Member of the "
-               "private Organization...", "cyan")
+        """Challenge Details. User logged in, and the Staff Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in, and the Staff Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3077,7 +2986,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_private_org_3.slug,
             })
         data = {}
@@ -3086,13 +2995,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -3106,7 +3014,7 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
@@ -3115,9 +3023,8 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
 
     def test_user_logged_in_and_group_member_of_private_org(self):
-        """Event Details. User logged in, and the Group Member of the private Organization."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in, and the Group Member of the "
-               "private Organization...", "cyan")
+        """Challenge Details. User logged in, and the Group Member of the private Organization."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in, and the Group Member of the private Organization...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3139,7 +3046,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_private_org_3.slug,
             })
         data = {}
@@ -3148,13 +3055,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -3168,7 +3074,7 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
@@ -3177,9 +3083,8 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Organization returned", "white", "on_red"))
 
     def test_user_logged_in_not_subscriber(self):
-        """Event Details. User logged in. NOT an Organization Subscriber."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. NOT an Organization "
-               "Subscriber...", "cyan")
+        """Challenge Details. User logged in. NOT an Organization Subscriber."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. NOT an Organization Subscriber...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3191,7 +3096,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_public_org_4.slug,
             })
         data = {}
@@ -3200,13 +3105,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -3220,7 +3124,7 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
@@ -3232,9 +3136,8 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong subscribed Information returned", "white", "on_red"))
 
     def test_user_logged_in_subscriber(self):
-        """Event Details. User logged in. An Organization Subscriber."""
-        cprint("[---  INFO   ---] Test Event Details. User logged in. An Organization "
-               "Subscriber...", "cyan")
+        """Challenge Details. User logged in. An Organization Subscriber."""
+        cprint("[---  INFO   ---] Test Challenge Details. User logged in. An Organization Subscriber...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3251,7 +3154,7 @@ class EventDetailsViewTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        url = reverse("event-details", kwargs={
+        url = reverse("challenge-details", kwargs={
             "slug":     self.test_public_org_4.slug,
             })
         data = {}
@@ -3260,13 +3163,12 @@ class EventDetailsViewTestCase(TestCase):
             data=data,
             follow=True)
 
-        cprint(f"[---  DUMP ---] CONTEXT        : {response.context}\n"
-               f"                REQUEST        : {response.request}\n"
-               f"                STATUS         : {response.status_code}\n"
-               f"                TEMPLATES      : {response.templates}\n"
-               f"                CONTENT        : {response.content}\n"
-               f"                REDIRECT CHAIN : {response.redirect_chain}",
-               "yellow")
+        # cprint("[---  DUMP   ---] CONTEXT          : %s" % response.context["organizations"], "yellow")
+        # cprint("[---  DUMP   ---] REQUEST          : %s" % response.request, "yellow")
+        # cprint("[---  DUMP   ---] STATUS           : %s" % response.status_code, "yellow")
+        # cprint("[---  DUMP   ---] TEMPLATES        : %s" % response.templates, "yellow")
+        # cprint("[---  DUMP   ---] CONTENT          : %s" % response.content, "yellow")
+        # cprint("[---  DUMP   ---] REDIRECT CHAIN   : %s" % response.redirect_chain, "yellow")
 
         # ---------------------------------------------------------------------
         # --- Test Response
@@ -3280,7 +3182,7 @@ class EventDetailsViewTestCase(TestCase):
             colored("[---  ERROR  ---] Wrong Status Code", "white", "on_red"))
         self.assertTemplateUsed(
             response,
-            "events/event_details.html",
+            "challenges/challenge_details.html",
             colored("[---  ERROR  ---] Wrong Template used", "white", "on_red"))
 
         self.assertEqual(
@@ -3311,19 +3213,19 @@ class EventDetailsViewTestCase(TestCase):
 # === FORMS
 # ===
 # =============================================================================
-class EventCreateFormTestCase(TestCase):
+class ChallengeCreateFormTestCase(TestCase):
 
-    """Event create Test Case."""
+    """Challenge create Test Case."""
 
     fixtures = [
-        "test_accounts_users.json",
+        "test_accounts.json",
         "test_core_addr_acc.json",
     ]
 
     def setUp(self):
         """Set up."""
         cprint("***" * 27, "green")
-        cprint("*** TEST > EVENTS > FORMS > CREATE", "green")
+        cprint("*** TEST > CHALLENGES > FORMS > CREATE", "green")
 
         # ---------------------------------------------------------------------
         # --- Fake
@@ -3339,8 +3241,8 @@ class EventCreateFormTestCase(TestCase):
         self.test_user_4 = User.objects.get(id=4)
 
     def test_create_event_success(self):
-        """Event create. Success."""
-        cprint("[---  INFO   ---] Test Event create. Success...", "cyan")
+        """Challenge create. Success."""
+        cprint("[---  INFO   ---] Test Challenge create. Success...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3351,13 +3253,13 @@ class EventCreateFormTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3373,13 +3275,13 @@ class EventCreateFormTestCase(TestCase):
                 "start_time":           "00:00",
                 "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3396,8 +3298,8 @@ class EventCreateFormTestCase(TestCase):
         # self.assertIn(u"Invalid Action",form.errors["__all__"])
 
     def test_create_event_no_avatar(self):
-        """Event create. No Avatar."""
-        cprint("[---  INFO   ---] Test Event create. No Avatar...", "cyan")
+        """Challenge create. No Avatar."""
+        cprint("[---  INFO   ---] Test Challenge create. No Avatar...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3408,13 +3310,13 @@ class EventCreateFormTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3430,13 +3332,13 @@ class EventCreateFormTestCase(TestCase):
                 "start_time":           "00:00",
                 "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                # "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                # "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3450,8 +3352,8 @@ class EventCreateFormTestCase(TestCase):
             form.is_valid())
 
     def test_create_event_no_name_no_description(self):
-        """Event create. No Name, no Description."""
-        cprint("[---  INFO   ---] Test Event create. No Name, no Description...", "cyan")
+        """Challenge create. No Name, no Description."""
+        cprint("[---  INFO   ---] Test Challenge create. No Name, no Description...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3462,13 +3364,13 @@ class EventCreateFormTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                # "name":                 "Testing Event #1",
-                # "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                # "name":                 "Testing Challenge #1",
+                # "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3484,13 +3386,13 @@ class EventCreateFormTestCase(TestCase):
                 "start_time":           "00:00",
                 "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3510,8 +3412,8 @@ class EventCreateFormTestCase(TestCase):
             form.errors.as_json())
 
     def test_create_event_no_tags(self):
-        """Event create. No Tags."""
-        cprint("[---  INFO   ---] Test Event create. No Tags...", "cyan")
+        """Challenge create. No Tags."""
+        cprint("[---  INFO   ---] Test Challenge create. No Tags...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3522,13 +3424,13 @@ class EventCreateFormTestCase(TestCase):
 
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                # "tags":                 "testing,event",
-                # "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                # "tags":                 "testing,challenge",
+                # "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3544,13 +3446,13 @@ class EventCreateFormTestCase(TestCase):
                 "start_time":           "00:00",
                 "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3570,8 +3472,8 @@ class EventCreateFormTestCase(TestCase):
             form.errors.as_json())
 
     def test_create_event_dateless(self):
-        """Event create. Dateless."""
-        cprint("[---  INFO   ---] Test Event create. Dateless...", "cyan")
+        """Challenge create. Dateless."""
+        cprint("[---  INFO   ---] Test Challenge create. Dateless...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3584,13 +3486,13 @@ class EventCreateFormTestCase(TestCase):
         # --- Successful
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3606,13 +3508,13 @@ class EventCreateFormTestCase(TestCase):
                 # "start_time":           "00:00",
                 # "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3648,8 +3550,8 @@ class EventCreateFormTestCase(TestCase):
         self.assertIsNotNone(instance.start_tz)
 
     def test_create_event_once(self):
-        """Event create. Once. Success."""
-        cprint("[---  INFO   ---] Test Event create. Once...", "cyan")
+        """Challenge create. Once. Success."""
+        cprint("[---  INFO   ---] Test Challenge create. Once...", "cyan")
 
         # ---------------------------------------------------------------------
         # --- Log in
@@ -3662,13 +3564,13 @@ class EventCreateFormTestCase(TestCase):
         # --- Successful
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3684,13 +3586,13 @@ class EventCreateFormTestCase(TestCase):
                 "start_time":           "00:00",
                 "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3729,13 +3631,13 @@ class EventCreateFormTestCase(TestCase):
         # --- No Date/Time
         # ---------------------------------------------------------------------
         # --- Send Request
-        form = CreateEditEventForm(
+        form = CreateEditChallengeForm(
             data={
-                "name":                 "Testing Event #1",
-                "description":          "Description for the testing Event #1",
-                "category":             EVENT_CATEGORY.ANIMALS,
-                "tags":                 "testing,event",
-                "hashtag":              "testing-event",
+                "name":                 "Testing Challenge #1",
+                "description":          "Description for the testing Challenge #1",
+                "category":             CHALLENGE_CATEGORY.ANIMALS,
+                "tags":                 "testing,challenge",
+                "hashtag":              "testing-challenge",
                 "duration":             8,
                 "addressless":          False,
                 "is_alt_person":        False,
@@ -3751,13 +3653,13 @@ class EventCreateFormTestCase(TestCase):
                 # "start_time":           "00:00",
                 # "start_tz":             "America/Los_Angeles",
                 "organization":         None,
-                "application":          EVENT_MODE.FREE_FOR_ALL,
+                "application":          CHALLENGE_MODE.FREE_FOR_ALL,
                 "allow_reenter":        True,
                 "accept_automatically": True,
                 "acceptance_text":      "Great Job",
             },
             files={
-                "avatar":               File(open("static/img/tests/event-test.jpg", "rb")),
+                "avatar":               File(open("static/img/tests/challenge-test.jpg", "rb")),
             },
             user=self.test_user_1,
             )
@@ -3778,24 +3680,27 @@ class EventCreateFormTestCase(TestCase):
 
 
 """
-    self.assertEqual                /               self.assertNotEqual
+    self.assertEqual                /   self.assertNotEqual
     self.assertGreater
     self.assertGreaterEqual
     self.assertLess
     self.assertLessEqual
-    self.assertTrue                 /               self.assertFalse
-    self.assertIs                   /               self.assertIsNot
-    self.assertIsNone               /               self.assertIsNotNone
-    self.assertIn                   /               self.assertNotIn
-    self.assertIsInstance           /               self.assertNotIsInstance
-    self.assertRegexpMatches        /               self.assertNotRegexpMatches
+    self.assertTrue                 /   self.assertFalse
+    self.assertIs                   /   self.assertIsNot
+    self.assertIsNone               /   self.assertIsNotNone
+    self.assertIn                   /   self.assertNotIn
+    self.assertIsInstance           /   self.assertNotIsInstance
+    self.assertRegexpMatches        /   self.assertNotRegexpMatches
+
     self.assertRaises
+    self.assertRaisesMessage
     self.assertRaisesRegexp
 
     self.assertDictContainsSubset
+    self.assertNumQueries
 
-    self.assertContains             /               self.assertNotContains
-    self.assertTemplateUsed         /               self.assertTemplateNotUsed
+    self.assertContains             /   self.assertNotContains
+    self.assertTemplateUsed         /   self.assertTemplateNotUsed
     self.assertInHTML
-    self.assertJSONEqual            /               self.assertJSONNotEqual
+    self.assertJSONEqual            /   self.assertJSONNotEqual
 """

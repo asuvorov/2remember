@@ -1,0 +1,21 @@
+[
+    {
+        "pk":       1,
+        "model":    "events.Event",
+        "fields":   {
+            "author":               1,
+            "title":                "Event #1",
+            "description":          "Description for the Event #1.",
+            "slug":                 "event-1",
+            "category":             null,
+            "addressless":          true,
+            "address":              null,
+            "start_date":           "2016-01-01",
+            "organization":         null,
+            "allow_comments":       true,
+            "is_newly_created":     true,
+            "created":              "2016-01-01 00:00:00-0700",
+            "modified":             "2016-01-01 00:00:00-0700"
+        }
+    }
+]

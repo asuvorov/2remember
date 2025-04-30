@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib.sitemaps import Sitemap
@@ -23,10 +23,6 @@ class HomeSitemap(Sitemap):
             # "account-online-list",
             "contact-us",
             "event-list",
-            # "event-near-you-list",
-            # "event-new-list",
-            # "event-dateless-list",
-            # "event-featured-list",
             "faq",
             # "haystack_search",
             "index",

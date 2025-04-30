@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from decouple import config
@@ -13,6 +13,7 @@ from .base import *
 # --- Override Settings here.
 # -----------------------------------------------------------------------------
 DEBUG = True
+DOMAIN_NAME = "127.0.0.1:8000"
 
 
 ###############################################################################
@@ -34,8 +35,8 @@ DEBUG = True
 #     "CacheControl":     "max-age=86400",
 # }
 
-# DEFAULT_FILE_STORAGE = "ddcore.S3Util.PublicMediaS3BotoStorage"
-# STATICFILES_STORAGE = "ddcore.S3Util.CachedS3BotoStorage"
+# DEFAULT_FILE_STORAGE = "ddcore.aws.S3Util.PublicMediaS3BotoStorage"
+# STATICFILES_STORAGE = "ddcore.aws.S3Util.CachedS3BotoStorage"
 # STATIC_URL = f"https://{AWS_S3_BUCKET_DOMAIN}/static/"
 # MEDIA_URL = f"https://{AWS_S3_BUCKET_DOMAIN}/media/"
 

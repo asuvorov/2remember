@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 import os
@@ -8,6 +8,7 @@ import os.path
 from django.utils.translation import gettext_lazy as _
 
 from decouple import config
+from termcolor import cprint
 
 from . import __version__
 
@@ -105,8 +106,6 @@ STATICFILES_FINDERS = (
 SECRET_KEY = config("SECRET_KEY", default="@zew8t_wcz!qn9=8+hheltx@&b#!x@i6ores96lhbnobr3jp*c")
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 
-print(f">>> {SECURE_SSL_REDIRECT=}")
-
 TEMPLATES = [
     {
         "BACKEND":  "django.template.backends.django.DjangoTemplates",
@@ -139,6 +138,7 @@ TEMPLATES = [
                 "social_django.context_processors.login_redirect",
 
                 "accounts.context_processors.signin_form",
+                "accounts.context_processors.eligibility",
 
                 "events.context_processors.pb_event_choices",
                 "events.context_processors.pb_participation_choices",
@@ -179,7 +179,7 @@ ROOT_URLCONF = "urls"
 WSGI_APPLICATION = "wsgi.application"
 
 INSTALLED_APPS = (
-    # --- Django Apps
+    # --- Django Apps.
     "grappelli",
 
     "django.contrib.admin",
@@ -192,11 +192,9 @@ INSTALLED_APPS = (
     # "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
 
-    # --- 3rd Party Apps
+    # --- 3rd Party Apps.
     "adminsortable2",
-    # "bootstrap3_datetime",
     "corsheaders",
-    "ddcore",
     # "django_countries",
     "django_static_fontawesome",
     "django_static_ionicons",
@@ -210,18 +208,23 @@ INSTALLED_APPS = (
     "twitter_tag",
     "url_tools",
 
-    # --- Project Apps
+    # --- DDaemon Family Apps.
+    "ddcore",
+    "papertrail",
+    "privateurl",
+
+    # --- Project Apps.
     "accounts",
     "api",
     "app",
     "blog",
+    "collection",
     "events",
     "home",
     "invites",
     "organizations",
-    "papertrail",
     "places",
-    # "tests",
+    "tests",
 )
 
 SESSION_SERIALIZER = "django.contrib.sessions.serializers.JSONSerializer"
@@ -239,7 +242,7 @@ CACHES = {
         # "LOCATION": "127.0.0.1:11211",
         "LOCATION": "unix:/tmp/memcached.sock",
         "OPTIONS": {
-            "MAX_ENTRIES":      1000,
+            # "MAX_ENTRIES":      1000,
             "no_delay":         True,
             "ignore_exc":       True,
             "max_pool_size":    4,
@@ -330,7 +333,7 @@ LOGGING = {
                 "require_debug_true",
             ],
             "class":        "logging.StreamHandler",
-            "formatter":    "simple",
+            "formatter":    "json",  # "simple",
         },
         "json_file": {
             "level":        "DEBUG",
@@ -393,18 +396,194 @@ AUTH_USER_MODEL = "ddcore.User"
 ###############################################################################
 ### CUSTOM PROJECT SETTINGS                                                 ###
 ###############################################################################
-PAYPAL_SHARE_LINK = "https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&currency_code=USD"
+PAYPAL_SHARE_LINK = ("https://www.paypal.com/donate/?business=LGZD2EA4KZYAG&no_recurring=0"
+                     "&item_name=Thank+you+for+your+Support.%0AYour+Donation+makes+a+Difference%21&"
+                     "currency_code=USD")
 
 SELFREFLECTION_SUBMIT_DURATION_PERIOD = 7  # Days
 PROFILE_COMPLETENESS_GRACE_PERIOD = 5  # Days
 
+COLLECTION_TITLE_RESERVED_WORDS = [
+    "create", "edit",
+]
 EVENT_TITLE_RESERVED_WORDS = [
-    "near-you", "new", "dateless", "featured", "categories",
+    "create", "edit", "near-you", "new", "dateless", "featured", "categories",
 ]
 ORGANIZATION_TITLE_RESERVED_WORDS = [
-    "directory", "create",
+    "create", "edit", "directory", "create",
 ]
 
+SUBSCRIPTION_PLANS = {
+    "DEV": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "images": {
+                "max_width":            900,
+                "max_height":           600,
+                "max_file_size":        10485760,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        10485760,
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+            "video_urls": {
+                "max_per_event":        2,
+                "max_per_organization": 2,
+            },
+        },
+        "accounts": {},
+        "collections": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "events": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+    "BASIC": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "images": {
+                "max_width":            1600,
+                "max_height":           900,
+                "max_file_size":        10485760,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+                "quality":              80,
+            },
+            "video": {
+                "max_file_size":        10485760,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "collections": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "events": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+    "TIER-1": {
+        "fare": 0,  # Cents.
+        "attachments": {
+            "documents": {
+                "max_file_size":        5242800,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "images": {
+                "max_width":            1920,
+                "max_height":           1080,
+                "max_file_size":        10485760,
+                "max_per_event":        25,
+                "max_per_organization": 25,
+                "quality":              90,
+            },
+            "video": {
+                "max_file_size":        10485760,
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+            "video_urls": {
+                "max_per_event":        5,
+                "max_per_organization": 5,
+            },
+        },
+        "accounts": {},
+        "collections": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "events": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    False,
+        },
+        "organizations": {
+            "max_per_day":          1,
+            "max_per_week":         None,
+            "max_per_month":        None,
+            "max_per_year":         None,
+            "upon_request_only":    True,
+        },
+        "places": {},
+    },
+}
+SUBSCRIPTION_PLAN_DEFAULT = "BASIC"
+
+#  720p – SD (1280 x 720)
+#            (1600 x 900)
+# 1080p – HD (1920 x 1080)
+# 1440p – 2K (2560 x 1440)
+# 2160p – 4K (3840 x 2160)
 
 ###############################################################################
 ### DJANGO BOWER                                                            ###
@@ -422,29 +601,87 @@ BOWER_INSTALLED_APPS = (
     "bootpag",
     "bootstrap#5.3.3",
     "bootstrap-maxlength",
-    # "bootstrap-rating",
     # "bootstrap-tagsinput",
-    # "bx-slider.js",
-    # "equalheight",
     "jquery#3.7.1",
-    # "jquery.inputmask",
     "jquery-colorbox",
     "jquery-file-upload#10.32.0",
     "jquery-popup-overlay#1.6.0",
-    # "jquery-shorten-js",
-    # "jquery-sticky",
     "jquery-ui#1.12.1",
-    # "jt.timepicker",
     "less.js#4.2.0",
-    # "modernizr",
     "moment#2.30.1",
     "noty#3.1.4",
     "readmore-js",
-    # "seiyria-bootstrap-slider",
-    # "smooth-scroll.js",
-    # "tablesorter",
     "underscore#1.13.6",
 )
+
+
+###############################################################################
+### DJANGO BOOTSTRAP DATEPICKER                                             ###
+###############################################################################
+INSTALLED_APPS += (
+    "bootstrap_datepicker_plus",
+)
+
+BOOTSTRAP_DATEPICKER_PLUS = {
+    # -------------------------------------------------------------------------
+    # --- Options for all Input Widgets.
+    #     More Options: https://getdatepicker.com/4/Options/
+    "options": {
+        # "locale": "bn",
+        "showClose":        True,
+        "showClear":        True,
+        "showTodayButton":  True,
+        "allowInputToggle": True,
+    },
+    # -------------------------------------------------------------------------
+    # --- You can set Date and Event Hook Options, using JavaScript, Usage in README.
+    #     You can also set Options for specific Variant Widgets only, which overrides
+    #     above Options.
+    "variant_options": {
+        "date": {
+            "format":   "MM/DD/YYYY",
+        },
+        "datetime": {
+            "format":   "MM/DD/YYYY HH:mm",
+        },
+        "month": {
+            "format":   "MMMM, YYYY",
+        },
+    },
+    # -------------------------------------------------------------------------
+    # --- HTML Attributes for Widget <input> Element.
+    "attrs": {
+        "class":    "form-control",
+    },
+    # -------------------------------------------------------------------------
+    # --- Override <input> Addon Icon Classes.
+    "addon_icon_classes": {
+        "month":    "bi-calendar-month",
+    },
+    # -------------------------------------------------------------------------
+    # --- HTML Template to render the HTML Input.
+    #     Example: https://github.com/monim67/django-bootstrap-datepicker-plus/blob/5.0.0/dev/myapp/templates/myapp/custom-input.html
+    #
+    # "template_name": "your-app/custom-input.html",
+    #
+    # Advanced: Choose where from static JS/CSS files are served.
+    # defaults: https://github.com/monim67/django-bootstrap-datepicker-plus/blob/5.0.0/src/bootstrap_datepicker_plus/settings.py#L16
+    # To serve from any other preferred CDN, just update the options below.
+    # You can also set them to None if you already have the following resources
+    # included into your template.
+    #
+    # "datetimepicker_js_url": "https://..",
+    # "datetimepicker_css_url": "https://..",
+    # "momentjs_url": None,  # If you already have momentjs added into your template
+    # "bootstrap_icon_css_url": None,  # If you don't need bootstrap icons
+    #
+    # If you want to serve static files yourself without CDN (from staticfiles) and
+    # you know how to serve django static files on production server (DEBUG=False)
+    # Then download the js/css files to any of your static directory, update the js/css
+    # urls above and set the following option
+    #
+    # "app_static_url": "bootstrap_datepicker_plus/",
+}
 
 
 ###############################################################################
@@ -497,7 +734,8 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "forms",
 #                 "items": [
-#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button", "ImageButton", "HiddenField",
+#                     "Form", "Checkbox", "Radio", "TextField", "Textarea", "Select", "Button",
+#                     "ImageButton", "HiddenField",
 #                 ]
 #             },
 #             "/",
@@ -527,7 +765,8 @@ CKEDITOR_UPLOAD_SLUGIFY_FILENAME = True
 #             {
 #                 "name":     "insert",
 #                 "items": [
-#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar", "PageBreak", "Iframe",
+#                     "Image", "Flash", "Table", "HorizontalRule", "Smiley", "SpecialChar",
+#                     "PageBreak", "Iframe",
 #                 ]
 #             },
 #             "/",
@@ -807,6 +1046,9 @@ MAX_POSTS_PER_QUERY = 100
 MAX_EVENTS_PER_PAGE = 25
 MAX_EVENTS_PER_QUERY = 250
 
+MAX_COLLECTIONS_PER_PAGE = 25
+MAX_COLLECTIONS_PER_QUERY = 250
+
 MAX_ORGANIZATIONS_PER_PAGE = 25
 MAX_ORGANIZATIONS_PER_QUERY = 250
 
@@ -817,15 +1059,18 @@ MAX_ORGANIZATIONS_PER_QUERY = 250
 PASSWORD_MIN_LENGTH = 6         # Defaults to 6
 PASSWORD_MAX_LENGTH = 30        # Defaults to None
 PASSWORD_DICTIONARY = None
-PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly the same.
-PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for default
+PASSWORD_MATCH_THRESHOLD = 0.9  # Defaults to 0.9, should be 0.0 - 1.0, where 1.0 means exactly
+                                # the same.
+PASSWORD_COMMON_SEQUENCES = []  # Should be a List of Strings. See `passwords/validators.py` for
+                                # default
 PASSWORD_COMPLEXITY = {         # You can omit any or all of these for no Limit for that particular Set
     "UPPER":    1,              # Uppercase
     "LOWER":    1,              # Lowercase
     "LETTERS":  1,              # Either uppercase or lowercase Letters
     "DIGITS":   1,              # Digits
     "SPECIAL":  1,              # Not alphanumeric, Space or punctuation Character
-    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or punctuation character)
+    "WORDS":    0,              # Words (alphanumeric Sequences, separated by a Whitespace or
+                                # punctuation character)
 }
 
 
@@ -880,7 +1125,8 @@ INSTALLED_APPS += (
 ROSETTA_MESSAGES_PER_PAGE = 20
 ROSETTA_ENABLE_TRANSLATION_SUGGESTIONS = True
 
-YANDEX_TRANSLATE_KEY = "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
+YANDEX_TRANSLATE_KEY =\
+    "trnsl.1.1.20160321T202549Z.dc1425f58a3b7ddc.425ec99eb6632647ee447824f70d71f9dbaddb45"
 
 AZURE_CLIENT_ID = None
 AZURE_CLIENT_SECRET = None
@@ -1098,32 +1344,35 @@ WHITENOISE_MAX_AGE = 31536000
 
 
 ###############################################################################
-### EMAILING                                                                 ###
+### EMAILING                                                                ###
 ###############################################################################
-EMAIL_SENDER = "no-reply@2remember.live"
-EMAIL_SUPPORT = "support@2remember.live"
+# --- DOC : For Reference: https://www.twilio.com/docs/sendgrid/for-developers/sending-email/django
+SENDGRID_API_KEY = config("SENDGRID_API_KEY", default="")
 
+EMAIL_SENDER = "admin@copycatsoftware.org"
+EMAIL_SUPPORT = "artem.suvorov@copycatsoftware.llc"
 
 EMAIL_BACKEND = config("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")  # "django.core.mail.backends.console.EmailBackend"
                                                                                                 # "django.core.mail.backends.filebased.EmailBackend"
                                                                                                 # "django.core.mail.backends.locmem.EmailBackend"
                                                                                                 # "django.core.mail.backends.dummy.EmailBackend"
-EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)  # e.g. "/tmp/app-messages"
-EMAIL_HOST = config("EMAIL_HOST", default="localhost")
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_PORT = config("EMAIL_PORT", default=25)
+EMAIL_FILE_PATH = config("EMAIL_FILE_PATH", default=None)                   # e.g. "/tmp/app-messages"
+EMAIL_HOST = config("EMAIL_HOST", default="localhost", cast=str)            # This is exactly the Value `"smtp.sendgrid.net"`, if using Sendgrid.
+EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="", cast=str)           # This is exactly the Value `"apikey"`, if using Sendgrid.
+EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="", cast=str)   # This is the Value of your `SENDGRID_API_KEY`, if using Sendgrid.
+EMAIL_PORT = config("EMAIL_PORT", default=25)                               # This is exactly the Value `587`, if using Sendgrid.
 EMAIL_SUBJECT_PREFIX = config("EMAIL_SUBJECT_PREFIX", default="[Django] ")
 EMAIL_USE_LOCALTIME = config("EMAIL_USE_LOCALTIME", default=False)
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False)
-EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False)
+EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)           # This is exactly the Value `True`, if using Sendgrid.
+EMAIL_USE_SSL = config("EMAIL_USE_SSL", default=False, cast=bool)
 EMAIL_SSL_CERTFILE = config("EMAIL_SSL_CERTFILE", default=None)
 EMAIL_SSL_KEYFILE = config("EMAIL_SSL_KEYFILE", default=None)
-EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
+EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None, cast=int)
 
-# --- SendGrid Gateway
-# EMAIL_BACKEND = "sgbackend.SendGridBackend"
-# SENDGRID_API_KEY = ""
+# cprint(f">>> {EMAIL_HOST=}", "cyan")
+# cprint(f">>> {EMAIL_HOST_USER=}", "cyan")
+# cprint(f">>> {EMAIL_HOST_PASSWORD=}", "cyan")
+# cprint(f">>> {EMAIL_USE_TLS=}", "cyan")
 
 
 ###############################################################################
@@ -1136,7 +1385,7 @@ EMAIL_TIMEOUT = config("EMAIL_TIMEOUT", default=None)
 ###############################################################################
 PB_SOCIAL_LINKS = {
     "PB_FACEBOOK":  "#",
-    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live"    / S1
+    "PB_TWITTER":   "https://x.com/2rememberlive",  # --- On behalf of "support@2remember.live" / S1
     "PB_LINKEDIN":  "#",
     "PB_GOOGLE":    "#",
     "PB_PINTEREST": "#",
@@ -1167,9 +1416,6 @@ UPLOADER_SETTINGS = {
             "tiff": "image/tiff",
             "webp": "image/webp",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "documents": {
         "MIME_TYPES_MAP": {
@@ -1181,9 +1427,6 @@ UPLOADER_SETTINGS = {
             "rtf":  "application/rtf",
             "txt":  "text/plain",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "images": {
         "MIME_TYPES_MAP": {
@@ -1196,9 +1439,6 @@ UPLOADER_SETTINGS = {
             "tiff": "image/tiff",
             "webp": "image/webp",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "video": {
         "MIME_TYPES_MAP": {
@@ -1209,9 +1449,6 @@ UPLOADER_SETTINGS = {
             "ogv":  "video/ogg",
             "webm": "video/webm",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
     },
     "audio": {
         "MIME_TYPES_MAP": {
@@ -1223,26 +1460,36 @@ UPLOADER_SETTINGS = {
             "wav":  "audio/wav",
             "weba": "audio/webm",
         },
-        "MAX_FILE_SIZE":    10485760,
-        "MAX_FILE_NUMBER":  5,
-        "AUTO_UPLOAD":      True,
-    }
+    },
 }
-
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_DEFAULTS = [key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DEFAULTS_STR = ", ".join(SUPPORTED_DEFAULTS)
-SUPPORTED_DEFAULTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DEFAULTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
-
+SUPPORTED_DEFAULTS_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DEFAULTS_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["default"]["MIME_TYPES_MAP"].items()])
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_DOCUMENTS = [key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_DOCUMENTS_STR = ", ".join(SUPPORTED_DOCUMENTS)
-SUPPORTED_DOCUMENTS_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_DOCUMENTS_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
-
+SUPPORTED_DOCUMENTS_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_DOCUMENTS_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["documents"]["MIME_TYPES_MAP"].items()])
+# -------------------------------------------------------------------------------------------------
 SUPPORTED_IMAGES = [key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()]
 SUPPORTED_IMAGES_STR = ", ".join(SUPPORTED_IMAGES)
-SUPPORTED_IMAGES_STR_EXT = ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
-SUPPORTED_IMAGES_STR_REG = "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_IMAGES_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["images"]["MIME_TYPES_MAP"].items()])
+# -------------------------------------------------------------------------------------------------
+SUPPORTED_VIDEO = [key for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()]
+SUPPORTED_VIDEO_STR = ", ".join(SUPPORTED_VIDEO)
+SUPPORTED_VIDEO_STR_EXT =\
+    ",".join([f".{key}" for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()])
+SUPPORTED_VIDEO_STR_REG =\
+    "|".join([key for key, val in UPLOADER_SETTINGS["video"]["MIME_TYPES_MAP"].items()])
 
 
 ###############################################################################

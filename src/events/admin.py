@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.contrib import admin
@@ -43,6 +43,7 @@ from .models import (
 # -----------------------------------------------------------------------------
 # --- Event Category Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Category Admin."""
 
@@ -90,9 +91,6 @@ class CategoryAdmin(admin.ModelAdmin, ImagesAdminMixin):
     inlines = []
 
 
-admin.site.register(Category, CategoryAdmin)
-
-
 # =============================================================================
 # ===
 # === EVENT ADMIN
@@ -136,6 +134,7 @@ admin.site.register(Category, CategoryAdmin)
 # -----------------------------------------------------------------------------
 # --- Event Admin.
 # -----------------------------------------------------------------------------
+@admin.register(Event)
 class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
     """Event Admin."""
 
@@ -155,17 +154,26 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         ("", {
             "classes":  (""),
             "fields":   (
+                ("id", "uid"),
                 "author",
                 ("preview", "preview_image_tag"),
                 ("cover", "cover_image_tag"),
                 ("title", "event_url"),
                 "description",
                 "custom_data",
-                ("category", "visibility", "organization"),
+                ("category", "visibility"),
                 # ("status", "application"),
                 # "duration",
                 # "achievements",
                 # "closed_reason",
+            ),
+        }),
+        ("Relations", {
+            "classes":  (
+                "grp-collapse grp-open",
+            ),
+            "fields":   (
+                ("followers", "subscribers", "organization"),
             ),
         }),
         ("Tags", {
@@ -207,7 +215,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
                 "grp-collapse grp-open",
             ),
             "fields":   (
-                ("allow_comments", "is_newly_created"),
+                ("allow_comments", "is_newly_created", "is_hidden", "is_deleted"),
                 # "allow_reenter",
                 # ("accept_automatically", "acceptance_text",),
             ),
@@ -227,7 +235,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "id", "title", "author",
         "preview_image_tag", "cover_image_tag", "start_date",
         "organization", "visibility",
-        "addressless", "allow_comments", "is_newly_created",
+        "addressless", "allow_comments", "is_newly_created", "is_hidden", "is_deleted",
         "created_by", "created", "modified_by", "modified",
     ]
     list_display_links = [
@@ -245,6 +253,7 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
         "title", "organization",
     ]
     readonly_fields = [
+        "id", "uid",
         "preview_image_tag", "cover_image_tag", "event_url",
         "created", "modified",
     ]
@@ -292,9 +301,6 @@ class EventAdmin(admin.ModelAdmin, ImagesAdminMixin):
             "complaint-deleted",
         ),
     }
-
-
-admin.site.register(Event, EventAdmin)
 
 
 # =============================================================================
@@ -366,6 +372,3 @@ admin.site.register(Event, EventAdmin)
 #     readonly_fields = [
 #         "image_tag",
 #     ]
-
-
-# admin.site.register(Participation, ParticipationAdmin)

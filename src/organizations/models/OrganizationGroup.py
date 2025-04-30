@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.conf import settings
@@ -53,7 +53,8 @@ class OrganizationGroup(
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True, blank=True,
         related_name="organization_group_author",
         verbose_name=_("Author"),
         help_text=_("Organization Group Author"))

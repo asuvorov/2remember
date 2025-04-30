@@ -1,0 +1,40 @@
+{% load i18n %}
+{% load imagekit %}
+
+{% comment %}
+    Input Parameters:
+        :<request> - Request
+
+        :<collection>         - Collection
+        :[show_rate_form]     - Show rate Form?
+        :[show_complain_form] - Show complain Form?
+{% endcomment %}
+
+{% if collection.author == request.user %}
+    <a class="btn btn-warning w-100 mb-2" href="{% url 'collection-edit' collection.slug %}"><i class="bi bi-braces-asterisk"></i>&nbsp;{% trans "Edit Collection" %}</a>
+{% else %}
+    <!-- Add Complaint -->
+    {% if show_complain_form %}
+        <div class="alert alert-danger mb-2" role="alert">
+            <strong">{% trans "Disclaimer" %}</strong><br/>
+        {% blocktrans %}
+            Let us know, if there's something to complain about it.
+        {% endblocktrans %}
+        </div>
+
+        <a class="btn btn-danger w-100 mb-2 add-complaint" href="#"><i class="bi bi-info-circle"></i>&nbsp;{% trans "Complain" %}</a>
+    {% endif %}
+{% endif %}
+
+<hr>
+
+<p>
+{% if collection.is_private %}
+    <span class="badge text-bg-warning">{% trans "Private" %}</span>
+{% else %}
+    <span class="badge text-bg-success">{% trans "Public" %}</span>
+{% endif %}<br/>
+
+{% if collection.allow_comments %}<i class="accept bi bi-check-lg"></i>{% else %}<i class="reject bi bi-x-lg"></i>{% endif %}
+    Allow Comments
+</p>

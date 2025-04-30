@@ -25,7 +25,7 @@
         {% if post.is_draft %}
             <span><i class="bi bi-vector-pen"></i><sup>{% trans "Draft" %}</sup></span>
         {% endif %}
-            {{ post.title|truncatechars:50 }}
+            <a href="{% url 'post-details' post.slug %}">{{ post.title|truncatechars:50 }}</a>
         </h5>
     </div>
 
@@ -54,16 +54,16 @@
         {% else %}
             <img src="{{ STATIC_URL }}img/no-avatar.png" height="30" width="30" alt="" />
         {% endif %}
-            <a href="{% url 'profile-view' post.author_id %}"> {{ post.author.first_name }}</a> {{ post.created|timesince }} {% trans "ago" %}
+            <a href="{% url 'profile-view' post.author.uid %}"> {{ post.author.first_name }}</a> {{ post.created|timesince }} {% trans "ago" %}
         </p>
     </div>
 
     <div class="card-footer bg-transparent d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
         <p class="card-text col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
             <small class="text-muted">
-                <i class="bi bi-feather"></i> {{ post.get_comments_count }}
+                <i class="bi bi-feather"></i> {{ post.comments_count }}
                 <span class="vert-delimiter">|</span>
-                <i class="bi bi-eye"></i> {{ post.get_views_count }}
+                <i class="bi bi-eye"></i> {{ post.views_count }}
 
                 <br/>
 
@@ -73,6 +73,9 @@
 
         <div class="learn-more text-end">
             <a class="btn btn-warning" href="{% url 'post-details' post.slug %}">{% trans "LEARN MORE" %} <i class="bi bi-chevron-double-right"></i></a>
+        {% if request.user.is_staff %}
+            <a class="btn btn-warning mx-2" href="{% url 'post-edit' post.slug %}"><i class="bi bi-braces-asterisk"></i> {% trans "Edit Post" %}</a>
+        {% endif %}
         </div>
     </div>
 </div>

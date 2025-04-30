@@ -1,5 +1,5 @@
 """
-(C) 2013-2024 Copycat Software, LLC. All Rights Reserved.
+(C) 2013-2025 Copycat Software, LLC. All Rights Reserved.
 """
 
 from django.db import models
@@ -182,6 +182,7 @@ class Category(TitleSlugDescriptionBaseModel):
     objects = CategoryManager()
 
     class Meta:
+        app_label = "events"
         verbose_name = _("category")
         verbose_name_plural = _("categories")
         ordering = ["id", ]
