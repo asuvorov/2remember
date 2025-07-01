@@ -8,7 +8,7 @@ import logging
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.core.cache import cache
+# from django.core.cache import cache
 from django.template import loader
 from django.utils.translation import ugettext_lazy as _
 
@@ -44,7 +44,9 @@ from ddcore.models import (
 # pylint: disable=import-error
 from accounts.models import UserProfile
 from api.auth import CsrfExemptSessionAuthentication
-from app import logconst
+from app import (
+    cache,
+    logconst)
 from app.decorators import log_default
 from app.logformat import Format
 from blog.models import Post
@@ -84,40 +86,40 @@ class TmpUploadViewSet(APIView):
                 "message":      _("No Files attached."),
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        cprint(f"    [--- DUMP ---] REQUEST DATA : {request.data}\n"
+               f"                                : {request.FILES['file'].name}\n"
+               f"                                : {request.FILES['file'].size}", "yellow")
+
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
-        # instance = None
-        # instance_type = request.data.get("instance_type")
-        # instance_id = request.data.get("instance_id")
+        instance_type = request.data.get("instance_type")
+        instance_uid = request.data.get("instance_uid")
+        if (
+                not instance_type or
+                not instance_uid):
+            return Response({
+                "message":      _("Missing mandatory Parameters."),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        result = {}
 
         subscription_plan = settings.SUBSCRIPTION_PLANS[settings.SUBSCRIPTION_PLAN_DEFAULT]
         if request.user.is_staff:
             subscription_plan = settings.SUBSCRIPTION_PLANS["ADMIN"]
-
-        tmp_file = TemporaryFile.objects.create(
-            file=request.FILES["file"],
-            name=request.FILES["file"].name)
-        result = {
-            "tmp_file_id":      tmp_file.id,
-            "tmp_file_name":    tmp_file.file.name,
-            "tmp_file_size":    tmp_file.file.size,
-        }
-
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {result}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- START SANITIZING UPLOAD
         # ---------------------------------------------------------------------
         # --- Verify File Type.
         # ---------------------------------------------------------------------
-        file_ext = tmp_file.file.name.split(".")[-1].lower()
+        file_ext = request.FILES["file"].name.split(".")[-1].lower()
         if file_ext in settings.SUPPORTED_IMAGES:
-            media = "images"
+            media_type, upload_type = "images", "image"
         elif file_ext in settings.SUPPORTED_DOCUMENTS:
-            media = "documents"
+            media_type, upload_type = "documents", "document"
         elif file_ext in settings.SUPPORTED_VIDEO:
-            media = "video"
+            media_type, upload_type = "video", "video"
         else:
             cprint("[---  ERROR  ---] Upload - unsupported Type", "white", "on_red")
 
@@ -125,69 +127,44 @@ class TmpUploadViewSet(APIView):
             # --- Save the Log
 
             return Response({
-                "files":    [],
+                "message":      _("Unsupported Media Type."),
             }, status=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
-
-        # ---------------------------------------------------------------------
-        # --- Verify File Amount.
-        # ---------------------------------------------------------------------
-        # --- Pull out cached Data.
-        # ---------------------------------------------------------------------
-        # upload_numbers = cache.get(f"upload_numbers_{instance_type}_{instance_id}")
-        # if not upload_numbers:
-        #     # -----------------------------------------------------------------
-        #     # --- Pull the Instance.
-        #     if instance_type == "event":
-        #         instance = get_object_or_None(Event, id=instance_id)
-        #     elif instance_type == "organization":
-        #         instance = get_object_or_None(Organization, id=instance_id)
-
-        #     if not instance:
-        #         return Response({
-        #             "message":      _("Instance not found."),
-        #         }, status=status.HTTP_404_NOT_FOUND)
-
-        #     # -----------------------------------------------------------------
-        #     # --- Pull the Instance's saved and temporary Images.
-        #     saved_images = instance.image_count
-
-        #     # -----------------------------------------------------------------
-        #     # --- Pull the Instance's saved and temporary Documents.
-        #     saved_documents = instance.document_count
-
-        #     # -----------------------------------------------------------------
-        #     # --- Pull the Instance's saved and temporary Video.
-
-        #     # -----------------------------------------------------------------
-        #     # --- Prepare Payload.
-        #     upload_numbers = {
-        #         "images": {
-        #             "saved_images": saved_images,
-        #             "temp_images": temp_images,
-        #             "total_images": total_images,
-        #         },
-        #         "documents": {
-        #             "saved_documents": saved_documents,
-        #             "temp_documents": temp_documents,
-        #             "total_documents": total_documents,
-        #         },
-        #         "video": {},
-        #     }
-
-        #     cache.set(f"upload_numbers_{instance_type}_{instance_id}", upload_numbers, 60)
 
         # ---------------------------------------------------------------------
         # --- Verify File Size.
         # ---------------------------------------------------------------------
-        if tmp_file.file.size > subscription_plan["attachments"][media]["max_file_size"]:
+        if request.FILES["file"].size > subscription_plan["attachments"][media_type]["max_file_size"]:
             cprint("[---  ERROR  ---] Upload - too large", "white", "on_red")
 
             # -----------------------------------------------------------------
             # --- Save the Log
 
             return Response({
-                "files":    [],
+                "message":      _("Upload is too large."),
             }, status=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE)
+
+        # ---------------------------------------------------------------------
+        # --- Verify File Amount.
+        # ---------------------------------------------------------------------
+        # --- Pull out cached Data.
+        # ---------------------------------------------------------------------
+        (
+            upload_numbers,
+            err_mgs
+        ) = cache.get_upload_numbers(instance_type, instance_uid)
+
+        # ---------------------------------------------------------------------
+        tmp_file = TemporaryFile.objects.create(
+            file=request.FILES["file"],
+            name=request.FILES["file"].name,
+            upload_type=upload_type)
+        result.update({
+            "tmp_file_id":      tmp_file.id,
+            "tmp_file_name":    tmp_file.file.name,
+            "tmp_file_size":    tmp_file.file.size,
+        })
+
+        cprint(f"    [--- DUMP ---] UPLOAD TYPE : {result}", "yellow")
 
         # ---------------------------------------------------------------------
         # --- Save the Log.
@@ -199,6 +176,7 @@ class TmpUploadViewSet(APIView):
 
         return Response({
             "files":    [result],
+            "numbers":  upload_numbers,
         }, status=status.HTTP_200_OK)
 
 

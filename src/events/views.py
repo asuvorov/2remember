@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import (
     login_required,
     user_passes_test)
 from django.contrib.contenttypes.models import ContentType
+from django.core.cache import cache
 from django.core.exceptions import (
     BadRequest,
     PermissionDenied)
@@ -180,9 +181,9 @@ def event_category_list(request):
 # === EVENT CREATE
 # ===
 # =============================================================================
-@event_create_access_check_required
-@user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
 @login_required
+@user_passes_test(is_profile_complete, login_url="/accounts/my-profile/")
+@event_create_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_create(request):
     """Create the Event."""
@@ -427,8 +428,8 @@ def event_details(request, slug, event=None):
 # === EVENT EDIT
 # ===
 # =============================================================================
-@event_edit_access_check_required
 @login_required
+@event_edit_access_check_required
 @log_default(my_logger=logger, cls_or_self=False)
 def event_edit(request, slug, event=None):
     """Edit Event."""
@@ -498,37 +499,6 @@ def event_edit(request, slug, event=None):
             # event.email_notify_alt_person_event_edited(request)
 
             # -----------------------------------------------------------------
-            # --- Is Date/Time changed?
-            # if (
-            #         "start_date" in form.changed_data or
-            #         "start_time" in form.changed_data):
-            #     Participation.email_notify_participants_datetime_event_edited(
-            #         request=request,
-            #         event=event)
-
-            # -----------------------------------------------------------------
-            # --- Is Application changed?
-            # if (
-            #         "application" in form.changed_data and
-            #         event.is_free_for_all):
-            #     Participation.email_notify_participants_application_event_edited(
-            #         request=request,
-            #         event=event)
-
-            # -----------------------------------------------------------------
-            # --- Is Location changed?
-            # if (
-            #         "address_1" in form.changed_data or
-            #         "address_2" in form.changed_data or
-            #         "city" in form.changed_data or
-            #         "zip_code" in form.changed_data or
-            #         "province" in form.changed_data or
-            #         "country" in form.changed_data):
-            #     Participation.email_notify_participants_location_event_edited(
-            #         request=request,
-            #         event=event)
-
-            # -----------------------------------------------------------------
             # --- Save the Log.
 
             return HttpResponseRedirect(
@@ -540,10 +510,17 @@ def event_edit(request, slug, event=None):
         # --- Failed to edit the Event
         # --- Save the Log
 
+    # -------------------------------------------------------------------------
+    # --- Clear the Cache.
+    # -------------------------------------------------------------------------
+    cache.delete(f"upload_numbers_event_{event.uid}")
+
     return render(
         request, "events/event-edit.html", {
             "form":             form,
             "aform":            aform,
             # "formset_social":   formset_social,
             "event":            event,
+            "instance_type":    "event",
+            "instance_uid":     event.uid,
         })

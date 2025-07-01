@@ -28,7 +28,8 @@ DATABASES = {
 
 SUBSCRIPTION_PLANS = {
     "DAILY": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        102400,
@@ -75,7 +76,8 @@ SUBSCRIPTION_PLANS = {
         "places": {},
     },
     "WEEKLY": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        102400,
@@ -122,7 +124,8 @@ SUBSCRIPTION_PLANS = {
         "places": {},
     },
     "MONTHLY": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        102400,
@@ -169,7 +172,8 @@ SUBSCRIPTION_PLANS = {
         "places": {},
     },
     "YEARLY": {
-        "fare": 0,  # Cents.
+        "description":  "",
+        "fare":         0,  # Cents.
         "attachments": {
             "documents": {
                 "max_file_size":        102400,
