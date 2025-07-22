@@ -45,8 +45,8 @@ from app import (
     MONTH_AGO,
     YEAR_AGO)
 from app.models import (
-    Visibility,
-    visibility_choices)
+    Visibility, visibility_choices,
+    Status, status_choices)
 from invites.models import Invite
 from organizations.models import Organization
 from privateurl.models import PrivateUrl
@@ -282,6 +282,12 @@ class Event(
     # -------------------------------------------------------------------------
     # --- Flags.
     # -------------------------------------------------------------------------
+    status = models.CharField(
+        max_length=2,
+        choices=status_choices, default=Status.DRAFT,
+        verbose_name=_("Status"),
+        help_text=_("Event Status"))
+
     allow_comments = models.BooleanField(
         default=True,
         verbose_name=_("I would like to allow Comments"),

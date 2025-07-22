@@ -31,6 +31,8 @@ from rest_framework.test import (
     APITestCase)
 from termcolor import colored, cprint
 
+from events.models import Event
+
 
 api_factory = APIRequestFactory()
 api_client = APIClient()
@@ -42,12 +44,12 @@ user_model = get_user_model()
 
 # =============================================================================
 # ===
-# === ATTACHMENTS
+# === EVENTS
 # ===
 # =============================================================================
-class TmpUploadViewSetTests(APITestCase):
+class EventPublishViewSetTests(APITestCase):
 
-    """TmpUploadViewSet Test Class."""
+    """EventPublishViewSet Test Class."""
 
     fixtures = [
         "test_accounts_users",
@@ -61,116 +63,107 @@ class TmpUploadViewSetTests(APITestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
+        self.event = Event.objects.create(
+            author=self.john,
+            title="Event #1")
+        self.url = reverse("api-event-publish", kwargs={
+            "event_id": self.event.id,
+        })
+        self.data = {}
+
     def tearDown(self):
         """Destructor."""
         super().tearDown()
 
-    def test_unauthorized(self):
-        """Temporary Upload: User is not authorized."""
+    def test_not_authenticated(self):
+        """Publish Event: User is not authenticated."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-tmp-upload")
-        data = {}
 
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=None)
-        response = api_client.post(url, data, content_type="application/json")
+        response = api_client.post(self.url, self.data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_no_files(self):
-        """Temporary Upload: User has not provided the File(s) in Request."""
+    def test_event_not_found(self):
+        """Publish Event: Event not found."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-tmp-upload")
-        data = {}
 
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=self.john)
-        response = api_client.post(url, data, content_type="application/json")
+        api_client.force_authenticate(user=self.jane)
+        url = reverse("api-event-publish", kwargs={
+            "event_id": 10,
+        })
+        response = api_client.post(url, self.data, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_unauthorized(self):
+        """Publish Event: User is not authorized to perform an Action."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.jane)
+        response = api_client.post(self.url, self.data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
-class UploadDetailsViewSetTests(APITestCase):
-
-    """UploadDetailsViewSet Test Class."""
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    def test_remove_unauthorized(self):
-        """Remove Upload: User is not authorized."""
+    def test_success_author(self):
+        """Publish Event: Success."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-upload-details", kwargs={
-            "upload_type":  "document",
-            "upload_id":    1,
-        })
 
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=None)
-        response = api_client.delete(url, content_type="application/json")
+        api_client.force_authenticate(user=self.john)
+        response = api_client.post(self.url, self.data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-
-class LinkDetailsViewSetTests(APITestCase):
-
-    """LinkDetailsViewSet Test Class."""
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    def test_remove_unauthorized(self):
-        """Remove Link: User is not authorized."""
+    def test_success_admin(self):
+        """Publish Event: Success."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-link-details", kwargs={
-            "link_type":    "regular",
-            "link_id":      1,
-        })
 
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=None)
-        response = api_client.delete(url, content_type="application/json")
+        api_client.force_authenticate(user=self.admin)
+        response = api_client.post(self.url, self.data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)

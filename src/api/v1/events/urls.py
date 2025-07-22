@@ -11,12 +11,12 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Events.
     # -------------------------------------------------------------------------
-    re_path(r"^/$",
-        views.event_list,
-        name="api-event-list"),
-    re_path(r"^(?P<event_id>[\w_-]+)/create/$",
-        views.event_create,
-        name="api-event-create"),
+    re_path(r"^$", views.event_list, name="api-event-list"),
+
+    # -------------------------------------------------------------------------
+    # --- Admin Actions.
+    re_path(r"^(?P<event_id>[\w_-]+)/publish/$", views.event_publish, name="api-event-publish"),
+    re_path(r"^(?P<event_id>[\w_-]+)/close/$", views.event_close, name="api-event-close"),
 
     # -------------------------------------------------------------------------
     # --- Participations.

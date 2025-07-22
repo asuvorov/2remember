@@ -13,8 +13,8 @@ urlpatterns = [
     # -------------------------------------------------------------------------
     # --- Attachments
     re_path(r"^tmp-upload/$", views.tmp_upload, name="api-tmp-upload"),
-    re_path(r"^remove-upload/$", views.remove_upload, name="api-remove-upload"),
-    re_path(r"^remove-link/$", views.remove_link, name="api-remove-link"),
+    re_path(r"^upload/(?P<upload_type>[\w_-]+)/(?P<upload_id>[\w_-]+)/$", views.upload_details, name="api-upload-details"),
+    re_path(r"^link/(?P<link_type>[\w_-]+)/(?P<link_id>[\w_-]+)/$", views.link_details, name="api-link-details"),
 
     # -------------------------------------------------------------------------
     # --- Comments.

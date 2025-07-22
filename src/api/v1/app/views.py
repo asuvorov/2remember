@@ -157,8 +157,8 @@ class TmpUploadViewSet(APIView):
 tmp_upload = TmpUploadViewSet.as_view()
 
 
-class RemoveUploadViewSet(APIView):
-    """Remove Upload View Set."""
+class UploadDetailsViewSet(APIView):
+    """Upload Details View Set."""
 
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
@@ -167,14 +167,11 @@ class RemoveUploadViewSet(APIView):
     # model =
 
     @log_default(my_logger=logger)
-    def post(self, request):
+    def delete(self, request, upload_type, upload_id):
         """Remove uploaded File."""
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
-        upload_type = request.data.get("type")
-        upload_id = request.data.get("id")
-
         cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
                f"                  UPLOAD   ID : {upload_id}", "yellow")
 
@@ -222,11 +219,11 @@ class RemoveUploadViewSet(APIView):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-remove_upload = RemoveUploadViewSet.as_view()
+upload_details = UploadDetailsViewSet.as_view()
 
 
-class RemoveLinkViewSet(APIView):
-    """Remove Link View Set."""
+class LinkDetailsViewSet(APIView):
+    """Link Details View Set."""
 
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (IsAuthenticated, )
@@ -235,24 +232,21 @@ class RemoveLinkViewSet(APIView):
     # model =
 
     @log_default(my_logger=logger)
-    def post(self, request):
+    def delete(self, request, link_type, link_id):
         """Remove Link."""
         # ---------------------------------------------------------------------
         # --- INITIALS
         # ---------------------------------------------------------------------
-        upload_type = request.data.get("type")
-        upload_id = request.data.get("id")
-
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {link_type}\n"
+               f"                  UPLOAD   ID : {link_id}", "yellow")
 
         if (
-                upload_type and
-                upload_id):
-            if upload_type == "regular":
-                instance = get_object_or_None(AttachedUrl, id=upload_id)
-            elif upload_type == "video":
-                instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
+                link_type and
+                link_id):
+            if link_type == "regular":
+                instance = get_object_or_None(AttachedUrl, id=link_id)
+            elif link_type == "video":
+                instance = get_object_or_None(AttachedVideoUrl, id=link_id)
 
             if instance:
                 if (
@@ -273,7 +267,7 @@ class RemoveLinkViewSet(APIView):
         }, status=status.HTTP_404_NOT_FOUND)
 
 
-remove_link = RemoveLinkViewSet.as_view()
+link_details = LinkDetailsViewSet.as_view()
 
 
 # =============================================================================

@@ -17,3 +17,17 @@ visibility_choices = [
     (Visibility.PUBLIC,     _("Public")),
     (Visibility.PRIVATE,    _("Private")),
 ]
+
+
+# -----------------------------------------------------------------------------
+# --- Model Status Choices.
+# -----------------------------------------------------------------------------
+Status = enum(
+    DRAFT="0",
+    PUBLISHED="1",
+    CLOSED="2")
+status_choices = [
+    (Status.DRAFT,      _("Draft")),
+    (Status.PUBLISHED,  _("Published")),
+    (Status.CLOSED,     _("Closed")),
+]

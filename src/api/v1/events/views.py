@@ -19,6 +19,7 @@ from annoying.functions import get_object_or_None
 
 # pylint: disable=import-error
 from app.decorators import log_default
+from app.models import Status
 from events.models import (
     Event,
     Participation,
@@ -44,8 +45,8 @@ class EventListViewSet(APIView):
     # authentication_classes = (CsrfExemptSessionAuthentication, )
     permission_classes = (AllowAny, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = PostSerializer
-    # model = Post
+    # serializer_class = EventSerializer
+    # model = Event
 
     @log_default(my_logger=logger)
     def get(self, request):
@@ -73,7 +74,7 @@ class EventListViewSet(APIView):
         month = request.data.get("month", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors
+        # --- Handle Errors.
         # ---------------------------------------------------------------------
         if (
                 not year or
@@ -83,7 +84,7 @@ class EventListViewSet(APIView):
             }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Filter QuerySet by the Calendar specified Year & Month
+        # --- Filter QuerySet by the Calendar specified Year & Month.
         # ---------------------------------------------------------------------
         events = Event.objects.filter(
             start_date__year=year,
@@ -105,8 +106,8 @@ class EventListViewSet(APIView):
 event_list = EventListViewSet.as_view()
 
 
-class EventCreateViewSet(APIView):
-    """Event Create View Set."""
+class EventPublishViewSet(APIView):
+    """Event Publish View Set."""
 
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
@@ -119,8 +120,7 @@ class EventCreateViewSet(APIView):
 
             Receive:
 
-                event_id            :uint:
-                description_text        :str:
+                event_id                :uint:
 
             Return:
 
@@ -128,38 +128,18 @@ class EventCreateViewSet(APIView):
 
             Example Payload:
 
-                {
-                    "description_text":     "Event Description",
-                }
+                {}
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request
+        # --- Retrieve Data from the Request.
         # ---------------------------------------------------------------------
-        description_text = request.data.get("description_text", "")
 
         # ---------------------------------------------------------------------
-        # --- Handle Errors
+        # --- Handle Errors.
         # ---------------------------------------------------------------------
-        if not event_id:
-            return Response({
-                "message":      _("Event ID is not provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        if not description_text:
-            return Response({
-                "message":      _("No Description Text provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
-        # --- Check the Rights
-        # ---------------------------------------------------------------------
-        if not event_org_staff_member_required(request, event_id):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        # ---------------------------------------------------------------------
-        # --- Retrieve the Event
+        # --- Retrieve the Event.
         # ---------------------------------------------------------------------
         event = get_object_or_None(Event, id=event_id)
         if not event:
@@ -167,14 +147,19 @@ class EventCreateViewSet(APIView):
                 "message":      _("Event not found."),
             }, status=status.HTTP_404_NOT_FOUND)
 
-        event.description = description_text
+        if (
+                request.user != event.author and
+                not request.user.is_staff):
+            return Response({
+                "message":      _("You don't have Permissions to perform the Action."),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        event.status = Status.PUBLISHED
         event.save()
 
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
         # ---------------------------------------------------------------------
-        event.email_notify_admin_event_created(request)
-        event.email_notify_alt_person_event_created(request)
 
         # ---------------------------------------------------------------------
         # --- Save the Log
@@ -185,7 +170,71 @@ class EventCreateViewSet(APIView):
         }, status=status.HTTP_200_OK)
 
 
-event_create = EventCreateViewSet.as_view()
+event_publish = EventPublishViewSet.as_view()
+
+
+class EventCloseViewSet(APIView):
+    """Event close View Set."""
+
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class = EventSerializer
+    # model = Event
+
+    @log_default(my_logger=logger)
+    def post(self, request, event_id):
+        """POST: Close the Post.
+
+            Receive:
+
+                event_id                :uint:
+
+            Return:
+
+                status                  200/400/404/500
+
+            Example Payload:
+
+                {}
+        """
+        # ---------------------------------------------------------------------
+        # --- Retrieve Data from the Request
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Handle Errors
+        # ---------------------------------------------------------------------
+        if not event_id:
+            return Response({
+                "message":      _("Event ID is not provided."),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Blog Event
+        # ---------------------------------------------------------------------
+        event = get_object_or_None(Event, id=event_id)
+        if not event:
+            return Response({
+                "message":      _("Event not found."),
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        event.status = Status.CLOSED
+        event.save()
+
+        # ---------------------------------------------------------------------
+        # --- Send Email Notification(s)
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Save the Log
+        # ---------------------------------------------------------------------
+
+        return Response({
+            "message":      _("Successfully closed the Event."),
+        }, status=status.HTTP_200_OK)
+
+
+event_close = EventCloseViewSet.as_view()
 
 
 # =============================================================================
