@@ -457,9 +457,10 @@ class Collection(
                 storage.delete(preview.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
         try:
             if created:
@@ -472,9 +473,10 @@ class Collection(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
     def pre_delete(self, **kwargs):
         """Docstring."""

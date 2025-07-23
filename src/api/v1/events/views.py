@@ -152,7 +152,7 @@ class EventPublishViewSet(APIView):
                 not request.user.is_staff):
             return Response({
                 "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_400_BAD_REQUEST)
+            }, status=status.HTTP_403_FORBIDDEN)
 
         event.status = Status.PUBLISHED
         event.save()
@@ -204,10 +204,6 @@ class EventCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors
         # ---------------------------------------------------------------------
-        if not event_id:
-            return Response({
-                "message":      _("Event ID is not provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Event
@@ -217,6 +213,13 @@ class EventCloseViewSet(APIView):
             return Response({
                 "message":      _("Event not found."),
             }, status=status.HTTP_404_NOT_FOUND)
+
+        if (
+                request.user != event.author and
+                not request.user.is_staff):
+            return Response({
+                "message":      _("You don't have Permissions to perform the Action."),
+            }, status=status.HTTP_403_FORBIDDEN)
 
         event.status = Status.CLOSED
         event.save()

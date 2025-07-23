@@ -31,6 +31,9 @@ from rest_framework.test import (
     APITestCase)
 from termcolor import colored, cprint
 
+from app.models import Status
+from collection.models import Collection
+
 
 api_factory = APIRequestFactory()
 api_client = APIClient()
@@ -42,12 +45,12 @@ user_model = get_user_model()
 
 # =============================================================================
 # ===
-# === ATTACHMENTS
+# === COLLECTIONS
 # ===
 # =============================================================================
-class TmpUploadViewSetTests(APITestCase):
+class CollectionCloseViewSetSetTests(APITestCase):
 
-    """TmpUploadViewSet Test Class."""
+    """CollectionCloseViewSetSet Test Class."""
 
     fixtures = [
         "test_accounts_users",
@@ -61,81 +64,85 @@ class TmpUploadViewSetTests(APITestCase):
         self.john = user_model.objects.get(username="john")
         self.jane = user_model.objects.get(username="jane")
 
+        self.collection = Collection.objects.create(
+            author=self.john,
+            title="Collection #1")
+        self.url = reverse("api-collection-close", kwargs={
+            "collection_id": self.collection.id,
+        })
+        self.data = {}
+
     def tearDown(self):
         """Destructor."""
         super().tearDown()
 
-    def test_unauthorized(self):
-        """Temporary Upload: User is not authorized."""
+    def test_not_authenticated(self):
+        """Close Collection: User is not authenticated."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-tmp-upload")
-        data = {}
 
         # ---------------------------------------------------------------------
         # --- Send Request.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=None)
-        response = api_client.post(url, data, content_type="application/json")
+        response = api_client.post(self.url, self.data, content_type="application/json")
 
         # ---------------------------------------------------------------------
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_no_files(self):
-        """Temporary Upload: User has not provided the File(s) in Request."""
+    def test_failure(self):
+        """Close Collection: Failure"""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-tmp-upload")
-        data = {}
 
         # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- Collection not found.
         # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=self.john)
-        response = api_client.post(url, data, content_type="application/json")
+        api_client.force_authenticate(user=self.jane)
+        url = reverse("api-collection-close", kwargs={
+            "collection_id": 10,
+        })
+        response = api_client.post(url, self.data, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
         # ---------------------------------------------------------------------
-        # --- Assertions.
+        # --- User is not authorized to perform an Action.
         # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.jane)
+        response = api_client.post(self.url, self.data, content_type="application/json")
+
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
-class UploadDetailsViewSetTests(APITestCase):
-
-    """UploadDetailsViewSet Test Class."""
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    def test_remove_unauthorized(self):
-        """Remove Upload: User is not authorized."""
+    def test_success(self):
+        """Close Collection: Success."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
-        url = reverse("api-upload-details", kwargs={
-            "upload_type":  "document",
-            "upload_id":    1,
-        })
 
         # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- Author.
         # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=None)
-        response = api_client.delete(url, content_type="application/json")
+        api_client.force_authenticate(user=self.john)
+        response = api_client.post(self.url, self.data, content_type="application/json")
+
+        self.collection.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.collection.status, Status.CLOSED)
 
         # ---------------------------------------------------------------------
-        # --- Assertions.
+        # --- Admin.
         # ---------------------------------------------------------------------
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        api_client.force_authenticate(user=self.admin)
+        response = api_client.post(self.url, self.data, content_type="application/json")
+
+        self.collection.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.collection.status, Status.CLOSED)

@@ -129,10 +129,6 @@ class CollectionPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors
         # ---------------------------------------------------------------------
-        if not collection_id:
-            return Response({
-                "message":      _("Collection ID is not provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Collection
@@ -143,7 +139,14 @@ class CollectionPublishViewSet(APIView):
                 "message":      _("Collection not found."),
             }, status=status.HTTP_404_NOT_FOUND)
 
-        collection.status = Status.VISIBLE
+        if (
+                request.user != collection.author and
+                not request.user.is_staff):
+            return Response({
+                "message":      _("You don't have Permissions to perform the Action."),
+            }, status=status.HTTP_403_FORBIDDEN)
+
+        collection.status = Status.PUBLISHED
         collection.save()
 
         # ---------------------------------------------------------------------
@@ -193,10 +196,6 @@ class CollectionCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Handle Errors
         # ---------------------------------------------------------------------
-        if not collection_id:
-            return Response({
-                "message":      _("Collection ID is not provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
 
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Collection
@@ -206,6 +205,13 @@ class CollectionCloseViewSet(APIView):
             return Response({
                 "message":      _("Collection not found."),
             }, status=status.HTTP_404_NOT_FOUND)
+
+        if (
+                request.user != collection.author and
+                not request.user.is_staff):
+            return Response({
+                "message":      _("You don't have Permissions to perform the Action."),
+            }, status=status.HTTP_403_FORBIDDEN)
 
         collection.status = Status.CLOSED
         collection.save()

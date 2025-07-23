@@ -31,6 +31,7 @@ from rest_framework.test import (
     APITestCase)
 from termcolor import colored, cprint
 
+from app.models import Status
 from events.models import Event
 
 
@@ -93,15 +94,15 @@ class EventPublishViewSetTests(APITestCase):
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    def test_event_not_found(self):
-        """Publish Event: Event not found."""
+    def test_failure(self):
+        """Publish Event: Failure."""
 
         # ---------------------------------------------------------------------
         # --- Initials.
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- Event not found.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=self.jane)
         url = reverse("api-event-publish", kwargs={
@@ -109,30 +110,17 @@ class EventPublishViewSetTests(APITestCase):
         })
         response = api_client.post(url, self.data, content_type="application/json")
 
-        # ---------------------------------------------------------------------
-        # --- Assertions.
-        # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_unauthorized(self):
-        """Publish Event: User is not authorized to perform an Action."""
-
         # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- User is not authorized to perform an Action.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=self.jane)
         response = api_client.post(self.url, self.data, content_type="application/json")
 
-        # ---------------------------------------------------------------------
-        # --- Assertions.
-        # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_success_author(self):
+    def test_success(self):
         """Publish Event: Success."""
 
         # ---------------------------------------------------------------------
@@ -140,30 +128,21 @@ class EventPublishViewSetTests(APITestCase):
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- Author.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=self.john)
         response = api_client.post(self.url, self.data, content_type="application/json")
 
-        # ---------------------------------------------------------------------
-        # --- Assertions.
-        # ---------------------------------------------------------------------
+        self.event.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_success_admin(self):
-        """Publish Event: Success."""
+        self.assertEqual(self.event.status, Status.PUBLISHED)
 
         # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Send Request.
+        # --- Admin.
         # ---------------------------------------------------------------------
         api_client.force_authenticate(user=self.admin)
         response = api_client.post(self.url, self.data, content_type="application/json")
 
-        # ---------------------------------------------------------------------
-        # --- Assertions.
-        # ---------------------------------------------------------------------
+        self.event.refresh_from_db()
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.event.status, Status.PUBLISHED)
