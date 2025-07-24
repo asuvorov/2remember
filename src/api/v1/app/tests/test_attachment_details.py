@@ -135,6 +135,7 @@ class UploadDetailsViewSetTests(APITestCase):
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+        self.assertFalse(response.data.get("deleted"))
 
     def test_remove_failure(self):
         """Remove Upload: Failure."""
@@ -158,6 +159,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Image.
         url = reverse("api-upload-details", kwargs={
@@ -167,6 +169,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Document.
         url = reverse("api-upload-details", kwargs={
@@ -176,6 +179,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- URL.
         url = reverse("api-upload-details", kwargs={
@@ -185,6 +189,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Video URL.
         url = reverse("api-upload-details", kwargs={
@@ -194,6 +199,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertFalse(response.data.get("deleted"))
 
         # ---------------------------------------------------------------------
         # ---
@@ -210,6 +216,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Image.
         url = reverse("api-upload-details", kwargs={
@@ -219,6 +226,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Document.
         url = reverse("api-upload-details", kwargs={
@@ -228,6 +236,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- URL.
         url = reverse("api-upload-details", kwargs={
@@ -237,6 +246,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(response.data.get("deleted"))
 
         # --- Video URL.
         url = reverse("api-upload-details", kwargs={
@@ -246,6 +256,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(response.data.get("deleted"))
 
     def test_remove_success(self):
         """Remove Upload: Success."""
@@ -269,6 +280,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get("deleted"))
 
         # --- Image.
         url = reverse("api-upload-details", kwargs={
@@ -278,6 +290,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get("deleted"))
 
         # --- Document.
         url = reverse("api-upload-details", kwargs={
@@ -287,6 +300,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get("deleted"))
 
         # ---------------------------------------------------------------------
         # ---
@@ -303,6 +317,7 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get("deleted"))
 
         # --- Video URL.
         url = reverse("api-upload-details", kwargs={
@@ -312,3 +327,4 @@ class UploadDetailsViewSetTests(APITestCase):
         response = api_client.delete(url, content_type="application/json")
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(response.data.get("deleted"))

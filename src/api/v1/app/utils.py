@@ -52,7 +52,7 @@ def _get_attachment_with_privacy_or_response(
         }, status=status.HTTP_404_NOT_FOUND)
 
     if (
-            request.user != instance.created_by or
+            request.user != instance.created_by and
             not request.user.is_superuser):
         return Response({
             **fields_add_on_fail,

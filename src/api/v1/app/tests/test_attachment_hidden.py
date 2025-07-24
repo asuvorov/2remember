@@ -31,6 +31,12 @@ from rest_framework.test import (
     APITestCase)
 from termcolor import colored, cprint
 
+from ddcore.models import (
+    AttachedDocument,
+    AttachedImage,
+    AttachedUrl,
+    AttachedVideoUrl,
+    TemporaryFile)
 
 api_factory = APIRequestFactory()
 api_client = APIClient()
@@ -45,3 +51,572 @@ user_model = get_user_model()
 # === ATTACHMENTS
 # ===
 # =============================================================================
+class UploadHiddenViewSetMarkTests(APITestCase):
+
+    """UploadHiddenViewSet (mark as hidden) Test Class."""
+
+    fixtures = [
+        "test_accounts_users",
+    ]
+
+    def setUp(self):
+        """Constructor."""
+        super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.tmp_file = TemporaryFile.objects.create(
+            # file=request.FILES["file"],
+            name="Temporary Upload",
+            created_by=self.john)
+        self.attached_image = AttachedImage.objects.create(
+            name="Saved Image",
+            # content_type=content_type,
+            # object_id=object_id
+            created_by=self.john)
+        self.attached_document = AttachedDocument.objects.create(
+            name="Saved Document",
+            # content_type=content_type,
+            # object_id=object_id
+            created_by=self.john)
+        self.attached_url = AttachedUrl.objects.create(
+            url="https://2remember.live/",
+            created_by=self.john)
+        self.attached_video_url = AttachedVideoUrl.objects.create(
+            url="https://2remember.live/",
+            created_by=self.john)
+
+    def tearDown(self):
+        """Destructor."""
+        super().tearDown()
+
+    def test_not_authenticated(self):
+        """Mark Upload as hidden: User is not authenticated."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=None)
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unsupported(self):
+        """Mark Upload as hidden: Unsupported Media Type."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "unsupported",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_failure(self):
+        """Mark Upload as hidden: Failure."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Upload not found.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    10,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    10,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    10,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    10,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    10,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- User is not authorized to perform an Action.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.jane)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.tmp_file.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.tmp_file.is_hidden)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    self.attached_image.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_image.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.attached_image.is_hidden)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    self.attached_document.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_document.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.attached_document.is_hidden)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    self.attached_url.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.attached_url.is_hidden)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    self.attached_video_url.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_video_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertFalse(self.attached_video_url.is_hidden)
+
+    def test_success(self):
+        """Mark Upload as hidden: Success."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Author.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.tmp_file.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.tmp_file.is_hidden)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    self.attached_image.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_image.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.attached_image.is_hidden)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    self.attached_document.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_document.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.attached_document.is_hidden)
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Admin.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.admin)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    self.attached_url.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.attached_url.is_hidden)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    self.attached_video_url.id,
+        })
+        response = api_client.post(url, content_type="application/json")
+
+        self.attached_video_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertTrue(self.attached_video_url.is_hidden)
+
+
+class UploadHiddenViewSetUnmarkTests(APITestCase):
+
+    """UploadHiddenViewSet (unmark as hidden) Test Class."""
+
+    fixtures = [
+        "test_accounts_users",
+    ]
+
+    def setUp(self):
+        """Constructor."""
+        super().setUp()
+
+        self.admin = user_model.objects.get(username="admin")
+        self.john = user_model.objects.get(username="john")
+        self.jane = user_model.objects.get(username="jane")
+
+        self.tmp_file = TemporaryFile.objects.create(
+            # file=request.FILES["file"],
+            name="Temporary Upload",
+            is_hidden=True,
+            created_by=self.john)
+        self.attached_image = AttachedImage.objects.create(
+            name="Saved Image",
+            # content_type=content_type,
+            # object_id=object_id
+            is_hidden=True,
+            created_by=self.john)
+        self.attached_document = AttachedDocument.objects.create(
+            name="Saved Document",
+            # content_type=content_type,
+            # object_id=object_id
+            is_hidden=True,
+            created_by=self.john)
+        self.attached_url = AttachedUrl.objects.create(
+            url="https://2remember.live/",
+            is_hidden=True,
+            created_by=self.john)
+        self.attached_video_url = AttachedVideoUrl.objects.create(
+            url="https://2remember.live/",
+            is_hidden=True,
+            created_by=self.john)
+
+    def tearDown(self):
+        """Destructor."""
+        super().tearDown()
+
+    def test_not_authenticated(self):
+        """Mark Upload as hidden: User is not authenticated."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=None)
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_unsupported(self):
+        """Mark Upload as hidden: Unsupported Media Type."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # --- Send Request.
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "unsupported",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        # ---------------------------------------------------------------------
+        # --- Assertions.
+        # ---------------------------------------------------------------------
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_failure(self):
+        """Mark Upload as hidden: Failure."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Upload not found.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    10,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    10,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    10,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    10,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    10,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- User is not authorized to perform an Action.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.jane)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.tmp_file.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.tmp_file.is_hidden)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    self.attached_image.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_image.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.attached_image.is_hidden)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    self.attached_document.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_document.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.attached_document.is_hidden)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    self.attached_url.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.attached_url.is_hidden)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    self.attached_video_url.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_video_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertTrue(self.attached_video_url.is_hidden)
+
+    def test_success(self):
+        """Mark Upload as hidden: Success."""
+
+        # ---------------------------------------------------------------------
+        # --- Initials.
+        # ---------------------------------------------------------------------
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Author.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.john)
+
+        # --- Temporary.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "temp",
+            "upload_id":    self.tmp_file.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.tmp_file.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.tmp_file.is_hidden)
+
+        # --- Image.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "image",
+            "upload_id":    self.attached_image.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_image.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.attached_image.is_hidden)
+
+        # --- Document.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "document",
+            "upload_id":    self.attached_document.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_document.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.attached_document.is_hidden)
+
+        # ---------------------------------------------------------------------
+        # ---
+        # --- Admin.
+        # ---
+        # ---------------------------------------------------------------------
+        api_client.force_authenticate(user=self.admin)
+
+        # --- URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "url",
+            "upload_id":    self.attached_url.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.attached_url.is_hidden)
+
+        # --- Video URL.
+        url = reverse("api-upload-hidden", kwargs={
+            "upload_type":  "video_url",
+            "upload_id":    self.attached_video_url.id,
+        })
+        response = api_client.delete(url, content_type="application/json")
+
+        self.attached_video_url.refresh_from_db()
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertFalse(self.attached_video_url.is_hidden)
