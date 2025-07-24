@@ -53,6 +53,8 @@ from app import logconst
 from app.decorators import log_default
 from app.logformat import Format
 
+from .. utils import _get_attachment_with_privacy_or_response
+
 
 logger = logging.getLogger(__name__)
 
@@ -167,33 +169,18 @@ class UploadDetailsViewSet(APIView):
     def delete(self, request, upload_type, upload_id):
         """Remove uploaded File or Link."""
         # ---------------------------------------------------------------------
-        # --- INITIALS
+        # --- Handle Errors.
         # ---------------------------------------------------------------------
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
 
-        if upload_type == "document":
-            instance = get_object_or_None(AttachedDocument, id=upload_id)
-        elif upload_type == "image":
-            instance = get_object_or_None(AttachedImage, id=upload_id)
-        elif upload_type == "temp":
-            instance = get_object_or_None(TemporaryFile, id=upload_id)
-        elif upload_type == "url":
-            instance = get_object_or_None(AttachedUrl, id=upload_id)
-        elif upload_type == "video_url":
-            instance = get_object_or_None(AttachedVideoUrl, id=upload_id)
-
-        if not instance:
-            return Response({
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Attachment.
+        # ---------------------------------------------------------------------
+        instance = _get_attachment_with_privacy_or_response(
+            request, upload_type, upload_id, fields_add_on_fail={
                 "deleted":  False,
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        if (
-                request.user != instance.created_by or
-                not request.user.is_superuser):
-            return Response({
-                "deleted":  False,
-            }, status=status.HTTP_403_FORBIDDEN)
+            })
+        if isinstance(instance, Response):
+            return instance
 
         try:
             instance.file.delete()
@@ -214,6 +201,7 @@ class UploadDetailsViewSet(APIView):
 
         return Response({
             "deleted":  True,
+            "message":  _("Successfully deleted the Attachment."),
         }, status=status.HTTP_200_OK)
 
 
@@ -225,12 +213,12 @@ class UploadPrivateViewSet(APIView):
 
     permission_classes = (IsAuthenticated, )
     renderer_classes = (JSONRenderer, )
-    # serializer_class = EventSerializer
-    # model = Event
+    # serializer_class =
+    # model =
 
     @log_default(my_logger=logger)
     def post(self, request, upload_type, upload_id):
-        """POST: Close the Post.
+        """POST: Mark Attachment as private.
 
             Receive:
 
@@ -246,49 +234,123 @@ class UploadPrivateViewSet(APIView):
                 {}
         """
         # ---------------------------------------------------------------------
-        # --- Retrieve Data from the Request
+        # --- Retrieve the Attachment.
         # ---------------------------------------------------------------------
-        cprint(f"[---  DUMP   ---] UPLOAD TYPE : {upload_type}\n"
-               f"                  UPLOAD   ID : {upload_id}", "yellow")
+        instance = _get_attachment_with_privacy_or_response(request, upload_type, upload_id)
+        if isinstance(instance, Response):
+            return instance
 
-        # ---------------------------------------------------------------------
-        # --- Handle Errors
-        # ---------------------------------------------------------------------
-        if not event_id:
-            return Response({
-                "message":      _("Event ID is not provided."),
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        # ---------------------------------------------------------------------
-        # --- Retrieve the Blog Event
-        # ---------------------------------------------------------------------
-        event = get_object_or_None(Event, id=event_id)
-        if not event:
-            return Response({
-                "message":      _("Event not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
-
-        if (
-                request.user != event.author and
-                not request.user.is_staff):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_400_BAD_REQUEST)
-
-        event.status = Status.CLOSED
-        event.save()
-
-        # ---------------------------------------------------------------------
-        # --- Send Email Notification(s)
-        # ---------------------------------------------------------------------
-
-        # ---------------------------------------------------------------------
-        # --- Save the Log
-        # ---------------------------------------------------------------------
+        instance.is_private = True
+        instance.save()
 
         return Response({
-            "message":      _("Successfully closed the Event."),
+            "message":  _("Successfully updated the Attachment."),
+        }, status=status.HTTP_200_OK)
+
+    @log_default(my_logger=logger)
+    def delete(self, request, upload_type, upload_id):
+        """DELETE: Unmark Attachment as private.
+
+            Receive:
+
+                upload_type             :str
+                upload_id               :int
+
+            Return:
+
+                status                  200/400/404/500
+
+            Example Payload:
+
+                {}
+        """
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Attachment.
+        # ---------------------------------------------------------------------
+        instance = _get_attachment_with_privacy_or_response(request, upload_type, upload_id)
+        if isinstance(instance, Response):
+            return instance
+
+        instance.is_private = False
+        instance.save()
+
+        return Response({
+            "message":  _("Successfully updated the Attachment."),
         }, status=status.HTTP_200_OK)
 
 
 upload_private = UploadPrivateViewSet.as_view()
+
+
+class UploadHiddenViewSet(APIView):
+    """Upload hidden View Set."""
+
+    permission_classes = (IsAuthenticated, )
+    renderer_classes = (JSONRenderer, )
+    # serializer_class =
+    # model =
+
+    @log_default(my_logger=logger)
+    def post(self, request, upload_type, upload_id):
+        """POST: Mark Attachment as hidden.
+
+            Receive:
+
+                upload_type             :str
+                upload_id               :int
+
+            Return:
+
+                status                  200/400/404/500
+
+            Example Payload:
+
+                {}
+        """
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Attachment.
+        # ---------------------------------------------------------------------
+        instance = _get_attachment_with_privacy_or_response(request, upload_type, upload_id)
+        if isinstance(instance, Response):
+            return instance
+
+        instance.is_hidden = True
+        instance.save()
+
+        return Response({
+            "message":  _("Successfully updated the Attachment."),
+        }, status=status.HTTP_200_OK)
+
+    @log_default(my_logger=logger)
+    def delete(self, request, upload_type, upload_id):
+        """DELETE: Unmark Attachment as hidden.
+
+            Receive:
+
+                upload_type             :str
+                upload_id               :int
+
+            Return:
+
+                status                  200/400/404/500
+
+            Example Payload:
+
+                {}
+        """
+        # ---------------------------------------------------------------------
+        # --- Retrieve the Attachment.
+        # ---------------------------------------------------------------------
+        instance = _get_attachment_with_privacy_or_response(request, upload_type, upload_id)
+        if isinstance(instance, Response):
+            return instance
+
+        instance.is_hidden = False
+        instance.save()
+
+        return Response({
+            "message":  _("Successfully updated the Attachment."),
+        }, status=status.HTTP_200_OK)
+
+
+upload_hidden = UploadHiddenViewSet.as_view()

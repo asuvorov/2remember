@@ -40,5 +40,5 @@
 #     def index_queryset(self, using=None):
 #         """Used when the entire Index for Model is updated."""
 #         return self.get_model().objects.filter(
-#             status=PostStatus.VISIBLE,
+#             status=PostStatus.PUBLISHED,
 #             created__lte=datetime.date.today())

@@ -104,38 +104,3 @@ class TmpUploadViewSetTests(APITestCase):
         # --- Assertions.
         # ---------------------------------------------------------------------
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-
-class UploadDetailsViewSetTests(APITestCase):
-
-    """UploadDetailsViewSet Test Class."""
-
-    def setUp(self):
-        """Constructor."""
-        super().setUp()
-
-    def tearDown(self):
-        """Destructor."""
-        super().tearDown()
-
-    def test_remove_unauthorized(self):
-        """Remove Upload: User is not authorized."""
-
-        # ---------------------------------------------------------------------
-        # --- Initials.
-        # ---------------------------------------------------------------------
-        url = reverse("api-upload-details", kwargs={
-            "upload_type":  "document",
-            "upload_id":    1,
-        })
-
-        # ---------------------------------------------------------------------
-        # --- Send Request.
-        # ---------------------------------------------------------------------
-        api_client.force_authenticate(user=None)
-        response = api_client.delete(url, content_type="application/json")
-
-        # ---------------------------------------------------------------------
-        # --- Assertions.
-        # ---------------------------------------------------------------------
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)

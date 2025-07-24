@@ -28,7 +28,8 @@ from events.models import (
 
 from .utils import (
     event_access_check_required,
-    event_org_staff_member_required)
+    event_org_staff_member_required,
+    _get_event_with_privacy_or_response)
 
 
 logger = logging.getLogger(__name__)
@@ -141,21 +142,12 @@ class EventPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Event.
         # ---------------------------------------------------------------------
-        event = get_object_or_None(Event, id=event_id)
-        if not event:
-            return Response({
-                "message":      _("Event not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
+        instance = _get_event_with_privacy_or_response(request, event_id)
+        if isinstance(instance, Response):
+            return instance
 
-        if (
-                request.user != event.author and
-                not request.user.is_staff):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_403_FORBIDDEN)
-
-        event.status = Status.PUBLISHED
-        event.save()
+        instance.status = Status.PUBLISHED
+        instance.save()
 
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
@@ -206,23 +198,14 @@ class EventCloseViewSet(APIView):
         # ---------------------------------------------------------------------
 
         # ---------------------------------------------------------------------
-        # --- Retrieve the Blog Event
+        # --- Retrieve the Event
         # ---------------------------------------------------------------------
-        event = get_object_or_None(Event, id=event_id)
-        if not event:
-            return Response({
-                "message":      _("Event not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
+        instance = _get_event_with_privacy_or_response(request, event_id)
+        if isinstance(instance, Response):
+            return instance
 
-        if (
-                request.user != event.author and
-                not request.user.is_staff):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_403_FORBIDDEN)
-
-        event.status = Status.CLOSED
-        event.save()
+        instance.status = Status.CLOSED
+        instance.save()
 
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)

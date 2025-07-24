@@ -22,6 +22,8 @@ from app.decorators import log_default
 from app.models import Status
 from collection.models import Collection
 
+from .utils import _get_collection_with_privacy_or_response
+
 
 logger = logging.getLogger(__name__)
 
@@ -133,21 +135,12 @@ class CollectionPublishViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Collection
         # ---------------------------------------------------------------------
-        collection = get_object_or_None(Collection, id=collection_id)
-        if not collection:
-            return Response({
-                "message":      _("Collection not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
+        instance = _get_collection_with_privacy_or_response(request, collection_id)
+        if isinstance(instance, Response):
+            return instance
 
-        if (
-                request.user != collection.author and
-                not request.user.is_staff):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_403_FORBIDDEN)
-
-        collection.status = Status.PUBLISHED
-        collection.save()
+        instance.status = Status.PUBLISHED
+        instance.save()
 
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)
@@ -200,21 +193,12 @@ class CollectionCloseViewSet(APIView):
         # ---------------------------------------------------------------------
         # --- Retrieve the Blog Collection
         # ---------------------------------------------------------------------
-        collection = get_object_or_None(Collection, id=collection_id)
-        if not collection:
-            return Response({
-                "message":      _("Collection not found."),
-            }, status=status.HTTP_404_NOT_FOUND)
+        instance = _get_collection_with_privacy_or_response(request, collection_id)
+        if isinstance(instance, Response):
+            return instance
 
-        if (
-                request.user != collection.author and
-                not request.user.is_staff):
-            return Response({
-                "message":      _("You don't have Permissions to perform the Action."),
-            }, status=status.HTTP_403_FORBIDDEN)
-
-        collection.status = Status.CLOSED
-        collection.save()
+        instance.status = Status.CLOSED
+        instance.save()
 
         # ---------------------------------------------------------------------
         # --- Send Email Notification(s)

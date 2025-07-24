@@ -81,7 +81,7 @@ class BlogArchiveViewSet(APIView):
         # --- Filter QuerySet by the Calendar specified Year & Month
         # ---------------------------------------------------------------------
         posts = Post.objects.filter(
-            status=Status.VISIBLE,
+            status=Status.PUBLISHED,
             created__year=year,
             created__month=month)
 
@@ -148,7 +148,7 @@ class PostPublishViewSet(APIView):
                 "message":      _("Post not found."),
             }, status=status.HTTP_404_NOT_FOUND)
 
-        post.status = Status.VISIBLE
+        post.status = Status.PUBLISHED
         post.save()
 
         # ---------------------------------------------------------------------
