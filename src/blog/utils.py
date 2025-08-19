@@ -12,9 +12,9 @@ from django.core.paginator import (
 
 from termcolor import cprint
 
-from .models import (
-    Post,
-    PostStatus)
+from app.models import Status
+
+from .models import Post
 
 
 def get_post_list(request, author=None):
@@ -34,13 +34,13 @@ def get_post_list(request, author=None):
     if request.user.is_staff:
         posts = Post.objects.filter(
             status__in=[
-                PostStatus.PUBLISHED,
-                PostStatus.DRAFT,
+                Status.PUBLISHED,
+                Status.DRAFT,
             ])
     else:
         posts = Post.objects.filter(
             status__in=[
-                PostStatus.PUBLISHED,
+                Status.PUBLISHED,
             ])
 
     if author:

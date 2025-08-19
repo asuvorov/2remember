@@ -16,11 +16,10 @@ from django.urls import reverse
 
 # pylint: disable=import-error
 from app.decorators import log_default
+from app.models import Status
 
 from .forms import CreateEditPostForm
-from .models import (
-    Post,
-    PostStatus)
+from .models import Post
 from .utils import get_post_list
 
 
@@ -67,11 +66,11 @@ def post_create(request):
             # -----------------------------------------------------------------
             # --- Render HTML Email Content
             if "post-draft" in request.POST:
-                post.status = PostStatus.DRAFT
+                post.status = Status.DRAFT
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
             else:
-                post.status = PostStatus.PUBLISHED
+                post.status = Status.PUBLISHED
                 # -------------------------------------------------------------
                 # --- TODO: Send confirmation Email
 

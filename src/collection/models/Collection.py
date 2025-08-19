@@ -42,8 +42,8 @@ from app import (
     MONTH_AGO,
     YEAR_AGO)
 from app.models import (
-    Visibility,
-    visibility_choices)
+    Visibility, visibility_choices,
+    Status, status_choices)
 from events.models import Event
 from invites.models import Invite
 from privateurl.models import PrivateUrl
@@ -245,6 +245,12 @@ class Collection(
     # -------------------------------------------------------------------------
     # --- Flags.
     # -------------------------------------------------------------------------
+    status = models.CharField(
+        max_length=2,
+        choices=status_choices, default=Status.DRAFT,
+        verbose_name=_("Status"),
+        help_text=_("Collection Status"))
+
     allow_comments = models.BooleanField(
         default=True,
         verbose_name=_("I would like to allow Comments"),
@@ -451,9 +457,10 @@ class Collection(
                 storage.delete(preview.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
         try:
             if created:
@@ -466,9 +473,10 @@ class Collection(
                 storage.delete(cover.file.name)
 
         except Exception as exc:
-            cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
-                   f"                 {type(exc).__name__}\n"
-                   f"                 {str(exc)}", "white", "on_red")
+            # cprint(f"### EXCEPTION @ `{inspect.stack()[0][3]}`:\n"
+            #        f"                 {type(exc).__name__}\n"
+            #        f"                 {str(exc)}", "white", "on_red")
+            pass
 
     def pre_delete(self, **kwargs):
         """Docstring."""

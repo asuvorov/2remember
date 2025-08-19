@@ -3,12 +3,45 @@
 """
 
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
+
+from rest_framework import status
+from rest_framework.response import Response
 
 from annoying.functions import get_object_or_None
+from termcolor import cprint
 
 # pylint: disable=import-error
 from events.models import Event
 from organizations.models import OrganizationStaff
+
+
+# =============================================================================
+# ===
+# === UTILITIES
+# ===
+# =============================================================================
+def _get_event_with_privacy_or_response(
+        request, event_id, fields_add_on_fail={}):
+    """Retrieve an Event, or prepare and return an Error Response."""
+    cprint(f"[---  DUMP   ---] EVENT ID : {event_id}", "yellow")
+
+    instance = get_object_or_None(Event, id=event_id)
+    if not instance:
+        return Response({
+            **fields_add_on_fail,
+            "message":  _("Event not found."),
+        }, status=status.HTTP_404_NOT_FOUND)
+
+    if (
+            request.user != instance.author and
+            not request.user.is_staff):
+        return Response({
+            **fields_add_on_fail,
+            "message":  _("You don't have Permissions to perform the Action."),
+        }, status=status.HTTP_403_FORBIDDEN)
+
+    return instance
 
 
 def event_access_check_required(request, event_id):

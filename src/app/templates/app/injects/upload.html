@@ -222,9 +222,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'api-remove-upload' %}", {
-            "type":                 type,
-            "id":                   id,
+        $.post("{% url 'api-upload-details' -1 0 %}".replace("-1", type).replace("0", id), {
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()
         }).done(function (result) {
             if (result.deleted) {
@@ -246,9 +244,7 @@
 
         var srcElement = event.target;
 
-        $.post("{% url 'api-remove-link' %}", {
-            "type":                 type,
-            "id":                   id,
+        $.post("{% url 'api-upload-details' -1 0 %}".replace("-1", type).replace("0", id), {
             "csrfmiddlewaretoken":  $("input[name='csrfmiddlewaretoken']").val()
         }).done( function(result) {
             if (result.deleted) {

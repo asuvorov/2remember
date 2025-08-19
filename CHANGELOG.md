@@ -3,7 +3,7 @@
 ### New
 
 - Added a `collection` App for creating the Collections of Events.
-- Added `parent` Organization Field to the Organization Model.
+- Added a `parent` Organization Field to the Organization Model.
 - Added sending Email to the Team from the "Contact Us" Page.
 - Added the Features Feature for toggling the new testable Features.
 - Added a View for the dateless Events.

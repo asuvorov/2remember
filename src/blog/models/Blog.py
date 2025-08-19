@@ -27,6 +27,9 @@ from ddcore.models import (
 from ddcore.Decorators import autoconnect
 from ddcore.uuids import get_unique_filename
 
+from app.models import (
+    Status, status_choices)
+
 
 # =============================================================================
 # ===
@@ -37,15 +40,6 @@ from ddcore.uuids import get_unique_filename
 # -----------------------------------------------------------------------------
 # --- Blog Post Model Choices.
 # -----------------------------------------------------------------------------
-PostStatus = enum(
-    DRAFT="0",
-    PUBLISHED="1",
-    CLOSED="2")
-post_status_choices = [
-    (PostStatus.DRAFT,      _("Draft")),
-    (PostStatus.PUBLISHED,  _("Published")),
-    (PostStatus.CLOSED,     _("Closed")),
-]
 
 
 # -----------------------------------------------------------------------------
@@ -93,7 +87,8 @@ class Post(
     """Post Model."""
 
     # -------------------------------------------------------------------------
-    # --- Basics
+    # --- Basics.
+    # -------------------------------------------------------------------------
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         db_index=True,
@@ -125,7 +120,8 @@ class Post(
         help_text=_("Post Content"))
 
     # -------------------------------------------------------------------------
-    # --- Tags
+    # --- Tags.
+    # -------------------------------------------------------------------------
     tags = TaggableManager(
         through=None, blank=True,
         verbose_name=_("Tags"),
@@ -137,10 +133,11 @@ class Post(
         help_text=_("Hashtag"))
 
     # -------------------------------------------------------------------------
-    # --- Flags
+    # --- Flags.
+    # -------------------------------------------------------------------------
     status = models.CharField(
         max_length=2,
-        choices=post_status_choices, default=PostStatus.DRAFT,
+        choices=status_choices, default=Status.DRAFT,
         verbose_name=_("Status"),
         help_text=_("Post Status"))
 
